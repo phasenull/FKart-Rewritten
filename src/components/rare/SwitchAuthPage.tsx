@@ -13,7 +13,7 @@ export default function SwitchAuthPage(props: { updatePage: (index: number) => v
 				updatePage(1 - panel_type)
 			}}
 		>
-			<Text style={{ textShadowRadius: 3, color:styles.secondaryDark }} className="justify-center text-lg font-extrabold">
+			<Text style={{ textShadowRadius: 3, color: styles.secondaryDark }} className="justify-center text-lg font-extrabold">
 				{props.panel_type === 0 ? "Don't have an account?" : "Already have an account?"}
 				<Text style={{ color: styles.primaryDark }}>{props.panel_type === 0 ? " Sign Up" : " Sign In"}</Text>
 			</Text>
