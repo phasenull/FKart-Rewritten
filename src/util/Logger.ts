@@ -24,6 +24,7 @@ function getTime() {
 		.toString()
 		.padStart(2, "0")}/${date.getMonth().toString().padStart(2, "0")}/${date.getFullYear().toString().padStart(4, "0")}`
 }
+
 function getLogColor(log_type: string) {
 	switch (log_type) {
 		case "LOG":
