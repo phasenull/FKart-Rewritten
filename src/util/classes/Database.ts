@@ -16,7 +16,7 @@ export default abstract class Database {
 			return null
 		}
 	}
-	public static async set(key: string, value: Map<any,any>|Array<any>|string|boolean|number) {
+	public static async set(key: string, value: Map<any,any>|Array<any>|string|boolean|number|undefined|null) {
 		try {
 			await AsyncStorage.setItem(key, JSON.stringify(value))
 		} catch (e : string | any) {

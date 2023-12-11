@@ -4,39 +4,79 @@ import Application from "../Application"
 import Logger from "../Logger"
 
 export default class User {
-	name: string
+	//💀💀💀💀
+	name?: string
 	surname?: string
 	email?: string
 	phone?: string
 	refresh_token?: string
 	access_token?: string
+	user_id?: string
+	accountId?: string
+	identityNo?: string
+	activationStatus?: string
+	accountCreateDate?: Date
+	cCardNo?: string
+	cCardExprMonth?: string
+	cCardExprYear?: string
+	nfcCardNo?: string
+	systemid?: string
+	datetime?: string
+	timeDiff?: string
+	runningTime?: string
+	payment_type?: string
+	home?: {
+		latitude: number
+		longitude: number
+	}
+	country_code?: string
+	work?: {
+		latitude: number
+		longitude: number
+	}
+	file_url?: number
+	additional_info?: null | string
 
-	constructor({ name, surname, email, phone }: { name: string; surname: string; email?: string; phone?: string }) {
-		this.name = name
-		this.surname = surname
-		this.email = email
-		this.phone = phone
+	constructor() {
 		return this
 	}
 	public async login({ auth_type, auth_value, password }: { auth_type: LoginTypes; auth_value: string; password: string }) {
-		console.log(`Attempting to login ${auth_value} ${password.slice(0, 1)}... ${auth_type}`)
+		console.log(`Attempting to login ${auth_value} ${password.slice(0, 3)}... ${auth_type}`)
 		const refresh_token = await API.getRefreshToken({ auth_type, auth_value, password })
 		const access_token = await API.getAuthToken({ refresh_token })
 		this.refresh_token = refresh_token
 		this.access_token = access_token
-		Logger.info("User.login", "User logged in!")
+		
+
 		return this
 	}
 
-	static fromJSON(json: string) : User | null {
-		const obj = JSON.parse(json)
-		if (!obj) {return null}
-		const new_user = new User({ name: obj.name, surname: obj.surname, email: obj.email, phone: obj.phone })
-		new_user.refresh_token = obj.refresh_token
-		new_user.access_token = obj.access_token
+	static fromJSON(json:Object): User | null {
+		Object.entries(json).map(([key, value]) => {
+			new_user[key as keyof User] = json[key]
+		}
+		)
+		if (!json) {
+			return null
+		}
+		const new_user = new User()
 		return new_user
 	}
-	public toJSON() : string {
-		return JSON.stringify(this)
+	static fromString(json: string): User | null {
+		return this.fromJSON(JSON.parse(json))
+	}
+	public toJSON(): string {
+		return JSON.stringify(Object.assign({}, this))
+	}
+	static async fromRefreshToken(refresh_token: string) {
+		const access_token = (await API.getAuthToken({ refresh_token })) || ""
+		const user = await this.fromAccessToken(access_token)
+		user.refresh_token = refresh_token
+		return user
+	}
+	static async fromAccessToken(access_token: string) {
+		const user = new User()
+		user.access_token = access_token
+		return user
 	}
 }
