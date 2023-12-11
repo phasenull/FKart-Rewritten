@@ -18,7 +18,7 @@ web-build/
 
 # Metro
 .metro-health-check*
-
+*.rest
 # debug
 npm-debug.*
 yarn-debug.*
@@ -30,6 +30,6 @@ yarn-error.*
 
 # local env files
 .env*.local
-
+local.properties
 # typescript
 *.tsbuildinfo
