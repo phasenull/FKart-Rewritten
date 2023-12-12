@@ -1,4 +1,4 @@
-import LoginTypes from "../enums/LoginTypes"
+import LoginTypes from "./enums/LoginTypes"
 import Application from "./Application"
 import Logger from "./Logger"
 import User from "./classes/User"

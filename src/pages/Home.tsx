@@ -9,8 +9,10 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import AuthPanel from "../components/AuthPanel"
 import AuthPage from "./Auth"
-import MainScreen from "../screens/MainScreen"
-import AccountScreen from "../screens/Account"
+
+
+import MainTab from "../tabs/home/MainTab"
+import AccountTab from "../tabs/home/AccountTab"
 export default function HomePage(props: { navigation: NativeStackNavigationProp<any> }) {
 	const [user, setUser] = useState<User | undefined>(undefined)
 	const { navigation } = props
@@ -82,7 +84,7 @@ export default function HomePage(props: { navigation: NativeStackNavigationProp<
 								/>
 							),
 						}}
-						component={MainScreen}
+						component={MainTab}
 					/>
 					<Tab.Screen
 						name="Home"
@@ -97,7 +99,7 @@ export default function HomePage(props: { navigation: NativeStackNavigationProp<
 								/>
 							),
 						}}
-						component={MainScreen}
+						component={MainTab}
 					/>
 					<Tab.Screen
 						options={{
@@ -112,7 +114,7 @@ export default function HomePage(props: { navigation: NativeStackNavigationProp<
 						}}
 						name="Account"
 						initialParams={{ user: user }}
-						component={AccountScreen}
+						component={AccountTab}
 					/>
 				</Tab.Navigator>
 			) : prompt_log_in ? (

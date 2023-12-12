@@ -4,7 +4,7 @@ import Application from "../../util/Application";
 import Divider from "../Divider";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-export default function AccountDetailsPanel(props: { user: User }) {
+export default function AccountDetailsContainer(props: { user: User }) {
 	const styles = Application.styles
 	const user = props.user
 	return (<View className="py-5 mt-5 px-10 w-80 rounded-[16px] justify-center" style={{backgroundColor:styles.white,elevation:10, shadowOffset:{height:4,width:4}}}>

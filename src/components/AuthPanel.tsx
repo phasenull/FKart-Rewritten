@@ -2,9 +2,9 @@ import { Animated, Keyboard, KeyboardAvoidingView, Platform, Switch, SwitchCompo
 import Application from "../util/Application"
 import { BlurView } from "expo-blur"
 import { LinearGradient } from "expo-linear-gradient"
-import LoginTypes from "../enums/LoginTypes"
+import LoginTypes from "../util/enums/LoginTypes"
 import { Component, ReactNode, useState } from "react"
-import SwitchAuthPage from "./rare/SwitchAuthPage"
+import SwitchAuthPage from "./containers/SwitchAuthPage"
 import { withTiming } from "react-native-reanimated"
 import Logger from "../util/Logger"
 type AuthPanelProps = {callBack:Function, updatePage: (index: number) => void; panel_type: number }

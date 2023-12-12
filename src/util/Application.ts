@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native"
 import User from "./classes/User"
 import Database from "./classes/Database"
 import Logger from "./Logger"
-import LoginTypes from "../enums/LoginTypes"
+import LoginTypes from "./enums/LoginTypes"
 import API from "./API"
 
 export default abstract class Application {
