@@ -14,8 +14,8 @@ export default function AccountTab(props: { route: any; navigation: NativeStackN
 
 	const styles = Application.styles
 	const user: User = props.route.params?.user
-	const cards = useMemo<Array<{ id: string; name: string; type: CardTypes; balance: number, loads:number }>>(() => {
-		return [{ id: "666", name: "card.name", type: CardTypes.student, balance: -999, loads: 2 }]
+	const cards = useMemo<Array<{ id: string; name: string; type: CardTypes; balance: number; loads: number }>>(() => {
+		return [{ id: "12345-6789-0", name: "Abonman Kartım", type: CardTypes.student, balance: -999, loads: 2 }]
 	}, [])
 	async function fetchData(user: User) {
 		if (!user) {
@@ -50,13 +50,18 @@ export default function AccountTab(props: { route: any; navigation: NativeStackN
 									source={CardImages[CardTypes[card.type as CardTypes]]}
 								/>
 							</View>
-							{card.loads?<View className="absolute w-6 h-6 justify-center -right-1.5 -top-1.5 self-start rounded-full bg-red-400">
-								<Text className="text-white text-center text-xl font-bold">{card.loads}</Text>
-							</View>:null}
+							{card.loads ? (
+								<View className="absolute w-6 h-6 justify-center -right-1.5 -top-1.5 self-start rounded-full bg-red-400">
+									<Text className="text-white text-center text-xl font-bold">{card.loads}</Text>
+								</View>
+							) : null}
 							<View className="flex-1 flex-row items-center justify-between">
 								<View>
 									<Text style={{ color: styles.primary }} className="flex-1 font-bold text-2xl text-left">
 										{card.name}
+									</Text>
+									<Text style={{ color: styles.white, backgroundColor: styles.secondary }} className="rounded-full mx-auto px-4 relative mb-4 font-bold text-[12px] text-center">
+										{card.id}
 									</Text>
 									<Text style={{ color: styles.secondary }} className="flex-1 opacity-50 font-bold text-2xl text-left">
 										{card.balance} TL
