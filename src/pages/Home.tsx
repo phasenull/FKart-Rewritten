@@ -7,8 +7,6 @@ import NotLoggedInModal from "../components/NotLoggedInModal"
 import User from "../util/classes/User"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
-import AuthPanel from "../components/AuthPanel"
-import AuthPage from "./Auth"
 
 
 import MainTab from "../tabs/home/MainTab"
