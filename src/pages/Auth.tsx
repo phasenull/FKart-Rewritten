@@ -20,6 +20,7 @@ export default function AuthPage(props: { navigation: NativeStackNavigationProp<
 		updatePage(0)
 	}, [])
 	function logged_in(user:User) {
+		console.log("logged in with user", user.toJSON())
 		navigation.navigate("home",{user:user})
 	}
 	return (

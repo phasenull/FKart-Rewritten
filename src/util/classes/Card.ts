@@ -49,9 +49,10 @@ export default class Card {
 			"01": CardTypes.student,
 			"02": CardTypes.age60,
 			"03": CardTypes.age65,
+			"undefined" : CardTypes.undefined,
 			// random data since it doesn't matter
 		}
-		return map[code || "03"]
+		return map[code || "undefined"]
 	}
 	public getImage() {
 		return CardImages[Card.getCardTypeFromCode(this.card_type)]

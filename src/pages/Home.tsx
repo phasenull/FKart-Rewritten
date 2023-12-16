@@ -11,8 +11,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 
 import MainTab from "../tabs/home/MainTab"
 import AccountTab from "../tabs/home/AccountTab"
-export default function HomePage(props: { navigation: NativeStackNavigationProp<any> }) {
-	const [user, setUser] = useState<User | undefined>(undefined)
+export default function HomePage(props: { navigation: NativeStackNavigationProp<any>, route:{params?:{user?:User|undefined}} }) {
+	const [user, setUser] = useState<User | undefined>(props.route.params?.user)
 	const { navigation } = props
 	const [prompt_log_in, set_prompt_log_in] = useState(false)
 	const Tab = useMemo(() => {

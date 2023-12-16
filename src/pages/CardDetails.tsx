@@ -3,7 +3,7 @@ import { RefreshControl, ScrollView, Text, View } from "react-native"
 import Application from "../util/Application"
 import CardImages from "../util/enums/CardImages"
 import CardTypes from "../util/enums/CardTypes"
-import Animated, { FlipInEasyX, FlipInEasyY } from "react-native-reanimated"
+import Animated, { FadeInDown, FlipInEasyX, FlipInEasyY } from "react-native-reanimated"
 import Card from "../util/classes/Card"
 import { useState } from "react"
 
@@ -17,7 +17,7 @@ export default function CardDetails(props?: { route: { params?: { card?: Card } 
 			</View>
 		)
 	}
-	const [card,setCard] = useState<Card>(props.route.params.card)
+	const [card, setCard] = useState<Card>(props.route.params.card)
 	async function get() {
 		if (!card) {
 			return
@@ -29,8 +29,20 @@ export default function CardDetails(props?: { route: { params?: { card?: Card } 
 		setLoading(false)
 	}
 	return (
-		<ScrollView refreshControl={<RefreshControl refreshing={loading} onRefresh={()=>{get()}}/>} className="flex-col" contentContainerStyle={{ alignItems: "center"}}>
-			<View className="flex-col items-center w-80">
+		<Animated.ScrollView
+			entering={FadeInDown.duration(500)}
+			refreshControl={
+				<RefreshControl
+					refreshing={loading}
+					onRefresh={() => {
+						get()
+					}}
+				/>
+			}
+			className="flex-col"
+			contentContainerStyle={{ alignItems: "center" }}
+		>
+			<View className="flex-col items-center bg-green-500 w-80">
 				<Animated.Image
 					entering={FlipInEasyX.duration(500).delay(250)}
 					style={{
@@ -48,7 +60,7 @@ export default function CardDetails(props?: { route: { params?: { card?: Card } 
 			<View>
 				<Text style={{ color: styles.secondary }} className="mt-2 font-bold text-center text-[36px]">
 					{card.balance} TL
-					{!card.loads_in_line ? (
+					{card.loads_in_line ? (
 						<View className="absolute w-6 h-6 justify-center  -top-1.5 self-start rounded-full bg-red-400">
 							<Text className="text-white text-center text-xl font-bold">{card.loads_in_line?.length || "??"}</Text>
 						</View>
@@ -58,7 +70,9 @@ export default function CardDetails(props?: { route: { params?: { card?: Card } 
 					Tip: "{card.card_type || "undefined"}"
 				</Text>
 			</View>
-			<Text className="p-4 mb-10" style={{backgroundColor:styles.dark, borderRadius:10, elevation:10, color:styles.secondaryDark}}>Card Data: {JSON.stringify(card, null, 4)}</Text>
-		</ScrollView>
+			<Text className="p-4 mb-10" style={{ backgroundColor: styles.dark, borderRadius: 10, elevation: 10, color: styles.secondaryDark }}>
+				Card Data: {JSON.stringify(card, null, 4)}
+			</Text>
+		</Animated.ScrollView>
 	)
 }

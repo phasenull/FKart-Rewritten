@@ -15,6 +15,6 @@ export default function AccountDetailsContainer(props: { user: User }) {
 		<Divider style={{marginVertical:10,borderRadius:100, opacity:0.1, backgroundColor:styles.secondary}} />
 
 
-		<Text style={{color:styles.secondary}} className="opacity-20 text-center font-bold text-[12px]">Created at {user.accountCreateDate?.toString()}</Text>
+		<Text style={{color:styles.secondary}} className="opacity-20 text-center font-bold text-[12px]">Created at {Application.CONVERT_TO_DATE(user.accountCreateDate)?.toString() || "unknown"}</Text>
 	</View>)
 }

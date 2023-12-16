@@ -15,7 +15,7 @@ export default class User {
 	accountId?: string
 	identityNo?: string
 	activationStatus?: string
-	accountCreateDate?: Date
+	accountCreateDate?: string
 	cCardNo?: string
 	cCardExprMonth?: string
 	cCardExprYear?: string
@@ -46,20 +46,18 @@ export default class User {
 		const access_token = await API.getAuthToken({ refresh_token })
 		this.refresh_token = refresh_token
 		this.access_token = access_token
-		
 
 		return this
 	}
 
-	static fromJSON(json:Object): User | null {
-		Object.entries(json).map(([key, value]) => {
-			new_user[key as keyof User] = json[key]
-		}
-		)
+	static fromJSON(json: Object): User | null {
 		if (!json) {
 			return null
 		}
 		const new_user = new User()
+		Object.entries(json).map(([key, value]) => {
+			new_user[key as keyof User] = json[key]
+		})
 		return new_user
 	}
 	static fromString(json: string): User | null {

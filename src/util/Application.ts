@@ -64,7 +64,6 @@ export default abstract class Application {
 			this.logged_user = user
 
 			const profile_data = await API.getProfile({ user })
-			profile_data.accountCreateDate = Application.CONVERT_TO_DATE(profile_data.accountCreateDate)
 			user = Object.assign(user, profile_data)
 			await this.database.set("refresh_token", user.refresh_token)
 			await this.database.set("access_token", user.access_token)
@@ -97,7 +96,7 @@ export default abstract class Application {
 		const user_data = await this.database.get("user")
 		const refresh_token = await this.database.get("refresh_token")
 		const access_token = await this.database.get("access_token")
-		let user : User | null = null
+		let user: User | null = null
 		if (access_token) {
 			user = await User.fromAccessToken(access_token)
 			user.refresh_token = refresh_token
@@ -114,12 +113,14 @@ export default abstract class Application {
 		}
 
 		const profile_data = await API.getProfile({ user })
-		profile_data.accountCreateDate = Application.CONVERT_TO_DATE(profile_data.accountCreateDate)
 		user = Object.assign(user, profile_data)
 		this.logged_user = user
 		this.__is_init = true
 	}
-	public static CONVERT_TO_DATE(date: string) {
+	public static CONVERT_TO_DATE(date: string | undefined) {
+		if (!date) {
+			return
+		}
 		return new Date(date)
 	}
 
@@ -127,7 +128,7 @@ export default abstract class Application {
 		return date.toISOString()
 	}
 	public static DATE_DIFF(date1: Date, date2: Date) {
-		return (date1.getTime() - date2.getTime())
+		return date1.getTime() - date2.getTime()
 	}
 	public static DATE_COUNTDOWN(date: Date) {
 		const diff = this.DATE_DIFF(date, new Date())
@@ -137,6 +138,6 @@ export default abstract class Application {
 		const hours = Math.floor(diff / (1000 * 60 * 60))
 		const minutes = Math.floor(diff / (1000 * 60))
 		const seconds = Math.floor(diff / 1000)
-		return { years,months, days, hours, minutes, seconds }
+		return { years, months, days, hours, minutes, seconds }
 	}
 }
