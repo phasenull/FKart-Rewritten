@@ -41,7 +41,7 @@ export default function HomePage(props: { navigation: NativeStackNavigationProp<
 	// TODO separate these into different files
 	return (
 		<View className="flex-1">
-			<StatusBar translucent={false} />
+			<StatusBar translucent={false} style="dark" />
 			{user ? (
 				<Tab.Navigator
 					initialRouteName="Account"

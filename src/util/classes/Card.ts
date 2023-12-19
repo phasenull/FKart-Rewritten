@@ -20,7 +20,7 @@ export default class Card {
 	public last_usages?: any[]
 	public balance?: number
 	public loads_in_line?: Array<any>
-
+	public is_from_cache?: boolean
 	constructor(alias: string) {
 		this.alias = alias
 		return this
@@ -28,6 +28,10 @@ export default class Card {
 	public static FETCH_CARD_DATA({ region, alias, token }: { region: string; alias: string; token: string }) {
 		const url = `https://service.kentkart.com/rl1/api/card/balance?region=${region}&lang=tr&authType=4&token=${token}&alias=${alias}`
 		return Application.fetch(url)
+	}
+	public setIsFromCache(is_from_cache: boolean) {
+		this.is_from_cache = is_from_cache
+		return this
 	}
 	public async fetchData() {
 		const region = Application.region

@@ -39,6 +39,7 @@ export default abstract class Application {
 		},
 	})
 	public static fetch(input: string | URL | Request, init?: RequestInit | undefined): Promise<Response> {
+		// WARNING: nvm
 		return fetch(input, {
 			...init,
 			...{
@@ -123,7 +124,12 @@ export default abstract class Application {
 		}
 		return new Date(date)
 	}
-
+	public static async TO_CACHE(key:string,value:any) {
+		await this.database.set(`__cache__${key}`,value)
+	}
+	public static async FROM_CACHE(key:string) {
+		return await this.database.get(`__cache__${key}`)
+	}
 	public static DATE_TO_STRING(date: Date) {
 		return date.toISOString()
 	}

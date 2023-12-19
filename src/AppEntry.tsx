@@ -1,18 +1,19 @@
-import { LogBox, View, useColorScheme } from "react-native"
+import { LogBox, Text, View, useColorScheme } from "react-native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { NavigationContainer } from "@react-navigation/native"
-import HomePage from "./pages/Home"
-import Application from "./util/Application"
-import AuthPage from "./pages/Auth"
-import CardDetails from "./pages/CardDetails"
 LogBox.ignoreLogs(["Non-serializable values were found in the navigation state."])
 const Stack = createNativeStackNavigator()
-export default function App() {
+let Application
+export default function AppEntryComponent() {
 	LogBox.ignoreLogs(["Non-serializable values were found in the navigation state."])
 	const colorScheme = useColorScheme()
 	console.log(colorScheme)
 	LogBox.ignoreLogs(["Require cycle:"])
+	Application = require("./util/Application").default
 	Application.__INIT()
+	const HomePage = require("./pages/Home").default
+	const AuthPage = require("./pages/Auth").default
+	const CardDetails = require("./pages/CardDetails").default
 	return (
 		<NavigationContainer>
 			<Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false, statusBarHidden: false }}>

@@ -23,7 +23,7 @@ export default abstract class API {
 			[auth_type === LoginTypes.email ? "email" : "phoneNumber"]: auth_value,
 		}
 		const result = await Application.fetch(
-			`https://auth.kentkart.com/rl1/oauth/authorize?region=${region}&authType=4&lang=tr&version=${"Web_1.7.2(24)_1.0_CHROME_kentkart.web.mkentkart"}`,
+			`https://auth.kentkart.com/rl1/oauth/authorize?region=${region}&authType=4&lang=tr`,
 			{
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
@@ -67,7 +67,7 @@ export default abstract class API {
 		return response2.accessToken
 	}
 	public static async getProfile({ user }: { user: User }) {
-		const url = `https://service.kentkart.com/rl1/api/account?region=004&authType=4`
+		const url = `https://service.kentkart.com/rl1/api/account?region=${Application.region}&authType=4`
 		const result = await Application.fetch(url, {
 			method: "GET",
 			headers: {
@@ -82,5 +82,22 @@ export default abstract class API {
 			throw new Error("Get Profile failed.")
 		}
 		return response.accountInfo
+	}
+	public static async getFavorites({ user }: { user: User }) {
+		const url = `https://service.kentkart.com/rl1/api/v4.0/favorite?authType=4&region=${Application.region}`
+		const result = await Application.fetch(url, {
+			method: "GET",
+			headers: {
+				Authorization: `Bearer ${user.access_token}`,
+			},
+		})
+		if (result.status !== 200) {
+			throw new Error("Get Favorites failed! (status code not 200)")
+		}
+		const response = await result.json()
+		if (response.result.code !== 0) {
+			throw new Error("Get Favorites failed.")
+		}
+		return response?.userFavorites
 	}
 }

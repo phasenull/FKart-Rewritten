@@ -1,3 +1,3 @@
-import { App } from "./src/App"
+import AppEntryComponent from "./src/AppEntry"
 import { AppRegistry } from "react-native"
-AppRegistry.registerComponent("main", () => App)
+export default AppEntryComponent
