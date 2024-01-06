@@ -5,7 +5,7 @@ export default abstract class Logger {
 	}
 	public static error(stack: string, ...args: any[]) {
 		const text = `${getPrefix("ERROR", stack)} ${args}`
-		console.log(text)
+		console.trace(text)
 	}
 	public static warning(stack: string, ...args: any[]) {
 		const text = `${getPrefix("WARNING", stack)} ${args}`

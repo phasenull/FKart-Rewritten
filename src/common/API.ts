@@ -2,6 +2,8 @@ import LoginTypes from "./enums/LoginTypes"
 import Application from "./Application"
 import Logger from "./Logger"
 import User from "./classes/User"
+import { useQuery } from "react-query";
+import { AxiosResponse } from "axios";
 
 export default abstract class API {
 	public static async getRefreshToken({ auth_type, auth_value, password }: { auth_type: LoginTypes; auth_value: string; password: string }) {
@@ -22,82 +24,89 @@ export default abstract class API {
 			responseType: "code",
 			[auth_type === LoginTypes.email ? "email" : "phoneNumber"]: auth_value,
 		}
-		const result = await Application.fetch(
+		const request = await Application.makeRequest(
 			`https://auth.kentkart.com/rl1/oauth/authorize?region=${region}&authType=4&lang=tr`,
 			{
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(body),
+				params: body,
 			}
 		)
-		const response = await result.json()
-		if (!(result.status === 200)) {
+		console.log(request.status,request.data)
+		if (!(request.status === 200)) {
 			throw new Error("Access token failed! (status code not 200)")
 		}
-		if (response.result?.code !== 0) {
-			if (response.result?.message) {
-				throw new Error(`${response.result.message}`)
+		if (request.data?.result?.code !== 0) {
+			if (request.data?.result?.message) {
+				throw new Error(`${request.data?.result.message}`)
 			}
-			throw new Error("Access token failed!", { cause: response.result?.extraErrorMessage })
+			throw new Error("Access token failed!", { cause: request.data?.result?.extraErrorMessage })
 		}
-		const one_time_code = response.code
+		const one_time_code = request.data?.code
 		if (!one_time_code) throw new Error("Access token failed! (one_time_code is empty)")
 		return one_time_code
 	}
-	public static async getAuthToken({ refresh_token }: { refresh_token: string }) {
-		const result = await Application.fetch(`https://auth.kentkart.com/rl1/oauth/token?`, {
+	public static async getAuthToken({ refresh_token }: { refresh_token: string }) : Promise<string> {
+		const request = await Application.makeRequest(`https://auth.kentkart.com/rl1/oauth/token`, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({
+			data: {
 				loginType: "phone",
 				clientId: "rH7S2", // no idea what this is i hope i dont get hacked (amen)
 				clientSecret: "Om121T12fSv1j66kp9Un5vE9IMkJ3639", // static client secret (Gandalf didnt tell me to keep it secret so i didnt)
 				code: refresh_token,
 				grantType: "authorizationCode",
 				redirectUri: "m.kentkart.com",
-			}),
+			},
 		})
-		const response2 = await result.json()
-		if (result.status !== 200) {
+		if (request.status !== 200) {
 			throw new Error("Get Token failed! (status code not 200)")
 		}
-		if (response2.result.code !== 0) {
+		if (request.data?.result?.code !== 0) {
 			throw new Error("Get Token failed.")
 		}
-		return response2.accessToken
+		return request.data.accessToken
 	}
 	public static async getProfile({ user }: { user: User }) {
 		const url = `https://service.kentkart.com/rl1/api/account?region=${Application.region}&authType=4`
-		const result = await Application.fetch(url, {
+		const request : {data:{result:{code:number,message?:string},accountInfo:any},status:number} = await Application.makeRequest(url, {
 			method: "GET",
 			headers: {
 				Authorization: `Bearer ${user.access_token}`,
 			},
 		})
-		const response = await result.json()
-		if (result.status !== 200) {
+		if (request.status !== 200) {
 			throw new Error("Get Profile failed! (status code not 200)")
 		}
-		if (response.result.code !== 0) {
-			throw new Error("Get Profile failed.")
+		if (request.data?.result.code !== 0) {
+			throw new Error(`Get Profile failed. (Response Code: ${request.data.result?.code} / ${request.data.result?.message})`)
 		}
-		return response.accountInfo
+		return request.data.accountInfo
 	}
-	public static async getFavorites({ user }: { user: User }) {
-		const url = `https://service.kentkart.com/rl1/api/v4.0/favorite?authType=4&region=${Application.region}`
-		const result = await Application.fetch(url, {
-			method: "GET",
-			headers: {
-				Authorization: `Bearer ${user.access_token}`,
-			},
-		})
+	public static handleDefaultResult(result: any) {
 		if (result.status !== 200) {
 			throw new Error("Get Favorites failed! (status code not 200)")
 		}
-		const response = await result.json()
+		const response = result.data
+		// auth token expired
+		if (response.result.code === 33) {
+			Application.userAuthCookieTimedOut()
+			return false
+		}
 		if (response.result.code !== 0) {
 			throw new Error("Get Favorites failed.")
 		}
-		return response?.userFavorites
+		return response
+	}
+	public static async getFavorites({ user }: { user: User }) {
+		const url = `https://service.kentkart.com/rl1/api/v4.0/favorite?authType=4&region=${Application.region}`
+		const result = await Application.makeRequest(url, {
+			method: "GET",
+			headers: {
+				Authorization: `Bearer ${user.access_token}`,
+			},
+		})
+		
+		return (API.handleDefaultResult(result))?.userFavorites
 	}
 }

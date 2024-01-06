@@ -1,12 +1,12 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { RefreshControl, ScrollView, Text, View } from "react-native"
-import Application from "../util/Application"
-import CardImages from "../util/enums/CardImages"
-import CardTypes from "../util/enums/CardTypes"
+import Application from "../common/Application"
+import CardImages from "../common/enums/CardImages"
+import CardTypes from "../common/enums/CardTypes"
 import Animated, { FadeInDown, FadeOutUp, FlipInEasyX, FlipInEasyY } from "react-native-reanimated"
-import Card from "../util/classes/Card"
+import Card from "../common/classes/Card"
 import { useEffect, useState } from "react"
-import Logger from "../util/Logger"
+import Logger from "../common/Logger"
 import { LinearGradient } from "expo-linear-gradient"
 
 export default function CardDetails(props?: { route: { params?: { card?: Card } }; navigation: NativeStackNavigationProp<any> }) {

@@ -1,17 +1,17 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { Image, RefreshControl, SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View } from "react-native"
-import Application from "../../util/Application"
-import User from "../../util/classes/User"
+import Application from "../../common/Application"
+import User from "../../common/classes/User"
 import AccountDetailsContainer from "../../components/containers/AccountDetailsContainer"
 import { useEffect, useMemo, useState } from "react"
-import CardTypes from "../../util/enums/CardTypes"
-import CardImages from "../../util/enums/CardImages"
+import CardTypes from "../../common/enums/CardTypes"
+import CardImages from "../../common/enums/CardImages"
 import Animated, { FadeInDown, FadeInLeft, FadeInRight, SharedTransition, withSpring } from "react-native-reanimated"
 
 import { MaterialCommunityIcons } from "@expo/vector-icons"
-import Card from "../../util/classes/Card"
-import { CARD_ALIAS } from "../../util/secret"
-import API from "../../util/API"
+import Card from "../../common/classes/Card"
+import { CARD_ALIAS } from "../../common/secret"
+import API from "../../common/API"
 export default function AccountTab(props: { route: any; navigation: NativeStackNavigationProp<any> }) {
 	const { navigation } = props
 

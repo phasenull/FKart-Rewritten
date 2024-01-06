@@ -40,12 +40,43 @@ export default class User {
 	constructor() {
 		return this
 	}
-	public async login({ auth_type, auth_value, password }: { auth_type: LoginTypes; auth_value: string; password: string }) {
-		console.log(`Attempting to login ${auth_value} ${password.slice(0, 3)}... ${auth_type}`)
-		const refresh_token = await API.getRefreshToken({ auth_type, auth_value, password })
-		const access_token = await API.getAuthToken({ refresh_token })
+	public async login({
+		auth_type,
+		auth_value,
+		password,
+	}: {
+		auth_type: LoginTypes
+		auth_value: string
+		password: string
+	}) {
+		console.log(
+			`Attempting to login ${auth_value} ${password.slice(
+				0,
+				3
+			)}... ${auth_type}`
+		)
+		const refresh_token = await API.getRefreshToken({
+			auth_type,
+			auth_value,
+			password,
+		})
+		console.log("got refresh token", refresh_token)
+		if (!refresh_token) {
+			return false
+		}
+		const auth_token = await API.getAuthToken({
+			refresh_token,
+		})
+		const access_token = auth_token
+		console.log("got access token", access_token)
+		if (!access_token) {
+			return false
+		}
 		this.refresh_token = refresh_token
 		this.access_token = access_token
+		const profile_data = await API.getProfile({ user: this })
+		console.log("got profile data", profile_data)
+		Object.assign(this, profile_data)
 
 		return this
 	}
@@ -67,7 +98,8 @@ export default class User {
 		return JSON.stringify(Object.assign({}, this))
 	}
 	static async fromRefreshToken(refresh_token: string) {
-		const access_token = (await API.getAuthToken({ refresh_token })) || ""
+		const access_token =
+			(await API.getAuthToken({ refresh_token })) || ""
 		const user = await this.fromAccessToken(access_token)
 		user.refresh_token = refresh_token
 		return user
@@ -76,5 +108,11 @@ export default class User {
 		const user = new User()
 		user.access_token = access_token
 		return user
+	}
+
+	async getProfile() {
+		const profile_data = await API.getProfile({ user: this })
+		Object.assign(this, profile_data)
+		return this
 	}
 }

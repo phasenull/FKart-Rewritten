@@ -1,7 +1,7 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { SafeAreaView, StatusBar, Text, TouchableOpacity, View } from "react-native"
-import Application from "../../util/Application"
-import User from "../../util/classes/User"
+import Application from "../../common/Application"
+import User from "../../common/classes/User"
 
 export default function MainTab(props: { route:any,navigation: NativeStackNavigationProp<any>} ) {
 	const { navigation } = props

@@ -1,5 +1,5 @@
 import { RegisteredStyle, StyleProp, Text, TouchableOpacity, View, ViewStyle } from "react-native"
-import Application from "../../util/Application"
+import Application from "../../common/Application"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 
 export default function SwitchAuthPage(props: { style:StyleProp<ViewStyle>, updatePage: (index: number) => void; panel_type: number }) {

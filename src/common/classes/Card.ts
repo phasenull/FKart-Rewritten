@@ -27,7 +27,7 @@ export default class Card {
 	}
 	public static FETCH_CARD_DATA({ region, alias, token }: { region: string; alias: string; token: string }) {
 		const url = `https://service.kentkart.com/rl1/api/card/balance?region=${region}&lang=tr&authType=4&token=${token}&alias=${alias}`
-		return Application.fetch(url)
+		return Application.makeRequest(url)
 	}
 	public setIsFromCache(is_from_cache: boolean) {
 		this.is_from_cache = is_from_cache
@@ -39,12 +39,12 @@ export default class Card {
 		const alias = this.alias
 		if (!region || !token) throw new Error("Not logged in")
 		const response = await Card.FETCH_CARD_DATA({ region: Application.region, alias: alias, token: token })
-		if (!response.ok) throw new Error("Failed to fetch card data")
-		const json = await response.json()
+		if (!(response.status === 200)) throw new Error("Failed to fetch card data")
+		if (!(response.data?.result?.code === 0)) throw new Error("Failed to fetch card data")
 		// todo
 		// const response2 = await Card.FETCH_CARD_DATA_FROM_FAVORITES({ region, token, alias })
 
-		const card = this.loadFromJSON({ ...json?.cardlist[0] })
+		const card = this.loadFromJSON({ ...response.data?.cardlist[0] })
 		return this
 	}
 	public static getCardTypeFromCode(code: "00" | "01" | "02" | "03" | undefined) : CardTypes {

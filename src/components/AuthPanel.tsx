@@ -1,12 +1,12 @@
 import { Animated, Keyboard, KeyboardAvoidingView, Platform, Switch, SwitchComponent, Text, TextInput, TouchableOpacity, View } from "react-native"
-import Application from "../util/Application"
+import Application from "../common/Application"
 import { BlurView } from "expo-blur"
 import { LinearGradient } from "expo-linear-gradient"
-import LoginTypes from "../util/enums/LoginTypes"
+import LoginTypes from "../common/enums/LoginTypes"
 import { Component, ReactNode, useState } from "react"
 import SwitchAuthPage from "./containers/SwitchAuthPage"
 import { withTiming } from "react-native-reanimated"
-import Logger from "../util/Logger"
+import Logger from "../common/Logger"
 type AuthPanelProps = {callBack:Function, updatePage: (index: number) => void; panel_type: number }
 export default class AuthPanel extends Component<AuthPanelProps> {
 	state: { is_keyboard_open?: boolean; input_type: LoginTypes; input_fields: { confirm_password: string; email: string; password: string; tel: string } }
@@ -34,7 +34,6 @@ export default class AuthPanel extends Component<AuthPanelProps> {
 		this.setState({ input_type: type })
 	}
 	render(): ReactNode {
-		Logger.log("AuthPanel.render", "rendering" + this.state.is_keyboard_open)
 		const { panel_type, updatePage } = this.props
 		const styles = Application.styles
 		const theme = Application.theme
@@ -50,12 +49,13 @@ export default class AuthPanel extends Component<AuthPanelProps> {
 					{/* username */}
 					<TextInput
 						autoComplete={this.state.input_type === LoginTypes.email ? "email" : "tel"}
-						style={{ color: styles.dark }}
+						style={{ color: styles.secondary }}
 						placeholderTextColor={styles.secondaryDark}
 						inputMode={this.state.input_type === LoginTypes.email ? "email" : "tel"}
 						placeholder={this.state.input_type === LoginTypes.email ? "E-Mail" : "Phone Number"}
 						className="mt-8 border-2 w-full h-16 border-slate-200 rounded-[10px] px-8 py-2 shadow-2xl"
 						value={this.state.input_fields[this.state.input_type === LoginTypes.email ? "email" : "tel"] || ""}
+						
 						onChangeText={(text) => {
 							this.setState({ input_fields: { ...this.state.input_fields, [this.state.input_type === LoginTypes.email ? "email" : "tel"]: text } })
 						}}
@@ -65,7 +65,7 @@ export default class AuthPanel extends Component<AuthPanelProps> {
 						inputMode="text"
 						autoComplete={"password"}
 						secureTextEntry={true}
-						style={{ color: styles.dark }}
+						style={{ color: styles.secondary }}
 						placeholderTextColor={styles.secondaryDark}
 						passwordRules={"minlength: 8; required: true;"}
 						placeholder={"Password"}
@@ -82,7 +82,7 @@ export default class AuthPanel extends Component<AuthPanelProps> {
 							inputMode="text"
 							autoComplete={"password"}
 							secureTextEntry={true}
-							style={{ color: styles.dark }}
+							style={{ color: styles.secondary }}
 							placeholderTextColor={styles.secondaryDark}
 							passwordRules={"minlength: 8; required: true;"}
 							placeholder={"Password"}
@@ -138,6 +138,7 @@ export default class AuthPanel extends Component<AuthPanelProps> {
 
 async function HandleForm(params: {callback:Function, form_type: number; type: LoginTypes; email: string; password: string; confirm_password: string; tel: string }) {
 	const { type, email, password, confirm_password, tel, form_type } = params
+	// WHAT HAVE I DONE
 	switch (form_type) {
 		default: {
 			if (!password) {

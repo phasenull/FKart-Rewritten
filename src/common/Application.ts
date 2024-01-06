@@ -4,6 +4,10 @@ import Database from "./classes/Database"
 import Logger from "./Logger"
 import LoginTypes from "./enums/LoginTypes"
 import API from "./API"
+import axios, {
+	AxiosRequestConfig,
+	AxiosResponse,
+} from "axios"
 
 export default abstract class Application {
 	public static region: string = "004"
@@ -38,13 +42,14 @@ export default abstract class Application {
 			borderRadius: 10,
 		},
 	})
-	public static fetch(input: string | URL | Request, init?: RequestInit | undefined): Promise<Response> {
-		// WARNING: nvm
-		return fetch(input, {
-			...init,
-			...{
-				headers: {
-					...init?.headers,
+	public static makeRequest(
+		input: string | URL | Request,
+		config?: AxiosRequestConfig | undefined
+	): Promise<AxiosResponse<any, any>> {
+		return axios(input as string, {
+			headers: {
+				...config?.headers,
+				...{
 					"User-Agent": "FKart",
 					"fkart-version": Application.version,
 					"fkart-environment": "dev",
@@ -52,32 +57,41 @@ export default abstract class Application {
 					// "Content-Type": "application/json",
 				},
 			},
+			...config,
 		})
 	}
 
-	public static async login({ auth_type, auth_value, password }: { auth_type: LoginTypes; auth_value: string; password: string }) {
-		try {
-			let user = new User()
-			await user.login({ auth_type, auth_value, password })
-			if (!user.access_token) {
-				return false
-			}
-			this.logged_user = user
-
-			const profile_data = await API.getProfile({ user })
-			user = Object.assign(user, profile_data)
-			await this.database.set("refresh_token", user.refresh_token)
-			await this.database.set("access_token", user.access_token)
-			await this.database.set("user", user.toJSON())
-			Logger.info("Application.login", "User logged in!", user.toJSON())
-			return user
-		} catch (error) {
-			Logger.error("Application.login", error)
+	public static async login({
+		auth_type,
+		auth_value,
+		password,
+	}: {
+		auth_type: LoginTypes
+		auth_value: string
+		password: string
+	}) {
+		let user = new User()
+		await user.login({ auth_type, auth_value, password })
+		if (!user.access_token) {
 			return false
 		}
+		this.logged_user = user
+		await this.database.set("refresh_token", user.refresh_token)
+		await this.database.set("access_token", user.access_token)
+		await this.database.set("user", user.toJSON())
+		Logger.info(
+			"Application.login",
+			"User logged in!",
+			user.toJSON()
+		)
+		return user
 	}
 
-	public static async loginWithRefreshToken({ refresh_token }: { refresh_token: string }) {
+	public static async loginWithRefreshToken({
+		refresh_token,
+	}: {
+		refresh_token: string
+	}) {
 		const user = new User()
 		user.refresh_token = refresh_token
 		return user
@@ -95,16 +109,24 @@ export default abstract class Application {
 			return
 		}
 		const user_data = await this.database.get("user")
-		const refresh_token = await this.database.get("refresh_token")
+		const refresh_token = await this.database.get(
+			"refresh_token"
+		)
 		const access_token = await this.database.get("access_token")
 		let user: User | null = null
 		if (access_token) {
 			user = await User.fromAccessToken(access_token)
 			user.refresh_token = refresh_token
-			Logger.info("Application.__INIT.access_token", "User logged in!")
+			Logger.info(
+				"Application.__INIT.access_token",
+				"User logged in!"
+			)
 		} else if (refresh_token) {
 			user = await User.fromRefreshToken(refresh_token)
-			Logger.info("Application.__INIT.refresh_token", "User logged in!")
+			Logger.info(
+				"Application.__INIT.refresh_token",
+				"User logged in!"
+			)
 		}
 
 		if (!user) {
@@ -112,11 +134,25 @@ export default abstract class Application {
 			this.__is_init = true
 			return
 		}
+		await user.getProfile()
 
-		const profile_data = await API.getProfile({ user })
-		user = Object.assign(user, profile_data)
 		this.logged_user = user
 		this.__is_init = true
+	}
+	public static async userAuthCookieTimedOut() {
+		const user = this.logged_user
+		if (!user || !user.refresh_token) {
+			return false
+		}
+
+		const new_user = await User.fromRefreshToken(
+			user.refresh_token
+		)
+		if (!new_user) {
+			return false
+			this.logged_user = null
+		}
+		this.logged_user = new_user
 	}
 	public static CONVERT_TO_DATE(date: string | undefined) {
 		if (!date) {
@@ -124,10 +160,10 @@ export default abstract class Application {
 		}
 		return new Date(date)
 	}
-	public static async TO_CACHE(key:string,value:any) {
-		await this.database.set(`__cache__${key}`,value)
+	public static async TO_CACHE(key: string, value: any) {
+		await this.database.set(`__cache__${key}`, value)
 	}
-	public static async FROM_CACHE(key:string) {
+	public static async FROM_CACHE(key: string) {
 		return await this.database.get(`__cache__${key}`)
 	}
 	public static DATE_TO_STRING(date: Date) {

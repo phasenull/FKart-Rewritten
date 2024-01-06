@@ -1,11 +1,11 @@
 import { KeyboardAvoidingView, SafeAreaView, ScrollView, Text, TouchableOpacity, View, useWindowDimensions } from "react-native"
-import Application from "../util/Application"
+import Application from "../common/Application"
 import { StatusBar } from "expo-status-bar"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { useEffect, useState } from "react"
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated"
 import AuthPanel from "../components/AuthPanel"
-import User from "../util/classes/User"
+import User from "../common/classes/User"
 
 export default function AuthPage(props: { navigation: NativeStackNavigationProp<any> }) {
 	const { navigation } = props
