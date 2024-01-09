@@ -11,7 +11,10 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 
 import MainTab from "../tabs/home/MainTab"
 import AccountTab from "../tabs/home/AccountTab"
+import Routes from "../tabs/home/Routes"
+import CustomLoadingIndicator from "../components/CustomLoadingIndicator"
 export default function HomePage(props: { navigation: NativeStackNavigationProp<any>, route:{params?:{user?:User|undefined}} }) {
+	const { route } = props
 	const [user, setUser] = useState<User | undefined>(props.route.params?.user)
 	const { navigation } = props
 	const [prompt_log_in, set_prompt_log_in] = useState(false)
@@ -55,13 +58,14 @@ export default function HomePage(props: { navigation: NativeStackNavigationProp<
 							fontWeight: "bold",
 						},
 						tabBarActiveBackgroundColor: styles.primary,
-						tabBarActiveTintColor: styles.dark,
+						tabBarActiveTintColor: styles.white,
 						tabBarInactiveBackgroundColor: styles.white,
 						tabBarInactiveTintColor: styles.secondaryDark,
+						
 						tabBarLabelPosition: "below-icon",
 						headerShown: false,
 						tabBarStyle: {
-							height: 60,
+							height: 65,
 							position: "absolute",
 							marginBottom: 10,
 							marginHorizontal: 20,
@@ -77,12 +81,12 @@ export default function HomePage(props: { navigation: NativeStackNavigationProp<
 								<MaterialCommunityIcons
 									name="bus"
 									size={size}
-									style={{ bottom: (focused && 7) || 0, backgroundColor: (focused && styles.primary) || styles.white, borderRadius: 100, paddingTop: 1, paddingHorizontal: 6 }}
+									style={{ bottom: (focused && 7) || 0, backgroundColor: (focused && styles.primary) || styles.white, borderRadius: 100, paddingHorizontal: 6 }}
 									color={color}
 								/>
 							),
 						}}
-						component={MainTab}
+						component={Routes}
 					/>
 					<Tab.Screen
 						name="Home"
@@ -92,7 +96,7 @@ export default function HomePage(props: { navigation: NativeStackNavigationProp<
 								<MaterialCommunityIcons
 									name="home"
 									size={size}
-									style={{ bottom: (focused && 7) || 0, backgroundColor: (focused && styles.primary) || styles.white, borderRadius: 100, paddingTop: 1, paddingHorizontal: 6 }}
+									style={{ bottom: (focused && 7) || 0, backgroundColor: (focused && styles.primary) || styles.white, borderRadius: 100, paddingHorizontal: 6 }}
 									color={color}
 								/>
 							),
@@ -105,7 +109,7 @@ export default function HomePage(props: { navigation: NativeStackNavigationProp<
 								<MaterialCommunityIcons
 									name="account"
 									size={size}
-									style={{ bottom: (focused && 7) || 0, backgroundColor: (focused && styles.primary) || styles.white, borderRadius: 100, paddingTop: 1, paddingHorizontal: 6 }}
+									style={{ bottom: (focused && 7) || 0, backgroundColor: (focused && styles.primary) || styles.white, borderRadius: 100, paddingHorizontal: 6 }}
 									color={color}
 								/>
 							),
@@ -118,7 +122,7 @@ export default function HomePage(props: { navigation: NativeStackNavigationProp<
 			) : prompt_log_in ? (
 				<NotLoggedInModal navigation={navigation} onRequestClose={() => {}} param_visible={true} />
 			) : (
-				<ActivityIndicator className="mx-auto my-auto scale-150" size="large" color={styles.primary} />
+				<CustomLoadingIndicator/>
 			)}
 		</View>
 	)

@@ -34,3 +34,4 @@ local.properties
 # typescript
 *.tsbuildinfo
 secret.ts
+data/slang_list.json

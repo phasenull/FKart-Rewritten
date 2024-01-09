@@ -1,3 +1,4 @@
+import API from "../API"
 import Application from "../Application"
 import CardImages from "../enums/CardImages"
 import CardTypes from "../enums/CardTypes"
@@ -26,8 +27,7 @@ export default class Card {
 		return this
 	}
 	public static FETCH_CARD_DATA({ region, alias, token }: { region: string; alias: string; token: string }) {
-		const url = `https://service.kentkart.com/rl1/api/card/balance?region=${region}&lang=tr&authType=4&token=${token}&alias=${alias}`
-		return Application.makeRequest(url)
+		return API.fetchCardData({ region, alias, token })
 	}
 	public setIsFromCache(is_from_cache: boolean) {
 		this.is_from_cache = is_from_cache

@@ -13,6 +13,12 @@ export default abstract class Application {
 	public static region: string = "004"
 	public static version: string = "1.0.0"
 	public static name: string = "FKart"
+	public static readonly base_server = "kentkart.com"
+	public static readonly endpoints = {
+		"base":`https://${Application.base_server}`,
+		"auth":`https://auth.${Application.base_server}`,
+		"service" : `https://service.${Application.base_server}`
+	}
 	public static __is_init: boolean = false
 	public static logged_user: User | null = null
 	public static readonly database = Database
