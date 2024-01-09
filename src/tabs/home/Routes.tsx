@@ -10,8 +10,8 @@ import {
 	TouchableOpacity,
 	View,
 } from "react-native"
-import RouteData from "../../common/interfaces/RouteData"
-import { useMemo } from "react"
+import BasicRouteInformation from "../../common/interfaces/BasicRouteInformation"
+import { useMemo, useState } from "react"
 import RouteTouchableContainer from "../../components/containers/RouteTouchableContainer"
 import CustomLoadingIndicator from "../../components/CustomLoadingIndicator"
 
@@ -24,7 +24,7 @@ export default function Routes(props: {
 		item,
 	}: {
 		index: number
-		item: RouteData
+		item: BasicRouteInformation
 	}) {
 		return (
 			<RouteTouchableContainer
@@ -42,6 +42,7 @@ export default function Routes(props: {
 		refetch,
 		isRefetching,
 	} = useGetRouteList({ region: Application.region })
+	const [searchText, setSearchText] = useState("")
 	function refreshData() {
 		console.log("refreshing data")
 		refetch()
@@ -62,37 +63,55 @@ export default function Routes(props: {
 			</View>
 		)
 	}
-	if (data) {
-		if (!data.routeList) {
-			refetch()
-		}
+	if (!data) {
 		return (
 			<View>
-				<TextInput
-					className="absolute w-80 self-center my-2 h-12 px-4 mx-4 rounded-full"
-					style={{
-						backgroundColor: Application.styles.white,
-						elevation: 10,
-						color: Application.styles.primary,
-						shadowOffset: { height: 4, width: 4 },
-						zIndex: 100,
-					}}
-					placeholder="Search Routes"
-				/>
-				<FlatList
-					refreshControl={
-						<RefreshControl
-							refreshing={isRefetching}
-							onRefresh={refreshData}
-						/>
-					}
-					className="z-10"
-					contentContainerStyle={{ paddingTop: 60 }}
-					maxToRenderPerBatch={10}
-					data={data.routeList?.slice(0, 25)}
-					renderItem={renderRoute}
-				/>
+				<Text>No data found</Text>
 			</View>
 		)
 	}
+	if (!data.routeList) {
+		refetch()
+	}
+	return (
+		<View>
+			<TextInput
+				className="absolute w-80 self-center my-2 h-12 px-4 mx-4 rounded-full"
+				style={{
+					backgroundColor: Application.styles.white,
+					elevation: 10,
+					color: Application.styles.secondary,
+					shadowOffset: { height: 4, width: 4 },
+					zIndex: 100,
+				}}
+				onChangeText={(text) => setSearchText(text)}
+				placeholder="Search Routes"
+				value={searchText}
+			/>
+			<FlatList
+				refreshControl={
+					<RefreshControl
+						refreshing={isRefetching}
+						onRefresh={refreshData}
+					/>
+				}
+				className="z-10 mt-16 mb-20"
+				// contentContainerStyle={{ paddingTop: 60 }}
+				maxToRenderPerBatch={10}
+				data={data.routeList
+					?.filter((item : BasicRouteInformation) => {
+						return (
+							item.displayRouteCode
+								.toLowerCase()
+								.includes(searchText.toLowerCase()) ||
+							item.name
+								.toLowerCase()
+								.includes(searchText.toLowerCase())
+						)
+					})
+					.slice(0, 25)}
+				renderItem={renderRoute}
+			/>
+		</View>
+	)
 }

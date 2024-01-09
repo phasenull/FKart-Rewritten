@@ -1,16 +1,19 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import RouteData from "../../common/interfaces/RouteData"
+import BasicRouteInformation from "../../common/interfaces/BasicRouteInformation"
 import { Text, TouchableOpacity, View } from "react-native"
 import Application from "../../common/Application"
 
 export default function RouteTouchableContainer(props: {
 	navigation: NativeStackNavigationProp<any>
 	route: any
-	item: RouteData
+	item: BasicRouteInformation
 }) {
 	const { item } = props
+	const { navigation, route } = props
 	return (
-		<TouchableOpacity className="z-10 py-1 flex-row pl-3 gap-x-2">
+		<TouchableOpacity onPress={
+			()=>navigation.navigate("route_details", {data_route: item})
+		} className="z-10 py-1 flex-row pl-3 gap-x-2">
 			<View
 				style={{
 					backgroundColor: Application.styles.primary,

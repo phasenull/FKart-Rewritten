@@ -18,6 +18,7 @@ LogBox.ignoreLogs([
 ])
 const Stack = createNativeStackNavigator()
 import Application from "./common/Application"
+import RouteDetails from "./screens/RouteDetails"
 const queryClient = new QueryClient()
 export default function AppEntryComponent() {
 	LogBox.ignoreLogs([
@@ -50,6 +51,13 @@ export default function AppEntryComponent() {
 							headerTintColor: "white",
 						}}
 						component={CardDetails}
+					/>
+					<Stack.Screen
+						name="route_details"
+						options={{
+							headerShown: true,
+						}}
+						component={RouteDetails}
 					/>
 				</Stack.Navigator>
 			</NavigationContainer>

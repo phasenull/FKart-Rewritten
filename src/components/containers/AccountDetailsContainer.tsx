@@ -3,6 +3,7 @@ import User from "../../common/classes/User"
 import Application from "../../common/Application"
 import Divider from "../Divider"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
+import { hideEmail, hidePhone } from "../../util"
 
 export default function AccountDetailsContainer(props: { show_credentials?: boolean; user: User }) {
 	const show_credentials = props.show_credentials
@@ -17,13 +18,11 @@ export default function AccountDetailsContainer(props: { show_credentials?: bool
 				{user.name} {user.surname}
 			</Text>
 			<Text style={{ color: styles.secondary }} className="opacity-50 font-bold text-md">
-				<MaterialCommunityIcons name="phone" size={14} /> +{user.country_code} {show_credentials ? user.phone : `${"*".repeat(user?.phone?.slice(0,user.phone.length-2).length as number)}${user?.phone?.slice(-2)}`}
-
+				<MaterialCommunityIcons name="phone" size={14} /> +{user.country_code} {show_credentials ? user.phone : hidePhone(user.phone)}
 			</Text>
 			<Text style={{ color: styles.secondary }} className="opacity-50 font-bold text-md">
 				<MaterialCommunityIcons name="email" size={14} />{" "}
-				{/* {show_credentials ? user.email : user.email} */}
-				{`${user?.email?.slice(0, 5)}${"*".repeat(user?.email?.split("@")[0].slice(5).length as number)}@${user?.email?.split("@")[1]}`}
+				{show_credentials ? user?.email : hideEmail(user?.email)}
 			</Text>
 
 			<Divider style={{ marginVertical: 10, borderRadius: 100, opacity: 0.1, backgroundColor: styles.secondary }} />
