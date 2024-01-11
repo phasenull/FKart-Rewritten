@@ -1,21 +1,37 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { StatusBar } from "expo-status-bar"
 import { useEffect, useMemo, useState } from "react"
-import { ActivityIndicator, Button, Keyboard, Modal, Pressable, SafeAreaView, Text, TouchableHighlight, TouchableOpacity, View, useWindowDimensions } from "react-native"
+import {
+	ActivityIndicator,
+	Button,
+	Keyboard,
+	Modal,
+	Pressable,
+	SafeAreaView,
+	Text,
+	TouchableHighlight,
+	TouchableOpacity,
+	View,
+	useWindowDimensions,
+} from "react-native"
 import Application from "../common/Application"
 import NotLoggedInModal from "../components/auth/NotLoggedInModal"
 import User from "../common/classes/User"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 
-
 import MainTab from "../tabs/home/MainTab"
 import AccountTab from "../tabs/home/AccountTab"
 import Routes from "../tabs/home/Routes"
 import CustomLoadingIndicator from "../components/CustomLoadingIndicator"
-export default function HomePage(props: { navigation: NativeStackNavigationProp<any>, route:{params?:{user?:User|undefined}} }) {
+export default function HomePage(props: {
+	navigation: NativeStackNavigationProp<any>
+	route: { params?: { user?: User | undefined } }
+}) {
 	const { route } = props
-	const [user, setUser] = useState<User | undefined>(props.route.params?.user)
+	const [user, setUser] = useState<User | undefined>(
+		props.route.params?.user
+	)
 	const { navigation } = props
 	const [prompt_log_in, set_prompt_log_in] = useState(false)
 	const Tab = useMemo(() => {
@@ -41,13 +57,12 @@ export default function HomePage(props: { navigation: NativeStackNavigationProp<
 		}
 		get()
 	}, [])
-	const [keyboardOpen, setKeyboardOpen] = useState(false)
-	
+
 	// TODO separate these into different files
-	return (
-		<View className="flex-1">
-			<StatusBar translucent={false} style="dark" />
-			{user ? (
+	if (user) {
+		return (
+			<View className="flex-1">
+				<StatusBar translucent={false} style="dark" />
 				<Tab.Navigator
 					initialRouteName="Account"
 					screenOptions={{
@@ -63,7 +78,7 @@ export default function HomePage(props: { navigation: NativeStackNavigationProp<
 						tabBarActiveTintColor: styles.white,
 						tabBarInactiveBackgroundColor: styles.white,
 						tabBarInactiveTintColor: styles.secondaryDark,
-						
+
 						tabBarLabelPosition: "below-icon",
 						headerShown: false,
 						tabBarStyle: {
@@ -84,7 +99,13 @@ export default function HomePage(props: { navigation: NativeStackNavigationProp<
 								<MaterialCommunityIcons
 									name="bus"
 									size={size}
-									style={{ bottom: (focused && 7) || 0, backgroundColor: (focused && styles.primary) || styles.white, borderRadius: 100, paddingHorizontal: 6 }}
+									style={{
+										bottom: (focused && 7) || 0,
+										backgroundColor:
+											(focused && styles.primary) || styles.white,
+										borderRadius: 100,
+										paddingHorizontal: 6,
+									}}
 									color={color}
 								/>
 							),
@@ -99,7 +120,13 @@ export default function HomePage(props: { navigation: NativeStackNavigationProp<
 								<MaterialCommunityIcons
 									name="home"
 									size={size}
-									style={{ bottom: (focused && 7) || 0, backgroundColor: (focused && styles.primary) || styles.white, borderRadius: 100, paddingHorizontal: 6 }}
+									style={{
+										bottom: (focused && 7) || 0,
+										backgroundColor:
+											(focused && styles.primary) || styles.white,
+										borderRadius: 100,
+										paddingHorizontal: 6,
+									}}
 									color={color}
 								/>
 							),
@@ -112,7 +139,13 @@ export default function HomePage(props: { navigation: NativeStackNavigationProp<
 								<MaterialCommunityIcons
 									name="account"
 									size={size}
-									style={{ bottom: (focused && 7) || 0, backgroundColor: (focused && styles.primary) || styles.white, borderRadius: 100, paddingHorizontal: 6 }}
+									style={{
+										bottom: (focused && 7) || 0,
+										backgroundColor:
+											(focused && styles.primary) || styles.white,
+										borderRadius: 100,
+										paddingHorizontal: 6,
+									}}
 									color={color}
 								/>
 							),
@@ -122,11 +155,17 @@ export default function HomePage(props: { navigation: NativeStackNavigationProp<
 						component={AccountTab}
 					/>
 				</Tab.Navigator>
-			) : prompt_log_in ? (
-				<NotLoggedInModal navigation={navigation} onRequestClose={() => {}} param_visible={true} />
-			) : (
-				<CustomLoadingIndicator/>
-			)}
-		</View>
-	)
+			</View>
+		)
+	}
+	if (prompt_log_in) {
+		return (
+			<NotLoggedInModal
+				navigation={navigation}
+				onRequestClose={() => {}}
+				param_visible={true}
+			/>
+		)
+	}
+	return (<CustomLoadingIndicator />)
 }
