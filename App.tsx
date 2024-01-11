@@ -6,9 +6,9 @@ import {
 } from "react-native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { NavigationContainer } from "@react-navigation/native"
-import HomePage from "./screens/Home"
-import AuthPage from "./screens/Auth"
-import CardDetails from "./screens/CardDetails"
+import HomePage from "./src/screens/Home"
+import AuthPage from "./src/screens/Auth"
+import CardDetails from "./src/screens/CardDetails"
 import {
 	QueryClient,
 	QueryClientProvider,
@@ -17,8 +17,8 @@ LogBox.ignoreLogs([
 	"Non-serializable values were found in the navigation state.",
 ])
 const Stack = createNativeStackNavigator()
-import Application from "./common/Application"
-import RouteDetails from "./screens/RouteDetails"
+import Application from "./src/common/Application"
+import RouteDetails from "./src/screens/RouteDetails"
 const queryClient = new QueryClient()
 export default function AppEntryComponent() {
 	LogBox.ignoreLogs([
