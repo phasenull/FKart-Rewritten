@@ -31,8 +31,9 @@ export default function SegmentedButtons(props: {
 				className="flex-row  rounded-full overflow-hidden"
 				style={{
 					borderColor: Application.styles.primary,
-					borderWidth: 2,
+					borderWidth: 3,
 					borderRadius: 100,
+					
 				}}
 			>
 				{values.map((item, index) => (
