@@ -1,7 +1,7 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { StatusBar } from "expo-status-bar"
 import { useEffect, useMemo, useState } from "react"
-import { ActivityIndicator, Button, Modal, Pressable, SafeAreaView, Text, TouchableHighlight, TouchableOpacity, View, useWindowDimensions } from "react-native"
+import { ActivityIndicator, Button, Keyboard, Modal, Pressable, SafeAreaView, Text, TouchableHighlight, TouchableOpacity, View, useWindowDimensions } from "react-native"
 import Application from "../common/Application"
 import NotLoggedInModal from "../components/NotLoggedInModal"
 import User from "../common/classes/User"
@@ -41,6 +41,8 @@ export default function HomePage(props: { navigation: NativeStackNavigationProp<
 		}
 		get()
 	}, [])
+	const [keyboardOpen, setKeyboardOpen] = useState(false)
+	
 	// TODO separate these into different files
 	return (
 		<View className="flex-1">
@@ -71,6 +73,7 @@ export default function HomePage(props: { navigation: NativeStackNavigationProp<
 							marginHorizontal: 20,
 							borderRadius: 100,
 						},
+						tabBarHideOnKeyboard: true,
 					}}
 				>
 					<Tab.Screen

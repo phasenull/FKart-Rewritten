@@ -35,3 +35,4 @@ local.properties
 *.tsbuildinfo
 secret.ts
 data/slang_list.json
+dump.json

@@ -28,10 +28,17 @@ import Card from "../../common/classes/Card"
 import API from "../../common/API"
 import CardContainer from "../../components/containers/CardContainer"
 import NotLoggedInModal from "../../components/NotLoggedInModal"
-export default function AccountTab(props: {
-	route?: any
-	navigation?: NativeStackNavigationProp<any>
+export default function AccountTab(props?: {
+	route: any
+	navigation: NativeStackNavigationProp<any> | any
 }) {
+	if (!props) {
+		return (
+			<View>
+				<Text>Something Went Wrong</Text>
+			</View>
+		)
+	}
 	const { navigation } = props
 
 	const styles = Application.styles

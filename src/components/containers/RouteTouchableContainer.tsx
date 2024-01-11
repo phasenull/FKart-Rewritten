@@ -2,6 +2,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import BasicRouteInformation from "../../common/interfaces/BasicRouteInformation"
 import { Text, TouchableOpacity, View } from "react-native"
 import Application from "../../common/Application"
+import { useMemo } from "react"
 
 export default function RouteTouchableContainer(props: {
 	navigation: NativeStackNavigationProp<any>
@@ -10,7 +11,7 @@ export default function RouteTouchableContainer(props: {
 }) {
 	const { item } = props
 	const { navigation } = props
-	return (
+	return useMemo(() => (
 		<TouchableOpacity
 			onPress={() =>
 				navigation.navigate("route_details", { data_route: item })
@@ -30,9 +31,10 @@ export default function RouteTouchableContainer(props: {
 				<Text
 					className="text-center my-auto bg-re-400"
 					style={{
-						color: item.routeColor === "006633"
-						? Application.styles.secondary
-						:`#${item.routeTextColor}`,
+						color:
+							item.routeColor === "006633"
+								? Application.styles.secondary
+								: `#${item.routeTextColor}`,
 						fontWeight: "900",
 					}}
 				>
@@ -48,5 +50,5 @@ export default function RouteTouchableContainer(props: {
 				{item.name} ({item.routeCode})
 			</Text>
 		</TouchableOpacity>
-	)
+	),[item])
 }
