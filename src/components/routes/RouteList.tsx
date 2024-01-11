@@ -60,10 +60,8 @@ export default function RouteList(props: {
 	}
 	const finalData = useMemo(() => {
 		if (routeType && (!searchText || searchText === "")) {
-			console.log("regenerating from memo", searchText, routeType)
 			return getListFromRouteType(routeType)
 		}
-		console.log("couldn't regenerate", searchText, routeType)
 		return getListFromRouteType(routeType)
 			?.filter((item: BasicRouteInformation) => {
 				return (

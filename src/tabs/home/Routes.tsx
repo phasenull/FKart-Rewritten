@@ -39,7 +39,6 @@ export default function Routes(props: {
 
 	const { navigation, route } = props
 	const [searchText, setSearchText] = useState("")
-	const [showFilter, setShowFilter] = useState(false)
 	const [filterByRouteType, setFilterByRouteType] = useState<{
 		key: string
 		label?: string
@@ -80,13 +79,7 @@ export default function Routes(props: {
 	}
 	return (
 		<React.Fragment>
-			<RouteSearchBar onChangeText={setSearchText} setShowFilter={setShowFilter} />
-			<FilterByRouteTypeModal
-				filterByRouteType={filterByRouteType}
-				setFilterByRouteType={setFilterByRouteType}
-				visible={showFilter}
-				setVisible={setShowFilter}
-			/>
+			<RouteSearchBar onChangeText={setSearchText} filterByRouteType={filterByRouteType} setFilterByRouteType={setFilterByRouteType}/>
 			<RouteList
 				data={data}
 				navigation={navigation}
