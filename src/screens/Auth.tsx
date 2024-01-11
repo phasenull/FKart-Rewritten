@@ -4,7 +4,7 @@ import { StatusBar } from "expo-status-bar"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { useEffect, useState } from "react"
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated"
-import AuthPanel from "../components/AuthPanel"
+import AuthPanel from "../components/auth/AuthPanel"
 import User from "../common/classes/User"
 
 export default function AuthPage(props: { navigation: NativeStackNavigationProp<any> }) {

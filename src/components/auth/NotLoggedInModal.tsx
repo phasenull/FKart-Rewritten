@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Modal, Text, TouchableOpacity, View } from "react-native"
-import Application from "../common/Application"
+import Application from "../../common/Application"
 import { Navigator } from "expo-router"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 

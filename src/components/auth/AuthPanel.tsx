@@ -1,12 +1,12 @@
 import { Animated, Keyboard, KeyboardAvoidingView, Platform, Switch, SwitchComponent, Text, TextInput, TouchableOpacity, View } from "react-native"
-import Application from "../common/Application"
+import Application from "../../common/Application"
 import { BlurView } from "expo-blur"
 import { LinearGradient } from "expo-linear-gradient"
-import LoginTypes from "../common/enums/LoginTypes"
+import LoginTypes from "../../common/enums/LoginTypes"
 import { Component, ReactNode, useState } from "react"
-import SwitchAuthPage from "./containers/SwitchAuthPage"
+import SwitchAuthPage from "./SwitchAuthPage"
 import { withTiming } from "react-native-reanimated"
-import Logger from "../common/Logger"
+import Logger from "../../common/Logger"
 type AuthPanelProps = {callBack:Function, updatePage: (index: number) => void; panel_type: number }
 export default class AuthPanel extends Component<AuthPanelProps> {
 	state: { is_keyboard_open?: boolean; input_type: LoginTypes; input_fields: { confirm_password: string; email: string; password: string; tel: string } }

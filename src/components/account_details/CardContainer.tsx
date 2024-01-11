@@ -1,4 +1,4 @@
-import Card from "../../common/classes/Card"
+import Card from "../../common/classes/Card" 
 import {
 	Text,
 	TouchableOpacity,

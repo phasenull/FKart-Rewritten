@@ -11,7 +11,7 @@ import {
 } from "react-native"
 import Application from "../../common/Application"
 import User from "../../common/classes/User"
-import AccountDetailsContainer from "../../components/containers/AccountDetailsContainer"
+import AccountDetailsContainer from "../../components/account_details/AccountDetailsContainer"
 import { useEffect, useMemo, useState } from "react"
 import CardTypes from "../../common/enums/CardTypes"
 import CardImages from "../../common/enums/CardImages"
@@ -26,8 +26,8 @@ import Animated, {
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import Card from "../../common/classes/Card"
 import API from "../../common/API"
-import CardContainer from "../../components/containers/CardContainer"
-import NotLoggedInModal from "../../components/NotLoggedInModal"
+import CardContainer from "../../components/account_details/CardContainer"
+import NotLoggedInModal from "../../components/auth/NotLoggedInModal"
 export default function AccountTab(props?: {
 	route: any
 	navigation: NativeStackNavigationProp<any> | any
