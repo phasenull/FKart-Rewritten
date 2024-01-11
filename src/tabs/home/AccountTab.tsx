@@ -47,8 +47,7 @@ export default function AccountTab(props: {
 	const [cache, set_cache] = useState<{
 		user_favorite_cards: Card[] | undefined
 	}>({ user_favorite_cards: undefined })
-	const [is_show_credentials, set_is_show_credentials] =
-		useState(true)
+	const [is_show_secret, setIsShowSecret] = useState(false)
 	useEffect(() => {
 		get(true)
 	}, [])
@@ -116,7 +115,7 @@ export default function AccountTab(props: {
 			)) === "true"
 				? true
 				: false
-		set_is_show_credentials(is_show)
+		setIsShowSecret(is_show)
 		setTimeout(() => {
 			setLoading(false)
 		}, 100)
@@ -160,7 +159,7 @@ export default function AccountTab(props: {
 				className="w-full"
 			>
 				<AccountDetailsContainer
-					show_credentials={is_show_credentials}
+					show_credentials={is_show_secret}
 					user={user}
 				/>
 				{(cards ? cards : cache.user_favorite_cards || []).map(

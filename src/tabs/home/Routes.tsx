@@ -15,25 +15,12 @@ import { useMemo, useState } from "react"
 import RouteTouchableContainer from "../../components/containers/RouteTouchableContainer"
 import CustomLoadingIndicator from "../../components/CustomLoadingIndicator"
 
+import { MaterialCommunityIcons } from "@expo/vector-icons"
+import RouteList from "../../components/containers/RouteList"
 export default function Routes(props: {
 	route: any
 	navigation: NativeStackNavigationProp<any>
 }) {
-	function renderRoute({
-		index,
-		item,
-	}: {
-		index: number
-		item: BasicRouteInformation
-	}) {
-		return (
-			<RouteTouchableContainer
-				item={item}
-				navigation={props.navigation}
-				route={props.route}
-			/>
-		)
-	}
 	const {
 		data,
 		isLoading,
@@ -42,11 +29,25 @@ export default function Routes(props: {
 		refetch,
 		isRefetching,
 	} = useGetRouteList({ region: Application.region })
+	const { navigation, route } = props
 	const [searchText, setSearchText] = useState("")
 	function refreshData() {
 		console.log("refreshing data")
 		refetch()
 	}
+	const routeList = useMemo(
+		() => (
+			<RouteList
+				data={data}
+				navigation={navigation}
+				onRefresh={refreshData}
+				refreshing={isRefetching}
+				searchText={searchText}
+				route={route}
+			/>
+		),
+		[searchText,data]
+	)
 	if (isLoading || isRefetching) {
 		return <CustomLoadingIndicator />
 	}
@@ -75,43 +76,32 @@ export default function Routes(props: {
 	}
 	return (
 		<View>
-			<TextInput
-				className="absolute w-80 self-center my-2 h-12 px-4 mx-4 rounded-full"
+			<View
+				className="absolute w-80 mt-2 px-4 rounded-full items-center justify-center self-center flex-row"
 				style={{
 					backgroundColor: Application.styles.white,
 					elevation: 10,
-					color: Application.styles.secondary,
 					shadowOffset: { height: 4, width: 4 },
 					zIndex: 100,
 				}}
-				onChangeText={(text) => setSearchText(text)}
-				placeholder="Search Routes"
-				value={searchText}
-			/>
-			<FlatList
-				refreshControl={
-					<RefreshControl
-						refreshing={isRefetching}
-						onRefresh={refreshData}
-					/>
-				}
-				className="z-10 mt-16 mb-20"
-				// contentContainerStyle={{ paddingTop: 60 }}
-				maxToRenderPerBatch={10}
-				data={data.routeList
-					?.filter((item : BasicRouteInformation) => {
-						return (
-							item.displayRouteCode
-								.toLowerCase()
-								.includes(searchText.toLowerCase()) ||
-							item.name
-								.toLowerCase()
-								.includes(searchText.toLowerCase())
-						)
-					})
-					.slice(0, 25)}
-				renderItem={renderRoute}
-			/>
+			>
+				<TextInput
+					className="mx-1 h-16 bg-transparent flex-1"
+					onChangeText={(text) => setSearchText(text)}
+					placeholder="Search Routes"
+					style={{
+						color: Application.styles.secondaryDark,
+						fontSize: 16,
+					}}
+					value={searchText}
+				/>
+				<MaterialCommunityIcons
+					color={Application.styles.secondary}
+					size={28}
+					name="magnify"
+				/>
+			</View>
+			{routeList}
 		</View>
 	)
 }

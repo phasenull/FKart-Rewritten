@@ -58,7 +58,7 @@ export default function CardContainer(props: {
 					<View>
 						<Text
 							style={{ color: styles.primary }}
-							className="flex-1 font-bold text-2xl bottom-2 text-left"
+							className="flex-1 font-bold text-xl bottom-2 text-left"
 						>
 							{p_card.description || "Adsız Kart"}
 						</Text>

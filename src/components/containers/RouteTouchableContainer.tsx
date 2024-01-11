@@ -9,14 +9,20 @@ export default function RouteTouchableContainer(props: {
 	item: BasicRouteInformation
 }) {
 	const { item } = props
-	const { navigation, route } = props
+	const { navigation } = props
 	return (
-		<TouchableOpacity onPress={
-			()=>navigation.navigate("route_details", {data_route: item})
-		} className="z-10 py-1 flex-row pl-3 gap-x-2">
+		<TouchableOpacity
+			onPress={() =>
+				navigation.navigate("route_details", { data_route: item })
+			}
+			className="z-10 py-1 flex-row pl-3 gap-x-2"
+		>
 			<View
 				style={{
-					backgroundColor: Application.styles.primary,
+					backgroundColor:
+						item.routeColor === "006633"
+							? Application.styles.primary
+							: `#${item.routeColor}`,
 					borderRadius: 6,
 				}}
 				className="my-auto h-6 items-center px-2"
@@ -24,7 +30,9 @@ export default function RouteTouchableContainer(props: {
 				<Text
 					className="text-center my-auto bg-re-400"
 					style={{
-						color: Application.styles.secondary,
+						color: item.routeColor === "006633"
+						? Application.styles.secondary
+						:`#${item.routeTextColor}`,
 						fontWeight: "900",
 					}}
 				>
