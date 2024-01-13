@@ -79,17 +79,16 @@ def jscFlavor = 'org.webkit:android-jsc:+'
 android {
     ndkVersion rootProject.ext.ndkVersion
 
-    compileSdkVersion 34
-	
+    compileSdkVersion rootProject.ext.compileSdkVersion
+
     namespace 'com.phasenull.FKart'
     defaultConfig {
         applicationId 'com.phasenull.FKart'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-    	compileSdkVersion 34
         versionCode 1
-        versionName "1.0.0"
-		compileSdk 34 
+        versionName "1.0.1"
+
         buildConfigField("boolean", "REACT_NATIVE_UNSTABLE_USE_RUNTIME_SCHEDULER_ALWAYS", (findProperty("reactNative.unstable_useRuntimeSchedulerAlways") ?: true).toString())
     }
     signingConfigs {
