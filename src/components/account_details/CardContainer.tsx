@@ -30,7 +30,7 @@ export default function CardContainer(props: {
 		>
 			<TouchableOpacity
 				activeOpacity={0.7}
-				className="flex-row py-5 px-5 w-80 h-32 rounded-[16px]"
+				className="items-center flex-row py-5 px-5 w-80 h-32 rounded-[16px]"
 				style={{
 					backgroundColor: styles.white,
 					elevation: 10,
@@ -40,11 +40,11 @@ export default function CardContainer(props: {
 					navigation.push("card_details", { card: p_card })
 				}}
 			>
-				<View className="w-24 -ml-5 mr-5 items-center justify-center">
+				<View className=" w-28 h-36 -ml-12 mr-6 items-center justify-center">
 					<Animated.Image
-						className="mb-4 rotate-90"
-						style={{ width: 36 * 4, objectFit: "contain" }}
-						source={p_card.getImage()}
+						className="h-64 rotate-90"
+						style={{ width:4*40, objectFit: "contain" }}
+						source={{uri:p_card.getImage()}}
 					/>
 				</View>
 				{p_card.loads_in_line ? (

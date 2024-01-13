@@ -1,5 +1,6 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import {
+	Image,
 	RefreshControl,
 	ScrollView,
 	Text,
@@ -111,12 +112,15 @@ export default function CardDetails(props?: {
 					className="flex-1 mr-24"
 				>
 					<Animated.Image
-						className={"relative w-64 -bottom-12 "}
+						className={"relative w-64 h-64 -bottom-12 "}
 						style={{
 							transform: [{ rotateZ: "90deg" }],
 							objectFit: "contain",
 						}}
-						source={card.getImage()}
+						source={{
+							uri:
+								card.getImage()
+						}}
 					/>
 				</Animated.View>
 			</LinearGradient>

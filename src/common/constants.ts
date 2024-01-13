@@ -1,0 +1,1 @@
+export const DYNAMIC_CONTENT_URL = "https://raw.githubusercontent.com/phasenull/FKart-Rewritten/master/dynamic"
