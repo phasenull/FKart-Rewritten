@@ -17,9 +17,8 @@ import {
 import Application from "../common/Application"
 import NotLoggedInModal from "../components/auth/NotLoggedInModal"
 import User from "../common/classes/User"
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
-
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import MainTab from "../tabs/home/MainTab"
 import AccountTab from "../tabs/home/AccountTab"
 import Routes from "../tabs/home/Routes"

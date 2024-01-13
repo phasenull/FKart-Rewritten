@@ -2,7 +2,7 @@ import { Text, View } from "react-native"
 import User from "../../common/classes/User"
 import Application from "../../common/Application"
 import Divider from "../Divider"
-import { MaterialCommunityIcons } from "@expo/vector-icons"
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { hideEmail, hidePhone } from "../../util"
 
 export default function AccountDetailsContainer(props: { show_credentials?: boolean; user: User }) {

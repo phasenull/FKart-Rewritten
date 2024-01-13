@@ -9,7 +9,7 @@ import Animated, {
 	FadeInRight,
 } from "react-native-reanimated"
 
-import { MaterialCommunityIcons } from "@expo/vector-icons"
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import Application from "../../common/Application"
 export default function CardContainer(props: {
 	card: Card

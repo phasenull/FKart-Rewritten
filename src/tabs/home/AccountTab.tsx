@@ -23,7 +23,6 @@ import Animated, {
 	withSpring,
 } from "react-native-reanimated"
 
-import { MaterialCommunityIcons } from "@expo/vector-icons"
 import Card from "../../common/classes/Card"
 import API from "../../common/API"
 import CardContainer from "../../components/account_details/CardContainer"
