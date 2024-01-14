@@ -1,9 +1,13 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import {
+	Clipboard,
 	Image,
 	RefreshControl,
 	ScrollView,
 	Text,
+	ToastAndroid,
+	TouchableWithoutFeedback,
+	Vibration,
 	View,
 } from "react-native"
 import Application from "../common/Application"
@@ -17,10 +21,11 @@ import Animated, {
 	FlipInEasyY,
 } from "react-native-reanimated"
 import Card from "../common/classes/Card"
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import Logger from "../common/Logger"
 import { LinearGradient } from "expo-linear-gradient"
 
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 export default function CardDetails(props?: {
 	route: { params?: { card?: Card } }
 	navigation: NativeStackNavigationProp<any>
@@ -100,12 +105,42 @@ export default function CardDetails(props?: {
 						</Text>
 						<Text className="text-[28px] text-white font-bold">TL</Text>
 					</View>
-					<Text className="opacity-70 text-white text-xl">
-						Kart Numarası
-					</Text>
-					<Text className="font-bold bottom-1 text-white text-xl">
-						{card.alias}
-					</Text>
+					<TouchableWithoutFeedback
+						onPress={() => {
+							Clipboard.setString(card.alias)
+							ToastAndroid.show(
+								"Kart numarası kopyalandı!",
+								ToastAndroid.SHORT
+							)
+							// vibrate device
+							Vibration.vibrate(100)
+						}}
+						onLongPress={() => {
+							Clipboard.setString(card.alias)
+							ToastAndroid.show(
+								"Kart numarası kopyalandı!",
+								ToastAndroid.SHORT
+							)
+							// vibrate device
+							Vibration.vibrate(100)
+						}}
+					>
+						<View className="flex-row gap-x-1 items-center">
+							<View className="flex-col">
+								<Text className="opacity-70 text-white text-xl">
+									Kart Numarası
+								</Text>
+								<Text className="font-bold bottom-1 text-white text-xl">
+									{card.alias}
+								</Text>
+							</View>
+							<MaterialCommunityIcons
+								style={{ color: styles.white }}
+								size={20}
+								name="content-copy"
+							/>
+						</View>
+					</TouchableWithoutFeedback>
 				</Animated.View>
 				<Animated.View
 					entering={FadeInDown.duration(500)}
@@ -118,8 +153,7 @@ export default function CardDetails(props?: {
 							objectFit: "contain",
 						}}
 						source={{
-							uri:
-								card.getImage()
+							uri: card.getImage(),
 						}}
 					/>
 				</Animated.View>

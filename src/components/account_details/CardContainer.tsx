@@ -1,7 +1,9 @@
-import Card from "../../common/classes/Card" 
+import Card from "../../common/classes/Card"
 import {
 	Text,
+	ToastAndroid,
 	TouchableOpacity,
+	Vibration,
 	View,
 	ViewStyle,
 } from "react-native"
@@ -11,6 +13,7 @@ import Animated, {
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import Application from "../../common/Application"
+import { Clipboard } from "react-native"
 export default function CardContainer(props: {
 	card: Card
 	index: number
@@ -39,12 +42,22 @@ export default function CardContainer(props: {
 				onPress={() => {
 					navigation.push("card_details", { card: p_card })
 				}}
+				onLongPress={() => {
+					Clipboard.setString(p_card.alias)
+					ToastAndroid.show(
+						"Kart numarası kopyalandı!",
+						ToastAndroid.SHORT
+					)
+					// vibrate device
+					Vibration.vibrate(100)
+
+				}}
 			>
-				<View className=" w-28 h-36 -ml-12 mr-6 items-center justify-center">
+				<View className="w-28 h-36 top-1 -ml-12 mr-6 items-center justify-center">
 					<Animated.Image
 						className="h-64 rotate-90"
-						style={{ width:4*40, objectFit: "contain" }}
-						source={{uri:p_card.getImage()}}
+						style={{ width: 4 * 40, objectFit: "contain" }}
+						source={{ uri: p_card.getImage() }}
 					/>
 				</View>
 				{p_card.loads_in_line ? (

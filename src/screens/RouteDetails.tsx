@@ -11,10 +11,12 @@ import useGetRouteDetails from "../common/hooks/useGetRouteDetails"
 import CustomLoadingIndicator from "../components/CustomLoadingIndicator"
 import RouteData from "../common/interfaces/RouteData"
 import { useEffect, useState } from "react"
+import BusData from "../common/interfaces/BusData"
+import BusContainer from "../components/route_details/BusContainer"
 
 export default function RouteDetails(props: {
-	route?: { params: { data_route: BasicRouteInformation } }
-	navigation?: NativeStackNavigationProp<any>
+	route: { params?: { data_route?: BasicRouteInformation } }
+	navigation: NativeStackNavigationProp<any>
 }) {
 	const [direction, setDirection] = useState(1)
 	const { navigation, route } = props
@@ -92,6 +94,23 @@ export default function RouteDetails(props: {
 			<Text>
 				BasicRouteInformation: {JSON.stringify(data_route, null, 4)}
 			</Text>
+			<ScrollView
+				horizontal={true}
+				contentContainerStyle={{
+					padding: 20,
+					columnGap: 20,
+				}}
+				className="w-full"
+			>
+				{finalRouteData.busList.map((bus: BusData) => (
+					<BusContainer
+						route_data={finalRouteData}
+						navigation={navigation}
+						bus={bus}
+						key={`BusContainer-${bus.plateNumber}`}
+					/>
+				))}
+			</ScrollView>
 			<View className="mt-5">
 				<Text>
 					HeadSign: {finalRouteData.headSign} {"\n"}
