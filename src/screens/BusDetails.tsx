@@ -138,7 +138,7 @@ export default function BusDetails(props: {
 				}}
 			>
 				<Text style={{ color: styles.warning, fontSize: 24 }}>
-					{error?.message}
+					{(error as {"message":string})?.message}
 				</Text>
 				<TextInput
 					onChangeText={setToken}
