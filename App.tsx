@@ -19,6 +19,7 @@ LogBox.ignoreLogs([
 const Stack = createNativeStackNavigator()
 import Application from "./src/common/Application"
 import RouteDetails from "./src/screens/RouteDetails"
+import BusDetails from "./src/screens/BusDetails"
 const queryClient = new QueryClient()
 export default function AppEntryComponent() {
 	LogBox.ignoreLogs([
@@ -26,7 +27,7 @@ export default function AppEntryComponent() {
 	])
 	const colorScheme = useColorScheme()
 	console.log(colorScheme)
-	LogBox.ignoreLogs(["Require cycle:"])
+	LogBox.ignoreLogs(["Require cycle:","Clipboard has been extracted from react-native"])
 	
 	Application.__INIT()
 	return (
@@ -58,6 +59,13 @@ export default function AppEntryComponent() {
 							headerShown: true,
 						}}
 						component={RouteDetails}
+					/>
+					<Stack.Screen
+						name="bus_details"
+						options={{
+							headerShown: true,
+						}}
+						component={BusDetails}
 					/>
 				</Stack.Navigator>
 			</NavigationContainer>
