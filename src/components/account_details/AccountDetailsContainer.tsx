@@ -1,9 +1,9 @@
 import { Text, View } from "react-native"
 import User from "../../common/classes/User"
 import Application from "../../common/Application"
-import Divider from "../Divider"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { hideEmail, hidePhone } from "../../util"
+import HorizontalDivider from "../HorizontalDivider"
 
 export default function AccountDetailsContainer(props: { show_credentials?: boolean; user: User }) {
 	const show_credentials = props.show_credentials
@@ -25,7 +25,7 @@ export default function AccountDetailsContainer(props: { show_credentials?: bool
 				{show_credentials ? user?.email : hideEmail(user?.email)}
 			</Text>
 
-			<Divider style={{ marginVertical: 10, borderRadius: 100, opacity: 0.1, backgroundColor: styles.secondary }} />
+			<HorizontalDivider style={{ marginVertical: 10, borderRadius: 100, opacity: 0.1, backgroundColor: styles.secondary }} />
 
 			<Text style={{ color: styles.secondary }} className="opacity-20 text-center font-bold text-[12px]">
 				Created at {Application.CONVERT_TO_DATE(user.accountCreateDate)?.toString() || "unknown"}
