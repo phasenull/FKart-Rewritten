@@ -26,7 +26,7 @@ export async function putBusImages(
 	)
 
 	const url =
-		"https://bus.phasenull.workers.dev/media?busPlateNumber=" + bus.plateNumber
+		`${Application.fkart_endpoints.bus}/media?busPlateNumber=` + bus.plateNumber
 	return axios(url, {
 		method: "PUT",
 		headers: {

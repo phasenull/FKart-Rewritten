@@ -14,10 +14,14 @@ export default abstract class Application {
 	public static version: string = "1.0.0"
 	public static name: string = "FKart"
 	public static readonly base_server = "kentkart.com"
+	public static readonly base_fkart_server = "fkart.project.phasenull.dev"
 	public static readonly endpoints = {
 		"base":`https://${Application.base_server}`,
 		"auth":`https://auth.${Application.base_server}`,
 		"service" : `https://service.${Application.base_server}`
+	}
+	public static readonly fkart_endpoints = {
+		"bus":`https://bus.${Application.base_fkart_server}`,
 	}
 	public static __is_init: boolean = false
 	public static logged_user: User | null = null
@@ -31,6 +35,7 @@ export default abstract class Application {
 		black: "#000000",
 		white: "#ffffff",
 		warning: "#E95555",
+		success: "#4BB543",
 	}
 	public static readonly theme = StyleSheet.create({
 		buttonPrimary: {
@@ -56,6 +61,7 @@ export default abstract class Application {
 			headers: {
 				...config?.headers,
 				...{
+					"Authorization": `Bearer ${Application.logged_user?.access_token}`,
 					"User-Agent": "FKart",
 					"fkart-version": Application.version,
 					"fkart-environment": "dev",
