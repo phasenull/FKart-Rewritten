@@ -65,7 +65,8 @@ GOOGLE_PLACES_DETAILS:'https://maps.googleapis.com/maps/api/place/details/json'
 https://www.ulasimpark.com.tr/img/AkcarayGuzergah.png
 
 https://service.kentkart.com/test/api/transaction/request
-https://service.kentkart.com/rl1/api/info/masterPass/jquery.min.jsetTimeout
+https://service.kentkart.com/rl1/api/info/masterPass/jquery.min.js
+etTimeout
 
 
 
@@ -77,4 +78,4 @@ https://service.kentkart.com/rl1/api/transaction/complete?region=004&lang=tr&aut
 
 
 
-
+0042333801294964
