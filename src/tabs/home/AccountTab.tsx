@@ -27,6 +27,13 @@ import Card from "../../common/classes/Card"
 import API from "../../common/API"
 import CardContainer from "../../components/account_details/CardContainer"
 import NotLoggedInModal from "../../components/auth/NotLoggedInModal"
+import useGetProfileData from "../../common/hooks/useGetProfileData"
+import useGetFavorites from "../../common/hooks/useGetFavorites"
+import CustomLoadingIndicator from "../../components/CustomLoadingIndicator"
+import {
+	Favorite,
+	Favorites,
+} from "../../common/enums/Favorites"
 export default function AccountTab(props?: {
 	route: any
 	navigation: NativeStackNavigationProp<any> | any
@@ -41,103 +48,86 @@ export default function AccountTab(props?: {
 	const { navigation } = props
 
 	const styles = Application.styles
-	const user: User = props.route.params?.user
+	const [user, setUser] = useState<User | null>(
+		props.route.params?.user
+	)
 	if (!user) {
 		return navigation?.navigate("auth")
 	}
-	const [loading, setLoading] = useState(false)
 	// const card = useMemo(async () =>  {return await fetchData()}, [])
-	const [cards, setCards] = useState<Card[] | undefined>(
-		undefined
-	)
-	const [cache, set_cache] = useState<{
-		user_favorite_cards: Card[] | undefined
-	}>({ user_favorite_cards: undefined })
+	const [cards, setCards] = useState<
+		Favorite<"Card">[] | undefined
+	>(undefined)
+	const [virtualCards, setVirtualCards] = useState<
+		Favorite<"QR">[] | undefined
+	>(undefined)
+	const {
+		data: user_profile_data,
+		isLoading,
+		isError,
+		error,
+		refetch,
+		isRefetching,
+	} = useGetProfileData()
 	const [is_show_secret, setIsShowSecret] = useState(false)
-	useEffect(() => {
-		get(true)
-	}, [])
+
 	function get_cards_from_fav_list(
 		fav_list: any,
 		is_from_cache: boolean = false
 	) {
-		const favorite_cards_filtered: [] = fav_list.filter(
-			(p_card: {
-				description: string
-				favId: number
-				favorite: string
-				type: number
-				typeDescription: string
-				alias?: string
-			}) => p_card.type === 2 || p_card.alias
-		)
-		const to_return = Promise.all(
-			favorite_cards_filtered.map(
-				async (p_card: {
-					balance: number
-					description: string
-					favId: number
-					favorite: string
-					type: number
-					typeDescription: string
-				}) => {
-					const card = new Card(p_card.favorite)
-					card.loadFromJSON(p_card)
-					card.alias = p_card.favorite
-					card.description = p_card.description || "*unnamed card*"
-					card.balance = p_card.balance
-					card.setIsFromCache(is_from_cache)
-					if (!is_from_cache) {
-						await card.fetchData()
-					}
-					return card
-				}
+		const favorite_cards_filtered: Favorite<"Card">[] =
+			fav_list.filter(
+				(p_card: Favorite<"Card">) => p_card.type === 2 || p_card.alias
 			)
-		)
-		return to_return
+		return favorite_cards_filtered
 	}
-	async function get(force_catch: boolean = false) {
-		if (!user) {
+
+	const {
+		data: favoritesData,
+		error: favoritesError,
+		refetch: refetchFavorites,
+		isError: isFavoritesError,
+		isRefetching: isFavoritesRefetching,
+		isLoading: isFavoritesLoading,
+	} = useGetFavorites()
+	useEffect(() => {
+		if (!favoritesData?.data) {
 			return
 		}
-		setLoading(true)
-		if (force_catch) {
-			const cached_favorites = await Application.FROM_CACHE(
-				"user_favorite_cards"
-			)
-			if (cached_favorites) {
-				const favorite_cards_filtered =
-					await get_cards_from_fav_list(cached_favorites, true)
-				set_cache({ user_favorite_cards: favorite_cards_filtered })
-			}
-		}
-		const real_data = await API.getFavorites({ user })
-		const favorite_cards_filtered =
-			await get_cards_from_fav_list(real_data)
-		setCards(favorite_cards_filtered)
-		const is_show =
-			(await Application.database.get(
-				"settings.show_credentials"
-			)) === "true"
-				? true
-				: false
-		setIsShowSecret(is_show)
-		setTimeout(() => {
-			setLoading(false)
-		}, 100)
-		await Application.TO_CACHE(
-			"user_favorite_cards",
-			favorite_cards_filtered
+		const favorite_cards_filtered = get_cards_from_fav_list(
+			favoritesData.data.userFavorites
 		)
-		set_cache({ user_favorite_cards: favorite_cards_filtered })
-	}
-	const transition = SharedTransition.custom((values) => {
-		"worklet"
-		return {
-			height: withSpring(values.targetHeight),
-			width: withSpring(values.targetWidth),
+		setCards(favorite_cards_filtered)
+		setVirtualCards(favoritesData.data.virtualCards)
+	}, [favoritesData?.data])
+	useEffect(() => {
+		if (!user_profile_data?.data) {
+			return
 		}
-	})
+		setUser(User.fromJSON(user_profile_data.data.accountInfo))
+	}, [user_profile_data?.data])
+	if (!user) {
+		return (
+			<NotLoggedInModal
+				navigation={navigation}
+				onRequestClose={() => {
+					navigation?.navigate("auth")
+				}}
+				param_visible={true}
+				key={"not_logged_in_modal"}
+			/>
+		)
+	}
+	if (isError || favoritesError) {
+		return (
+			<View>
+				<Text>Something Went Wrong</Text>
+			</View>
+		)
+	}
+	if (isLoading || isFavoritesLoading) {
+		return <CustomLoadingIndicator />
+	}
 	return (
 		<Animated.View
 			entering={FadeInDown.duration(500)}
@@ -150,9 +140,11 @@ export default function AccountTab(props?: {
 					<RefreshControl
 						onRefresh={() => {
 							setCards(undefined)
-							get(true)
+							setVirtualCards(undefined)
+							refetch()
+							refetchFavorites()
 						}}
-						refreshing={loading}
+						refreshing={isLoading || isFavoritesLoading}
 					/>
 				}
 				horizontal={false}
@@ -168,17 +160,25 @@ export default function AccountTab(props?: {
 					show_credentials={is_show_secret}
 					user={user}
 				/>
-				{(cards ? cards : cache.user_favorite_cards || []).map(
-					(p_card, index) => (
-						<CardContainer
-							style={{ marginTop: 5 * 4 }}
-							index={index}
-							key={"card_" + index}
-							card={p_card}
-							navigation={navigation}
-						/>
-					)
-				)}
+				{cards?.map((p_card, index) => (
+					<CardContainer
+						style={{ marginTop: 5 * 4 }}
+						index={index}
+						key={"card_" + index}
+						favorite_data={p_card}
+						navigation={navigation}
+					/>
+				))}
+
+				{virtualCards?.map((p_card, index) => (
+					<CardContainer
+						style={{ marginTop: 5 * 4 }}
+						favorite_data={p_card}
+						navigation={navigation}
+						key={"virtual_card_" + index}
+						index={index}
+					/>
+				))}
 				<TouchableOpacity
 					className="justify-end"
 					onPress={async () => {

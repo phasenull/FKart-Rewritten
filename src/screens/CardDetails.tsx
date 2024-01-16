@@ -6,6 +6,7 @@ import {
 	ScrollView,
 	Text,
 	ToastAndroid,
+	TouchableOpacity,
 	TouchableWithoutFeedback,
 	Vibration,
 	View,
@@ -26,13 +27,25 @@ import Logger from "../common/Logger"
 import { LinearGradient } from "expo-linear-gradient"
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
+import { BasicCardData } from "../common/interfaces/BasicCardData"
+import { Favorite } from "../common/enums/Favorites"
+import CardControlPanel from "../components/card_details/CardControlPanel"
 export default function CardDetails(props?: {
-	route: { params?: { card?: Card } }
+	route: {
+		params?: {
+			card: BasicCardData<"Basic" | "QR">
+			favorite_data: Favorite<"Card" | "QR">
+			is_virtual?: boolean
+		}
+	}
 	navigation: NativeStackNavigationProp<any>
 }) {
 	const styles = Application.styles
 	const [loading, setLoading] = useState(false)
-	if (!props?.route?.params?.card) {
+	const favorite_data = props?.route.params?.favorite_data
+	const card = props?.route.params?.card
+	const is_virtual = props?.route.params?.is_virtual
+	if (!card || !favorite_data) {
 		return (
 			<View className="flex-1 items-center justify-center">
 				<Text style={{ color: styles.warning, fontSize: 24 }}>
@@ -45,7 +58,9 @@ export default function CardDetails(props?: {
 	useEffect(() => {
 		navigation.setOptions({
 			headerTitle: `${
-				props.route?.params?.card?.description || "unnamed card"
+				favorite_data.description ||
+				(is_virtual && "QR Kart") ||
+				"unnamed card"
 			}`,
 			headerTintColor: styles.white,
 			headerTitleAlign: "left",
@@ -54,22 +69,18 @@ export default function CardDetails(props?: {
 			},
 		})
 	}, [])
-	const [card, setCard] = useState<Card>(
-		props.route.params.card
-	)
 	async function get() {
 		if (!card) {
 			return
 		}
-		setLoading(true)
-		const new_card = new Card(card.alias)
-		await new_card.fetchData()
-		setCard(new_card)
-		Logger.info(
-			"CardDetails.get",
-			`Fetched new card data for ${card.alias}}`
-		)
-		setLoading(false)
+		// setLoading(true)
+		// const new_card = new Card(card.alias)
+		// await new_card.fetchData()
+		// Logger.info(
+		// 	"CardDetails.get",
+		// 	`Fetched new card data for ${card.alias}}`
+		// )
+		// setLoading(false)
 	}
 
 	return (
@@ -105,9 +116,9 @@ export default function CardDetails(props?: {
 						</Text>
 						<Text className="text-[28px] text-white font-bold">TL</Text>
 					</View>
-					<TouchableWithoutFeedback
+					<TouchableOpacity
 						onPress={() => {
-							Clipboard.setString(card.alias)
+							Clipboard.setString(card.aliasNo)
 							ToastAndroid.show(
 								"Kart numarası kopyalandı!",
 								ToastAndroid.SHORT
@@ -116,7 +127,7 @@ export default function CardDetails(props?: {
 							Vibration.vibrate(100)
 						}}
 						onLongPress={() => {
-							Clipboard.setString(card.alias)
+							Clipboard.setString(card.aliasNo)
 							ToastAndroid.show(
 								"Kart numarası kopyalandı!",
 								ToastAndroid.SHORT
@@ -124,36 +135,35 @@ export default function CardDetails(props?: {
 							// vibrate device
 							Vibration.vibrate(100)
 						}}
+						className="flex-row w-full gap-x-1 items-center"
 					>
-						<View className="flex-row gap-x-1 items-center">
-							<View className="flex-col">
-								<Text className="opacity-70 text-white text-xl">
-									Kart Numarası
-								</Text>
-								<Text className="font-bold bottom-1 text-white text-xl">
-									{card.alias}
-								</Text>
-							</View>
-							<MaterialCommunityIcons
-								style={{ color: styles.white }}
-								size={20}
-								name="content-copy"
-							/>
+						<View className="flex-col">
+							<Text className="opacity-70 text-white text-xl">
+								Kart Numarası
+							</Text>
+							<Text className="font-bold bottom-1 text-white text-xl">
+								{card.aliasNo}
+							</Text>
 						</View>
-					</TouchableWithoutFeedback>
+						<MaterialCommunityIcons
+							style={{ color: styles.white }}
+							size={20}
+							name="content-copy"
+						/>
+					</TouchableOpacity>
 				</Animated.View>
 				<Animated.View
 					entering={FadeInDown.duration(500)}
 					className="flex-1 mr-24"
 				>
-					<Animated.Image
-						className={"relative w-64 h-64 -bottom-12 "}
+					<Image
+						className={"relative w-64 h-64 left-4 -bottom-8 "}
 						style={{
 							transform: [{ rotateZ: "90deg" }],
-							objectFit: "contain",
+							objectFit: "contain"
 						}}
 						source={{
-							uri: card.getImage(),
+							uri: Card.getImageFromType(is_virtual ? "QR" : "00"),
 						}}
 					/>
 				</Animated.View>
@@ -171,11 +181,12 @@ export default function CardDetails(props?: {
 					Tip: "{card.card_type || "undefined"}"
 				</Text>
 			</View> */}
+			<CardControlPanel makeRefresh={()=>{}} card={card} favorite_data={favorite_data} navigation={navigation} is_virtual={is_virtual} />
 			<Text
-				className="p-4 mb-10"
+				className="p-4 mb-10 w-80"
 				style={{
 					backgroundColor: styles.dark,
-					borderRadius: 10,
+					borderRadius: 16,
 					elevation: 10,
 					color: styles.secondaryDark,
 				}}
