@@ -151,15 +151,15 @@ export default abstract class API {
 		}
 		return response
 	}
-	public static async getFavorites({ user }: { user: User }) {
-		const url = `${Application.endpoints.service}/rl1/api/v4.0/favorite?authType=4&region=${Application.region}`
-		const result = await Application.makeRequest(url, {
-			method: "GET",
-			headers: {
-				Authorization: `Bearer ${user.access_token}`,
-			},
-		})
+	// public static async getFavorites({ user }: { user: User }) {
+	// 	const url = `${Application.endpoints.service}/rl1/api/v4.0/favorite?authType=4&region=${Application.region}`
+	// 	const result = await Application.makeRequest(url, {
+	// 		method: "GET",
+	// 		headers: {
+	// 			Authorization: `Bearer ${user.access_token}`,
+	// 		},
+	// 	})
 
-		return API.handleDefaultResult(result)?.userFavorites
-	}
+	// 	return API.handleDefaultResult(result)?.userFavorites
+	// }
 }

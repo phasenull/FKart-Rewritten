@@ -2,16 +2,18 @@ import { AxiosResponse } from "axios"
 import Application from "../Application"
 import User from "../classes/User"
 import { useQueries, useQuery } from "react-query"
+import { Account } from "../enums/Account"
 
-async function getProfile({ user }: { user: User }) {
+async function getProfile() {
+	const user = Application.logged_user
+	if (!user) {
+		throw new Error("User not logged in.")
+	}
 	const url = `${Application.endpoints.service}/rl1/api/account?region=${Application.region}&authType=4`
 	const request: Promise<
 		AxiosResponse<{
-			data: {
-				result: { code: number; message?: string }
-				accountInfo: any
-			}
-			status: number
+			result: { code: number; message?: string }
+			accountInfo: Account
 		}>
 	> = Application.makeRequest(url, {
 		method: "GET",
@@ -22,27 +24,5 @@ async function getProfile({ user }: { user: User }) {
 	return request
 }
 export default function useGetProfileData() {
-	const user = Application.logged_user
-	if (!user) {
-		throw new Error("User not logged in.")
-	}
-	const {
-		data,
-		error,
-		isLoading,
-		refetch,
-		isError,
-		isRefetching,
-	} = useQuery(
-		["getProfile", user],
-		() => getProfile({ user })
-	)
-	return {
-		data,
-		error,
-		isLoading,
-		isError,
-		refetch,
-		isRefetching,
-	}
+	return useQuery(["useGetProfileData"],getProfile)
 }

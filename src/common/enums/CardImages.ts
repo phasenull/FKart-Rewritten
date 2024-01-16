@@ -8,5 +8,6 @@ enum CardImages {
 	"age60" = DYNAMIC_CONTENT_URL + "/assets/media/images/cards/age60.png",
 	"age65" =  DYNAMIC_CONTENT_URL + "/assets/media/images/cards/age65.png",
 	"undefined" = DYNAMIC_CONTENT_URL + "/assets/media/images/cards/undefined.png",
+	"QR" = DYNAMIC_CONTENT_URL + "/assets/media/images/cards/qr.png",
 }
 export default CardImages
