@@ -12,7 +12,7 @@ export interface Favorites {
  */
 export interface Favorite<T extends "QR" | "Card" | "Stop" | "Route"> {
 	description: T extends "QR" ? never : string
-	favId: T extends "QR" ? never : number
+	favId: T extends "QR" ? never : string
 	alias: T extends "QR" ? string : never
 	favorite: T extends "QR" ? never : string,
 	type: T extends "QR" ? "33" : T extends "Card" ? 2 : T extends "Stop" ? 1 : 3

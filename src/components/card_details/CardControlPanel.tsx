@@ -6,7 +6,7 @@ import { Text, TouchableOpacity, View } from "react-native"
 import { useEffect, useState } from "react"
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import { useFavoriteCard } from "../../common/hooks/useRenameCard"
+import { useAddFavoriteCard,useRemoveFavoriteCard } from "../../common/hooks/useRenameCard"
 import RenameModal from "./RenameModal"
 import Logger from "../../common/Logger"
 export default function CardControlPanel(props: {
@@ -32,12 +32,19 @@ export default function CardControlPanel(props: {
 		isRefetchError: is_request_refetch_error,
 		isLoading: request_loading,
 		isRefetching: request_refetching,
-		refetch: request_refetch,
-	} = useFavoriteCard({
+		refetch: refetchAddCard,
+	} = useAddFavoriteCard({
 		card_or_fav_id: card.aliasNo,
 		name: card_description,
-		type: favorite ? "remove" : "add",
 	})
+	const {refetch: refetchRemoveCard} = useRemoveFavoriteCard({
+		card_or_fav_id: favorite_data.favId
+	})
+	useEffect(()=>{
+		if (["",favorite_data.description].includes(card_description)) {return}
+		Logger.log("CardControlPanel","renameing card to "+card_description)
+		refetchAddCard()
+	},[card_description])
 	if (!card || !favorite_data) {
 		return (
 			<View className="flex-1 items-center justify-center">
@@ -45,25 +52,21 @@ export default function CardControlPanel(props: {
 			</View>
 		)
 	}
-	useEffect(()=>{
-		if (["",favorite_data.description].includes(card_description)) {return}
-		Logger.log("CardControlPanel","renameing card to "+card_description)
-		request_refetch()
-	},[card_description])
 	return (
-		<View className="w-80 flex-col h-max px-4 pb-4 rounded-[16px] gap-y-4 my-5" style={{ elevation: 10, backgroundColor: styles.dark }}>
+		<View className="w-80 flex-col h-max px-4 pb-4 rounded-[16px] gap-y-4" style={{ elevation: 10, backgroundColor: styles.dark }}>
 			<RenameModal
 				visible={show_rename_modal}
 				onDismiss={() => {
 					setShowRenameModal(false)
 				}}
+				defaultValue={favorite_data.description}
 				onSave={(text) => {
 					setCardDescription(text)
 					setShowRenameModal(false)
 				}}
 			/>
-			<Text className="text-black">
-				{(request_error as any)?.message}
+			<Text style={{color:Application.styles.primaryDark,fontSize:24,fontWeight:"600"}}>
+				Quick Actions
 			</Text>
 			<View className="flex-row gap-x-4">
 				<TouchableOpacity className="flex-1 rounded-xl flex-row justify-center items-center h-12" style={{ backgroundColor: styles.primaryDark }}>
@@ -115,7 +118,11 @@ export default function CardControlPanel(props: {
 				</TouchableOpacity>
 				<TouchableOpacity
 					onPress={() => {
-						request_refetch()
+						if (favorite) {
+							refetchRemoveCard()
+						} else {
+							refetchAddCard()
+						}
 						setFavorite(!favorite)
 					}}
 					className="flex-1 rounded-xl flex-row justify-center items-center h-12"
@@ -129,9 +136,9 @@ export default function CardControlPanel(props: {
 							fontSize: 15,
 						}}
 					>
-						{favorite ? "Remove" : "Add"}
+						{favorite ? "Remove" : "Favorite"}
 					</Text>
-					<MaterialCommunityIcons name="delete" size={24} color={styles.secondary} />
+					<MaterialCommunityIcons name={favorite ? "delete" : "star"} size={24} color={styles.secondary} />
 				</TouchableOpacity>
 			</View>
 		</View>

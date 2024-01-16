@@ -80,29 +80,26 @@ export default function CardContainer(props: { favorite_data: Favorite<"Card" | 
 				) : null}
 				<View className="flex-1 flex-row items-center justify-between">
 					<View className="flex-col flex-2 w-full">
-						<Text style={{ color: styles.primary }} className="flex-1 font-bold w-full text-xl bottom-2 text-left">
-							{favorite_data.description || card?.virtualCard && "QR Kart" || "Adsız Kart"}
+						<Text numberOfLines={1} style={{ color: styles.primary }} className="flex-1 text-2xl font-bold w-full bottom-2 text-left">
+							{favorite_data.description || (card?.virtualCard && "QR Kart") || "Adsız Kart"}
 						</Text>
 						<Text
 							style={{
 								color: styles.white,
 								backgroundColor: styles.secondary,
+								width: 28 * 4,
 							}}
-							className="rounded-full w-18 px-4 bottom-3 absolute justify-center font-bold text-[12px] text-center"
+							className="rounded-full mt-3 px-4 bottom-5 relative justify-center font-bold text-[12px] text-center"
 						>
 							{favorite_data.favorite || favorite_data.alias || "key_error (favorite)"}
 						</Text>
-						{isRefetching && card ? (
+						{card ? (
 							<View className="flex-1 flex-row">
-								<Text style={{ color: styles.secondary }} className="opacity-50 font-bold text-2xl text-left">
+								<Text style={{ color: styles.secondary, fontSize: 34, textAlignVertical: "bottom" }} className="opacity-50 font-bold text-2xl text-left">
 									{card.balance || "key_error (balance)"} TL
 								</Text>
-									<CustomLoadingIndicator color={Application.styles.secondary} style={{ marginLeft: 10 }} size={15} />
+								{isLoading || isRefetching ? <CustomLoadingIndicator color={Application.styles.secondary} style={{ marginLeft: 10 }} size={15} /> : null}
 							</View>
-						) : card ? (
-							<Text style={{ color: styles.secondary }} className="flex-1 opacity-50 font-bold text-2xl text-left">
-								{card.balance || "key_error (balance)"} TL
-							</Text>
 						) : (
 							<CustomLoadingIndicator color={Application.styles.secondary} size={20} />
 						)}

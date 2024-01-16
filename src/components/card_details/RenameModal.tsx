@@ -2,9 +2,9 @@ import { useState } from "react"
 import Application from "../../common/Application"
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native"
 
-export default function RenameModal(props: { visible?: boolean; onDismiss: () => void; onSave?: (text: string) => void }) {
+export default function RenameModal(props: { visible?: boolean; onDismiss: () => void; onSave?: (text: string) => void; defaultValue?:string }) {
 	const styles = Application.styles
-	const [input, setInput] = useState("")
+	const [input, setInput] = useState(props.defaultValue || "")
 	const { onSave, onDismiss } = props
 	if (!props.visible) {
 		return null
@@ -17,6 +17,7 @@ export default function RenameModal(props: { visible?: boolean; onDismiss: () =>
 				</Text>
 				<TextInput
 					onChangeText={setInput}
+					defaultValue={props.defaultValue}
 					className="w-full h-16 my-4 px-4"
 					placeholder="My Favorite Card"
 					style={{ borderColor: styles.secondary, borderWidth: 2, borderRadius: 8, color: styles.secondary, fontSize: 18, fontWeight: "500" }}
