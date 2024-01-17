@@ -12,7 +12,7 @@ export default function AccountDetailsContainer(props: { show_credentials?: bool
 	return (
 		<View
 			className="py-5 mt-5 px-10 w-80 rounded-[16px] justify-center"
-			style={{ backgroundColor: styles.white, elevation: 10, shadowOffset: { height: 4, width: 4 } }}
+			style={{ backgroundColor: styles.white, elevation: 2, shadowOffset: { height: 4, width: 4 } }}
 		>
 			<Text style={{ color: styles.secondary }} className="opacity-50 font-bold text-2xl">
 				{user.name} {user.surname}

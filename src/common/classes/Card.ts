@@ -34,7 +34,7 @@ export default abstract class Card {
 		}
 		const data_on_db = await Application.database.get("card__" + card_alias)
 		if (data_on_db) {
-			return CardTypes[data_on_db.card_type as keyof typeof CardTypes] || CardTypes.undefined
+			return CardTypes[data_on_db as keyof typeof CardTypes] || CardTypes.undefined
 		}
 		return CardTypes.undefined
 	}

@@ -16,6 +16,7 @@ import CardControlPanel from "../components/card_details/CardControlPanel"
 import { useGetSyncCode } from "../common/hooks/useGetSyncCode"
 import { getQRCode } from "../common/hooks/useGetQRCode"
 import CustomLoadingIndicator from "../components/CustomLoadingIndicator"
+import SelectCardTypeModal from "../components/card_details/SelectCardTypeModal"
 export default function CardDetails(props: {
 	route: {
 		params: {
@@ -35,9 +36,12 @@ export default function CardDetails(props: {
 	const [cardToken, setCardToken] = useState<undefined | { expireDate: string; token: string; aliasNo: string }>(undefined)
 	const { navigation } = props
 	const [card_image, setCardImage] = useState(CardImages.undefined)
+	const [card_type, setCardType] = useState(CardTypes.undefined)
+	const [showEditCardTypeModal, setShowEditCardTypeModal] = useState(false)
 	useEffect(() => {
 		async function get() {
-			setCardImage(await Card.getImageFromCard({...card, ...favorite_data}))
+			setCardImage(await Card.getImageFromCard({ ...card, ...favorite_data }))
+			setCardType(await Card.getTypeFromCard({ ...card, ...favorite_data }))
 		}
 		get()
 		navigation.setOptions({
@@ -48,7 +52,7 @@ export default function CardDetails(props: {
 				fontWeight: "bold",
 			},
 		})
-	}, [])
+	}, [card_type])
 	const linear = useSharedValue(100)
 	const animatedChanged = useAnimatedStyle(() => ({
 		width: `${linear.value}%`,
@@ -57,7 +61,7 @@ export default function CardDetails(props: {
 		if (syncData?.data?.cardInfo?.token) {
 			setCardToken(syncData?.data.cardInfo)
 			linear.value = 100
-			linear.value = withTiming(0, { duration: 5000,easing:Easing.linear })
+			linear.value = withTiming(0, { duration: 5000, easing: Easing.linear })
 		}
 	}, [syncData?.data])
 	if (!card || !favorite_data) {
@@ -75,6 +79,16 @@ export default function CardDetails(props: {
 			className="flex-col"
 			contentContainerStyle={{ alignItems: "center" }}
 		>
+			<SelectCardTypeModal
+				visible={showEditCardTypeModal}
+				onDismiss={() => setShowEditCardTypeModal(false)}
+				defaultValue={card_type}
+				onSelect={async (value) => {
+					setShowEditCardTypeModal(false)
+					setCardType(value)
+					await Application.database.set("card__" + card.aliasNo, value)
+				}}
+			/>
 			<LinearGradient colors={[styles.primary, styles.white]} end={{ x: 1.25, y: 1 }} className="flex-row h-56 w-full mb-20" style={{ backgroundColor: styles.primary }}>
 				<Animated.View entering={FadeInLeft.duration(500)} className="flex-col flex-1 ml-5 self-end mb-4 ">
 					<Text className="opacity-70 top-3 text-white text-xl">Bakiye</Text>
@@ -105,16 +119,19 @@ export default function CardDetails(props: {
 					</TouchableOpacity>
 				</Animated.View>
 				<Animated.View entering={FadeInDown.duration(500)} className="flex-1 mr-24">
-					<Image
-						className={"relative w-64 h-64 left-4 -bottom-8 "}
-						style={{
-							transform: [{ rotateZ: "90deg" }],
-							objectFit: "contain",
-						}}
-						source={{
-							uri: card_image,
-						}}
-					/>
+					<TouchableOpacity disabled={card_type === "QR"} onPress={() => setShowEditCardTypeModal(true)} className="relative w-40 h-64 left-16 -bottom-8 ">
+						<Image
+							className={"w-64 h-64 right-14"}
+							style={{
+								transform: [{ rotateZ: "90deg" }],
+								objectFit: "contain",
+							}}
+							source={{
+								uri: card_image,
+							}}
+						/>
+						{card_type === "QR" ? null : <MaterialCommunityIcons style={{ bottom: 16 * 4,right:4*4,alignSelf:"flex-end" }} color={styles.dark} name="image-edit" size={36} />}
+					</TouchableOpacity>
 				</Animated.View>
 			</LinearGradient>
 			{/* <View>
@@ -131,6 +148,31 @@ export default function CardDetails(props: {
 				</Text>
 			</View> */}
 			<CardControlPanel makeRefresh={() => {}} card={card} favorite_data={favorite_data} navigation={navigation} is_virtual={is_virtual} />
+			
+			{card.virtualCard === "1" && cardToken ? (
+				<View
+					className="flex-col my-4 w-80 overflow-hidden"
+					style={{
+						backgroundColor: styles.white,
+						borderRadius: 16,
+						elevation: 2,
+					}}
+				>
+					<Text style={{color:styles.secondary,fontSize:32,fontWeight:"600"}} className="flex-1 my-2 text-center">
+						Ücret: {card.paxDescription}
+					</Text>
+					<Image
+						className="self-center"
+						style={{
+							height: 64 * 4,
+							width: 64 * 4,
+							marginBottom: 4 * 4,
+						}}
+						source={{ uri: getQRCode(cardToken.token) }}
+					/>
+					<Animated.View style={[animatedChanged, { backgroundColor: styles.primary, height: 16 }]} />
+				</View>
+			) : null}
 			<Text
 				className="p-4 my-10 w-80"
 				style={{
@@ -143,27 +185,6 @@ export default function CardDetails(props: {
 				Card Data: {JSON.stringify({ ...favorite_data, ...card }, null, 4)}
 				{/* Loads in line: {JSON.stringify(card.loads_in_line, null, 4)} */}
 			</Text>
-			{card.virtualCard === "1" && cardToken ? (
-				<View
-					className="flex-col pt-4 my-10 w-80 overflow-hidden"
-					style={{
-						backgroundColor: styles.dark,
-						borderRadius: 16,
-						elevation: 10,
-					}}
-				>
-					<Image
-						className="self-center"
-						style={{
-							height: 64 * 4,
-							width: 64 * 4,
-							marginBottom: 4 * 4,
-						}}
-						source={{ uri: getQRCode(cardToken.token) }}
-					/>
-					<Animated.View style={[animatedChanged,{ backgroundColor: styles.primary, height: 16 }]} />
-				</View>
-			) : null}
 		</Animated.ScrollView>
 	)
 }

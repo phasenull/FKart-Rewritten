@@ -8,6 +8,7 @@ import {
 } from "react-native"
 import Application from "../../common/Application"
 import User from "../../common/classes/User"
+import { hidePhone } from "../../util"
 
 export default function MainTab(props: {
 	route: any
@@ -33,14 +34,14 @@ export default function MainTab(props: {
 				)}@${user?.email?.split("@")[1]}`}
 			</Text>
 			<Text className="mx-auto mt-4 font-bold opacity-50 text-[24px]">
-				Your phone is {user?.phone}
+				Your phone is {hidePhone(user?.phone)}
 			</Text>
 			<Text className="mx-auto mt-4 font-bold opacity-50 text-[24px]">
 				Your id is {user?.accountId}
 			</Text>
 
 			<TouchableOpacity
-				className="w-48 h-16 justify-center"
+				className="w-48 h-16 justify-center self-center"
 				onPress={async () => {
 					await Application.logout()
 					navigation.navigate("auth")
