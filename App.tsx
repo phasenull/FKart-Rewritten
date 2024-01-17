@@ -44,8 +44,10 @@ export default function AppEntryComponent() {
 					<Stack.Screen name="auth" component={AuthPage} />
 					<Stack.Screen
 						name="card_details"
+						headerTitle=""
 						options={{
 							headerShown: true,
+							headerTitle:"",
 							headerTransparent: true,
 							headerTitleAlign: "center",
 							headerTitleStyle: { color: "white" },
@@ -55,6 +57,7 @@ export default function AppEntryComponent() {
 					/>
 					<Stack.Screen
 						name="route_details"
+						headerTitle=""
 						options={{
 							headerShown: true,
 						}}
@@ -65,6 +68,7 @@ export default function AppEntryComponent() {
 						options={{
 							headerShown: true,
 						}}
+						headerTitle=""
 						component={BusDetails}
 					/>
 				</Stack.Navigator>
