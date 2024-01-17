@@ -4,10 +4,7 @@ import Database from "./classes/Database"
 import Logger from "./Logger"
 import LoginTypes from "./enums/LoginTypes"
 import API from "./API"
-import axios, {
-	AxiosRequestConfig,
-	AxiosResponse,
-} from "axios"
+import axios, { AxiosRequestConfig, AxiosResponse } from "axios"
 
 export default abstract class Application {
 	public static region: string = "004"
@@ -16,12 +13,12 @@ export default abstract class Application {
 	public static readonly base_server = "kentkart.com"
 	public static readonly base_fkart_server = "fkart.project.phasenull.dev"
 	public static readonly endpoints = {
-		"base":`https://${Application.base_server}`,
-		"auth":`https://auth.${Application.base_server}`,
-		"service" : `https://service.${Application.base_server}`
+		base: `https://${Application.base_server}`,
+		auth: `https://auth.${Application.base_server}`,
+		service: `https://service.${Application.base_server}`,
 	}
 	public static readonly fkart_endpoints = {
-		"bus":`https://bus.${Application.base_fkart_server}`,
+		bus: `https://bus.${Application.base_fkart_server}`,
 	}
 	public static __is_init: boolean = false
 	public static logged_user: User | null = null
@@ -53,15 +50,18 @@ export default abstract class Application {
 			borderRadius: 10,
 		},
 	})
-	public static makeRequest(
-		input: string | URL | Request,
-		config?: AxiosRequestConfig | undefined
-	): Promise<AxiosResponse<any, any>> {
+	public static makeRequest(input: string | URL | Request, config?: AxiosRequestConfig | undefined): Promise<AxiosResponse<any, any>> {
+		// get url host
+		const whitelist = [...Object.values(this.endpoints)]
+		const check = whitelist.map((v) => input.toString().includes(v)).includes(true)
+		if (!check) {
+			throw new Error(`Url ${input} is not allowed!`)
+		}
 		return axios(input as string, {
 			headers: {
 				...config?.headers,
 				...{
-					"Authorization": `Bearer ${Application.logged_user?.access_token}`,
+					Authorization: `Bearer ${Application.logged_user?.access_token}`,
 					"User-Agent": "FKart",
 					"fkart-version": Application.version,
 					"fkart-environment": "dev",
@@ -73,15 +73,7 @@ export default abstract class Application {
 		})
 	}
 
-	public static async login({
-		auth_type,
-		auth_value,
-		password,
-	}: {
-		auth_type: LoginTypes
-		auth_value: string
-		password: string
-	}) {
+	public static async login({ auth_type, auth_value, password }: { auth_type: LoginTypes; auth_value: string; password: string }) {
 		let user = new User()
 		await user.login({ auth_type, auth_value, password })
 		if (!user.access_token) {
@@ -91,19 +83,11 @@ export default abstract class Application {
 		await this.database.set("refresh_token", user.refresh_token)
 		await this.database.set("access_token", user.access_token)
 		await this.database.set("user", user.toJSON())
-		Logger.info(
-			"Application.login",
-			"User logged in!",
-			user.toJSON()
-		)
+		Logger.info("Application.login", "User logged in!", user.toJSON())
 		return user
 	}
 
-	public static async loginWithRefreshToken({
-		refresh_token,
-	}: {
-		refresh_token: string
-	}) {
+	public static async loginWithRefreshToken({ refresh_token }: { refresh_token: string }) {
 		const user = new User()
 		user.refresh_token = refresh_token
 		return user
@@ -121,24 +105,16 @@ export default abstract class Application {
 			return
 		}
 		const user_data = await this.database.get("user")
-		const refresh_token = await this.database.get(
-			"refresh_token"
-		)
+		const refresh_token = await this.database.get("refresh_token")
 		const access_token = await this.database.get("access_token")
 		let user: User | null = null
 		if (access_token) {
 			user = await User.fromAccessToken(access_token)
 			user.refresh_token = refresh_token
-			Logger.info(
-				"Application.__INIT.access_token",
-				"User logged in!"
-			)
+			Logger.info("Application.__INIT.access_token", "User logged in!")
 		} else if (refresh_token) {
 			user = await User.fromRefreshToken(refresh_token)
-			Logger.info(
-				"Application.__INIT.refresh_token",
-				"User logged in!"
-			)
+			Logger.info("Application.__INIT.refresh_token", "User logged in!")
 		}
 
 		if (!user) {
@@ -157,9 +133,7 @@ export default abstract class Application {
 			return false
 		}
 
-		const new_user = await User.fromRefreshToken(
-			user.refresh_token
-		)
+		const new_user = await User.fromRefreshToken(user.refresh_token)
 		if (!new_user) {
 			return false
 			this.logged_user = null
