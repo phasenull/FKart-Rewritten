@@ -4,10 +4,10 @@ import Application from "../Application"
 import API from "../API"
 import { AxiosResponse } from "axios"
 import { Favorites } from "../enums/Favorites"
-import { BasicKentKartResponse } from "../enums/BasicKentKartResponse"
+import { BaseKentKartResponse } from "../enums/BasicKentKartResponse"
 
 async function getFavorites(): Promise<
-	AxiosResponse<Favorites & BasicKentKartResponse>
+	AxiosResponse<Favorites & BaseKentKartResponse>
 > {
 	const user = Application.logged_user
 	const url = `${Application.endpoints.service}/rl1/api/v4.0/favorite?authType=4&region=${Application.region}`

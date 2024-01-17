@@ -9,6 +9,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { useAddFavoriteCard,useRemoveFavoriteCard } from "../../common/hooks/useRenameCard"
 import InputModal from "../InputModal"
 import Logger from "../../common/Logger"
+import useGetFavorites from "../../common/hooks/useGetFavorites"
 export default function CardControlPanel(props: {
 	card: BasicCardData<"Basic" | "QR">
 	favorite_data: Favorite<"Card" | "QR">
@@ -19,12 +20,13 @@ export default function CardControlPanel(props: {
 	const styles = Application.styles
 	const [loading, setLoading] = useState(false)
 	const favorite_data = props?.favorite_data
-	const card = props?.card
+	const [card,setCard] =  useState(props?.card)
 	const is_virtual = props?.is_virtual
 	const { navigation } = props
 	const [favorite, setFavorite] = useState(favorite_data ? true : false)
 	const [card_description, setCardDescription] = useState(favorite_data.description)
 	const [show_rename_modal, setShowRenameModal] = useState(false)
+	const {data:favoriteData,refetch:refetchFavoriteData} = useGetFavorites()
 	const {
 		data: request_result,
 		error: request_error,
@@ -37,12 +39,29 @@ export default function CardControlPanel(props: {
 		card_or_fav_id: card.aliasNo,
 		name: card_description,
 	})
-	const {refetch: refetchRemoveCard} = useRemoveFavoriteCard({
-		card_or_fav_id: favorite_data.favId
+	const {refetch: refetchRemoveCard, data:dataRemoveCard} = useRemoveFavoriteCard({
+		card_or_fav_id: card.aliasNo
 	})
 	useEffect(()=>{
-		if (["",favorite_data.description].includes(card_description)) {return}
+		// console.log("favoriteData",favoriteData?.data?.userFavorites,card.aliasNo)
+		if (favoriteData?.data?.userFavorites?.find((p_card)=>p_card.favorite===card.aliasNo)) {
+			setFavorite(true)
+		} else {
+			setFavorite(false)
+		}
+	},[favoriteData?.data])
+	useEffect(()=>{
+		navigation.setOptions({
+			headerTitle: (is_virtual && "QR Kart") || favorite_data.description || "unnamed card",
+		})
+		refetchFavoriteData()
+	},[])
+	useEffect(()=>{
+		if (["",undefined].includes(card_description)) {return}
 		Logger.log("CardControlPanel","renameing card to "+card_description)
+		navigation.setOptions({
+			headerTitle: (is_virtual && "QR Kart") || card_description || "unnamed card",
+		})
 		refetchAddCard()
 	},[card_description])
 	if (!card || !favorite_data) {
@@ -53,16 +72,17 @@ export default function CardControlPanel(props: {
 		)
 	}
 	return (
-		<View className="w-80 flex-col h-max px-4 pb-4 rounded-[16px] gap-y-4" style={{ elevation: 10, backgroundColor: styles.dark }}>
+		<View className="w-80 flex-col h-max px-4 pb-4 rounded-[16px] gap-y-4" style={{ elevation: 2, backgroundColor: styles.white }}>
 			<InputModal
 				visible={show_rename_modal}
 				onDismiss={() => {
 					setShowRenameModal(false)
 				}}
-				defaultValue={favorite_data.description}
+				defaultValue={card_description}
 				onSave={(text) => {
 					setCardDescription(text)
 					setShowRenameModal(false)
+					setFavorite(true)
 				}}
 			/>
 			<Text style={{color:Application.styles.primaryDark,fontSize:24,fontWeight:"600"}}>
@@ -120,13 +140,13 @@ export default function CardControlPanel(props: {
 					onPress={() => {
 						if (favorite) {
 							refetchRemoveCard()
+							setFavorite(false)
 						} else {
-							refetchAddCard()
+							setShowRenameModal(true)
 						}
-						setFavorite(!favorite)
 					}}
 					className="flex-1 rounded-xl flex-row justify-center items-center h-12"
-					style={{ backgroundColor: favorite ? styles.warning : styles.white }}
+					style={{ backgroundColor: favorite ? styles.warning : styles.primaryDark }}
 				>
 					<Text
 						className="text-center"

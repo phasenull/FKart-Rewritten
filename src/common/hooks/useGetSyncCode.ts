@@ -1,9 +1,9 @@
 import { useQuery } from "react-query";
 import Application from "../Application";
 import { AxiosResponse } from "axios";
-import { BasicKentKartResponse } from "../enums/BasicKentKartResponse";
+import { BaseKentKartResponse } from "../enums/BasicKentKartResponse";
 
-async function getSyncCode(card_alias:string | undefined) : Promise<AxiosResponse<BasicKentKartResponse & {cardInfo:{
+async function getSyncCode(card_alias:string | undefined) : Promise<AxiosResponse<BaseKentKartResponse & {cardInfo:{
 	expireDate:string,
 	token:string,
 	aliasNo:string,

@@ -19,6 +19,8 @@ export default function SegmentedButtons(props: {
 		value?: any
 	}) => void
 	defaultKey?: string
+	onDismiss?: () => void
+	paddingX?: number
 }) {
 	const { values, onSelect, defaultKey: defaultKey } = props
 	const [selected, setSelected] = useState(
@@ -45,8 +47,9 @@ export default function SegmentedButtons(props: {
 									selected.value === item.value
 										? Application.styles.primary
 										: Application.styles.white,
+								paddingHorizontal: props.paddingX || 16,
 							}}
-							className="px-4 py-2 items-center justify-center"
+							className="py-2 items-center justify-center"
 							onPress={() => {
 								setSelected(item)
 								selected.onPress?.()

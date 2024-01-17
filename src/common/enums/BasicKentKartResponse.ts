@@ -1,4 +1,4 @@
-export interface BasicKentKartResponse {
+export interface BaseKentKartResponse {
 	result: {
 		authType: "4" | "3"
 		cmd: string
