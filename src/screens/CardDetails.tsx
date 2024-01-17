@@ -1,26 +1,9 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import {
-	Clipboard,
-	Image,
-	RefreshControl,
-	ScrollView,
-	Text,
-	ToastAndroid,
-	TouchableOpacity,
-	TouchableWithoutFeedback,
-	Vibration,
-	View,
-} from "react-native"
+import { Clipboard, Image, RefreshControl, ScrollView, Text, ToastAndroid, TouchableOpacity, TouchableWithoutFeedback, Vibration, View } from "react-native"
 import Application from "../common/Application"
 import CardImages from "../common/enums/CardImages"
 import CardTypes from "../common/enums/CardTypes"
-import Animated, {
-	FadeInDown,
-	FadeInLeft,
-	FadeOutUp,
-	FlipInEasyX,
-	FlipInEasyY,
-} from "react-native-reanimated"
+import Animated, { Easing, FadeInDown, FadeInLeft, FadeOutUp, FlipInEasyX, FlipInEasyY, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated"
 import Card from "../common/classes/Card"
 import React, { useEffect, useState } from "react"
 import Logger from "../common/Logger"
@@ -30,9 +13,12 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { BasicCardData } from "../common/interfaces/BasicCardData"
 import { Favorite } from "../common/enums/Favorites"
 import CardControlPanel from "../components/card_details/CardControlPanel"
-export default function CardDetails(props?: {
+import { useGetSyncCode } from "../common/hooks/useGetSyncCode"
+import { getQRCode } from "../common/hooks/useGetQRCode"
+import CustomLoadingIndicator from "../components/CustomLoadingIndicator"
+export default function CardDetails(props: {
 	route: {
-		params?: {
+		params: {
 			card: BasicCardData<"Basic" | "QR">
 			favorite_data: Favorite<"Card" | "QR">
 			is_virtual?: boolean
@@ -45,23 +31,17 @@ export default function CardDetails(props?: {
 	const favorite_data = props?.route.params?.favorite_data
 	const card = props?.route.params?.card
 	const is_virtual = props?.route.params?.is_virtual
-	if (!card || !favorite_data) {
-		return (
-			<View className="flex-1 items-center justify-center">
-				<Text style={{ color: styles.warning, fontSize: 24 }}>
-					No card data found
-				</Text>
-			</View>
-		)
-	}
+	const { data: syncData } = useGetSyncCode(is_virtual ? card?.aliasNo || favorite_data?.favorite : undefined)
+	const [cardToken, setCardToken] = useState<undefined | { expireDate: string; token: string; aliasNo: string }>(undefined)
 	const { navigation } = props
+	const [card_image, setCardImage] = useState(CardImages.undefined)
 	useEffect(() => {
+		async function get() {
+			setCardImage(await Card.getImageFromCard({...card, ...favorite_data}))
+		}
+		get()
 		navigation.setOptions({
-			headerTitle: `${
-				favorite_data.description ||
-				(is_virtual && "QR Kart") ||
-				"unnamed card"
-			}`,
+			headerTitle: `${favorite_data.description || (is_virtual && "QR Kart") || "unnamed card"}`,
 			headerTintColor: styles.white,
 			headerTitleAlign: "left",
 			headerTitleStyle: {
@@ -69,101 +49,70 @@ export default function CardDetails(props?: {
 			},
 		})
 	}, [])
-	async function get() {
-		if (!card) {
-			return
+	const linear = useSharedValue(100)
+	const animatedChanged = useAnimatedStyle(() => ({
+		width: `${linear.value}%`,
+	}))
+	useEffect(() => {
+		if (syncData?.data?.cardInfo?.token) {
+			setCardToken(syncData?.data.cardInfo)
+			linear.value = 100
+			linear.value = withTiming(0, { duration: 5000,easing:Easing.linear })
 		}
-		// setLoading(true)
-		// const new_card = new Card(card.alias)
-		// await new_card.fetchData()
-		// Logger.info(
-		// 	"CardDetails.get",
-		// 	`Fetched new card data for ${card.alias}}`
-		// )
-		// setLoading(false)
+	}, [syncData?.data])
+	if (!card || !favorite_data) {
+		return (
+			<View className="flex-1 items-center justify-center">
+				<Text style={{ color: styles.warning, fontSize: 24 }}>No card data found</Text>
+			</View>
+		)
 	}
 
 	return (
 		<Animated.ScrollView
 			// tofix
-			refreshControl={
-				<RefreshControl
-					refreshing={loading}
-					onRefresh={() => {
-						get()
-					}}
-				/>
-			}
+			refreshControl={<RefreshControl refreshing={loading} onRefresh={() => {}} />}
 			className="flex-col"
 			contentContainerStyle={{ alignItems: "center" }}
 		>
-			<LinearGradient
-				colors={[styles.primary, styles.white]}
-				end={{ x: 1.25, y: 1 }}
-				className="flex-row h-56 w-full mb-20"
-				style={{ backgroundColor: styles.primary }}
-			>
-				<Animated.View
-					entering={FadeInLeft.duration(500)}
-					className="flex-col flex-1 ml-5 self-end mb-4 "
-				>
-					<Text className="opacity-70 top-3 text-white text-xl">
-						Bakiye
-					</Text>
+			<LinearGradient colors={[styles.primary, styles.white]} end={{ x: 1.25, y: 1 }} className="flex-row h-56 w-full mb-20" style={{ backgroundColor: styles.primary }}>
+				<Animated.View entering={FadeInLeft.duration(500)} className="flex-col flex-1 ml-5 self-end mb-4 ">
+					<Text className="opacity-70 top-3 text-white text-xl">Bakiye</Text>
 					<View className="flex-row items-baseline text-white gap-x-2 mb-4">
-						<Text className="font-bold text-white text-[48px]">
-							{card.balance}
-						</Text>
+						<Text className="font-bold text-white text-[48px]">{card.balance}</Text>
 						<Text className="text-[28px] text-white font-bold">TL</Text>
 					</View>
 					<TouchableOpacity
 						onPress={() => {
 							Clipboard.setString(card.aliasNo)
-							ToastAndroid.show(
-								"Kart numarası kopyalandı!",
-								ToastAndroid.SHORT
-							)
+							ToastAndroid.show("Kart numarası kopyalandı!", ToastAndroid.SHORT)
 							// vibrate device
 							Vibration.vibrate(100)
 						}}
 						onLongPress={() => {
 							Clipboard.setString(card.aliasNo)
-							ToastAndroid.show(
-								"Kart numarası kopyalandı!",
-								ToastAndroid.SHORT
-							)
+							ToastAndroid.show("Kart numarası kopyalandı!", ToastAndroid.SHORT)
 							// vibrate device
 							Vibration.vibrate(100)
 						}}
 						className="flex-row w-full gap-x-1 items-center"
 					>
 						<View className="flex-col">
-							<Text className="opacity-70 text-white text-xl">
-								Kart Numarası
-							</Text>
-							<Text className="font-bold bottom-1 text-white text-xl">
-								{card.aliasNo}
-							</Text>
+							<Text className="opacity-70 text-white text-xl">Kart Numarası</Text>
+							<Text className="font-bold bottom-1 text-white text-xl">{card.aliasNo}</Text>
 						</View>
-						<MaterialCommunityIcons
-							style={{ color: styles.white }}
-							size={20}
-							name="content-copy"
-						/>
+						<MaterialCommunityIcons style={{ color: styles.white }} size={20} name="content-copy" />
 					</TouchableOpacity>
 				</Animated.View>
-				<Animated.View
-					entering={FadeInDown.duration(500)}
-					className="flex-1 mr-24"
-				>
+				<Animated.View entering={FadeInDown.duration(500)} className="flex-1 mr-24">
 					<Image
 						className={"relative w-64 h-64 left-4 -bottom-8 "}
 						style={{
 							transform: [{ rotateZ: "90deg" }],
-							objectFit: "contain"
+							objectFit: "contain",
 						}}
 						source={{
-							uri: Card.getImageFromType(is_virtual ? "QR" : "00"),
+							uri: card_image,
 						}}
 					/>
 				</Animated.View>
@@ -181,9 +130,9 @@ export default function CardDetails(props?: {
 					Tip: "{card.card_type || "undefined"}"
 				</Text>
 			</View> */}
-			<CardControlPanel makeRefresh={()=>{}} card={card} favorite_data={favorite_data} navigation={navigation} is_virtual={is_virtual} />
+			<CardControlPanel makeRefresh={() => {}} card={card} favorite_data={favorite_data} navigation={navigation} is_virtual={is_virtual} />
 			<Text
-				className="p-4 mb-10 w-80"
+				className="p-4 my-10 w-80"
 				style={{
 					backgroundColor: styles.dark,
 					borderRadius: 16,
@@ -191,9 +140,30 @@ export default function CardDetails(props?: {
 					color: styles.secondaryDark,
 				}}
 			>
-				Card Data: {JSON.stringify(card, null, 4)}
+				Card Data: {JSON.stringify({ ...favorite_data, ...card }, null, 4)}
 				{/* Loads in line: {JSON.stringify(card.loads_in_line, null, 4)} */}
 			</Text>
+			{card.virtualCard === "1" && cardToken ? (
+				<View
+					className="flex-col pt-4 my-10 w-80 overflow-hidden"
+					style={{
+						backgroundColor: styles.dark,
+						borderRadius: 16,
+						elevation: 10,
+					}}
+				>
+					<Image
+						className="self-center"
+						style={{
+							height: 64 * 4,
+							width: 64 * 4,
+							marginBottom: 4 * 4,
+						}}
+						source={{ uri: getQRCode(cardToken.token) }}
+					/>
+					<Animated.View style={[animatedChanged,{ backgroundColor: styles.primary, height: 16 }]} />
+				</View>
+			) : null}
 		</Animated.ScrollView>
 	)
 }
