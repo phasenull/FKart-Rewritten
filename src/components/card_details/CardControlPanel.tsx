@@ -7,7 +7,7 @@ import { useEffect, useState } from "react"
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { useAddFavoriteCard,useRemoveFavoriteCard } from "../../common/hooks/useRenameCard"
-import RenameModal from "./RenameModal"
+import InputModal from "../InputModal"
 import Logger from "../../common/Logger"
 export default function CardControlPanel(props: {
 	card: BasicCardData<"Basic" | "QR">
@@ -54,7 +54,7 @@ export default function CardControlPanel(props: {
 	}
 	return (
 		<View className="w-80 flex-col h-max px-4 pb-4 rounded-[16px] gap-y-4" style={{ elevation: 10, backgroundColor: styles.dark }}>
-			<RenameModal
+			<InputModal
 				visible={show_rename_modal}
 				onDismiss={() => {
 					setShowRenameModal(false)

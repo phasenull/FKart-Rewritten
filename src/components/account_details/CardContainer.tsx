@@ -11,11 +11,20 @@ import { useGetCardData } from "../../common/hooks/useGetCardData"
 import { BasicCardData } from "../../common/interfaces/BasicCardData"
 import { useEffect, useState } from "react"
 import CustomLoadingIndicator from "../CustomLoadingIndicator"
+import CardImages from "../../common/enums/CardImages"
 export default function CardContainer(props: { favorite_data: Favorite<"Card" | "QR">; index: number; navigation: any; style?: ViewStyle }) {
 	const { favorite_data, index, navigation } = props
 
 	const { data, isLoading, isRefetching, isError } = useGetCardData(favorite_data.favorite || favorite_data.alias)
 	const [card, setCard] = useState<BasicCardData<any> | undefined>(undefined)
+	const [cardImage, setCardImage] = useState<CardImages | undefined>(undefined)
+	useEffect(() => {
+		async function get() {
+			const result = await Card.getImageFromCard(card as any)
+			setCardImage(result)
+		}
+		get()
+	},[card])
 	useEffect(() => {
 		if (data?.data) {
 			if (data.data.cardlist?.length > 0) {
@@ -69,7 +78,7 @@ export default function CardContainer(props: { favorite_data: Favorite<"Card" | 
 						className="h-64 rotate-90"
 						style={{ width: 4 * 40, objectFit: "contain" }}
 						source={{
-							uri: Card.getImageFromType(favorite_data.type === "33" || card?.virtualCard === "1" ? "QR" : "00"),
+							uri: cardImage
 						}}
 					/>
 				</View>
