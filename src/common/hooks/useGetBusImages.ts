@@ -8,7 +8,7 @@ async function getBusImages(bus: BusData) {
 		"CDN_TOKEN"
 	)
 	const url =
-		"https://bus.phasenull.workers.dev/media?busPlateNumber=" + bus.plateNumber
+		`${Application.fkart_endpoints.bus}/media?busPlateNumber=` + bus.plateNumber
 	const request = axios(url, {
 		method: "GET",
 		headers: {
