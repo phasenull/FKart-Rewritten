@@ -20,6 +20,7 @@ const Stack = createNativeStackNavigator()
 import Application from "./src/common/Application"
 import RouteDetails from "./src/screens/RouteDetails"
 import BusDetails from "./src/screens/BusDetails"
+import MapData from "./src/screens/MapData"
 const queryClient = new QueryClient()
 export default function AppEntryComponent() {
 	LogBox.ignoreLogs([
@@ -71,6 +72,14 @@ export default function AppEntryComponent() {
 						headerTitle=""
 						component={BusDetails}
 					/>
+					<Stack.Screen
+					name="map_data"
+					options={{
+						headerShown: true,
+					}}
+					headerTitle=""
+					component={MapData}
+				/>
 				</Stack.Navigator>
 			</NavigationContainer>
 		</QueryClientProvider>

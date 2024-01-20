@@ -1,23 +1,15 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import BasicRouteInformation from "../common/interfaces/BasicRouteInformation"
-import {
-	RefreshControl,
-	ScrollView,
-	Switch,
-	Text,
-	View,
-} from "react-native"
+import { RefreshControl, ScrollView, Switch, Text, TouchableOpacity, View } from "react-native"
 import useGetRouteDetails from "../common/hooks/useGetRouteDetails"
 import CustomLoadingIndicator from "../components/CustomLoadingIndicator"
 import RouteData from "../common/interfaces/RouteData"
 import { useEffect, useState } from "react"
 import BusData from "../common/interfaces/BusData"
 import BusContainer from "../components/route_details/BusContainer"
+import Application from "../common/Application"
 
-export default function RouteDetails(props: {
-	route: { params?: { data_route?: BasicRouteInformation } }
-	navigation: NativeStackNavigationProp<any>
-}) {
+export default function RouteDetails(props: { route: { params?: { data_route?: BasicRouteInformation } }; navigation: NativeStackNavigationProp<any> }) {
 	const [direction, setDirection] = useState(1)
 	const { navigation, route } = props
 	const data_route = route?.params?.data_route
@@ -29,12 +21,11 @@ export default function RouteDetails(props: {
 			</View>
 		)
 	}
-	const { data, error, isLoading, refetch, isRefetching } =
-		useGetRouteDetails({
-			route_data: data_route,
-			include_time_table: true,
-			direction: direction,
-		})
+	const { data, error, isLoading, refetch, isRefetching } = useGetRouteDetails({
+		route_data: data_route,
+		include_time_table: true,
+		direction: direction,
+	})
 	useEffect(() => {
 		if (data?.data?.result?.code !== 0) {
 			refetch()
@@ -62,9 +53,7 @@ export default function RouteDetails(props: {
 		)
 	}
 
-	const finalRouteData: RouteData = data?.data?.pathList
-		? data.data.pathList[0]
-		: undefined
+	const finalRouteData: RouteData = data?.data?.pathList ? data.data.pathList[0] : undefined
 	if (!data?.data || !finalRouteData) {
 		return (
 			<View>
@@ -74,14 +63,7 @@ export default function RouteDetails(props: {
 		)
 	}
 	return (
-		<ScrollView
-			refreshControl={
-				<RefreshControl
-					refreshing={isLoading || isRefetching}
-					onRefresh={refetch}
-				/>
-			}
-		>
+		<ScrollView refreshControl={<RefreshControl refreshing={isLoading || isRefetching} onRefresh={refetch} />}>
 			<Text>
 				Route Details {data_route.displayRouteCode} {direction}
 			</Text>
@@ -91,9 +73,7 @@ export default function RouteDetails(props: {
 					setDirection(1 - direction)
 				}}
 			/>
-			<Text>
-				BasicRouteInformation: {JSON.stringify(data_route, null, 4)}
-			</Text>
+			<Text>BasicRouteInformation: {JSON.stringify(data_route, null, 4)}</Text>
 			<ScrollView
 				horizontal={true}
 				contentContainerStyle={{
@@ -103,34 +83,33 @@ export default function RouteDetails(props: {
 				className="w-full"
 			>
 				{finalRouteData.busList.map((bus: BusData) => (
-					<BusContainer
-						route_data={finalRouteData}
-						navigation={navigation}
-						bus={bus}
-						key={`BusContainer-${bus.plateNumber}`}
-					/>
+					<BusContainer route_data={finalRouteData} navigation={navigation} bus={bus} key={`BusContainer-${bus.plateNumber}`} />
 				))}
 			</ScrollView>
+			<View className="mt-5">
+				<TouchableOpacity
+					onPress={() =>
+						navigation.navigate("map_data", {
+							route_data: data?.data?.pathList[0],
+							bus_list: finalRouteData.busList,
+						})
+					}
+					style={{ alignSelf: "center", elevation: 2, backgroundColor: Application.styles.primary, borderRadius: 16, paddingVertical: 2 * 4, paddingHorizontal: 4 * 4 }}
+				>
+					<Text>Open Map View</Text>
+				</TouchableOpacity>
+			</View>
 			<View className="mt-5">
 				<Text>
 					HeadSign: {finalRouteData.headSign} {"\n"}
 					RouteCode: {finalRouteData.displayRouteCode} {"\n"}
 					Direction: {finalRouteData.direction} {"\n"}
 					tripShortName: {finalRouteData.tripShortName} {"\n"}
-					direction_name: {finalRouteData.direction_name || '""'}{" "}
-					{"\n"}
+					direction_name: {finalRouteData.direction_name || '""'} {"\n"}
 					path_code: {finalRouteData.path_code} {"\n"}
-					stopTimeList:{finalRouteData.stopTimeList} {"\n"} {"\n"}{" "}
-					{"\n"}
-					busList: {JSON.stringify(
-						finalRouteData.busList,
-						null,
-						4
-					)}{" "}
-					{"\n"}
-					timeTableList :{" "}
-					{JSON.stringify(finalRouteData.timeTableList, null, 4)}{" "}
-					{"\n"}
+					stopTimeList:{finalRouteData.stopTimeList} {"\n"} {"\n"} {"\n"}
+					busList: {JSON.stringify(finalRouteData.busList, null, 4)} {"\n"}
+					timeTableList : {JSON.stringify(finalRouteData.timeTableList, null, 4)} {"\n"}
 				</Text>
 			</View>
 		</ScrollView>
