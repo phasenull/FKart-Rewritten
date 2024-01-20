@@ -1,6 +1,6 @@
-import Point from "./Point";
+import IPoint from "./Point";
 
-export default interface BasicStopInformation extends Point  {
+export default interface BasicStopInformation extends IPoint  {
 	"stopId": string,
 	"stopName": string,
 	"arrival_offset": number,

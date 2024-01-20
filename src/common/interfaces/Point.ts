@@ -1,5 +1,5 @@
-export default interface Point {
-	seq: number
-	lat: number
-	lng: number
+export default interface IPoint {
+	seq: string
+	lat: string
+	lng: string
 }

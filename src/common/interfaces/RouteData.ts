@@ -1,6 +1,6 @@
 import BasicStopInformation from "./BasicStopInformation";
 import BusData from "./BusData";
-import Point from "./Point";
+import IPoint from "./Point";
 
 export default interface RouteData extends Object {
 	busList: BusData[]
@@ -10,7 +10,7 @@ export default interface RouteData extends Object {
 	displayRouteCode: string
 	headSign: string
 	path_code: string
-	pointList: Point[]
+	pointList: IPoint[]
 	scheduleList: any
 	stopTimeList: any,
 	timeTableList: any

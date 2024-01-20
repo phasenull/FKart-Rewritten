@@ -1,3 +1,5 @@
+import IPoint from "./Point"
+
 /**
 @property {boolean} `ac` air conditioning
 @property {number} `bearing` direction of the bus
@@ -15,16 +17,14 @@
 @property {string} `tripId` the trip id
 @property {string} `vehicleType` the vehicle type
 */
-export default interface BusData {
+export default interface BusData extends IPoint {
 	ac: "1" | "0"
-	bearing: number
+	bearing: string
 	bike: "1" | "0"
 	busId: string
 	busLabel: string
 	couple: string
 	disabledPerson: "1" | "0"
-	lat: number
-	lng: number
 	pickMeUp: "1" | "0"
 	plateNumber: string
 	stopId: string
