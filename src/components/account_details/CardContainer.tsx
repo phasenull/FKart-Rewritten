@@ -74,13 +74,13 @@ export default function CardContainer(props: { favorite_data: Favorite<"Card" | 
 				}}
 			>
 				<View className="w-28 h-36 top-1 -ml-12 mr-6 items-center justify-center">
-					<Animated.Image
+					{cardImage?<Animated.Image
 						className="h-64 rotate-90"
 						style={{ width: 4 * 40, objectFit: "contain" }}
 						source={{
 							uri: cardImage
 						}}
-					/>
+					/>:<CustomLoadingIndicator/>}
 				</View>
 				{card?.loads_in_line ? (
 					<View className="absolute w-6 h-6 justify-center -right-1.5 -top-1.5 self-start rounded-full bg-red-400">
@@ -104,7 +104,7 @@ export default function CardContainer(props: { favorite_data: Favorite<"Card" | 
 						</Text>
 						{card ? (
 							<View className="flex-1 flex-row">
-								<Text style={{ color: styles.secondary, fontSize: 34, textAlignVertical: "bottom" }} className="opacity-50 font-bold text-2xl text-left">
+								<Text adjustsFontSizeToFit={true} style={{ color: styles.secondary, fontSize: 34, textAlignVertical: "bottom" }} className="opacity-50 font-bold text-left">
 									{card.balance || "key_error (balance)"} TL
 								</Text>
 								{isLoading || isRefetching ? <CustomLoadingIndicator color={Application.styles.secondary} style={{ marginLeft: 10 }} size={15} /> : null}

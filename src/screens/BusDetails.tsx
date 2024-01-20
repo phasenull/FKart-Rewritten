@@ -46,7 +46,7 @@ export default function BusDetails(props: {
 			headerTitle: `${
 				props.route?.params?.bus?.plateNumber || "unnamed bus"
 			}`,
-			headerTintColor: styles.white,
+			headerTintColor: styles.secondary,
 			headerTitleAlign: "left",
 			headerTitleStyle: {
 				fontWeight: "bold",

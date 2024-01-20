@@ -81,7 +81,6 @@ export default function AccountTab(props?: {
 			)
 		return favorite_cards_filtered
 	}
-
 	const {
 		data: favoritesData,
 		error: favoritesError,
@@ -160,7 +159,9 @@ export default function AccountTab(props?: {
 					show_credentials={is_show_secret}
 					user={user}
 				/>
-				{cards?.map((p_card, index) => (
+				{(isFavoritesLoading &&!isFavoritesRefetching) ? 
+				<CustomLoadingIndicator size={16*4} style={{height:400}}/>
+				: cards?.map((p_card, index) => (
 					<CardContainer
 						style={{ marginTop: 5 * 4 }}
 						index={index}
@@ -168,7 +169,7 @@ export default function AccountTab(props?: {
 						favorite_data={p_card}
 						navigation={navigation}
 					/>
-				))}
+				)) || <CustomLoadingIndicator size={16*4} style={{height:400}}/>}
 
 				{virtualCards?.map((p_card, index) => (
 					<CardContainer

@@ -89,7 +89,7 @@ export default function CardDetails(props: {
 					await Application.database.set("card__" + card.aliasNo, value)
 				}}
 			/>
-			<LinearGradient colors={[styles.primary, styles.white]} end={{ x: 1.25, y: 1 }} className="flex-row h-56 w-full mb-20" style={{ backgroundColor: styles.primary }}>
+			<LinearGradient colors={[styles.primary, styles.white]} end={{ x: 0.8, y: 0.9 }}  className="flex-row h-56 w-full mb-20" style={{ backgroundColor: styles.primary }}>
 				<Animated.View entering={FadeInLeft.duration(500)} className="flex-col flex-1 ml-5 self-end mb-4 ">
 					<Text className="opacity-70 top-3 text-white text-xl">Bakiye</Text>
 					<View className="flex-row items-baseline text-white gap-x-2 mb-4">
@@ -130,7 +130,7 @@ export default function CardDetails(props: {
 								uri: card_image,
 							}}
 						/>
-						{card_type === "QR" ? null : <MaterialCommunityIcons style={{ bottom: 16 * 4,right:4*4,alignSelf:"flex-end" }} color={styles.dark} name="image-edit" size={36} />}
+						{card_type === "QR" ? null : <MaterialCommunityIcons style={{ bottom: 16 * 4, right: 4 * 4, alignSelf: "flex-end" }} color={styles.dark} name="image-edit" size={36} />}
 					</TouchableOpacity>
 				</Animated.View>
 			</LinearGradient>
@@ -148,7 +148,7 @@ export default function CardDetails(props: {
 				</Text>
 			</View> */}
 			<CardControlPanel makeRefresh={() => {}} card={card} favorite_data={favorite_data} navigation={navigation} is_virtual={is_virtual} />
-			
+
 			{card.virtualCard === "1" && cardToken ? (
 				<View
 					className="flex-col my-4 w-80 overflow-hidden"
@@ -158,7 +158,7 @@ export default function CardDetails(props: {
 						elevation: 2,
 					}}
 				>
-					<Text style={{color:styles.secondary,fontSize:32,fontWeight:"600"}} className="flex-1 my-2 text-center">
+					<Text style={{ color: styles.secondary, fontSize: 32, fontWeight: "600" }} className="flex-1 my-2 text-center">
 						Ücret: {card.paxDescription}
 					</Text>
 					<Image

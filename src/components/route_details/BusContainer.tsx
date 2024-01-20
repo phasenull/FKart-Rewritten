@@ -94,7 +94,7 @@ export default function BusContainer(props: {
 					</React.Fragment>
 				)}
 			</View>
-			<View className="w-full items-center justify-center">
+			<View className="w-full flex-1 items-center justify-center">
 				{isLoading ? (
 					<CustomLoadingIndicator color={Application.styles.white} style={{ height: "100%" }} />
 				) : data?.data.data[0] ? (
@@ -119,7 +119,7 @@ export default function BusContainer(props: {
 						</Text>
 					</React.Fragment>
 				) : (
-					<Text className="bg-red-400 text-center">
+					<Text className="bg-red-400 text-center font-bold text-xl text-white px-4">
 						No Image Found
 					</Text>
 				)}
