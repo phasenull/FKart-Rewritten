@@ -1,13 +1,16 @@
 import { Text, View } from "react-native"
-import MapView, { Callout, Marker, PROVIDER_GOOGLE } from "react-native-maps"
+import MapView, { Callout, Marker, PROVIDER_GOOGLE, Polyline } from "react-native-maps"
 import BasicRouteInformation from "../common/interfaces/BasicRouteInformation"
 import BusData from "../common/interfaces/BusData"
 import RouteData from "../common/interfaces/RouteData"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import Application from "../common/Application"
 import useGetCityData from "../common/hooks/useGetCityData"
-import { useEffect, useState } from "react"
+import React, { LegacyRef, useEffect, useRef, useState } from "react"
 import { ICityInformation } from "../common/interfaces/CityInformation"
+import IPoint from "../common/interfaces/Point"
+import BasicStopInformation from "../common/interfaces/BasicStopInformation"
+import BottomSheet from "@gorhom/bottom-sheet"
 export default function MapData(props: {
 	route: {
 		params: {
@@ -16,8 +19,12 @@ export default function MapData(props: {
 		}
 	}
 }) {
+	const ref_map_view = useRef<MapView>()
 	const { data: cityData } = useGetCityData()
 	const { route_data, bus_list } = props.route?.params
+	const [busListToShow, setBusListToShow] = useState<BusData[]>(bus_list)
+	const [routeDataToShow, setRouteDataToShow] = useState<RouteData>(route_data)
+
 	const [userCity, setUserCity] = useState<ICityInformation | undefined>(undefined)
 	useEffect(() => {
 		if (cityData?.data) {
@@ -27,7 +34,7 @@ export default function MapData(props: {
 		}
 	}, [cityData?.data])
 
-	if (!route_data || !bus_list || !userCity) {
+	if (!routeDataToShow || !busListToShow || !userCity) {
 		return (
 			<View>
 				<Text>Map Data Error</Text>
@@ -35,10 +42,10 @@ export default function MapData(props: {
 			</View>
 		)
 	}
-
 	return (
 		<View className="flex-1">
 			<MapView
+				ref={ref_map_view as LegacyRef<MapView>}
 				initialRegion={{
 					latitude: parseFloat(userCity.initialRegion.lat),
 					longitude: parseFloat(userCity.initialRegion.lng),
@@ -48,47 +55,72 @@ export default function MapData(props: {
 				provider={PROVIDER_GOOGLE}
 				style={{ flex: 1 }}
 			>
-				{route_data.busStopList.map((busStop, index) => (
-					<Marker style={{ alignItems: "center" }} key={index} coordinate={{ latitude: parseFloat(busStop.lat), longitude: parseFloat(busStop.lng) }} title={busStop.stopName}>
-						<MaterialCommunityIcons name="bus-stop" size={30} color={Application.styles.secondary} />
-						<Callout
-							// tooltip={true}
-							className="items-center"
-							// style={{
-							// 	backgroundColor: Application.styles.white,
-							// 	borderRadius: 8,
-							// 	paddingHorizontal: 1 * 4,
-							// }}
-						>
-							<Text
-								className="bg-red-400 w-24 h-16"
-								style={{ color: Application.styles.secondary, fontWeight: "800", fontSize: 30, textAlign: "center" }}
-								numberOfLines={1}
-								// adjustsFontSizeToFit={true}
+				<Polyline
+					coordinates={routeDataToShow.pointList.map((e) => ({
+						latitude: parseFloat(e.lat),
+						longitude: parseFloat(e.lng),
+					}))}
+					strokeColor={Application.styles.primaryDark}
+					strokeWidth={5}
+				/>
+				{routeDataToShow.busStopList.map((busStop, index) => (
+					<Marker anchor={{ x: 0.5, y: 0.5 }} style={{ alignItems: "center" }} key={index} coordinate={{ latitude: parseFloat(busStop.lat), longitude: parseFloat(busStop.lng) }} title={busStop.stopName}>
+						<MaterialCommunityIcons name="bus-stop" size={22} color={Application.styles.secondary} />
+						{/* <Callout
+								// tooltip={true}
+								className=" w-48"
+								// style={{
+								// 	backgroundColor: Application.styles.white,
+								// 	borderRadius: 8,
+								// 	paddingHorizontal: 1 * 4,
+								// }}
 							>
-								{busStop.stopName}
-							</Text>
-						</Callout>
+								<Text
+									className="w-48"
+									style={{ color: Application.styles.secondary, fontWeight: "800", fontSize: 15, textAlign: "center" }}
+									// numberOfLines={1}
+									// adjustsFontSizeToFit={true}
+								>
+									{busStop.stopName}
+								</Text>
+							</Callout> */}
 					</Marker>
 				))}
-				{bus_list.map((bus, index) => (
-					<Marker key={index} className="items-center" coordinate={{ latitude: parseFloat(bus.lat), longitude: parseFloat(bus.lng) }} title={bus.plateNumber}>
-						<View className="items-center bg-white" style={{ borderRadius: 8, paddingHorizontal: 1 * 4 }}>
-							<Text style={{ color: Application.styles.primary, fontWeight: "800", fontSize: 12, maxWidth: 20 * 4, textAlign: "center" }} adjustsFontSizeToFit={true}>
+				{busListToShow.map((bus, index) => (
+					<Marker
+						tracksViewChanges={false}
+						anchor={{ x: 0.5, y: 0.5 }}
+						key={index}
+						coordinate={{ latitude: parseFloat(bus.lat), longitude: parseFloat(bus.lng) }}
+						flat={true}
+						title={bus.plateNumber}
+						className="items-center justify-center"
+					>
+						
+						<MaterialCommunityIcons
+							style={{
+								backgroundColor: Application.styles.primary,
+								elevation: 10,
+								borderRadius: 50,
+								padding: 5,
+								color: Application.styles.white,
+							}}
+							name="bus"
+							size={20}
+						/>
+						<View className="items-center" style={{ borderRadius: 8, backgroundColor: Application.styles.secondary, paddingHorizontal: 1 * 4 }}>
+							<Text style={{ color: Application.styles.white, fontWeight: "800", fontSize: 12, maxWidth: 20 * 4, textAlign: "center" }} adjustsFontSizeToFit={true}>
 								{bus.plateNumber}
 							</Text>
 						</View>
-						<MaterialCommunityIcons
-							style={{
-								transform: [{ rotateZ: `${parseFloat(bus.bearing)}deg` }],
-							}}
-							name="bus"
-							size={30}
-							color={Application.styles.primary}
-						/>
 					</Marker>
 				))}
 			</MapView>
+			<BottomSheet snapPoints={["5%", "25%", "50%", "70%", "100%"]}>
+				<View className="flex-1 bg-red-400">
+					<Text>Bottom Sheet</Text>
+				</View>
+			</BottomSheet>
 		</View>
 	)
 }

@@ -128,8 +128,7 @@ export default function AccountTab(props?: {
 		return <CustomLoadingIndicator />
 	}
 	return (
-		<Animated.View
-			entering={FadeInDown.duration(500)}
+		<View
 			style={{ backgroundColor: styles.dark }}
 			className="flex-1 items-center justify-center"
 		>
@@ -204,6 +203,6 @@ export default function AccountTab(props?: {
 					</Text>
 				</TouchableOpacity>
 			</ScrollView>
-		</Animated.View>
+		</View>
 	)
 }

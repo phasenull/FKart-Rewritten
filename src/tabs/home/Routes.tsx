@@ -67,21 +67,21 @@ export default function Routes(props: {
 			</View>
 		)
 	}
-	if (!data) {
+	if (!data?.data) {
 		return (
 			<View>
 				<Text>No data found</Text>
 			</View>
 		)
 	}
-	if (!data.routeList) {
+	if (!data?.data.routeList) {
 		refetch()
 	}
 	return (
 		<React.Fragment>
 			<RouteSearchBar onChangeText={setSearchText} filterByRouteType={filterByRouteType} setFilterByRouteType={setFilterByRouteType}/>
 			<RouteList
-				data={data}
+				data={data.data}
 				navigation={navigation}
 				onRefresh={refreshData}
 				refreshing={isRefetching}
