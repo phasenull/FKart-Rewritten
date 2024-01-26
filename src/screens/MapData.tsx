@@ -1,4 +1,4 @@
-import { Text, View } from "react-native"
+import { Image, Text, View } from "react-native"
 import MapView, { Callout, Marker, PROVIDER_GOOGLE, Polyline } from "react-native-maps"
 import BasicRouteInformation from "../common/interfaces/BasicRouteInformation"
 import BusData from "../common/interfaces/BusData"
@@ -11,6 +11,7 @@ import { ICityInformation } from "../common/interfaces/CityInformation"
 import IPoint from "../common/interfaces/Point"
 import BasicStopInformation from "../common/interfaces/BasicStopInformation"
 import BottomSheet from "@gorhom/bottom-sheet"
+import { DYNAMIC_CONTENT_URL } from "../common/constants"
 export default function MapData(props: {
 	route: {
 		params: {
@@ -88,26 +89,36 @@ export default function MapData(props: {
 				))}
 				{busListToShow.map((bus, index) => (
 					<Marker
+						removeClippedSubviews={false}
 						tracksViewChanges={false}
-						anchor={{ x: 0.5, y: 0.5 }}
+						anchor={{ x: 0.5, y: 0.9}}
 						key={index}
+						zIndex={12}
 						coordinate={{ latitude: parseFloat(bus.lat), longitude: parseFloat(bus.lng) }}
 						flat={true}
 						title={bus.plateNumber}
-						className="items-center justify-center"
+						rotation={parseFloat(bus.bearing)}
+						className="items-center justify-center overflow-visible"
 					>
-						
+
+						<Image
+							style={{ objectFit: "fill" }}
+							className="top-4 w-12 h-8 relative self-center -scale-y-100"
+							source={{ uri: `${DYNAMIC_CONTENT_URL}/assets/media/images/icons/bus_bearing_colored.png` }}
+							/>
 						<MaterialCommunityIcons
+						
 							style={{
 								backgroundColor: Application.styles.primary,
 								elevation: 10,
 								borderRadius: 50,
-								padding: 5,
+								padding: 2,
 								color: Application.styles.white,
+								transform: [{ rotateZ: "180deg"}]
 							}}
 							name="bus"
-							size={20}
-						/>
+							size={16}
+							/>
 						<View className="items-center" style={{ borderRadius: 8, backgroundColor: Application.styles.secondary, paddingHorizontal: 1 * 4 }}>
 							<Text style={{ color: Application.styles.white, fontWeight: "800", fontSize: 12, maxWidth: 20 * 4, textAlign: "center" }} adjustsFontSizeToFit={true}>
 								{bus.plateNumber}
