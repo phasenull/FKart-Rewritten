@@ -37,3 +37,4 @@ secret.ts
 data/slang_list.json
 dump.json
 request.dump.json
+%ProgramData%/Microsoft/Windows/UUS/State/_active.uusver

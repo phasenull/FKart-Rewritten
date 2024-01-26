@@ -66,16 +66,8 @@ https://www.ulasimpark.com.tr/img/AkcarayGuzergah.png
 
 https://service.kentkart.com/test/api/transaction/request
 https://service.kentkart.com/rl1/api/info/masterPass/jquery.min.js
-etTimeout
-
-
+https://service.kentkart.com/rl1/api/trip
+https://service.kentkart.com/rl1/api/users/*
 
 https://service.kentkart.com/rl1/api/3dPayHost/fail
-
 https://service.kentkart.com/rl1/api/transaction/complete?region=004&lang=tr&authType=4
-
-
-
-
-
-0042333801294964
