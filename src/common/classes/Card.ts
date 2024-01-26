@@ -18,8 +18,8 @@ export default abstract class Card {
 		return map[(code || "undefined") as keyof typeof map]
 	}
 	public static getImageFromType(card_type: "00" | "01" | "02" | "03" | "QR" | undefined) {
-		// const type = Card.getCardTypeFromCode(card_type)
-		// return CardImages[]
+		const type = Card.getCardTypeFromCode(card_type)
+		return CardImages[type]
 	}
 
 	public static async getTypeFromCard<T extends BasicCardData<"Basic" | "QR"> & Favorite<"Card" | "QR">>(card: T): Promise<CardTypes> {
