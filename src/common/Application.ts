@@ -21,6 +21,9 @@ export default abstract class Application {
 		base: `${Application.base_fkart_server}`,
 		bus: `https://bus.${Application.base_fkart_server}`,
 	}
+	public static getFormattedVersion() {
+		return `${Application.name} v${Application.version}-dev`
+	}
 	public static __is_init: boolean = false
 	public static logged_user: User | null = null
 	public static readonly database = Database
@@ -35,6 +38,7 @@ export default abstract class Application {
 		warning: "#E95555",
 		success: "#4BB543",
 	}
+	public static readonly sync_interval = 20 * 1000
 	public static readonly theme = StyleSheet.create({
 		buttonPrimary: {
 			backgroundColor: Application.styles.primaryDark,
@@ -63,7 +67,7 @@ export default abstract class Application {
 				...config?.headers,
 				...{
 					Authorization: `Bearer ${Application.logged_user?.access_token}`,
-					"User-Agent": "FKart",
+					"User-Agent": Application.getFormattedVersion(),
 					"fkart-version": Application.version,
 					"fkart-environment": "dev",
 					// "Origin": "https://m.kentkart.com",
