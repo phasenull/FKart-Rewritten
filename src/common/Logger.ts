@@ -13,6 +13,10 @@ export default abstract class Logger {
 	}
 
 	public static info(stack: string, ...args: any[]) {
+		if (!args || args.length === 0) {
+			args = [stack]
+			stack = "unknown"
+		}
 		const text = `${getPrefix("INFO", stack)} ${args}`
 		console.log(text)
 	}
