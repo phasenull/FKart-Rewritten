@@ -1,6 +1,7 @@
 import { useQuery } from "react-query"
 import Application from "../Application"
 import BasicRouteInformation from "../interfaces/BasicRouteInformation"
+import Logger from "../Logger"
 
 async function getRouteDetails({
 	route_data,
@@ -22,6 +23,7 @@ async function getRouteDetails({
 		// 111111: with time table
 		// 010000: without time table, only bus points
 	}
+	Logger.info("REQUEST useGetRouteDetails")
 	const request = Application.makeRequest(url, {
 		method: "GET",
 		params: params,
@@ -38,14 +40,7 @@ export default function useGetRouteDetails({
 	direction: number
 	include_time_table?: boolean
 }) {
-	const {
-		data,
-		error,
-		isLoading,
-		refetch,
-		isError,
-		isRefetching,
-	} = useQuery(
+	return useQuery(
 		[
 			"getRouteDetails",
 			route_data,
@@ -60,12 +55,4 @@ export default function useGetRouteDetails({
 			}),
 		{ staleTime: include_time_table ? Infinity : 5000 }
 	)
-	return {
-		data,
-		error,
-		isLoading,
-		isError,
-		refetch,
-		isRefetching,
-	}
 }

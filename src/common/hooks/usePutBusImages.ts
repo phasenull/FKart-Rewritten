@@ -3,7 +3,8 @@ import Application from "../Application"
 import BusData from "../interfaces/BusData"
 import { useQuery } from "react-query"
 import buffer from "buffer"
-export async function putBusImages(
+import Logger from "../Logger"
+async function putBusImages(
 	bus: BusData,
 	image: string | undefined
 ) {
@@ -35,4 +36,12 @@ export async function putBusImages(
 		},
 		data: img_base64,
 	})
+}
+
+export function usePutBusImages(
+	bus: BusData,
+	image: string | undefined
+) {
+	Logger.info("REQUEST usePutBusImages", bus)
+	return useQuery(["putBusImages",bus.plateNumber,image], () => putBusImages(bus, image))
 }

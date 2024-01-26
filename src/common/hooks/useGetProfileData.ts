@@ -3,12 +3,14 @@ import Application from "../Application"
 import User from "../classes/User"
 import { useQueries, useQuery } from "react-query"
 import { Account } from "../enums/Account"
+import Logger from "../Logger"
 
 async function getProfile() {
 	const user = Application.logged_user
 	if (!user) {
 		throw new Error("User not logged in.")
 	}
+	Logger.info("REQUEST useGetProfileData")
 	const url = `${Application.endpoints.service}/rl1/api/account?region=${Application.region}&authType=4`
 	const request: Promise<
 		AxiosResponse<{

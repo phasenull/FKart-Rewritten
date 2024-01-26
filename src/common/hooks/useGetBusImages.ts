@@ -2,37 +2,23 @@ import axios from "axios"
 import Application from "../Application"
 import BusData from "../interfaces/BusData"
 import { useQuery } from "react-query"
+import Logger from "../Logger"
 
 async function getBusImages(bus: BusData) {
+	Logger.info(`REQUEST useGetBusImages ${bus.plateNumber}`)
 	const authToken = await Application.database.get(
 		"CDN_TOKEN"
 	)
 	const url =
 		`${Application.fkart_endpoints.bus}/media?busPlateNumber=` + bus.plateNumber
-	const request = axios(url, {
+	return axios(url, {
 		method: "GET",
 		headers: {
 			Authorization: authToken,
 		},
 	})
-	return request
 }
 
 export function useGetBusImages(bus: BusData) {
-	const {
-		data,
-		error,
-		isLoading,
-		refetch,
-		isError,
-		isRefetching,
-	} = useQuery(["getBusImages",bus.plateNumber], () => getBusImages(bus))
-	return {
-		data,
-		error,
-		isLoading,
-		refetch,
-		isError,
-		isRefetching,
-	}
+	return useQuery(["getBusImages",bus.plateNumber], () => getBusImages(bus),{staleTime: Infinity, cacheTime: 24*60*1000})
 }
