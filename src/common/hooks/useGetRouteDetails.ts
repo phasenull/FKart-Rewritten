@@ -4,11 +4,11 @@ import BasicRouteInformation from "../interfaces/BasicRouteInformation"
 import Logger from "../Logger"
 
 async function getRouteDetails({
-	route_data,
+	route_code,
 	direction,
 	include_time_table = false,
 }: {
-	route_data: BasicRouteInformation
+	route_code:string
 	direction: number
 	include_time_table?: boolean
 }) {
@@ -18,7 +18,7 @@ async function getRouteDetails({
 		lang: "tr",
 		// authType: "4",
 		direction: direction.toString(),
-		displayRouteCode: route_data.displayRouteCode,
+		displayRouteCode: route_code,
 		resultType: include_time_table ? "111111" : "010000",
 		// 111111: with time table
 		// 010000: without time table, only bus points
@@ -32,27 +32,29 @@ async function getRouteDetails({
 }
 
 export default function useGetRouteDetails({
-	route_data,
+	route_code,
 	direction,
 	include_time_table = false,
+	interval
 }: {
-	route_data: BasicRouteInformation
+	route_code:string
+	interval?: number
 	direction: number
 	include_time_table?: boolean
 }) {
 	return useQuery(
 		[
 			"getRouteDetails",
-			route_data,
+			route_code,
 			direction,
 			include_time_table,
 		],
 		() =>
 			getRouteDetails({
-				route_data,
+				route_code,
 				direction,
 				include_time_table,
 			}),
-		{ staleTime: include_time_table ? Infinity : 5000 }
+		{ staleTime: include_time_table ? Infinity : 5000, refetchInterval: interval}
 	)
 }
