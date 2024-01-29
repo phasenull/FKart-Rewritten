@@ -18,6 +18,7 @@ export default function BusContainer(props: {
 	navigation: NativeStackNavigationProp<any>
 	bus: BusData
 	route_data: RouteData
+	onPress?: () => void
 }) {
 	const { bus, navigation, route_data } = props
 	const { data, isLoading, isError } = useGetBusImages(bus)
@@ -34,14 +35,14 @@ export default function BusContainer(props: {
 			style={{
 				backgroundColor: Application.styles.white,
 				borderRadius: 16,
-				elevation: 10,
+				elevation: 2,
 				shadowOffset: { height: 4, width: 4 },
 			}}
-			onPress={() => {
+			onPress={props.onPress ||( () => {
 				navigation.navigate("bus_details", {
 					bus,
 				})
-			}}
+			})}
 			className="h-48 w-80 flex-col overflow-hidden"
 		>
 			{/* title */}
