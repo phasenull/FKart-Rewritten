@@ -43,8 +43,9 @@ export default function CardContainer(props: { favorite_data: Favorite<"Card" | 
 	}
 
 	return (
-		<Animated.View
-			entering={FadeInRight}
+		// <Animated.View
+		<View
+			// entering={FadeInRight}
 			style={{
 				...props.style,
 			}}
@@ -118,6 +119,7 @@ export default function CardContainer(props: { favorite_data: Favorite<"Card" | 
 					</View>
 				</View>
 			</TouchableOpacity>
-		</Animated.View>
+		{/* </Animated.View> */}
+		</View>
 	)
 }
