@@ -24,18 +24,8 @@ import RouteList from "../../components/routes/RouteList"
 import SegmentedButtons from "../../components/SegmentedButtons"
 import FilterByRouteTypeModal from "../../components/routes/FilterByRouteTypeModal"
 import RouteSearchBar from "../../components/routes/RouteSearchBar"
-export default function Routes(props: {
-	route: any
-	navigation: NativeStackNavigationProp<any>
-}) {
-	const {
-		data,
-		isLoading,
-		isError,
-		error,
-		refetch,
-		isRefetching,
-	} = useGetRouteList({ region: Application.region })
+export default function Routes(props: { route: any; navigation: NativeStackNavigationProp<any> }) {
+	const { data, isLoading, isError, error, refetch, isRefetching } = useGetRouteList({ region: Application.region })
 
 	const { navigation, route } = props
 	const [searchText, setSearchText] = useState("")
@@ -45,7 +35,6 @@ export default function Routes(props: {
 		value?: any
 		onPress?: any
 	}>({ key: "all" })
-
 
 	function refreshData() {
 		console.log("refreshing data")
@@ -57,13 +46,8 @@ export default function Routes(props: {
 	if (isError) {
 		return (
 			<View>
-				<RefreshControl
-					refreshing={isLoading}
-					onRefresh={refreshData}
-				/>
-				<Text>
-					Unexpected Error: {JSON.stringify(error) || "unknown error"}
-				</Text>
+				<RefreshControl refreshing={isLoading} onRefresh={refreshData} />
+				<Text>Unexpected Error: {JSON.stringify(error) || "unknown error"}</Text>
 			</View>
 		)
 	}
@@ -79,16 +63,37 @@ export default function Routes(props: {
 	}
 	return (
 		<React.Fragment>
-			<RouteSearchBar onChangeText={setSearchText} filterByRouteType={filterByRouteType} setFilterByRouteType={setFilterByRouteType}/>
-			<RouteList
-				data={data.data}
-				navigation={navigation}
-				onRefresh={refreshData}
-				refreshing={isRefetching}
-				searchText={searchText}
-				route={route}
-				routeType={filterByRouteType.value}
-			/>
+			<View style={{elevation:20, backgroundColor:Application.styles.dark}}>
+				<RouteSearchBar onChangeText={setSearchText} filterByRouteType={filterByRouteType} setFilterByRouteType={setFilterByRouteType} />
+				<View className="mt-3 h-4 gap-x-4 flex-row justify-center mb-3">
+					{[
+						{
+							color: "#C60D0D",
+							value: "Diğer",
+						},
+						{
+							color: Application.styles.primary,
+							value: "Özel Halk Otobüsü",
+						},
+						{
+							color: "#1EA9BD",
+							value: "Belediye Otobüsü",
+						},
+						{
+							color: "#134395",
+							value: "Feribot",
+						},
+					].map((item) => {
+						return (
+							<View key={item.value} className="justify-center flex-col">
+								<View style={{ width: 3 * 4, height: 3 * 4, backgroundColor: item.color }} className="self-center" />
+								<Text style={{ color: Application.styles.secondary, fontWeight: "800" }}>{item.value}</Text>
+							</View>
+						)
+					})}
+				</View>
+			</View>
+			<RouteList data={data.data} navigation={navigation} onRefresh={refreshData} refreshing={isRefetching} searchText={searchText} route={route} routeType={filterByRouteType.value} />
 		</React.Fragment>
 	)
 }
