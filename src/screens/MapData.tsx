@@ -6,12 +6,20 @@ import RouteData from "../common/interfaces/RouteData"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import Application from "../common/Application"
 import useGetCityData from "../common/hooks/useGetCityData"
-import React, { LegacyRef, useEffect, useRef, useState } from "react"
+import React, { LegacyRef, Ref, useEffect, useRef, useState } from "react"
 import { ICityInformation } from "../common/interfaces/CityInformation"
 import IPoint from "../common/interfaces/Point"
 import BasicStopInformation from "../common/interfaces/BasicStopInformation"
-import BottomSheet from "@gorhom/bottom-sheet"
+import BottomSheet, { TouchableOpacity } from "@gorhom/bottom-sheet"
 import { DYNAMIC_CONTENT_URL } from "../common/constants"
+import { NativeStackNavigationProp } from "@react-navigation/native-stack"
+import { ScrollView } from "react-native-gesture-handler"
+import BusContainer from "../components/route_details/BusContainer"
+import { BottomSheetMethods } from "@gorhom/bottom-sheet/lib/typescript/types"
+import Map from "../components/map_details/Map"
+import useGetRouteDetails from "../common/hooks/useGetRouteDetails"
+import CustomLoadingIndicator from "../components/CustomLoadingIndicator"
+import FollowingBus from "../components/map_details/FollowingBus"
 export default function MapData(props: {
 	route: {
 		params: {
@@ -19,14 +27,52 @@ export default function MapData(props: {
 			bus_list: BusData[]
 		}
 	}
+	navigation: NativeStackNavigationProp<any>
 }) {
 	const ref_map_view = useRef<MapView>()
+	const ref_bottom_sheet = useRef<BottomSheet>()
 	const { data: cityData } = useGetCityData()
-	const { route_data, bus_list } = props.route?.params
-	const [busListToShow, setBusListToShow] = useState<BusData[]>(bus_list)
-	const [routeDataToShow, setRouteDataToShow] = useState<RouteData>(route_data)
-
+	const [busListToShow, setBusListToShow] = useState<BusData[]>(props?.route?.params?.bus_list)
+	const [routeDataToShow, setRouteDataToShow] = useState<RouteData>(props?.route?.params?.route_data)
+	const { navigation } = props
 	const [userCity, setUserCity] = useState<ICityInformation | undefined>(undefined)
+	const [direction, setDirection] = useState(routeDataToShow.direction)
+	const {
+		data: fetchedRouteData,
+		isRefetching: isRouteRefetching,
+		refetch: refetchRouteData,
+	} = useGetRouteDetails({ direction: direction, route_code: routeDataToShow.displayRouteCode, include_time_table: true, interval: 5000 })
+	const [followingBus, setFollowingBus] = useState<BusData | undefined>(undefined)
+	useEffect(() => {
+		refetchRouteData()
+	}, [direction])
+	useEffect(() => {
+		navigation.setOptions({
+			title: `Route ${props.route.params.route_data.displayRouteCode} - Map View`,
+			headerTitleStyle: {
+				color: Application.styles.secondary,
+				fontWeight: "900",
+			},
+		})}, [])
+	useEffect(() => {
+		if (fetchedRouteData?.data?.pathList[0]) {
+			setRouteDataToShow(fetchedRouteData.data.pathList[0])
+			setBusListToShow(fetchedRouteData.data.pathList[0].busList)
+
+			if (!followingBus) return
+			const found_bus = fetchedRouteData.data.pathList[0].busList.find((bus: BusData) => bus.plateNumber === followingBus.plateNumber)
+			if (!found_bus) return
+			console.log("Following bus found")
+			ref_map_view.current?.animateToRegion({
+				latitude: parseFloat(found_bus.lat) - 0.001,
+				longitude: parseFloat(found_bus.lng),
+				latitudeDelta: 0.005,
+				longitudeDelta: 0.005,
+			})
+			setFollowingBus(found_bus)
+		}
+		
+	}, [fetchedRouteData])
 	useEffect(() => {
 		if (cityData?.data) {
 			const user_region = Application.region
@@ -34,7 +80,6 @@ export default function MapData(props: {
 			setUserCity(user_city)
 		}
 	}, [cityData?.data])
-
 	if (!routeDataToShow || !busListToShow || !userCity) {
 		return (
 			<View>
@@ -45,92 +90,79 @@ export default function MapData(props: {
 	}
 	return (
 		<View className="flex-1">
-			<MapView
-				ref={ref_map_view as LegacyRef<MapView>}
-				initialRegion={{
-					latitude: parseFloat(userCity.initialRegion.lat),
-					longitude: parseFloat(userCity.initialRegion.lng),
-					longitudeDelta: 0.05,
-					latitudeDelta: 0.05,
-				}}
-				provider={PROVIDER_GOOGLE}
-				style={{ flex: 1 }}
-			>
-				<Polyline
-					coordinates={routeDataToShow.pointList.map((e) => ({
-						latitude: parseFloat(e.lat),
-						longitude: parseFloat(e.lng),
-					}))}
-					strokeColor={Application.styles.primaryDark}
-					strokeWidth={5}
-				/>
-				{routeDataToShow.busStopList.map((busStop, index) => (
-					<Marker anchor={{ x: 0.5, y: 0.5 }} style={{ alignItems: "center" }} key={index} coordinate={{ latitude: parseFloat(busStop.lat), longitude: parseFloat(busStop.lng) }} title={busStop.stopName}>
-						<MaterialCommunityIcons name="bus-stop" size={22} color={Application.styles.secondary} />
-						{/* <Callout
-								// tooltip={true}
-								className=" w-48"
-								// style={{
-								// 	backgroundColor: Application.styles.white,
-								// 	borderRadius: 8,
-								// 	paddingHorizontal: 1 * 4,
-								// }}
-							>
-								<Text
-									className="w-48"
-									style={{ color: Application.styles.secondary, fontWeight: "800", fontSize: 15, textAlign: "center" }}
-									// numberOfLines={1}
-									// adjustsFontSizeToFit={true}
-								>
-									{busStop.stopName}
-								</Text>
-							</Callout> */}
-					</Marker>
-				))}
-				{busListToShow.map((bus, index) => (
-					<Marker
-						removeClippedSubviews={false}
-						tracksViewChanges={false}
-						anchor={{ x: 0.5, y: 0.9}}
-						key={index}
-						zIndex={12}
-						coordinate={{ latitude: parseFloat(bus.lat), longitude: parseFloat(bus.lng) }}
-						flat={true}
-						title={bus.plateNumber}
-						rotation={parseFloat(bus.bearing)}
-						className="items-center justify-center overflow-visible"
-					>
+			<Map busListToShow={busListToShow} navigation={navigation} forwardRef={ref_map_view as LegacyRef<MapView>} routeDataToShow={routeDataToShow} userCity={userCity} />
+			<FollowingBus style={{position:"absolute",marginTop:2*4}} bus={followingBus} onStopFollowing={() => setFollowingBus(undefined)} />
 
-						<Image
-							style={{ objectFit: "fill" }}
-							className="top-4 w-12 h-8 relative self-center -scale-y-100"
-							source={{ uri: `${DYNAMIC_CONTENT_URL}/assets/media/images/icons/bus_bearing_colored.png` }}
-							/>
-						<MaterialCommunityIcons
-						
-							style={{
-								backgroundColor: Application.styles.primary,
-								elevation: 10,
-								borderRadius: 50,
-								padding: 2,
-								color: Application.styles.white,
-								transform: [{ rotateZ: "180deg"}]
+			<BottomSheet
+				containerStyle={{ overflow: "visible" }}
+				ref={ref_bottom_sheet as Ref<BottomSheetMethods>}
+				backgroundStyle={{
+					backgroundColor: Application.styles.dark,
+					overflow: "visible",
+				}}
+				handleStyle={{
+					overflow: "visible",
+				}}
+				style={{ overflow: "visible" }}
+				enableOverDrag={true}
+				snapPoints={["12%", "35%", "90%"]}
+				index={1}
+			>
+				<View style={{ marginHorizontal:4*4}} className="flex-row justify-between items-center h-12">
+					<Text style={{ fontWeight: "600", color: Application.styles.secondary }}>
+						{routeDataToShow.headSign}
+					</Text>
+					{isRouteRefetching ? (
+						<CustomLoadingIndicator size={20} style={{ marginHorizontal: 0, marginVertical: 5, marginRight: 12 }} />
+					) : (
+						<TouchableOpacity
+							onPress={() => {
+								setDirection(1 - direction)
 							}}
-							name="bus"
-							size={16}
+							className="flex-col"
+						>
+							<MaterialCommunityIcons
+								style={{
+									borderRadius: 40,
+									backgroundColor: Application.styles.secondary,
+									padding: 5,
+								}}
+								color={Application.styles.white}
+								size={30}
+								name="arrow-left-right"
 							/>
-						<View className="items-center" style={{ borderRadius: 8, backgroundColor: Application.styles.secondary, paddingHorizontal: 1 * 4 }}>
-							<Text style={{ color: Application.styles.white, fontWeight: "800", fontSize: 12, maxWidth: 20 * 4, textAlign: "center" }} adjustsFontSizeToFit={true}>
-								{bus.plateNumber}
-							</Text>
-						</View>
-					</Marker>
-				))}
-			</MapView>
-			<BottomSheet snapPoints={["5%", "25%", "50%", "70%", "100%"]}>
-				<View className="flex-1 bg-red-400">
-					<Text>Bottom Sheet</Text>
+							{/* <Text className="w-10 text-center" adjustsFontSizeToFit={true} numberOfLines={2}>Switch Direction</Text> */}
+						</TouchableOpacity>
+					)}
 				</View>
+				<ScrollView
+					horizontal={true}
+					contentContainerStyle={{
+						paddingHorizontal: 20,
+						columnGap: 20,
+					}}
+					className="w-full"
+				>
+					{busListToShow.map((bus: BusData) => (
+						<BusContainer
+							onPress={() => {
+								ref_map_view.current?.animateToRegion({
+									latitude: parseFloat(bus.lat) - 0.001,
+									longitude: parseFloat(bus.lng),
+									latitudeDelta: 0.005,
+									longitudeDelta: 0.005,
+								})
+								setFollowingBus(bus)
+								ref_bottom_sheet.current?.snapToIndex(1)
+							}}
+							route_data={routeDataToShow}
+							navigation={navigation}
+							bus={bus}
+							key={`BusContainer-${bus.plateNumber}`}
+						/>
+					))}
+				</ScrollView>
+				<Text>Hello</Text>
 			</BottomSheet>
 		</View>
 	)

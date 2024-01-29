@@ -10,7 +10,7 @@ import BusContainer from "../components/route_details/BusContainer"
 import Application from "../common/Application"
 
 export default function RouteDetails(props: { route: { params?: { data_route?: BasicRouteInformation } }; navigation: NativeStackNavigationProp<any> }) {
-	const [direction, setDirection] = useState(1)
+	const [direction, setDirection] = useState(0)
 	const { navigation, route } = props
 	const data_route = route?.params?.data_route
 	if (!data_route) {
@@ -22,7 +22,7 @@ export default function RouteDetails(props: { route: { params?: { data_route?: B
 		)
 	}
 	const { data, error, isLoading, refetch, isRefetching } = useGetRouteDetails({
-		route_data: data_route,
+		route_code: data_route.displayRouteCode,
 		include_time_table: true,
 		direction: direction,
 	})
