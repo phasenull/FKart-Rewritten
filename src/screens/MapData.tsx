@@ -1,4 +1,4 @@
-import { Image, Text, View } from "react-native"
+import { Clipboard, Image, Text, View } from "react-native"
 import MapView, { Callout, Marker, PROVIDER_GOOGLE, Polyline } from "react-native-maps"
 import BasicRouteInformation from "../common/interfaces/BasicRouteInformation"
 import BusData from "../common/interfaces/BusData"
@@ -25,6 +25,7 @@ export default function MapData(props: {
 		params: {
 			route_data: RouteData
 			bus_list: BusData[]
+			initial_bus?: BusData
 		}
 	}
 	navigation: NativeStackNavigationProp<any>
@@ -42,7 +43,7 @@ export default function MapData(props: {
 		isRefetching: isRouteRefetching,
 		refetch: refetchRouteData,
 	} = useGetRouteDetails({ direction: direction, route_code: routeDataToShow.displayRouteCode, include_time_table: true, interval: 5000 })
-	const [followingBus, setFollowingBus] = useState<BusData | undefined>(undefined)
+	const [followingBus, setFollowingBus] = useState<BusData | undefined>(props?.route?.params?.initial_bus)
 	useEffect(() => {
 		refetchRouteData()
 	}, [direction])
@@ -53,7 +54,17 @@ export default function MapData(props: {
 				color: Application.styles.secondary,
 				fontWeight: "900",
 			},
-		})}, [])
+		})
+		const init_bus =props.route.params.initial_bus
+		if (init_bus) {
+			ref_map_view.current?.animateToRegion({
+				latitude: parseFloat(init_bus.lat) - 0.001,
+				longitude: parseFloat(init_bus.lng),
+				latitudeDelta: 0.005,
+				longitudeDelta: 0.005,
+			})
+		}
+	}, [])
 	useEffect(() => {
 		if (fetchedRouteData?.data?.pathList[0]) {
 			setRouteDataToShow(fetchedRouteData.data.pathList[0])
@@ -71,7 +82,6 @@ export default function MapData(props: {
 			})
 			setFollowingBus(found_bus)
 		}
-		
 	}, [fetchedRouteData])
 	useEffect(() => {
 		if (cityData?.data) {
@@ -91,7 +101,7 @@ export default function MapData(props: {
 	return (
 		<View className="flex-1">
 			<Map busListToShow={busListToShow} navigation={navigation} forwardRef={ref_map_view as LegacyRef<MapView>} routeDataToShow={routeDataToShow} userCity={userCity} />
-			<FollowingBus style={{position:"absolute",marginTop:2*4}} bus={followingBus} onStopFollowing={() => setFollowingBus(undefined)} />
+			<FollowingBus style={{ position: "absolute", marginTop: 2 * 4 }} bus={followingBus} onStopFollowing={() => setFollowingBus(undefined)} />
 
 			<BottomSheet
 				containerStyle={{ overflow: "visible" }}
@@ -108,10 +118,8 @@ export default function MapData(props: {
 				snapPoints={["12%", "35%", "90%"]}
 				index={1}
 			>
-				<View style={{ marginHorizontal:4*4}} className="flex-row justify-between items-center h-12">
-					<Text style={{ fontWeight: "600", color: Application.styles.secondary }}>
-						{routeDataToShow.headSign}
-					</Text>
+				<View style={{ marginHorizontal: 4 * 4 }} className="px-2 self-center w-full flex-row justify-between items-center h-12">
+					<Text style={{ fontWeight: "600", maxWidth: "90%", color: Application.styles.secondary }}>{routeDataToShow.headSign}</Text>
 					{isRouteRefetching ? (
 						<CustomLoadingIndicator size={20} style={{ marginHorizontal: 0, marginVertical: 5, marginRight: 12 }} />
 					) : (
@@ -145,6 +153,9 @@ export default function MapData(props: {
 				>
 					{busListToShow.map((bus: BusData) => (
 						<BusContainer
+							onLongPress={() => {
+								Clipboard.setString(`https://deep.fkart.project.phasenull.dev/route_details/${routeDataToShow.displayRouteCode}/${direction}/${bus.busId}`)
+							}}
 							onPress={() => {
 								ref_map_view.current?.animateToRegion({
 									latitude: parseFloat(bus.lat) - 0.001,
@@ -162,7 +173,7 @@ export default function MapData(props: {
 						/>
 					))}
 				</ScrollView>
-				<Text>Hello</Text>
+				<Text className="self-center mb-4">Hello</Text>
 			</BottomSheet>
 		</View>
 	)

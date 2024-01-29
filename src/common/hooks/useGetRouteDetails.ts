@@ -2,16 +2,30 @@ import { useQuery } from "react-query"
 import Application from "../Application"
 import BasicRouteInformation from "../interfaces/BasicRouteInformation"
 import Logger from "../Logger"
+import { AxiosResponse } from "axios"
+import BusData from "../interfaces/BusData"
+import { BaseKentKartResponse } from "../enums/BasicKentKartResponse"
+import RouteData from "../interfaces/RouteData"
 
-async function getRouteDetails({
+async function getRouteDetails(
+	{
 	route_code,
 	direction,
-	include_time_table = false,
-}: {
-	route_code:string
-	direction: number
-	include_time_table?: boolean
-}) {
+	include_time_table = false
+	} : {
+	route_code: string;
+	direction: number;
+	include_time_table?: boolean 
+}
+) : Promise<
+	AxiosResponse<
+		BaseKentKartResponse & {
+			pathList: Array<
+				RouteData
+			>
+		}
+	>
+> {
 	const url = `${Application.endpoints.service}/rl1/web/pathInfo`
 	const params: Record<string, string> = {
 		region: Application.region,
@@ -20,8 +34,8 @@ async function getRouteDetails({
 		direction: direction.toString(),
 		displayRouteCode: route_code,
 		resultType: include_time_table ? "111111" : "010000",
-		// 111111: with time table
-		// 010000: without time table, only bus points
+		// 111111: with timetable
+		// 010000: without timetable, only bus points
 	}
 	Logger.info("REQUEST useGetRouteDetails")
 	const request = Application.makeRequest(url, {
@@ -35,26 +49,21 @@ export default function useGetRouteDetails({
 	route_code,
 	direction,
 	include_time_table = false,
-	interval
+	interval,
 }: {
-	route_code:string
+	route_code: string
 	interval?: number
 	direction: number
 	include_time_table?: boolean
 }) {
 	return useQuery(
-		[
-			"getRouteDetails",
-			route_code,
-			direction,
-			include_time_table,
-		],
+		["getRouteDetails", route_code, direction, include_time_table],
 		() =>
 			getRouteDetails({
 				route_code,
 				direction,
 				include_time_table,
 			}),
-		{ staleTime: include_time_table ? Infinity : 5000, refetchInterval: interval}
+		{ staleTime: include_time_table ? Infinity : 5000, refetchInterval: interval }
 	)
 }

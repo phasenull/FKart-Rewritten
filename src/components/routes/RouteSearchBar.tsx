@@ -34,21 +34,20 @@ export default function RouteSearchBar(props: {
 	}, [searchText])
 	const [showFilter, setShowFilter] = useState(false)
 	return (
-		<View className="z-50 flex-col">
+		<View style={{zIndex:150}} className="flex-col">
 			<FilterByRouteTypeModal
 				filterByRouteType={filterByRouteType}
 				setFilterByRouteType={setFilterByRouteType}
 				visible={showFilter}
 				setVisible={setShowFilter}
 			/>
-			<View style={{zIndex:150}} className="absolute w-full mt-3 px-4 items-center justify-center self-center flex-row">
+			<View className="w-full mt-3 px-4 items-center justify-center self-center flex-row">
 				<View
 					className="flex-1 w-80 px-4 rounded-full items-center justify-center flex-row"
 					style={{
 						backgroundColor: Application.styles.white,
 						elevation: 10,
 						shadowOffset: { height: 4, width: 4 },
-						zIndex: 100,
 					}}
 				>
 					{searchText === "" ? null : (

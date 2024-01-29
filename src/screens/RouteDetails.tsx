@@ -9,17 +9,66 @@ import BusData from "../common/interfaces/BusData"
 import BusContainer from "../components/route_details/BusContainer"
 import Application from "../common/Application"
 
-export default function RouteDetails(props: { route: { params?: { data_route?: BasicRouteInformation } }; navigation: NativeStackNavigationProp<any> }) {
-	const [direction, setDirection] = useState(0)
+export default function RouteDetails(props: {
+	route: {
+		params?: {
+			data_route?: BasicRouteInformation
+			fetch_from_id?: string
+			direction?: string
+			bus_id?: string
+		}
+		path?: string
+	}
+	navigation: NativeStackNavigationProp<any>
+}) {
 	const { navigation, route } = props
-	const data_route = route?.params?.data_route
+
+	const [direction, setDirection] = useState(parseInt(route?.params?.direction || "0") || 0)
+	const [data_route, setDataRoute] = useState<RouteData | undefined | BasicRouteInformation>(route?.params?.data_route)
 	if (!data_route) {
-		return (
-			<View>
-				<Text>Route Details</Text>
-				<Text>No route details found</Text>
-			</View>
-		)
+		// get data from path
+		const target_id = route?.params?.fetch_from_id
+		const p_direction = route?.params?.direction
+		const bus_id = route?.params?.bus_id
+		if (!target_id) {
+			return (
+				<View>
+					<Text>Route Details</Text>
+					<Text>No route details found</Text>
+					<Text>Params: {JSON.stringify(route.params, null, 4)}</Text>
+				</View>
+			)
+		}
+
+		console.log(`GOT DEEPLINKING, FETCHING ROUTE FROM ID: ${target_id}`, route.params)
+
+		const { data, error, isLoading, refetch, isRefetching } = useGetRouteDetails({
+			route_code: target_id,
+			include_time_table: true,
+			direction: direction,
+		})
+		useEffect(() => {
+			if (data?.data?.result?.code !== 0) {
+				refetch()
+				return
+			}
+			if (!navigation) return
+			if (!data?.data?.pathList[0]) return
+			const path = data?.data?.pathList[0]
+			setDataRoute(path)
+			if (!bus_id) return
+			if (!path.busList) return
+			console.log("bus_id", bus_id,path.busList)
+			const bus = path.busList.filter((bus: BusData) => bus.busId === bus_id)[0]
+			console.log("bus", bus)
+			if (!bus) return alert("Can't find bus on this route (Is it still on road?)")
+			navigation.navigate("map_data", {
+				route_data: path,
+				bus_list: path.busList,
+				initial_bus: bus,
+			})
+		}, [data])
+		return <CustomLoadingIndicator />
 	}
 	const { data, error, isLoading, refetch, isRefetching } = useGetRouteDetails({
 		route_code: data_route.displayRouteCode,
@@ -53,7 +102,7 @@ export default function RouteDetails(props: { route: { params?: { data_route?: B
 		)
 	}
 
-	const finalRouteData: RouteData = data?.data?.pathList ? data.data.pathList[0] : undefined
+	const finalRouteData: RouteData = data_route as RouteData
 	if (!data?.data || !finalRouteData) {
 		return (
 			<View>
@@ -73,7 +122,7 @@ export default function RouteDetails(props: { route: { params?: { data_route?: B
 					setDirection(1 - direction)
 				}}
 			/>
-			<Text>BasicRouteInformation: {JSON.stringify(data_route, null, 4)}</Text>
+			{/* <Text>BasicRouteInformation: {JSON.stringify(data_route, null, 4)}</Text> */}
 			<ScrollView
 				horizontal={true}
 				contentContainerStyle={{

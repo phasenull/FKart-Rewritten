@@ -5,25 +5,33 @@ import HomePage from "./src/screens/Home"
 import AuthPage from "./src/screens/Auth"
 import CardDetails from "./src/screens/CardDetails"
 import { QueryClient, QueryClientProvider } from "react-query"
-LogBox.ignoreLogs(["Non-serializable values were found in the navigation state."])
 const Stack = createNativeStackNavigator()
 import Application from "./src/common/Application"
 import RouteDetails from "./src/screens/RouteDetails"
 import BusDetails from "./src/screens/BusDetails"
 import MapData from "./src/screens/MapData"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
+import * as Linking from "expo-linking"
+const config = {
+	screens: {
+		route_details: "route_details/:fetch_from_id/:direction?/:bus_id?",
+	},
+}
+const linking = {
+	prefixes: [Linking.createURL("/"), "https://deep.fkart.project.phasenull.dev"],
+	config: config,
+}
 const queryClient = new QueryClient()
 export default function AppEntryComponent() {
 	LogBox.ignoreLogs(["Non-serializable values were found in the navigation state."])
+	LogBox.ignoreLogs(["Require cycle:", "Clipboard has been extracted from react-native"])
 	const colorScheme = useColorScheme()
 	console.log(colorScheme)
-	LogBox.ignoreLogs(["Require cycle:", "Clipboard has been extracted from react-native"])
-
 	Application.__INIT()
 	return (
 		<QueryClientProvider client={queryClient}>
-			<NavigationContainer>
-				<GestureHandlerRootView style={{flex:1}}>
+			<NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
+				<GestureHandlerRootView style={{ flex: 1 }}>
 					<Stack.Navigator
 						initialRouteName="Home"
 						screenOptions={{

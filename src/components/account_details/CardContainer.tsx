@@ -83,9 +83,9 @@ export default function CardContainer(props: { favorite_data: Favorite<"Card" | 
 						}}
 					/>:<CustomLoadingIndicator/>}
 				</View>
-				{card?.loads_in_line ? (
+				{(card?.loads_in_line ||card?.oChargeList) ? (
 					<View className="absolute w-6 h-6 justify-center -right-1.5 -top-1.5 self-start rounded-full bg-red-400">
-						<Text className="text-white text-center text-xl font-bold">{card.loads_in_line?.length}</Text>
+						<Text className="text-white text-center text-xl font-bold">{(card.loads_in_line || card.oChargeList)?.length}</Text>
 					</View>
 				) : null}
 				<View className="flex-1 flex-row items-center justify-between">
@@ -101,7 +101,9 @@ export default function CardContainer(props: { favorite_data: Favorite<"Card" | 
 							}}
 							className="rounded-full mt-3 px-4 bottom-5 relative justify-center font-bold text-[12px] text-center"
 						>
-							{favorite_data.favorite || favorite_data.alias || "key_error (favorite)"}
+
+							{/* {(favorite_data.favorite || favorite_data.alias || "key_error (favorite)")} */}
+							{"* * * * * * * * *"}
 						</Text>
 						{card ? (
 							<View className="flex-1 flex-row">

@@ -70,11 +70,13 @@ export default function Map(props: {
 					</Callout> */}
 					</Marker>
 				))}
+
+
 				{busListToShow.map((bus, index) => (
 					<Marker
 						removeClippedSubviews={false}
 						tracksViewChanges={false}
-						anchor={{ x: 0.5, y: 0.5 }}
+						anchor={{ x: 0.5, y: 0.96 }}
 						key={bus.plateNumber}
 						zIndex={12}
 						coordinate={{ latitude: parseFloat(bus.lat), longitude: parseFloat(bus.lng) }}

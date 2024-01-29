@@ -4,6 +4,7 @@
 		"slug": "FKart",
 		"version": "1.0.1",
 		"orientation": "portrait",
+		"scheme": "fkart",
 		"icon": "./assets/icon.png",
 		"userInterfaceStyle": "light",
 		"splash": {

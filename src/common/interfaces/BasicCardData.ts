@@ -29,4 +29,5 @@ export interface BasicCardData<T extends "QR" | "Basic"> {
 	ticketList: T extends "QR" ? Array<any> : never
 	paxDescription: T extends "QR" ? string : never
 	loads_in_line: Array<Map<string, any>>
+	oChargeList: Array<Map<string, any>>
 }

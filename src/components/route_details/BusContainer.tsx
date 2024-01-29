@@ -19,6 +19,7 @@ export default function BusContainer(props: {
 	bus: BusData
 	route_data: RouteData
 	onPress?: () => void
+	onLongPress?: () => void
 }) {
 	const { bus, navigation, route_data } = props
 	const { data, isLoading, isError } = useGetBusImages(bus)
@@ -43,6 +44,7 @@ export default function BusContainer(props: {
 					bus,
 				})
 			})}
+			onLongPress={props.onLongPress}
 			className="h-48 w-80 flex-col overflow-hidden"
 		>
 			{/* title */}
