@@ -28,10 +28,9 @@ export default function AppEntryComponent() {
 	const colorScheme = useColorScheme()
 	console.log(colorScheme)
 	Application.__INIT()
-	return (
-		<QueryClientProvider client={queryClient}>
-			<NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
-				<GestureHandlerRootView style={{ flex: 1 }}>
+	return ( <QueryClientProvider client={queryClient}>
+			<GestureHandlerRootView style={{ flex: 1 }}>
+				<NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
 					<Stack.Navigator
 						initialRouteName="Home"
 						screenOptions={{
@@ -43,7 +42,6 @@ export default function AppEntryComponent() {
 						<Stack.Screen name="auth" component={AuthPage} />
 						<Stack.Screen
 							name="card_details"
-							headerTitle=""
 							options={{
 								headerShown: true,
 								headerTitle: "",
@@ -52,35 +50,35 @@ export default function AppEntryComponent() {
 								headerTitleStyle: { color: "white" },
 								headerTintColor: "white",
 							}}
-							component={CardDetails}
+							component={CardDetails as any}
 						/>
 						<Stack.Screen
 							name="route_details"
-							headerTitle=""
 							options={{
 								headerShown: true,
+								title: ""
 							}}
-							component={RouteDetails}
+							component={RouteDetails as any}
 						/>
 						<Stack.Screen
 							name="bus_details"
 							options={{
 								headerShown: true,
+								title: ""
 							}}
-							headerTitle=""
-							component={BusDetails}
+							component={BusDetails as any}
 						/>
 						<Stack.Screen
 							name="map_data"
 							options={{
 								headerShown: true,
+								title: ""
 							}}
-							headerTitle=""
-							component={MapData}
+							component={MapData as any}
 						/>
 					</Stack.Navigator>
-				</GestureHandlerRootView>
-			</NavigationContainer>
+				</NavigationContainer>
+			</GestureHandlerRootView>
 		</QueryClientProvider>
 	)
 }

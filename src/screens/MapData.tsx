@@ -1,4 +1,4 @@
-import { Clipboard, Image, Text, View } from "react-native"
+import { Clipboard, Image, Text, ToastAndroid, Vibration, View } from "react-native"
 import MapView, { Callout, Marker, PROVIDER_GOOGLE, Polyline } from "react-native-maps"
 import BasicRouteInformation from "../common/interfaces/BasicRouteInformation"
 import BusData from "../common/interfaces/BusData"
@@ -104,19 +104,13 @@ export default function MapData(props: {
 			<FollowingBus style={{ position: "absolute", marginTop: 2 * 4 }} bus={followingBus} onStopFollowing={() => setFollowingBus(undefined)} />
 
 			<BottomSheet
-				containerStyle={{ overflow: "visible" }}
 				ref={ref_bottom_sheet as Ref<BottomSheetMethods>}
 				backgroundStyle={{
 					backgroundColor: Application.styles.dark,
-					overflow: "visible",
 				}}
-				handleStyle={{
-					overflow: "visible",
-				}}
-				style={{ overflow: "visible" }}
-				enableOverDrag={true}
 				snapPoints={["12%", "35%", "90%"]}
 				index={1}
+				enablePanDownToClose={false}
 			>
 				<View style={{ marginHorizontal: 4 * 4 }} className="px-2 self-center w-full flex-row justify-between items-center h-12">
 					<Text style={{ fontWeight: "600", maxWidth: "90%", color: Application.styles.secondary }}>{routeDataToShow.headSign}</Text>
@@ -155,6 +149,8 @@ export default function MapData(props: {
 						<BusContainer
 							onLongPress={() => {
 								Clipboard.setString(`https://deep.fkart.project.phasenull.dev/route_details/${routeDataToShow.displayRouteCode}/${direction}/${bus.busId}`)
+								ToastAndroid.show("Link kopyalandı!", ToastAndroid.SHORT)
+								Vibration.vibrate(100)
 							}}
 							onPress={() => {
 								ref_map_view.current?.animateToRegion({
