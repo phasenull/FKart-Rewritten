@@ -24,54 +24,17 @@ export default function RouteDetails(props: {
 	const { navigation, route } = props
 
 	const [direction, setDirection] = useState(parseInt(route?.params?.direction || "0") || 0)
-	const [data_route, setDataRoute] = useState<RouteData | undefined | BasicRouteInformation>(route?.params?.data_route)
-	if (!data_route) {
-		// get data from path
-		const target_id = route?.params?.fetch_from_id
-		const p_direction = route?.params?.direction
-		const bus_id = route?.params?.bus_id
-		if (!target_id) {
-			return (
-				<View>
-					<Text>Route Details</Text>
-					<Text>No route details found</Text>
-					<Text>Params: {JSON.stringify(route.params, null, 4)}</Text>
-				</View>
-			)
-		}
-
-		console.log(`GOT DEEPLINKING, FETCHING ROUTE FROM ID: ${target_id}`, route.params)
-
-		const { data, error, isLoading, refetch, isRefetching } = useGetRouteDetails({
-			route_code: target_id,
-			include_time_table: true,
-			direction: direction,
-		})
-		useEffect(() => {
-			if (data?.data?.result?.code !== 0) {
-				refetch()
-				return
-			}
-			if (!navigation) return
-			if (!data?.data?.pathList[0]) return
-			const path = data?.data?.pathList[0]
-			setDataRoute(path)
-			if (!bus_id) return
-			if (!path.busList) return
-			console.log("bus_id", bus_id,path.busList)
-			const bus = path.busList.filter((bus: BusData) => bus.busId === bus_id)[0]
-			console.log("bus", bus)
-			if (!bus) return alert("Can't find bus on this route (Is it still on road?)")
-			navigation.navigate("map_data", {
-				route_data: path,
-				bus_list: path.busList,
-				initial_bus: bus,
-			})
-		}, [data])
-		return <CustomLoadingIndicator />
+	const [data_route, setDataRoute] = useState<RouteData | undefined>(route?.params?.data_route as any as RouteData)
+	const id_to_fetch = data_route?.displayRouteCode || props.route.params?.fetch_from_id
+	if (!id_to_fetch) {
+		return (
+			<View>
+				<Text>Invalid route id</Text>
+			</View>
+		)
 	}
 	const { data, error, isLoading, refetch, isRefetching } = useGetRouteDetails({
-		route_code: data_route.displayRouteCode,
+		route_code: id_to_fetch,
 		include_time_table: true,
 		direction: direction,
 	})
@@ -80,17 +43,30 @@ export default function RouteDetails(props: {
 			refetch()
 			return
 		}
+		const response_data = data?.data?.pathList[0]
+		if (!response_data) {
+			return
+		}
+		setDataRoute(response_data)
 		if (!navigation) {
 			return
 		}
-		if (!finalRouteData || !data?.data?.pathList[0]) {
+		navigation.setOptions({
+			headerTitle: `${id_to_fetch} - ${response_data.headSign}`,
+		})
+		const bus_id = props.route.params?.bus_id
+		if (!bus_id) return
+		const bus = response_data.busList?.find((bus: BusData) => bus.busId === bus_id)
+		if (!bus) {
+			alert("Bus not found (is it still on road?)")
+			navigation.setParams({ bus_id: undefined })
 			return
 		}
-		navigation.setOptions({
-			headerTitle: `${data_route.displayRouteCode} - ${data?.data?.pathList[0].headSign}`,
+		navigation.navigate("map_data", {
+			initial_bus: bus,
+			route_data: response_data,
 		})
 	}, [data])
-
 	if (isLoading || isRefetching) {
 		return <CustomLoadingIndicator />
 	}
@@ -102,8 +78,7 @@ export default function RouteDetails(props: {
 		)
 	}
 
-	const finalRouteData: RouteData = data_route as RouteData
-	if (!data?.data || !finalRouteData) {
+	if (!data?.data || !data_route || !(data_route as RouteData)?.busList) {
 		return (
 			<View>
 				<Text>No data found</Text>
@@ -131,8 +106,8 @@ export default function RouteDetails(props: {
 				}}
 				className="w-full"
 			>
-				{finalRouteData.busList.map((bus: BusData) => (
-					<BusContainer route_data={finalRouteData} navigation={navigation} bus={bus} key={`BusContainer-${bus.plateNumber}`} />
+				{data_route?.busList?.map((bus: BusData) => (
+					<BusContainer route_data={data_route} navigation={navigation} bus={bus} key={`BusContainer-${bus.plateNumber}`} />
 				))}
 			</ScrollView>
 			<View className="mt-5">
@@ -140,7 +115,7 @@ export default function RouteDetails(props: {
 					onPress={() =>
 						navigation.navigate("map_data", {
 							route_data: data?.data?.pathList[0],
-							bus_list: finalRouteData.busList,
+							bus_list: data_route.busList,
 						})
 					}
 					style={{ alignSelf: "center", elevation: 2, backgroundColor: Application.styles.primary, borderRadius: 16, paddingVertical: 2 * 4, paddingHorizontal: 4 * 4 }}
@@ -150,15 +125,15 @@ export default function RouteDetails(props: {
 			</View>
 			<View className="mt-5">
 				<Text>
-					HeadSign: {finalRouteData.headSign} {"\n"}
-					RouteCode: {finalRouteData.displayRouteCode} {"\n"}
-					Direction: {finalRouteData.direction} {"\n"}
-					tripShortName: {finalRouteData.tripShortName} {"\n"}
-					direction_name: {finalRouteData.direction_name || '""'} {"\n"}
-					path_code: {finalRouteData.path_code} {"\n"}
-					stopTimeList:{finalRouteData.stopTimeList} {"\n"} {"\n"} {"\n"}
-					busList: {JSON.stringify(finalRouteData.busList, null, 4)} {"\n"}
-					timeTableList : {JSON.stringify(finalRouteData.timeTableList, null, 4)} {"\n"}
+					HeadSign: {data_route.headSign} {"\n"}
+					RouteCode: {data_route.displayRouteCode} {"\n"}
+					Direction: {data_route.direction} {"\n"}
+					tripShortName: {data_route.tripShortName} {"\n"}
+					direction_name: {data_route.direction_name || '""'} {"\n"}
+					path_code: {data_route.path_code} {"\n"}
+					stopTimeList:{data_route.stopTimeList} {"\n"} {"\n"} {"\n"}
+					busList: {JSON.stringify(data_route.busList, null, 4)} {"\n"}
+					timeTableList : {JSON.stringify(data_route.timeTableList, null, 4)} {"\n"}
 				</Text>
 			</View>
 		</ScrollView>
