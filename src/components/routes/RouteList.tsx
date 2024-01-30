@@ -61,7 +61,7 @@ export default function RouteList(props: {
 						No data found!
 					</Text>
 				)}
-				className="z-10 mb-20"
+				className="mb-20"
 				// contentContainerStyle={{ paddingTop: 60 }}
 				maxToRenderPerBatch={10}
 				data={finalData}

@@ -4,7 +4,7 @@ import BusData from "../interfaces/BusData"
 import { useQuery } from "react-query"
 import buffer from "buffer"
 import Logger from "../Logger"
-async function putBusImages(
+export async function putBusImages(
 	bus: BusData,
 	image: string | undefined
 ) {
@@ -26,6 +26,7 @@ async function putBusImages(
 		"CDN_TOKEN"
 	)
 
+	Logger.info("REQUEST usePutBusImages", bus)
 	const url =
 		`${Application.fkart_endpoints.bus}/media?busPlateNumber=` + bus.plateNumber
 	return axios(url, {
@@ -42,6 +43,5 @@ export function usePutBusImages(
 	bus: BusData,
 	image: string | undefined
 ) {
-	Logger.info("REQUEST usePutBusImages", bus)
 	return useQuery(["putBusImages",bus.plateNumber,image], () => putBusImages(bus, image))
 }

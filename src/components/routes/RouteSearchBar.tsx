@@ -34,7 +34,7 @@ export default function RouteSearchBar(props: {
 	}, [searchText])
 	const [showFilter, setShowFilter] = useState(false)
 	return (
-		<View style={{zIndex:150}} className="flex-col">
+		<View className="flex-col">
 			<FilterByRouteTypeModal
 				filterByRouteType={filterByRouteType}
 				setFilterByRouteType={setFilterByRouteType}
@@ -89,7 +89,6 @@ export default function RouteSearchBar(props: {
 						backgroundColor: Application.styles.white,
 						elevation: 10,
 						shadowOffset: { height: 4, width: 4 },
-						zIndex: 100,
 					}}
 				>
 					<MaterialCommunityIcons name="filter-outline" size={28} />

@@ -7,22 +7,10 @@ import BusData from "../interfaces/BusData"
 import { BaseKentKartResponse } from "../enums/BasicKentKartResponse"
 import RouteData from "../interfaces/RouteData"
 
-async function getRouteDetails(
-	{
-	route_code,
-	direction,
-	include_time_table = false
-	} : {
-	route_code: string;
-	direction: number;
-	include_time_table?: boolean 
-}
-) : Promise<
+async function getRouteDetails({ route_code, direction, include_time_table = false }: { route_code: string; direction: number; include_time_table?: boolean }): Promise<
 	AxiosResponse<
 		BaseKentKartResponse & {
-			pathList: Array<
-				RouteData
-			>
+			pathList: Array<RouteData>
 		}
 	>
 > {
@@ -37,7 +25,7 @@ async function getRouteDetails(
 		// 111111: with timetable
 		// 010000: without timetable, only bus points
 	}
-	Logger.info("REQUEST useGetRouteDetails")
+	Logger.info(`REQUEST useGetRouteDetails ${route_code} ${direction} ${include_time_table}`)
 	const request = Application.makeRequest(url, {
 		method: "GET",
 		params: params,

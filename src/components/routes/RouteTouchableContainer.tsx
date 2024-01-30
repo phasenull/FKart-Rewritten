@@ -18,7 +18,7 @@ export default function RouteTouchableContainer(props: {
 				onPress={() =>
 					navigation.navigate("route_details", { data_route: item })
 				}
-				className="z-20 py-1 flex-row pl-1"
+				className="py-1 flex-row pl-1"
 			>
 				<View
 					className="flex-[0.22] my-auto items-center "

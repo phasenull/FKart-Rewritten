@@ -16,6 +16,13 @@ web-build/
 *.key
 *.mobileprovision
 
+# RANDOM
+dump.json
+dump2.json
+*.dump.json
+source.links
+*.env
+*.rest
 # Metro
 .metro-health-check*
 *.rest
