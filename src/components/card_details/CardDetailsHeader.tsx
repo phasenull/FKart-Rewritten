@@ -1,7 +1,6 @@
 import { LinearGradient } from "expo-linear-gradient"
 import { useMemo } from "react"
 import { View, TouchableOpacity, ToastAndroid, Vibration, Text, Clipboard, Image } from "react-native"
-import Animated, { FadeInLeft, FadeInDown } from "react-native-reanimated"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import Application from "../../common/Application"
 import { BasicCardData } from "../../common/interfaces/BasicCardData"
@@ -19,7 +18,7 @@ export default function CardDetailsHeader(props: {
 		console.log("card_details_header render")
 		return (
 			<LinearGradient colors={[styles.primary, styles.white]} end={{ x: 0.8, y: 0.9 }} className="flex-row h-56 w-full mb-20" style={{ backgroundColor: styles.primary }}>
-				<Animated.View entering={FadeInLeft.duration(500)} className="flex-col flex-1 ml-5 self-end mb-4 ">
+				<View className="flex-col flex-1 ml-5 self-end mb-4 ">
 					<Text className="opacity-70 top-3 text-white text-xl">Bakiye</Text>
 					<View className="flex-row items-baseline text-white gap-x-2 mb-4">
 						<Text className="font-bold text-white text-[48px]">{card.balance}</Text>
@@ -46,8 +45,8 @@ export default function CardDetailsHeader(props: {
 						</View>
 						<MaterialCommunityIcons style={{ color: styles.white }} size={20} name="content-copy" />
 					</TouchableOpacity>
-				</Animated.View>
-				<Animated.View entering={FadeInDown.duration(500)} className="flex-1 mr-24">
+				</View>
+				<View className="flex-1 mr-24">
 					<TouchableOpacity disabled={card_type === "QR"} onPress={() => setShowEditCardTypeModal(true)} className="relative w-40 h-64 left-16 -bottom-8 ">
 						<Image
 							className={"w-64 h-64 right-14"}
@@ -61,7 +60,7 @@ export default function CardDetailsHeader(props: {
 						/>
 						{card_type === "QR" ? null : <MaterialCommunityIcons style={{ bottom: 16 * 4, right: 4 * 4, alignSelf: "flex-end" }} color={styles.dark} name="image-edit" size={36} />}
 					</TouchableOpacity>
-				</Animated.View>
+				</View>
 			</LinearGradient>
 		)
 	},[card,card_type])

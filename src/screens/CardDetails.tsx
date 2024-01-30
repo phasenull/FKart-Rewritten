@@ -73,7 +73,7 @@ export default function CardDetails(props: {
 		)
 	}
 	return (
-		<Animated.ScrollView
+		<ScrollView
 			// tofix
 			refreshControl={<RefreshControl refreshing={loading} onRefresh={() => {}} />}
 			className="flex-col"
@@ -98,6 +98,6 @@ export default function CardDetails(props: {
 			) : null} */}
 			<VirtualCardQRCodePanel card={card} token={cardToken} />
 			<CardJSONData card={card} favorite_data={favorite_data} />
-		</Animated.ScrollView>
+		</ScrollView>
 	)
 }
