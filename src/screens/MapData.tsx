@@ -69,7 +69,6 @@ export default function MapData(props: {
 		if (fetchedRouteData?.data?.pathList[0]) {
 			setRouteDataToShow(fetchedRouteData.data.pathList[0])
 			setBusListToShow(fetchedRouteData.data.pathList[0].busList)
-
 			if (!followingBus) return
 			const found_bus = fetchedRouteData.data.pathList[0].busList.find((bus: BusData) => bus.plateNumber === followingBus.plateNumber)
 			if (!found_bus) return
@@ -83,6 +82,8 @@ export default function MapData(props: {
 			setFollowingBus(found_bus)
 		}
 	}, [fetchedRouteData])
+	const pressCounter = useRef({last_press:0,press_count:0})
+
 	useEffect(() => {
 		if (cityData?.data) {
 			const user_region = Application.region
@@ -90,6 +91,27 @@ export default function MapData(props: {
 			setUserCity(user_city)
 		}
 	}, [cityData?.data])
+	function pressForEasterEgg() {
+		pressCounter.current.press_count++
+		console.log("Press detected",pressCounter.current.press_count)
+		if (pressCounter.current.press_count === 1) {
+			pressCounter.current.last_press = Date.now()
+		}
+		if (pressCounter.current.press_count >= 2) {
+			if (Date.now() - pressCounter.current.last_press < 500) {
+				pressCounter.current.press_count = 0
+				pressCounter.current.last_press = Date.now()
+				console.log("new easter egg enabled", !easterEggEnabled)
+				Vibration.vibrate(500)
+				ToastAndroid.show(`Easter Egg ${!easterEggEnabled ? "Enabled" : "Disabled"}`, ToastAndroid.SHORT)
+				setEasterEggEnabled(!easterEggEnabled)
+			} else {
+				pressCounter.current.press_count = 0
+				pressCounter.current.last_press = Date.now()
+			}
+		}
+	}
+	const [easterEggEnabled, setEasterEggEnabled] = useState(false)
 	if (!routeDataToShow || !busListToShow || !userCity) {
 		return (
 			<View>
@@ -100,7 +122,7 @@ export default function MapData(props: {
 	}
 	return (
 		<View className="flex-1">
-			<Map busListToShow={busListToShow} navigation={navigation} forwardRef={ref_map_view as LegacyRef<MapView>} routeDataToShow={routeDataToShow} userCity={userCity} />
+			<Map easterEggEnabled={easterEggEnabled} busListToShow={busListToShow} navigation={navigation} forwardRef={ref_map_view as LegacyRef<MapView>} routeDataToShow={routeDataToShow} userCity={userCity} />
 			<FollowingBus style={{ position: "absolute", marginTop: 2 * 4 }} bus={followingBus} onStopFollowing={() => setFollowingBus(undefined)} />
 
 			<BottomSheet
@@ -153,6 +175,7 @@ export default function MapData(props: {
 								Vibration.vibrate(100)
 							}}
 							onPress={() => {
+								pressForEasterEgg()
 								ref_map_view.current?.animateToRegion({
 									latitude: parseFloat(bus.lat) - 0.001,
 									longitude: parseFloat(bus.lng),

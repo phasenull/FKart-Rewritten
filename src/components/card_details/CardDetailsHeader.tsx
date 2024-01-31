@@ -6,6 +6,7 @@ import Application from "../../common/Application"
 import { BasicCardData } from "../../common/interfaces/BasicCardData"
 import CardTypes from "../../common/enums/CardTypes"
 import CardImages from "../../common/enums/CardImages"
+import Animated, { FadeInDown, FadeInLeft } from "react-native-reanimated"
 
 export default function CardDetailsHeader(props: {
 	card: BasicCardData<"Basic" | "QR">
@@ -18,7 +19,9 @@ export default function CardDetailsHeader(props: {
 		console.log("card_details_header render")
 		return (
 			<LinearGradient colors={[styles.primary, styles.white]} end={{ x: 0.8, y: 0.9 }} className="flex-row h-56 w-full mb-20" style={{ backgroundColor: styles.primary }}>
-				<View className="flex-col flex-1 ml-5 self-end mb-4 ">
+				<Animated.View className="flex-col flex-1 ml-5 self-end mb-4 "
+				entering={FadeInLeft.duration(500)}>
+
 					<Text className="opacity-70 top-3 text-white text-xl">Bakiye</Text>
 					<View className="flex-row items-baseline text-white gap-x-2 mb-4">
 						<Text className="font-bold text-white text-[48px]">{card.balance}</Text>
@@ -28,13 +31,11 @@ export default function CardDetailsHeader(props: {
 						onPress={() => {
 							Clipboard.setString(card.aliasNo)
 							ToastAndroid.show("Kart numarası kopyalandı!", ToastAndroid.SHORT)
-							// vibrate device
 							Vibration.vibrate(100)
 						}}
 						onLongPress={() => {
 							Clipboard.setString(card.aliasNo)
 							ToastAndroid.show("Kart numarası kopyalandı!", ToastAndroid.SHORT)
-							// vibrate device
 							Vibration.vibrate(100)
 						}}
 						className="flex-row w-full gap-x-1 items-center"
@@ -45,8 +46,8 @@ export default function CardDetailsHeader(props: {
 						</View>
 						<MaterialCommunityIcons style={{ color: styles.white }} size={20} name="content-copy" />
 					</TouchableOpacity>
-				</View>
-				<View className="flex-1 mr-24">
+				</Animated.View>
+				<Animated.View entering={FadeInDown.duration(500)} className="flex-1 mr-24">
 					<TouchableOpacity disabled={card_type === "QR"} onPress={() => setShowEditCardTypeModal(true)} className="relative w-40 h-64 left-16 -bottom-8 ">
 						<Image
 							className={"w-64 h-64 right-14"}
@@ -60,7 +61,7 @@ export default function CardDetailsHeader(props: {
 						/>
 						{card_type === "QR" ? null : <MaterialCommunityIcons style={{ bottom: 16 * 4, right: 4 * 4, alignSelf: "flex-end" }} color={styles.dark} name="image-edit" size={36} />}
 					</TouchableOpacity>
-				</View>
+				</Animated.View>
 			</LinearGradient>
 		)
 	},[card,card_type])
