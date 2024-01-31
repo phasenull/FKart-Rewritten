@@ -18,7 +18,7 @@ export default function BusMarker(props: { bus: BusData; coordinate: LatLng; eas
 		return (
 			<Marker
 				tracksViewChanges={false}
-				anchor={{ x: 0.5, y: 0.96 }}
+				anchor={{ x: 0.5, y: 0.7 }}
 				style={{ alignItems: "center" }}
 				flat={true}
 				zIndex={12}
