@@ -33,7 +33,7 @@ export default function AppEntryComponent() {
 			<GestureHandlerRootView style={{ flex: 1 }}>
 				<NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
 					<Stack.Navigator
-						initialRouteName="Home"
+						initialRouteName="home"
 						screenOptions={{
 							headerShown: false,
 							statusBarHidden: false,
