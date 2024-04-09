@@ -68,18 +68,22 @@ export default function Routes(props: { route: any; navigation: NativeStackNavig
 				<View className="mt-3 h-4 gap-x-4 flex-row justify-center mb-3">
 					{[
 						{
+							key:"koy_minibusu",
 							color: "#C60D0D",
-							value: "Diğer",
+							value: "Köy Minibüsü",
 						},
 						{
+							key:"ozel_halk_otobusu",
 							color: Application.styles.primary,
 							value: "Özel Halk Otobüsü",
 						},
 						{
+							key:"belediye_otobusu",
 							color: "#1EA9BD",
 							value: "Belediye Otobüsü",
 						},
 						{
+							key:"feribot",
 							color: "#134395",
 							value: "Feribot",
 						},
