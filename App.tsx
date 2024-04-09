@@ -12,6 +12,7 @@ import BusDetails from "./src/screens/BusDetails"
 import MapData from "./src/screens/MapData"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import * as Linking from "expo-linking"
+import WelcomerPage from "./src/screens/Welcomer"
 const config = {
 	screens: {
 		route_details: "route_details/:fetch_from_id/:direction?/:bus_id?",
@@ -38,6 +39,7 @@ export default function AppEntryComponent() {
 							statusBarHidden: false,
 						}}
 					>
+						<Stack.Screen name="welcomer" component={WelcomerPage} />
 						<Stack.Screen name="home" component={HomePage} />
 						<Stack.Screen name="auth" component={AuthPage} />
 						<Stack.Screen
