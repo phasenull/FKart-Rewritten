@@ -51,9 +51,6 @@ export default function AccountTab(props?: {
 	const [user, setUser] = useState<User | null>(
 		props.route.params?.user
 	)
-	if (!user) {
-		return navigation?.navigate("auth")
-	}
 	// const card = useMemo(async () =>  {return await fetchData()}, [])
 	const [cards, setCards] = useState<
 		Favorite<"Card">[] | undefined
@@ -75,8 +72,11 @@ export default function AccountTab(props?: {
 		fav_list: any,
 		is_from_cache: boolean = false
 	) {
+		if (!fav_list) {
+			return []
+		}
 		const favorite_cards_filtered: Favorite<"Card">[] =
-			fav_list.filter(
+			fav_list?.filter(
 				(p_card: Favorite<"Card">) => p_card.type === 2 || p_card.alias
 			)
 		return favorite_cards_filtered
