@@ -63,7 +63,7 @@ export default function Routes(props: { route: any; navigation: NativeStackNavig
 	}
 	return (
 		<React.Fragment>
-			<View style={{elevation:20, backgroundColor:Application.styles.dark}}>
+			<View style={{elevation:20,zIndex:2, backgroundColor:Application.styles.dark}}>
 				<RouteSearchBar onChangeText={setSearchText} filterByRouteType={filterByRouteType} setFilterByRouteType={setFilterByRouteType} />
 				<View className="mt-3 h-4 gap-x-4 flex-row justify-center mb-3">
 					{[
