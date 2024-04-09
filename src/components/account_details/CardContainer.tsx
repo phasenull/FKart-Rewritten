@@ -12,6 +12,7 @@ import { BasicCardData } from "../../common/interfaces/BasicCardData"
 import { useEffect, useState } from "react"
 import CustomLoadingIndicator from "../CustomLoadingIndicator"
 import CardImages from "../../common/enums/CardImages"
+import { formatAlias } from "../../util"
 
 export default function CardContainer(props: { favorite_data: Favorite<"Card" | "QR">; index: number; navigation: any; style?: ViewStyle }) {
 	const { favorite_data, index, navigation } = props
@@ -102,11 +103,11 @@ export default function CardContainer(props: { favorite_data: Favorite<"Card" | 
 								style={{
 									color: styles.white,
 									backgroundColor: styles.secondary,
-									width: 28 * 4,
+									width: 30 * 4,
 								}}
 								className="rounded-full mt-3 px-4 bottom-5 relative justify-center font-bold text-[12px] text-center"
 							>
-								{favorite_data.favorite || favorite_data.alias || "key_error (favorite)"}
+								{formatAlias(favorite_data.favorite || favorite_data.alias) || "key_error (favorite)"}
 								{/* {"* * * * * * * * *"} */}
 							</Text>
 							{card ? (
