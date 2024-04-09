@@ -26,7 +26,7 @@ async function getRouteDetails({ route_code, direction, include_time_table = fal
 		// 010000: without timetable, only bus points
 	}
 	Logger.info(`REQUEST useGetRouteDetails ${route_code} ${direction} ${include_time_table}`)
-	const request = Application.makeRequest(url, {
+	const request = Application.makeKentKartRequest(url, {
 		method: "GET",
 		params: params,
 	})

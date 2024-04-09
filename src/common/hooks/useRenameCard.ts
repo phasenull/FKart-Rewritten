@@ -8,7 +8,7 @@ async function FavoriteCard(card_or_fav_id: string, name: string | undefined, ty
 	}
 	Logger.info("REQUEST FavoriteCard", card_or_fav_id, name)
 
-	return Application.makeRequest(`${Application.endpoints.service}/rl1/api/v3.0/favorite?region=${Application.region}&authType=4&favorite=${card_or_fav_id}&description=${name || "HATALI AD"}&type=2`, {
+	return Application.makeKentKartRequest(`${Application.endpoints.service}/rl1/api/v3.0/favorite?region=${Application.region}&authType=4&favorite=${card_or_fav_id}&description=${name || "HATALI AD"}&type=2`, {
 		method: type === "remove" ? "DELETE" : "POST",
 	})
 }

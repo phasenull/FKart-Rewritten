@@ -5,8 +5,11 @@ import Logger from "./Logger"
 import LoginTypes from "./enums/LoginTypes"
 import API from "./API"
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios"
+import { Image } from "react-native"
+import { PREFETCH_IMAGES } from "./constants"
 
 export default abstract class Application {
+	public static readonly source_url = "https://github.com/phasenull/FKart-Rewritten"
 	public static region: string = "004"
 	public static version: string = "1.0.0"
 	public static name: string = "FKart"
@@ -55,7 +58,7 @@ export default abstract class Application {
 			borderRadius: 10,
 		},
 	})
-	public static makeRequest(input: string | URL | Request, config?: AxiosRequestConfig | undefined): Promise<AxiosResponse<any, any>> {
+	public static makeKentKartRequest(input: string | URL | Request, config?: AxiosRequestConfig | undefined): Promise<AxiosResponse<any, any>> {
 		// get url host
 		const whitelist = [...Object.values(this.endpoints)]
 		const check = whitelist.map((v) => input.toString().includes(v)).includes(true)
@@ -109,6 +112,11 @@ export default abstract class Application {
 		if (this.__is_init) {
 			return
 		}
+		PREFETCH_IMAGES.forEach((url:string)=>{
+			Image.prefetch(url).catch(()=>{
+				Logger.warning("Application.__INIT.PREFETCH_IMAGES","Failed to prefetch",url)
+			})
+		})
 		const user_data = await this.database.get("user")
 		const refresh_token = await this.database.get("refresh_token")
 		const access_token = await this.database.get("access_token")

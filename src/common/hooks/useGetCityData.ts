@@ -9,7 +9,7 @@ async function getCityData() : Promise<AxiosResponse<BaseKentKartResponse & {
 	city: ICityInformation[]
 }>> {
 	Logger.info("REQUEST useGetCityData")
-	return Application.makeRequest(`${Application.endpoints.service}/rl1/api/v2.0/city`)
+	return Application.makeKentKartRequest(`${Application.endpoints.service}/rl1/api/v2.0/city`)
 }
 
 export default function useGetCityData() {

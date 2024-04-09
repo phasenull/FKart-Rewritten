@@ -17,7 +17,7 @@ async function getFavorites(): Promise<
 	if (!user) {
 		throw new Error("User not logged in.")
 	}
-	return Application.makeRequest(url)
+	return Application.makeKentKartRequest(url)
 }
 
 export default function useGetFavorites() {

@@ -37,7 +37,7 @@ export default abstract class API {
 			[auth_type === LoginTypes.email ? "email" : "phoneNumber"]:
 				auth_value,
 		}
-		const request = await Application.makeRequest(
+		const request = await Application.makeKentKartRequest(
 			`${Application.endpoints.auth}/rl1/oauth/authorize?region=${region}&authType=4&lang=tr`,
 			{
 				method: "POST",
@@ -76,14 +76,14 @@ export default abstract class API {
 		token: string
 	}) {
 		const url = `${Application.endpoints.service}/rl1/api/card/balance?region=${region}&lang=tr&authType=4&token=${token}&alias=${alias}`
-		return Application.makeRequest(url)
+		return Application.makeKentKartRequest(url)
 	}
 	public static async getAuthToken({
 		refresh_token,
 	}: {
 		refresh_token: string
 	}): Promise<string> {
-		const request = await Application.makeRequest(
+		const request = await Application.makeKentKartRequest(
 			`${Application.endpoints.auth}/rl1/oauth/token`,
 			{
 				method: "POST",
@@ -114,7 +114,7 @@ export default abstract class API {
 				accountInfo: any
 			}
 			status: number
-		} = await Application.makeRequest(url, {
+		} = await Application.makeKentKartRequest(url, {
 			method: "GET",
 			headers: {
 				Authorization: `Bearer ${user.access_token}`,

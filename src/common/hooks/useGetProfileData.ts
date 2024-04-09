@@ -17,7 +17,7 @@ async function getProfile() {
 			result: { code: number; message?: string }
 			accountInfo: Account
 		}>
-	> = Application.makeRequest(url, {
+	> = Application.makeKentKartRequest(url, {
 		method: "GET",
 		headers: {
 			Authorization: `Bearer ${user.access_token}`,

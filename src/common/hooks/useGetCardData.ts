@@ -12,7 +12,7 @@ async function getCardData(
 > {
 	// Logger.info(`REQUEST useGetCardData ${card_alias}`)
 	const url = `${Application.endpoints.service}/rl1/api/card/balance?region=${Application.region}&lang=tr&authType=4&token=${Application.logged_user?.access_token}&alias=${card_alias}`
-	return Application.makeRequest(url)
+	return Application.makeKentKartRequest(url)
 }
 
 export function useGetCardData(card_alias: string) {

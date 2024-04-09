@@ -9,7 +9,7 @@ async function getProducts() : Promise<AxiosResponse<BaseKentKartResponse & IPro
 	const url = `https://service.kentkart.com/rl1/api/products?region=${Application.region}&lang=tr&authType=4`
 	
 	Logger.info("REQUEST useGetProducts")
-	return Application.makeRequest(url)
+	return Application.makeKentKartRequest(url)
 }
 
 export function useGetProducts() {

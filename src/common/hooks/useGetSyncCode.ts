@@ -21,7 +21,7 @@ async function getSyncCode(card_alias: string | undefined): Promise<
 	}
 	Logger.info("REQUEST useGetSyncCode")
 	const url = `https://service.kentkart.com/rl1/api/abt/sync?alias=${card_alias}&region=${Application.region}&authType=4`
-	return Application.makeRequest(url)
+	return Application.makeKentKartRequest(url)
 }
 
 export function useGetSyncCode(card_alias: string | undefined) {
