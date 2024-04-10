@@ -22,6 +22,8 @@ export default function BusContainer(props: {
 	onLongPress?: () => void
 }) {
 	const { bus, navigation, route_data } = props
+	const schedule_list = route_data?.timeTableList
+	const departure_time = (schedule_list?.find((e) => e.tripId === bus.tripId)?.departureTime)?.slice(0,5) || "--:--"
 	const { data, isLoading, isError } = useGetBusImages(bus)
 	function isEmpty() {
 		return ![bus.ac, bus.bike, bus.disabledPerson].find(
@@ -48,9 +50,9 @@ export default function BusContainer(props: {
 			className="h-48 w-80 flex-col overflow-hidden"
 		>
 			{/* title */}
-			<View className="flex-row h-6 justify-center items-center rounded-t-[16px]">
+			<View className="flex-row h-8 py-1 justify-center rounded-t-[16px]">
 				<Text
-					className="text-center font-bold py-1 mr-2"
+					className="text-center font-bold mr-2"
 					style={{
 						color: Application.styles.secondary,
 					}}
@@ -66,7 +68,7 @@ export default function BusContainer(props: {
 						size={16}
 						name={bus.vehicleType === "4" ? "ferry" : "bus"}
 					/>
-					{bus.plateNumber}
+					{bus.plateNumber} {departure_time}
 				</Text>
 				{isEmpty() ? null : (
 					<React.Fragment>

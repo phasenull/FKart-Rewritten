@@ -1,15 +1,18 @@
 import { Callout, LatLng, Marker } from "react-native-maps"
 import BusData from "../../../common/interfaces/BusData"
-import { Image, Text } from "react-native"
+import { Image, Text, View } from "react-native"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { DYNAMIC_CONTENT_URL } from "../../../common/constants"
 import Application from "../../../common/Application"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import Logger from "../../../common/Logger"
+import RouteData from "../../../common/interfaces/RouteData"
 
-export default function BusMarker(props: { bus: BusData; coordinate: LatLng; easterEggEnabled?: boolean; navigation: NativeStackNavigationProp<any> }) {
-	const { bus, coordinate, easterEggEnabled, navigation } = props
-
+export default function BusMarker(props: { bus: BusData; coordinate: LatLng; easterEggEnabled?: boolean; navigation: NativeStackNavigationProp<any>; route_data?: RouteData }) {
+	const { route_data, bus, coordinate, easterEggEnabled, navigation } = props
+	const schedule_list = route_data?.timeTableList
+	const departure_time = (schedule_list?.find((e) => e.tripId === bus.tripId)?.departureTime)?.slice(0,5) || "--:--"
+	console.log(departure_time)
 	if (!bus || !coordinate || !navigation) {
 		Logger.warning("BusMarker.tsx", "BusMarker", "Bus, coordinate or navigation is null")
 		return
@@ -26,28 +29,32 @@ export default function BusMarker(props: { bus: BusData; coordinate: LatLng; eas
 				calloutAnchor={{ x: 0.5, y: 0.5 }}
 				coordinate={coordinate}
 				title={bus.plateNumber}
-					onCalloutPress={() => {
-						navigation.navigate("bus_details", { bus: bus })
-					}}
+				onCalloutPress={() => {
+					navigation.navigate("bus_details", { bus: bus })
+				}}
 				// className="items-center justify-center overflow-visible"
-				
-					>
+			>
 				<Image
 					style={{
 						objectFit: "fill",
 					}}
-					source={{ uri: 
-						`${DYNAMIC_CONTENT_URL}/assets/media/images/random/easter_eggs/pacman/character_0.png` 
-					}}
+					source={{ uri: `${DYNAMIC_CONTENT_URL}/assets/media/images/random/easter_eggs/pacman/character_0.png` }}
 					className="h-8 w-8 -rotate-90"
 				/>
-				<Callout className="flex-row items-center">
+				<Callout className="flex-col items-center">
 					<Text
 						style={{
 							color: Application.styles.secondary,
 						}}
 					>
 						{bus.plateNumber}
+					</Text>
+					<Text
+						style={{
+							color: Application.styles.secondary,
+						}}
+					>
+						{departure_time}
 					</Text>
 					<MaterialCommunityIcons size={20} name="arrow-right-thick" />
 				</Callout>
@@ -96,14 +103,24 @@ export default function BusMarker(props: { bus: BusData; coordinate: LatLng; eas
 			</Text>
 		</View> */}
 			<Callout className="flex-row items-center">
-				<Text
-					style={{
-						color: Application.styles.secondary,
-					}}
-				>
-					{bus.plateNumber}
-				</Text>
-				<MaterialCommunityIcons size={20} style={{}} name="arrow-right-thick" />
+				<View className="flex-col items-center" style={{width:16*4}}>
+					<Text
+						style={{
+							color: Application.styles.secondary,
+							fontWeight:"800"
+						}}
+					>
+						{bus.plateNumber}
+					</Text>
+					<Text
+						style={{
+							color: Application.styles.secondary,
+						}}
+					>
+						{departure_time}
+					</Text>
+				</View>
+				<MaterialCommunityIcons size={20} color={Application.styles.secondary} name="arrow-right-thick" />
 			</Callout>
 		</Marker>
 	)

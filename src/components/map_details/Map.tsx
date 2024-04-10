@@ -55,7 +55,7 @@ export default function Map(props: {
 				))}
 
 				{busListToShow.map((bus, index) => (
-					<BusMarker bus={bus} key={index.toString()} easterEggEnabled={easterEggEnabled} coordinate={{ latitude: parseFloat(bus.lat), longitude: parseFloat(bus.lng) }} navigation={navigation} />
+					<BusMarker route_data={routeDataToShow} bus={bus} key={index.toString()} easterEggEnabled={easterEggEnabled} coordinate={{ latitude: parseFloat(bus.lat), longitude: parseFloat(bus.lng) }} navigation={navigation} />
 				))}
 			</MapView>
 		)
