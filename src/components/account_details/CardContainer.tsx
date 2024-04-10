@@ -15,12 +15,14 @@ import CardImages from "../../common/enums/CardImages"
 import { formatAlias } from "../../util"
 import { Swipeable } from "react-native-gesture-handler"
 import { useRemoveFavoriteCard } from "../../common/hooks/useRenameCard"
+import useGetFavorites from "../../common/hooks/useGetFavorites"
 
 export default function CardContainer(props: { favorite_data: Favorite<"Card" | "QR">; index: number; navigation: any; style?: ViewStyle }) {
 	const { favorite_data, index, navigation } = props
 	const { data, isLoading, isRefetching, isError } = useGetCardData(favorite_data.favorite || favorite_data.alias)
 	const [card, setCard] = useState<BasicCardData<any> | undefined>(undefined)
 	const {refetch:unFavoriteRefetch} = useRemoveFavoriteCard({card_or_fav_id:card?.aliasNo as string})
+	const {refetch:refetchAccountFavorites} = useGetFavorites()
 	const [cardImage, setCardImage] = useState<CardImages | undefined>(undefined)
 	useEffect(() => {
 		async function get() {
@@ -52,24 +54,19 @@ export default function CardContainer(props: { favorite_data: Favorite<"Card" | 
 			style={{
 				...props.style,
 			}}
-			key={`card-${index}`}
+			key={`card-${favorite_data.favorite || favorite_data.alias}`}
 		>
 			<Swipeable
 				containerStyle={{
 					overflow:"visible",
-					// backgroundColor:Application.styles.warning,
-					// borderTopRightRadius: 16,
-					// borderBottomRightRadius: 16,
 				}}
-				friction={1.5}
+				friction={1}
 				overshootRight={false}
 				renderRightActions={() => (
 					<TouchableOpacity
 						className="justify-center self-center items-center"
 						style={{
 							backgroundColor: Application.styles.warning,
-							// borderTopRightRadius: 16,
-							// borderBottomRightRadius: 16,
 							elevation:10,
 							borderRadius:100,
 							width:16*4,
@@ -80,6 +77,7 @@ export default function CardContainer(props: { favorite_data: Favorite<"Card" | 
 						onPress={()=>{
 							if (card?.aliasNo) {
 								unFavoriteRefetch()
+								refetchAccountFavorites()
 							}
 						}}
 					>
@@ -142,7 +140,6 @@ export default function CardContainer(props: { favorite_data: Favorite<"Card" | 
 								className="rounded-full mt-3 px-4 bottom-5 relative justify-center font-bold text-[12px] text-center"
 							>
 								{formatAlias(favorite_data.favorite || favorite_data.alias) || "key_error (favorite)"}
-								{/* {"* * * * * * * * *"} */}
 							</Text>
 							{card ? (
 								<View className="flex-1 flex-row">

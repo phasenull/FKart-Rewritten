@@ -34,6 +34,7 @@ import {
 	Favorite,
 	Favorites,
 } from "../../common/enums/Favorites"
+import { AddCard } from "../../components/account_details/AddCard"
 export default function AccountTab(props?: {
 	route: any
 	navigation: NativeStackNavigationProp<any> | any
@@ -148,7 +149,7 @@ export default function AccountTab(props?: {
 				horizontal={false}
 				showsVerticalScrollIndicator={true}
 				contentContainerStyle={{
-					paddingBottom: 60,
+					paddingBottom: 100,
 					justifyContent: "center",
 					alignItems: "center",
 				}}
@@ -179,7 +180,8 @@ export default function AccountTab(props?: {
 						index={index}
 					/>
 				))}
-				<TouchableOpacity
+				<AddCard/>
+				{/* <TouchableOpacity
 					className="justify-end"
 					onPress={async () => {
 						await Application.logout()
@@ -201,7 +203,7 @@ export default function AccountTab(props?: {
 					>
 						Logout
 					</Text>
-				</TouchableOpacity>
+				</TouchableOpacity> */}
 			</ScrollView>
 		</View>
 	)
