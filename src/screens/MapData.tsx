@@ -66,11 +66,14 @@ export default function MapData(props: {
 		}
 	}, [])
 	useEffect(() => {
-		if (fetchedRouteData?.data?.pathList[0]) {
-			setRouteDataToShow(fetchedRouteData.data.pathList[0])
-			setBusListToShow(fetchedRouteData.data.pathList[0]?.busList)
+		const path_list = fetchedRouteData?.data?.pathList
+		if (path_list && path_list[0]) {
+			setRouteDataToShow(path_list[0])
+			const bus_list = path_list[0].busList
+			if (!bus_list || bus_list.length === 0) return
+			setBusListToShow(path_list[0].busList)
 			if (!followingBus) return
-			const found_bus = fetchedRouteData.data.pathList[0]?.busList.find((bus: BusData) => bus.plateNumber === followingBus.plateNumber)
+			const found_bus = path_list[0].busList.find((bus: BusData) => bus.plateNumber === followingBus.plateNumber)
 			if (!found_bus) return
 			console.log("Following bus found")
 			ref_map_view.current?.animateToRegion({
