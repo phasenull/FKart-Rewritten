@@ -13,12 +13,14 @@ import { useEffect, useState } from "react"
 import CustomLoadingIndicator from "../CustomLoadingIndicator"
 import CardImages from "../../common/enums/CardImages"
 import { formatAlias } from "../../util"
+import { Swipeable } from "react-native-gesture-handler"
+import { useRemoveFavoriteCard } from "../../common/hooks/useRenameCard"
 
 export default function CardContainer(props: { favorite_data: Favorite<"Card" | "QR">; index: number; navigation: any; style?: ViewStyle }) {
 	const { favorite_data, index, navigation } = props
-
 	const { data, isLoading, isRefetching, isError } = useGetCardData(favorite_data.favorite || favorite_data.alias)
 	const [card, setCard] = useState<BasicCardData<any> | undefined>(undefined)
+	const {refetch:unFavoriteRefetch} = useRemoveFavoriteCard({card_or_fav_id:card?.aliasNo as string})
 	const [cardImage, setCardImage] = useState<CardImages | undefined>(undefined)
 	useEffect(() => {
 		async function get() {
@@ -52,9 +54,41 @@ export default function CardContainer(props: { favorite_data: Favorite<"Card" | 
 			}}
 			key={`card-${index}`}
 		>
-			
+			<Swipeable
+				containerStyle={{
+					overflow:"visible",
+					// backgroundColor:Application.styles.warning,
+					// borderTopRightRadius: 16,
+					// borderBottomRightRadius: 16,
+				}}
+				friction={1.5}
+				overshootRight={false}
+				renderRightActions={() => (
+					<TouchableOpacity
+						className="justify-center self-center items-center"
+						style={{
+							backgroundColor: Application.styles.warning,
+							// borderTopRightRadius: 16,
+							// borderBottomRightRadius: 16,
+							elevation:10,
+							borderRadius:100,
+							width:16*4,
+							height:16*4,
+							padding:4,
+							marginHorizontal:10
+						}}
+						onPress={()=>{
+							if (card?.aliasNo) {
+								unFavoriteRefetch()
+							}
+						}}
+					>
+						<MaterialCommunityIcons color={Application.styles.white} name="trash-can" size={44} />
+					</TouchableOpacity>
+				)}
+			>
 				<TouchableOpacity
-					activeOpacity={0.7}
+					activeOpacity={0.8}
 					className="items-center flex-row py-5 px-5 w-80 h-32 rounded-[16px]"
 					disabled={isLoading}
 					style={{
@@ -126,6 +160,7 @@ export default function CardContainer(props: { favorite_data: Favorite<"Card" | 
 						</View>
 					</View>
 				</TouchableOpacity>
+			</Swipeable>
 		</Animated.View>
 	)
 }
