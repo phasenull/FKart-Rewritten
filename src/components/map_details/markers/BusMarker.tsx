@@ -7,22 +7,60 @@ import Application from "../../../common/Application"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import Logger from "../../../common/Logger"
 import RouteData from "../../../common/interfaces/RouteData"
-
-export default function BusMarker(props: { bus: BusData; coordinate: LatLng; easterEggEnabled?: boolean; navigation: NativeStackNavigationProp<any>; route_data?: RouteData }) {
+export function BusCallout(props: { scheduled_data: any; route_data: RouteData; bus: BusData }) {
+	const { scheduled_data, bus, route_data } = props
+	const departure_time = scheduled_data?.departureTime?.slice(0, 5) || "--:--"
+	return (
+		<View
+			className="items-center justify-center flex-1 "
+			style={{
+				width: 30 * 4,
+				height: 12 * 4,
+				backgroundColor: Application.styles.white,
+				elevation: 10,
+				borderRadius: 16,
+			}}
+		>
+			{/* <View className="flex-col  bg-red-400" >
+				<Text
+				className="text-center"
+					style={{
+						color: Application.styles.secondary,
+						backgroundColor:"red"
+					}}
+				>
+					{bus.plateNumber}
+				</Text>
+				<Text
+					className="mx-auto"
+					style={{
+						color: Application.styles.secondary,
+						textAlign:"center",
+						backgroundColor:"red"
+					}}
+				>
+					{departure_time}
+				</Text>
+			</View> */}
+			{/* <MaterialCommunityIcons size={20} color={Application.styles.secondary} name="arrow-right-thick" /> */}
+		</View>
+	)
+}
+export function BusMarker(props: { bus: BusData; coordinate: LatLng; easterEggEnabled?: boolean; navigation: NativeStackNavigationProp<any>; route_data?: RouteData }) {
 	const { route_data, bus, coordinate, easterEggEnabled, navigation } = props
 	const schedule_list = route_data?.timeTableList
-	const departure_time = (schedule_list?.find((e) => e.tripId === bus.tripId)?.departureTime)?.slice(0,5) || "--:--"
-	console.log(departure_time)
-	if (!bus || !coordinate || !navigation) {
+	const scheduled_data = schedule_list?.find((e) => e.tripId === bus.tripId)
+	if (!bus || !coordinate || !navigation || !route_data) {
 		Logger.warning("BusMarker.tsx", "BusMarker", "Bus, coordinate or navigation is null")
 		return
 	}
 	if (easterEggEnabled) {
 		return (
 			<Marker
+				removeClippedSubviews={false}
 				tracksViewChanges={false}
 				anchor={{ x: 0.5, y: 0.7 }}
-				style={{ alignItems: "center" }}
+				style={{ alignItems: "center", overflow: "visible" }}
 				flat={true}
 				zIndex={12}
 				rotation={parseFloat(bus.bearing)}
@@ -41,29 +79,15 @@ export default function BusMarker(props: { bus: BusData; coordinate: LatLng; eas
 					source={{ uri: `${DYNAMIC_CONTENT_URL}/assets/media/images/random/easter_eggs/pacman/character_0.png` }}
 					className="h-8 w-8 -rotate-90"
 				/>
-				<Callout className="flex-col items-center">
-					<Text
-						style={{
-							color: Application.styles.secondary,
-						}}
-					>
-						{bus.plateNumber}
-					</Text>
-					<Text
-						style={{
-							color: Application.styles.secondary,
-						}}
-					>
-						{departure_time}
-					</Text>
-					<MaterialCommunityIcons size={20} name="arrow-right-thick" />
+				<Callout removeClippedSubviews={false} style={{ overflow: "visible" }} tooltip={true}>
+					<BusCallout bus={bus} route_data={route_data} scheduled_data={scheduled_data} />
 				</Callout>
 			</Marker>
 		)
 	}
 	return (
 		<Marker
-			tracksViewChanges={false}
+			tracksViewChanges={true}
 			anchor={{ x: 0.5, y: 0.96 }}
 			zIndex={12}
 			coordinate={{ latitude: parseFloat(bus.lat), longitude: parseFloat(bus.lng) }}
@@ -71,7 +95,8 @@ export default function BusMarker(props: { bus: BusData; coordinate: LatLng; eas
 			title={bus.plateNumber}
 			rotation={parseFloat(bus.bearing)}
 			className="items-center justify-center overflow-visible"
-			calloutAnchor={{ x: 0.5, y: 0.8 }}
+			// calloutOffset={{x:1,y:1}}
+			calloutAnchor={{ x: 0.5, y: 0.5 }}
 			onCalloutPress={() => {
 				navigation.navigate("bus_details", { bus: bus })
 			}}
@@ -97,30 +122,8 @@ export default function BusMarker(props: { bus: BusData; coordinate: LatLng; eas
 				name="bus"
 				size={16}
 			/>
-			{/* <View className="items-center" style={{ borderRadius: 8, backgroundColor: Application.styles.secondary, paddingHorizontal: 1 * 4 }}>
-			<Text style={{ color: Application.styles.white, fontWeight: "800", fontSize: 12, maxWidth: 20 * 4, textAlign: "center" }} adjustsFontSizeToFit={true}>
-				{bus.plateNumber}
-			</Text>
-		</View> */}
-			<Callout className="flex-row items-center">
-				<View className="flex-col items-center" style={{width:16*4}}>
-					<Text
-						style={{
-							color: Application.styles.secondary,
-							fontWeight:"800"
-						}}
-					>
-						{bus.plateNumber}
-					</Text>
-					<Text
-						style={{
-							color: Application.styles.secondary,
-						}}
-					>
-						{departure_time}
-					</Text>
-				</View>
-				<MaterialCommunityIcons size={20} color={Application.styles.secondary} name="arrow-right-thick" />
+			<Callout removeClippedSubviews={false} style={{ overflow: "visible" }} tooltip={true}>
+				<BusCallout bus={bus} route_data={route_data} scheduled_data={scheduled_data} />
 			</Callout>
 		</Marker>
 	)

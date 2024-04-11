@@ -10,7 +10,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { DYNAMIC_CONTENT_URL } from "../../common/constants"
 import Logger from "../../common/Logger"
 import StopMarker from "./markers/StopMarker"
-import BusMarker from "./markers/BusMarker"
+import {BusMarker} from "./markers/BusMarker"
 const styled_map = require("./MapStyle.json")
 export default function Map(props: {
 	forwardRef: LegacyRef<MapView> | undefined
