@@ -1,7 +1,7 @@
 import { LogBox, Text, View, useColorScheme } from "react-native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { NavigationContainer } from "@react-navigation/native"
-import HomePage from "./src/screens/Home"
+import RootScreen from "./src/screens/RootScreen"
 import AuthPage from "./src/screens/Auth"
 import CardDetails from "./src/screens/CardDetails"
 import { QueryClient, QueryClientProvider } from "react-query"
@@ -13,6 +13,8 @@ import MapData from "./src/screens/MapData"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import * as Linking from "expo-linking"
 import WelcomerPage from "./src/screens/Welcomer"
+import * as Updates from "expo-updates"
+import { useState } from "react"
 const config = {
 	screens: {
 		route_details: "route_details/:fetch_from_id/:direction?/:bus_id?",
@@ -29,18 +31,35 @@ export default function AppEntryComponent() {
 	const colorScheme = useColorScheme()
 	console.log(colorScheme)
 	Application.__INIT()
-	return ( <QueryClientProvider client={queryClient}>
+	const [isUpdateAvailable,setIsUpdateAvailable] = useState<boolean|undefined>(undefined)
+	async function onFetchUpdateAsync() {
+		try {
+			const update = await Updates.checkForUpdateAsync()
+
+			setIsUpdateAvailable(update.isAvailable)
+		} catch (error) {
+			// You can also add an alert() to see the error message in case of an error when fetching updates.
+			alert(`Error fetching latest Expo update: ${error}`)
+			setIsUpdateAvailable(false)
+		}
+	}
+	onFetchUpdateAsync()
+	return (
+		<QueryClientProvider client={queryClient}>
 			<GestureHandlerRootView style={{ flex: 1 }}>
 				<NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
 					<Stack.Navigator
-						initialRouteName="home"
+						initialRouteName="welcomer"
 						screenOptions={{
 							headerShown: false,
 							statusBarHidden: false,
 						}}
 					>
-						<Stack.Screen name="welcomer" component={WelcomerPage} />
-						<Stack.Screen name="home" component={HomePage} />
+						<Stack.Screen name="welcomer" initialParams={{
+							isCheckingUpdate: (isUpdateAvailable === undefined),
+							isUpdateAvailable: (isUpdateAvailable === true)
+						}} component={WelcomerPage} />
+						<Stack.Screen name="home" component={RootScreen} />
 						<Stack.Screen name="auth" component={AuthPage} />
 						<Stack.Screen
 							name="card_details"
@@ -58,7 +77,7 @@ export default function AppEntryComponent() {
 							name="route_details"
 							options={{
 								headerShown: true,
-								title: ""
+								title: "",
 							}}
 							component={RouteDetails as any}
 						/>
@@ -66,7 +85,7 @@ export default function AppEntryComponent() {
 							name="bus_details"
 							options={{
 								headerShown: true,
-								title: ""
+								title: "",
 							}}
 							component={BusDetails as any}
 						/>
@@ -74,7 +93,7 @@ export default function AppEntryComponent() {
 							name="map_data"
 							options={{
 								headerShown: true,
-								title: ""
+								title: "",
 							}}
 							component={MapData as any}
 						/>

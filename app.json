@@ -6,7 +6,6 @@
 		"orientation": "portrait",
 		"scheme": "fkart",
 		"icon": "./assets/icon.png",
-		"userInterfaceStyle": "light",
 		"splash": {
 			"image": "./assets/splash.png",
 			"resizeMode": "contain",
@@ -14,20 +13,18 @@
 		},
 		"assetBundlePatterns": ["**/*"],
 		"ios": {
-			"supportsTablet": true
+			"supportsTablet": false,
+			"runtimeVersion": {
+				"policy": "appVersion"
+			}
 		},
 		"android": {
 			"adaptiveIcon": {
 				"foregroundImage": "./assets/adaptive-icon.png",
 				"backgroundColor": "#ffffff"
 			},
-			"config": {
-				"googleMaps": {
-					"apiKey": "AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY"
-				}
-			},
-			"softwareKeyboardLayoutMode": "adjustPan",
-			"package": "com.phasenull.FKart"
+			"package": "com.phasenull.FKart",
+			"runtimeVersion": "1.0.0"
 		},
 		"web": {
 			"favicon": "./assets/favicon.png"
@@ -37,7 +34,7 @@
 			[
 				"expo-image-picker",
 				{
-					"photosPermission": "The app accesses your photos to let you share them with your friends."
+					"photosPermission": "Required to upload bus images."
 				}
 			]
 		],
@@ -48,6 +45,9 @@
 			"eas": {
 				"projectId": "33376c1e-302f-42f0-88ec-b0fccb210c19"
 			}
+		},
+		"updates": {
+			"url": "https://u.expo.dev/33376c1e-302f-42f0-88ec-b0fccb210c19"
 		}
 	}
 }
