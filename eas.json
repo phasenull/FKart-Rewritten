@@ -13,12 +13,8 @@
 			}
 		},
 		"apk": {
-			"distribution": "internal",
-			"developmentClient": false,
 			"android": {
-				"developmentClient": false,
-				"buildType": "apk",
-				"gradleCommand": ":app:assembleDebug"
+				"buildType": "apk"
 			},
 			"ios": {
 				"buildConfiguration": "Debug"
