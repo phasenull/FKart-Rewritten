@@ -24,7 +24,7 @@ export default function WelcomerPage(props: { checkedUpdates:boolean,isUpdateAva
 						fontSize: 24,
 					}}
 				>
-					Checking Updates in {Updates.channel}
+					Checking Updates in {Updates.channel}!
 				</Text>
 			</View>
 		)
