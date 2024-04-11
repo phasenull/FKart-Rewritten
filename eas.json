@@ -6,13 +6,15 @@
 		"development": {
 			"distribution": "internal",
 			"android": {
-				"gradleCommand": ":app:assembleDebug"
+				"buildType": "apk",
+				"gradleCommand": ":app:assembleRelease"
 			},
 			"ios": {
 				"buildConfiguration": "Debug"
 			}
 		},
 		"apk": {
+
 			"android": {
 				"buildType": "apk"
 			},
