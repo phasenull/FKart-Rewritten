@@ -11,7 +11,7 @@ export function IIPage1() {
 				</Text>
 				<Text className="text-md" style={{ fontWeight: "800", color: Application.styles.secondary,opacity:0.5 }}>
 					{" "}
-					v{Application.version} - {Updates.channel}
+					v{Application.version} - {Updates.channel} {Updates.isEmergencyLaunch}
 				</Text>
 			</Animated.View>
 			<Image

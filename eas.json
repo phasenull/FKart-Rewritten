@@ -5,6 +5,7 @@
 	"build": {
 		"development": {
 			"distribution": "internal",
+			"channel": "master",
 			"android": {
 				"buildType": "apk",
 				"gradleCommand": ":app:assembleRelease"
@@ -14,7 +15,6 @@
 			}
 		},
 		"apk": {
-
 			"android": {
 				"buildType": "apk"
 			},
@@ -28,8 +28,11 @@
 			}
 		},
 		"production": {
+			"distribution": "internal",
+			"channel": "production",
 			"android": {
-				"buildType": "apk"
+				"buildType": "apk",
+				"gradleCommand": ":app:assembleRelease"
 			}
 		}
 	},

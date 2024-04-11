@@ -5,11 +5,12 @@ import { Text, View } from "react-native"
 import Application from "../common/Application"
 import CustomLoadingIndicator from "../components/CustomLoadingIndicator"
 import * as Updates from "expo-updates"
-export default function WelcomerPage(props: { route: any,navigation:NativeStackNavigationProp<any> }) {
-	const { isCheckingUpdate, isUpdateAvailable } = props.route.params
-	console.log(isCheckingUpdate, isUpdateAvailable)
+export default function WelcomerPage(props: { checkedUpdates:boolean,isUpdateAvailable:boolean,navigation?:NativeStackNavigationProp<any> }) {
+	const { checkedUpdates, isUpdateAvailable } = props
+	const navigation = props.navigation as NativeStackNavigationProp<any>
+	console.log(checkedUpdates, isUpdateAvailable)
 	const [show, setShow] = useState<"initial_info" | "auth_page">("initial_info")
-	if (isCheckingUpdate) {
+	if (!checkedUpdates) {
 		return (
 			<View className="flex-1 gap-y-10 flex-col items-center justify-center" style={{ backgroundColor: Application.styles.dark }}>
 				<View>
@@ -53,6 +54,6 @@ export default function WelcomerPage(props: { route: any,navigation:NativeStackN
 		)
 	}
 	if (show == "initial_info") {
-		return <InitialInfo navigation={props.navigation} />
+		return <InitialInfo navigation={navigation} />
 	}
 }

@@ -31,15 +31,18 @@ export default function AppEntryComponent() {
 	const colorScheme = useColorScheme()
 	console.log(colorScheme)
 	Application.__INIT()
+	const [checkedUpdates, setCheckedUpdates] = useState(false)
 	const [isUpdateAvailable, setIsUpdateAvailable] = useState<boolean | undefined>(undefined)
 	async function onFetchUpdateAsync() {
 		try {
 			const update = await Updates.checkForUpdateAsync()
-			console.log(`Update available on channel ${Updates.channel}:`,update)
+			alert(`Update available on channel ${Updates.channel}: ${update.reason}`)
+			setCheckedUpdates(true)
 			setIsUpdateAvailable(update.isAvailable)
 		} catch (error) {
 			// You can also add an alert() to see the error message in case of an error when fetching updates.
 			alert(`Error fetching latest Expo update: ${error}`)
+			setCheckedUpdates(true)
 			setIsUpdateAvailable(false)
 		}
 	}
@@ -63,7 +66,9 @@ export default function AppEntryComponent() {
 								isCheckingUpdate: isUpdateAvailable === undefined,
 								isUpdateAvailable: isUpdateAvailable === true,
 							}}
-							component={WelcomerPage}
+							component={() => {
+								return <WelcomerPage checkedUpdates={checkedUpdates} isUpdateAvailable={(isUpdateAvailable === true)} />
+							}}
 						/>
 						<Stack.Screen name="home" component={RootScreen} />
 						<Stack.Screen name="auth" component={AuthPage} />
