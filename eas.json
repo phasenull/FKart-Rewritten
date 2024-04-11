@@ -12,12 +12,28 @@
 				"buildConfiguration": "Debug"
 			}
 		},
+		"apk": {
+			"distribution": "internal",
+			"developmentClient": false,
+			"android": {
+				"developmentClient": false,
+				"buildType": "apk",
+				"gradleCommand": ":app:assembleDebug"
+			},
+			"ios": {
+				"buildConfiguration": "Debug"
+			}
+		},
 		"preview": {
 			"android": {
 				"buildType": "apk"
 			}
 		},
-		"production": {}
+		"production": {
+			"android": {
+				"buildType": "apk"
+			}
+		}
 	},
 	"submit": {
 		"production": {}
