@@ -6,7 +6,7 @@ FKart is a project that focuses on building a better public transit app mainly f
 Kocaeli itself has an official public app (3 of them actually), but they were so bad and unstable that i thought "hey, this should not even be available to public, someone should make a better one" so i started this project.
 
 As far as i know, the company responsible for public transit infrastructure [Ulaşım Park](https://www.ulasimpark.com.tr/) does not have its own services and using [KentKart](https://www.kentkart.com/),
-they don't have a public docs for their API and thats pretty much what makes this project hard, even if they did it wouldn't matter since their backend is so bad that they should probably create it from scratch.
+they don't have a public docs for their API and thats pretty much what makes this project hard, even if they did it wouldn't matter since their backend is so bad that they should probably create a new one from scratch.
 
 #### contact me via email if needed: contact@phasenull.dev
 
