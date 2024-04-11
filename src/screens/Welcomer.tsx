@@ -23,7 +23,7 @@ export default function WelcomerPage(props: { route: any,navigation:NativeStackN
 						fontSize: 24,
 					}}
 				>
-					Checking Updates
+					Checking Updates in {Updates.channel}
 				</Text>
 			</View>
 		)

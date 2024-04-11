@@ -1,7 +1,7 @@
 import { Image, Text, View } from "react-native"
 import Application from "../../../common/Application"
 import Animated, { FadeIn } from "react-native-reanimated"
-
+import * as Updates from "expo-updates"
 export function IIPage1() {
 	return (
 		<View className="justify-center flex-col flex-1 items-center">
@@ -11,7 +11,7 @@ export function IIPage1() {
 				</Text>
 				<Text className="text-md" style={{ fontWeight: "800", color: Application.styles.secondary,opacity:0.5 }}>
 					{" "}
-					v{Application.version}
+					v{Application.version} - {Updates.channel}
 				</Text>
 			</Animated.View>
 			<Image

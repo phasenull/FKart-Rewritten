@@ -24,7 +24,7 @@
 				"backgroundColor": "#ffffff"
 			},
 			"package": "com.phasenull.FKart",
-			"runtimeVersion": "1.0.0"
+			"runtimeVersion": "11.4.24"
 		},
 		"web": {
 			"favicon": "./assets/favicon.png"

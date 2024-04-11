@@ -14,7 +14,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler"
 import * as Linking from "expo-linking"
 import WelcomerPage from "./src/screens/Welcomer"
 import * as Updates from "expo-updates"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 const config = {
 	screens: {
 		route_details: "route_details/:fetch_from_id/:direction?/:bus_id?",
@@ -31,11 +31,11 @@ export default function AppEntryComponent() {
 	const colorScheme = useColorScheme()
 	console.log(colorScheme)
 	Application.__INIT()
-	const [isUpdateAvailable,setIsUpdateAvailable] = useState<boolean|undefined>(undefined)
+	const [isUpdateAvailable, setIsUpdateAvailable] = useState<boolean | undefined>(undefined)
 	async function onFetchUpdateAsync() {
 		try {
 			const update = await Updates.checkForUpdateAsync()
-
+			console.log(`Update available on channel ${Updates.channel}:`,update)
 			setIsUpdateAvailable(update.isAvailable)
 		} catch (error) {
 			// You can also add an alert() to see the error message in case of an error when fetching updates.
@@ -43,7 +43,9 @@ export default function AppEntryComponent() {
 			setIsUpdateAvailable(false)
 		}
 	}
-	onFetchUpdateAsync()
+	useEffect(() => {
+		onFetchUpdateAsync()
+	}, [])
 	return (
 		<QueryClientProvider client={queryClient}>
 			<GestureHandlerRootView style={{ flex: 1 }}>
@@ -55,10 +57,14 @@ export default function AppEntryComponent() {
 							statusBarHidden: false,
 						}}
 					>
-						<Stack.Screen name="welcomer" initialParams={{
-							isCheckingUpdate: (isUpdateAvailable === undefined),
-							isUpdateAvailable: (isUpdateAvailable === true)
-						}} component={WelcomerPage} />
+						<Stack.Screen
+							name="welcomer"
+							initialParams={{
+								isCheckingUpdate: isUpdateAvailable === undefined,
+								isUpdateAvailable: isUpdateAvailable === true,
+							}}
+							component={WelcomerPage}
+						/>
 						<Stack.Screen name="home" component={RootScreen} />
 						<Stack.Screen name="auth" component={AuthPage} />
 						<Stack.Screen
