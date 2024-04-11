@@ -1,19 +1,7 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { StatusBar } from "expo-status-bar"
 import { useEffect, useMemo, useState } from "react"
-import {
-	ActivityIndicator,
-	Button,
-	Keyboard,
-	Modal,
-	Pressable,
-	SafeAreaView,
-	Text,
-	TouchableHighlight,
-	TouchableOpacity,
-	View,
-	useWindowDimensions,
-} from "react-native"
+import { ActivityIndicator, Button, Keyboard, Modal, Pressable, SafeAreaView, Text, TouchableHighlight, TouchableOpacity, View, useWindowDimensions } from "react-native"
 import Application from "../common/Application"
 import NotLoggedInModal from "../components/auth/NotLoggedInModal"
 import User from "../common/classes/User"
@@ -23,14 +11,10 @@ import MainTab from "../tabs/home/MainTab"
 import AccountTab from "../tabs/home/AccountTab"
 import Routes from "../tabs/home/Routes"
 import CustomLoadingIndicator from "../components/CustomLoadingIndicator"
-export default function HomePage(props: {
-	navigation: NativeStackNavigationProp<any>
-	route: { params?: { user?: User | undefined } }
-}) {
+import { TabIconWrapper } from "../components/root/TabIconWrapper"
+export default function RootScreen(props: { navigation: NativeStackNavigationProp<any>; route: { params?: { user?: User | undefined } } }) {
 	const { route } = props
-	const [user, setUser] = useState<User | undefined>(
-		props.route.params?.user
-	)
+	const [user, setUser] = useState<User | undefined>(props.route.params?.user)
 	const { navigation } = props
 	const [prompt_log_in, set_prompt_log_in] = useState(false)
 	const Tab = useMemo(() => {
@@ -95,18 +79,19 @@ export default function HomePage(props: {
 						initialParams={{ user: user }}
 						options={{
 							tabBarIcon: ({ focused, color, size }) => (
-								<MaterialCommunityIcons
-									name="bus"
-									size={size}
-									style={{
-										bottom: (focused && 7) || 0,
-										backgroundColor:
-											(focused && styles.primary) || styles.white,
-										borderRadius: 100,
-										paddingHorizontal: 6,
-									}}
-									color={color}
-								/>
+								// <TabIconWrapper>
+									<MaterialCommunityIcons
+										name="bus"
+										size={size}
+										style={{
+											bottom: (focused && 7) || 0,
+											backgroundColor: (focused && styles.primary) || styles.white,
+											borderRadius: 100,
+											paddingHorizontal: 6,
+										}}
+										color={color}
+									/>
+								// {/* </TabIconWrapper> */}
 							),
 						}}
 						component={Routes}
@@ -116,18 +101,19 @@ export default function HomePage(props: {
 						initialParams={{ user: user }}
 						options={{
 							tabBarIcon: ({ focused, color, size }) => (
-								<MaterialCommunityIcons
-									name="home"
-									size={size}
-									style={{
-										bottom: (focused && 7) || 0,
-										backgroundColor:
-											(focused && styles.primary) || styles.white,
-										borderRadius: 100,
-										paddingHorizontal: 6,
-									}}
-									color={color}
-								/>
+								// <TabIconWrapper>
+									<MaterialCommunityIcons
+										name="home"
+										size={size}
+										style={{
+											bottom: (focused && 7) || 0,
+											backgroundColor: (focused && styles.primary) || styles.white,
+											borderRadius: 100,
+											paddingHorizontal: 6,
+										}}
+										color={color}
+									/>
+								// {/* </TabIconWrapper> */}
 							),
 						}}
 						component={MainTab}
@@ -135,18 +121,19 @@ export default function HomePage(props: {
 					<Tab.Screen
 						options={{
 							tabBarIcon: ({ focused, color, size }) => (
-								<MaterialCommunityIcons
-									name="account"
-									size={size}
-									style={{
-										bottom: (focused && 7) || 0,
-										backgroundColor:
-											(focused && styles.primary) || styles.white,
-										borderRadius: 100,
-										paddingHorizontal: 6,
-									}}
-									color={color}
-								/>
+								// <TabIconWrapper>
+									<MaterialCommunityIcons
+										name="account"
+										size={size}
+										style={{
+											bottom: (focused && 7) || 0,
+											backgroundColor: (focused && styles.primary) || styles.white,
+											borderRadius: 100,
+											paddingHorizontal: 6,
+										}}
+										color={color}
+									/>
+								// </TabIconWrapper>
 							),
 						}}
 						name="Account"
@@ -158,13 +145,7 @@ export default function HomePage(props: {
 		)
 	}
 	if (prompt_log_in) {
-		return (
-			<NotLoggedInModal
-				navigation={navigation}
-				onRequestClose={() => {}}
-				param_visible={true}
-			/>
-		)
+		return <NotLoggedInModal navigation={navigation} onRequestClose={() => {}} param_visible={true} />
 	}
-	return (<CustomLoadingIndicator />)
+	return <CustomLoadingIndicator />
 }
