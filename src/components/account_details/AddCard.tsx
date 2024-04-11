@@ -19,7 +19,7 @@ export function AddCard() {
 		refetchAccountFavorites({})
 	}
 	return (
-		<View className="w-full h-36 items-center justify-center">
+		<View className="w-full mt-8 h-36 items-center justify-center">
 			<FavoriteCardInputAliasModal onSave={onSave} visible={visible} onDismiss={()=>{setVisible(false)}}/>
 			<TouchableOpacity
 				className="w-24 h-24 items-center justify-center rounded-full"

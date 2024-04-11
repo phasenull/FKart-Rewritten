@@ -96,7 +96,6 @@ export default function MapData(props: {
 	}, [cityData?.data])
 	function pressForEasterEgg() {
 		pressCounter.current.press_count++
-		console.log("Press detected",pressCounter.current.press_count)
 		if (pressCounter.current.press_count === 1) {
 			pressCounter.current.last_press = Date.now()
 		}

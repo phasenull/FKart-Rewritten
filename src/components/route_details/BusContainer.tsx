@@ -50,7 +50,7 @@ export default function BusContainer(props: {
 			className="h-48 w-80 flex-col overflow-hidden"
 		>
 			{/* title */}
-			<View className="flex-row h-8 py-1 justify-center rounded-t-[16px]">
+			<View className="flex-row pb-1 h-8 bg-red-400 items-center justify-center rounded-t-[16px]">
 				<Text
 					className="text-center font-bold mr-2"
 					style={{
@@ -72,7 +72,7 @@ export default function BusContainer(props: {
 				</Text>
 				{isEmpty() ? null : (
 					<React.Fragment>
-						<Divider height={"70%"} />
+						<Divider className="" />
 						<View className="flex-row ml-2">
 							{bus.disabledPerson === "1" ? (
 								<MaterialCommunityIcons
@@ -131,7 +131,7 @@ export default function BusContainer(props: {
 			</View>
 			<Text
 				style={{ color: Application.styles.secondary }}
-				className="text-center font-bold py-1"
+				className="text-center h-8 self-center items-center justify-center font-bold"
 			>
 				<MaterialCommunityIcons
 					name="map-marker"
