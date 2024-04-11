@@ -62,7 +62,7 @@ export default function Routes(props: { route: any; navigation: NativeStackNavig
 		refetch()
 	}
 	return (
-		<React.Fragment>
+		<View className="flex-1">
 			<View style={{elevation:20,zIndex:2, backgroundColor:Application.styles.dark}}>
 				<RouteSearchBar onChangeText={setSearchText} filterByRouteType={filterByRouteType} setFilterByRouteType={setFilterByRouteType} />
 				<View className="mt-3 h-4 gap-x-4 flex-row justify-center mb-3">
@@ -98,6 +98,6 @@ export default function Routes(props: { route: any; navigation: NativeStackNavig
 				</View>
 			</View>
 			<RouteList data={data.data} navigation={navigation} onRefresh={refreshData} refreshing={isRefetching} searchText={searchText} route={route} routeType={filterByRouteType.value} />
-		</React.Fragment>
+		</View>
 	)
 }
