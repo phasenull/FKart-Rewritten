@@ -3,7 +3,8 @@ import { Text, TouchableOpacity, View } from "react-native"
 import Application from "../../common/Application"
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-export function IIPaginator(props: { initialIndex?: number; onPageChange?: (newIndex: number, previousIndex?: number) => void; children: any }) {
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+export function IIPaginator(props: {navigation:NativeStackNavigationProp<any>, initialIndex?: number; onPageChange?: (newIndex: number, previousIndex?: number) => void; children: any }) {
 	const [page, setPage] = useState(props.initialIndex || 0)
 	function movePage(dir: -1 | 1) {
 		const result = Math.max(0, Math.min(page + dir, props.children.length - 1))
@@ -70,6 +71,12 @@ export function IIPaginator(props: { initialIndex?: number; onPageChange?: (newI
 						backgroundColor: Application.styles.primary,
 					}}
 					onPress={() => {
+						if (page == props.children.length-1) {
+							const navigation = props.navigation
+							if (navigation) {
+								navigation.navigate("auth")
+							}
+						}
 						movePage(1)
 					}}
 				>

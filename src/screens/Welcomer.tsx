@@ -5,7 +5,7 @@ import { Text, View } from "react-native"
 import Application from "../common/Application"
 import CustomLoadingIndicator from "../components/CustomLoadingIndicator"
 import * as Updates from "expo-updates"
-export default function WelcomerPage(props: { route: any }) {
+export default function WelcomerPage(props: { route: any,navigation:NativeStackNavigationProp<any> }) {
 	const { isCheckingUpdate, isUpdateAvailable } = props.route.params
 	console.log(isCheckingUpdate, isUpdateAvailable)
 	const [show, setShow] = useState<"initial_info" | "auth_page">("initial_info")
@@ -53,6 +53,6 @@ export default function WelcomerPage(props: { route: any }) {
 		)
 	}
 	if (show == "initial_info") {
-		return <InitialInfo />
+		return <InitialInfo navigation={props.navigation} />
 	}
 }

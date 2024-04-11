@@ -4,12 +4,14 @@ import { IIPage1 } from "./initial_info_pages/page_1_FKart"
 import { IIPaginator } from "./InitialInfoPaginator"
 import { IIPage2 } from "./initial_info_pages/page_2_CommunityMade"
 import { IIPage3 } from "./initial_info_pages/page_3_OpenSource"
+import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 const pages = [<IIPage1 />, <IIPage1 />, <IIPage1 />, <IIPage1 />, <IIPage1 />, <IIPage1 />, <IIPage1 />, <IIPage1 />]
-export function InitialInfo() {
+export function InitialInfo(props:{navigation:NativeStackNavigationProp<any>}) {
 	const [pageIndex, setPageIndex] = useState(0)
 	return (
 		// <View className="flex-col flex-1 items-center justify-center">
 		<IIPaginator
+		navigation={props.navigation}
 			// onPageChange={(newIndex, prevIndex) => {
 			// 	setPageIndex(newIndex)
 			// }}
