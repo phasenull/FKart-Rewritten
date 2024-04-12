@@ -34,6 +34,7 @@ export default function WelcomerPage(props: { navigation:NativeStackNavigationPr
 	useEffect(() => {
 		onFetchUpdateAsync()
 	}, [])
+	
 	const [show, setShow] = useState<"initial_info" | "auth_page">("initial_info")
 	if (!checkedUpdates) {
 		return (
