@@ -15,3 +15,21 @@ export function formatAlias(alias:string | undefined) {
 	const part3 : string = alias?.slice(10,11) as string
 	return `${part1 + "X".repeat(5-(part1?.length as number))}-${part2 + "X".repeat(5-(part2?.length as number))}-${part3 + "X".repeat(1-(part3?.length as number))}`
 }
+
+export function dateFromMessedKentKartDateFormat(input:string) {
+	if (input.length != 16) return new Date()
+	const date = new Date(Date.parse(input))
+	const year = parseInt(input.slice(0,4))
+	const month = parseInt(input.slice(4,6))
+	const day = parseInt(input.slice(6,8))
+	const hour = parseInt(input.slice(8,10))
+	const minutes = parseInt(input.slice(10,12))
+	const seconds = parseInt(input.slice(12,14))
+	// date.setFullYear(year)
+	// date.setMonth(month)
+	// date.setDate(day)
+	// date.setHours(hour)
+	// date.setMinutes(minutes)
+	// date.setSeconds(seconds)
+	return date
+}
