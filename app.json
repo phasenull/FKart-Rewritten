@@ -24,7 +24,12 @@
 				"backgroundColor": "#ffffff"
 			},
 			"package": "com.phasenull.FKart",
-			"runtimeVersion": "11.4.24"
+			"runtimeVersion": "11.4.24",
+			"config": {
+				"googleMaps": {
+					"apiKey":"AIzaSyDEi26R3XBBCxx9enfbo7H-dD4uNwmtIZ0"
+				}
+			}
 		},
 		"web": {
 			"favicon": "./assets/favicon.png"
