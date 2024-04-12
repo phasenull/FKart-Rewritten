@@ -11,25 +11,7 @@ import { dateFromMessedKentKartDateFormat } from "../../util"
 const pages = [<IIPage1 />, <IIPage1 />, <IIPage1 />, <IIPage1 />, <IIPage1 />, <IIPage1 />, <IIPage1 />, <IIPage1 />]
 export function InitialInfo(props: { navigation: NativeStackNavigationProp<any> }) {
 	const { data: announcements } = useGetAnnouncements()
-	const announcementObjects = useMemo(
-		() => (
-			<IIPageAnnouncement
-				announcements={
-					announcements?.data?.announceList?.map((data) => ({
-						title: data.title,
-						announcementType:"official",
-						validFrom: dateFromMessedKentKartDateFormat(data.valid_from),
-						validTo: dateFromMessedKentKartDateFormat(data.valid_to),
-						extra: {},
-						description: data.description,
-						id: data.id,
-						image: data.image,
-					})) || []
-				}
-			/>
-		),
-		[announcements?.data]
-	)
+
 	return (
 		// <View className="flex-col flex-1 items-center justify-center">
 		<IIPaginator
@@ -37,8 +19,28 @@ export function InitialInfo(props: { navigation: NativeStackNavigationProp<any> 
 			// onPageChange={(newIndex, prevIndex) => {
 			// 	setPageIndex(newIndex)
 			// }}
-			children={[<IIPage1 key={"app-info"} />, <IIPage2 key={"community-made"} />, <IIPage3 key={"open-source"} />].concat(announcementObjects || [])}
-		></IIPaginator>
+		>
+			<IIPage1 key={"app-info"} />
+			<IIPage2 key={"community-made"} />
+			<IIPage3 key={"open-source"} />
+			<IIPageAnnouncement
+				key={"announcements"}
+				announcements={
+					announcements?.data?.announceList?.map((data) => ({
+						title: data.title,
+						announcementType: "official",
+						extra: {
+							validFrom: dateFromMessedKentKartDateFormat(data.valid_from),
+							validTo: dateFromMessedKentKartDateFormat(data.valid_to),
+							targetRoutes:["633"]
+						},
+						description: data.description,
+						id: data.id,
+						image: data.image,
+					})) || []
+				}
+			/>
+		</IIPaginator>
 		// </View>
 	)
 }

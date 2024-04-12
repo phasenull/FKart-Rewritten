@@ -17,14 +17,13 @@ export default function RouteTouchableContainer(props: { navigation: NativeStack
 					<View className="flex-[0.22] my-auto items-center ">
 						<View
 							className="px-2 h-6"
-							h-6
 							style={{
 								backgroundColor: item.routeColor === "006633" ? Application.styles.primary : `#${item.routeColor}`,
 								borderRadius: 6,
 							}}
 						>
 							<Text
-								className="text-center my-auto bg-re-400"
+								className="text-center my-auto"
 								style={{
 									color: item.routeColor === "006633" ? Application.styles.secondary : `#${item.routeTextColor}`,
 									fontWeight: "900",

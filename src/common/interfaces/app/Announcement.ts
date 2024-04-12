@@ -7,5 +7,6 @@ export interface Announcement {
 	extra?: {
 		validFrom?: Date
 		validTo?: Date
+		targetRoutes?:string[]
 	}
 }
