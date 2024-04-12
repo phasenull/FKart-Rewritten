@@ -2,8 +2,8 @@ import API from "../API"
 import Application from "../Application"
 import CardImages from "../enums/CardImages"
 import CardTypes from "../enums/CardTypes"
-import { Favorite } from "../enums/Favorites"
-import { BasicCardData } from "../interfaces/BasicCardData"
+import { Favorite } from "../interfaces/KentKart/object/Favorite"
+import { BasicCardData } from "../interfaces/KentKart/object/BasicCardData"
 
 export default abstract class Card {
 	public static getCardTypeFromCode(code: "00" | "01" | "02" | "03" | "QR" | undefined): CardTypes {

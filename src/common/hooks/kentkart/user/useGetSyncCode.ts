@@ -1,8 +1,8 @@
 import { useQuery } from "react-query"
-import Application from "../Application"
+import Application from "../../../Application"
 import { AxiosResponse } from "axios"
-import { BaseKentKartResponse } from "../enums/BasicKentKartResponse"
-import Logger from "../Logger"
+import { BaseKentKartResponse } from "../../../interfaces/KentKart/BasicKentKartResponse"
+import Logger from "../../../Logger"
 
 async function getSyncCode(card_alias: string | undefined): Promise<
 	| AxiosResponse<

@@ -1,12 +1,12 @@
 import { Callout, LatLng, Marker } from "react-native-maps"
-import BusData from "../../../common/interfaces/BusData"
+import BusData from "../../../common/interfaces/KentKart/object/BusData"
 import { Image, Text, View } from "react-native"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { DYNAMIC_CONTENT_URL } from "../../../common/constants"
 import Application from "../../../common/Application"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import Logger from "../../../common/Logger"
-import RouteData from "../../../common/interfaces/RouteData"
+import RouteData from "../../../common/interfaces/KentKart/object/RouteData"
 export function BusCallout(props: { scheduled_data: any; route_data: RouteData; bus: BusData }) {
 	const { scheduled_data, bus, route_data } = props
 	const departure_time = scheduled_data?.departureTime?.slice(0, 5) || "--:--"

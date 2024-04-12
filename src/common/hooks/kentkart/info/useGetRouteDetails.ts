@@ -1,11 +1,11 @@
 import { useQuery } from "react-query"
-import Application from "../Application"
-import BasicRouteInformation from "../interfaces/BasicRouteInformation"
-import Logger from "../Logger"
+import Application from "../../../Application"
+import BasicRouteInformation from "../../../interfaces/KentKart/object/BasicRouteInformation"
+import Logger from "../../../Logger"
 import { AxiosResponse } from "axios"
-import BusData from "../interfaces/BusData"
-import { BaseKentKartResponse } from "../enums/BasicKentKartResponse"
-import RouteData from "../interfaces/RouteData"
+import BusData from "../../../interfaces/KentKart/object/BusData"
+import { BaseKentKartResponse } from "../../../interfaces/KentKart/BasicKentKartResponse"
+import RouteData from "../../../interfaces/KentKart/object/RouteData"
 
 async function getRouteDetails({ route_code, direction, include_time_table = false }: { route_code: string; direction: number; include_time_table?: boolean }): Promise<
 	AxiosResponse<

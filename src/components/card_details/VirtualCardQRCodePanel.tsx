@@ -2,8 +2,8 @@ import { useEffect, useMemo, useState } from "react"
 import { Image, Text, View } from "react-native"
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated"
 import Application from "../../common/Application"
-import { BasicCardData } from "../../common/interfaces/BasicCardData"
-import { Favorite } from "../../common/enums/Favorites"
+import { BasicCardData } from "../../common/interfaces/KentKart/object/BasicCardData"
+import { Favorite } from "../../common/interfaces/KentKart/object/Favorite"
 import { getQRCode } from "../../common/hooks/useGetQRCode"
 
 export default function VirtualCardQRCodePanel(props: { card: BasicCardData<"Basic" | "QR">; token?: { expireDate: string; token: string; aliasNo: string } }) {

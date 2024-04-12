@@ -1,5 +1,5 @@
 import { FlatList, RefreshControl, Text } from "react-native"
-import BasicRouteInformation from "../../common/interfaces/BasicRouteInformation"
+import BasicRouteInformation from "../../common/interfaces/KentKart/object/BasicRouteInformation"
 import RouteTouchableContainer from "./RouteTouchableContainer"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { useMemo } from "react"

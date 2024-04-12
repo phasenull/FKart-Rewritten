@@ -1,11 +1,11 @@
 import { useQuery } from "react-query"
-import User from "../classes/User"
-import Application from "../Application"
-import API from "../API"
+import User from "../../../classes/User"
+import Application from "../../../Application"
+import API from "../../../API"
 import { AxiosResponse } from "axios"
-import { Favorites } from "../enums/Favorites"
-import { BaseKentKartResponse } from "../enums/BasicKentKartResponse"
-import Logger from "../Logger"
+import { Favorites } from "../../../interfaces/KentKart/object/Favorite"
+import { BaseKentKartResponse } from "../../../interfaces/KentKart/BasicKentKartResponse"
+import Logger from "../../../Logger"
 
 async function getFavorites(): Promise<
 	AxiosResponse<Favorites & BaseKentKartResponse>

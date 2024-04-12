@@ -1,9 +1,9 @@
 import { useQuery } from "react-query"
-import Application from "../Application"
-import { BaseKentKartResponse } from "../enums/BasicKentKartResponse"
-import { BasicCardData } from "../interfaces/BasicCardData"
+import Application from "../../../Application"
+import { BaseKentKartResponse } from "../../../interfaces/KentKart/BasicKentKartResponse"
+import { BasicCardData } from "../../../interfaces/KentKart/object/BasicCardData"
 import { AxiosResponse } from "axios"
-import Logger from "../Logger"
+import Logger from "../../../Logger"
 
 async function getCardData(
 	card_alias: string

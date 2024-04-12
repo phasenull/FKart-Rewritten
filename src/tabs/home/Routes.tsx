@@ -1,5 +1,5 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import useGetRouteList from "../../common/hooks/useGetRouteList"
+import useGetRouteList from "../../common/hooks/kentkart/info/useGetRouteList"
 import Application from "../../common/Application"
 import {
 	ActivityIndicator,
@@ -15,7 +15,7 @@ import {
 	TouchableWithoutFeedbackComponent,
 	View,
 } from "react-native"
-import BasicRouteInformation from "../../common/interfaces/BasicRouteInformation"
+import BasicRouteInformation from "../../common/interfaces/KentKart/object/BasicRouteInformation"
 import React, { useMemo, useState } from "react"
 import RouteTouchableContainer from "../../components/routes/RouteTouchableContainer"
 import CustomLoadingIndicator from "../../components/CustomLoadingIndicator"

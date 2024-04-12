@@ -27,13 +27,13 @@ import Card from "../../common/classes/Card"
 import API from "../../common/API"
 import CardContainer from "../../components/account_details/CardContainer"
 import NotLoggedInModal from "../../components/auth/NotLoggedInModal"
-import useGetProfileData from "../../common/hooks/useGetProfileData"
-import useGetFavorites from "../../common/hooks/useGetFavorites"
+import useGetProfileData from "../../common/hooks/kentkart/user/useGetProfileData"
+import useGetFavorites from "../../common/hooks/kentkart/user/useGetFavorites"
 import CustomLoadingIndicator from "../../components/CustomLoadingIndicator"
 import {
 	Favorite,
 	Favorites,
-} from "../../common/enums/Favorites"
+} from "../../common/interfaces/KentKart/object/Favorite"
 import { AddCard } from "../../components/account_details/AddCard"
 export default function AccountTab(props?: {
 	route: any

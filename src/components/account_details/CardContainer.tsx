@@ -6,16 +6,16 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import Application from "../../common/Application"
 import { Clipboard } from "react-native"
 import { getQRCode } from "../../common/hooks/useGetQRCode"
-import { Favorite } from "../../common/enums/Favorites"
-import { useGetCardData } from "../../common/hooks/useGetCardData"
-import { BasicCardData } from "../../common/interfaces/BasicCardData"
+import { Favorite } from "../../common/interfaces/KentKart/object/Favorite"
+import { useGetCardData } from "../../common/hooks/kentkart/user/useGetCardData"
+import { BasicCardData } from "../../common/interfaces/KentKart/object/BasicCardData"
 import { useEffect, useState } from "react"
 import CustomLoadingIndicator from "../CustomLoadingIndicator"
 import CardImages from "../../common/enums/CardImages"
 import { formatAlias } from "../../util"
 import { Swipeable } from "react-native-gesture-handler"
-import { useRemoveFavoriteCard } from "../../common/hooks/useRenameCard"
-import useGetFavorites from "../../common/hooks/useGetFavorites"
+import { useRemoveFavoriteCard } from "../../common/hooks/kentkart/user/useRenameCard"
+import useGetFavorites from "../../common/hooks/kentkart/user/useGetFavorites"
 
 export default function CardContainer(props: { favorite_data: Favorite<"Card" | "QR">; index: number; navigation: any; style?: ViewStyle }) {
 	const { favorite_data, index, navigation } = props

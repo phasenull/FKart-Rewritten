@@ -1,5 +1,5 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import BusData from "../../common/interfaces/BusData"
+import BusData from "../../common/interfaces/KentKart/object/BusData"
 import {
 	Image,
 	Text,
@@ -11,8 +11,8 @@ import Application from "../../common/Application"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import Divider from "../Divider"
 import React from "react"
-import RouteData from "../../common/interfaces/RouteData"
-import { useGetBusImages } from "../../common/hooks/useGetBusImages"
+import RouteData from "../../common/interfaces/KentKart/object/RouteData"
+import { useGetBusImages } from "../../common/hooks/fkart/bus/useGetBusImages"
 import CustomLoadingIndicator from "../CustomLoadingIndicator"
 export default function BusContainer(props: {
 	navigation: NativeStackNavigationProp<any>

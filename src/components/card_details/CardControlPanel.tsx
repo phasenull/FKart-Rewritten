@@ -1,15 +1,15 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import { Favorite } from "../../common/enums/Favorites"
-import { BasicCardData } from "../../common/interfaces/BasicCardData"
+import { Favorite } from "../../common/interfaces/KentKart/object/Favorite"
+import { BasicCardData } from "../../common/interfaces/KentKart/object/BasicCardData"
 import Application from "../../common/Application"
 import { Text, TouchableOpacity, View } from "react-native"
 import { useEffect, useMemo, useState } from "react"
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import { useAddFavoriteCard, useRemoveFavoriteCard } from "../../common/hooks/useRenameCard"
+import { useAddFavoriteCard, useRemoveFavoriteCard } from "../../common/hooks/kentkart/user/useRenameCard"
 import InputModal from "../InputModal"
 import Logger from "../../common/Logger"
-import useGetFavorites from "../../common/hooks/useGetFavorites"
+import useGetFavorites from "../../common/hooks/kentkart/user/useGetFavorites"
 export default function CardControlPanel(props: {
 	card: BasicCardData<"Basic" | "QR">
 	favorite_data: Favorite<"Card" | "QR">

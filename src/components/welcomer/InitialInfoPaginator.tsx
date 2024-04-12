@@ -5,6 +5,7 @@ import Application from "../../common/Application"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 export function IIPaginator(props: {navigation:NativeStackNavigationProp<any>, initialIndex?: number; onPageChange?: (newIndex: number, previousIndex?: number) => void; children: any }) {
+	// console.log("IIPaginator Update",props?.children?.length)
 	const [page, setPage] = useState(props.initialIndex || 0)
 	function movePage(dir: -1 | 1) {
 		const result = Math.max(0, Math.min(page + dir, props.children.length - 1))
