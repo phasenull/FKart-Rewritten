@@ -39,7 +39,7 @@ export function IIPaginator(props: {navigation:NativeStackNavigationProp<any>, i
 				</TouchableOpacity>
 			) : null}
 			<View className="flex-row w-80 mt-4 justify-center mb-4 gap-x-2">
-				<TouchableOpacity
+				{page == 0 ? null : <TouchableOpacity
 					style={{
 						borderRadius: 16,
 						paddingHorizontal: 16,
@@ -61,7 +61,7 @@ export function IIPaginator(props: {navigation:NativeStackNavigationProp<any>, i
 					>
 						{"<"}
 					</Text>
-				</TouchableOpacity>
+				</TouchableOpacity>}
 				<TouchableOpacity
 					activeOpacity={0.5}
 					style={{
@@ -74,7 +74,11 @@ export function IIPaginator(props: {navigation:NativeStackNavigationProp<any>, i
 						if (page == props.children.length-1) {
 							const navigation = props.navigation
 							if (navigation) {
-								navigation.navigate("auth")
+								navigation.replace("home",{
+									user:Application.logged_user
+								})
+							} else {
+								alert("navigation is null")
 							}
 						}
 						movePage(1)
