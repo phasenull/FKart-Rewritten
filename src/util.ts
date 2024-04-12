@@ -9,6 +9,7 @@ export function hidePhone(phone: string | undefined) {
 	return `${"*".repeat(phone?.slice(0,phone.length-2).length as number)}${phone?.slice(-2)}`
 }
 
+
 export function formatAlias(alias:string | undefined) {
 	const part1 : string = alias?.slice(0,5) as string
 	const part2 : string = alias?.slice(5,10) as string
