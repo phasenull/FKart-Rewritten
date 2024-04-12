@@ -1,11 +1,12 @@
 # FKart - An alternative to KentKart and e-komobil
+![](https://komarev.com/ghpvc/?username=fkart-repo&label=Repo%20Visits)
 ### FKart - Open-source public transit app by people, for people
 ### !!! AS OF APRIL 10th THIS PROJECT IS STILL WORK IN PROGRESS !!!
 FKart is a project that focuses on building a better public transit app mainly for Kocaeli (also supports [other 23 cities](https://service.kentkart.com/rl1/api/city))
 Kocaeli itself has an official public app (3 of them actually), but they were so bad and unstable that i thought "hey, this should not even be available to public, someone should make a better one" so i started this project.
 
 As far as i know, the company responsible for public transit infrastructure [Ulaşım Park](https://www.ulasimpark.com.tr/) does not have its own services and using [KentKart](https://www.kentkart.com/),
-they don't have a public docs for their API and thats pretty much what makes this project hard, even if they did it wouldn't matter since their backend is so bad that they should probably create it from scratch.
+they don't have a public docs for their API and thats pretty much what makes this project hard, even if they did it wouldn't matter since their backend is so bad that they should probably create a new one from scratch.
 
 #### contact me via email if needed: contact@phasenull.dev
 
