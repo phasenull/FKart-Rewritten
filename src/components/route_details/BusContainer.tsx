@@ -50,7 +50,7 @@ export default function BusContainer(props: {
 			className="h-48 w-80 flex-col overflow-hidden"
 		>
 			{/* MARK: title */}
-			<View className="flex-row pb-1 h-8 items-center justify-center rounded-t-[16px]">
+			<View className="flex-row h-6 items-center justify-center rounded-t-[16px]">
 				<Text
 					className="text-center font-bold mr-2"
 					style={{
