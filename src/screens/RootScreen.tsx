@@ -47,6 +47,7 @@ export default function RootScreen(props: { navigation: NativeStackNavigationPro
 			<View className="flex-1">
 				<StatusBar translucent={false} style="dark" />
 				<Tab.Navigator
+					backBehavior="initialRoute"
 					initialRouteName="Account"
 					screenOptions={{
 						tabBarItemStyle: {
