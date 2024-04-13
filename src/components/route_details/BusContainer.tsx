@@ -49,8 +49,8 @@ export default function BusContainer(props: {
 			onLongPress={props.onLongPress}
 			className="h-48 w-80 flex-col overflow-hidden"
 		>
-			{/* title */}
-			<View className="flex-row pb-1 h-8 bg-red-400 items-center justify-center rounded-t-[16px]">
+			{/* MARK: title */}
+			<View className="flex-row pb-1 h-8 items-center justify-center rounded-t-[16px]">
 				<Text
 					className="text-center font-bold mr-2"
 					style={{
@@ -72,7 +72,7 @@ export default function BusContainer(props: {
 				</Text>
 				{isEmpty() ? null : (
 					<React.Fragment>
-						<Divider className="" />
+						<Divider height={"70%"} />
 						<View className="flex-row ml-2">
 							{bus.disabledPerson === "1" ? (
 								<MaterialCommunityIcons
@@ -99,6 +99,7 @@ export default function BusContainer(props: {
 					</React.Fragment>
 				)}
 			</View>
+			{/* MARK: Image */}
 			<View className="w-full flex-1 items-center justify-center">
 				{isLoading ? (
 					<CustomLoadingIndicator color={Application.styles.white} style={{ height: "100%" }} />
@@ -107,18 +108,17 @@ export default function BusContainer(props: {
 						<Image
 							className="overflow-hidden"
 							style={{
-								width: "100%",
-								height: "auto",
-								minHeight: 36 * 4,
-								maxHeight: 200,
+								height:"100%",
+								width:"100%",
+								objectFit:"contain"
 							}}
 							source={{
 								uri:
 									data?.data.data[0]?.url
 							}}
 						/>
-						<Text className="absolute bottom-0 opacity-80 font-bold">
-							By {data?.data.data[0]?.uploader || "Unknown user"} at{" "}
+						<Text className="text-white absolute bottom-0 font-bold">
+							By {data?.data.data[0]?.uploader || "phasenull"} at{" "}
 							{data?.data.data[0]?.uploadedAt.slice(0, 10) ||
 								"????-??-??"}
 						</Text>
@@ -129,9 +129,10 @@ export default function BusContainer(props: {
 					</Text>
 				)}
 			</View>
+			{/* MARK: Bus Stop */}
 			<Text
 				style={{ color: Application.styles.secondary }}
-				className="text-center h-8 self-center items-center justify-center font-bold"
+				className="text-center self-center items-center justify-center font-bold"
 			>
 				<MaterialCommunityIcons
 					name="map-marker"
