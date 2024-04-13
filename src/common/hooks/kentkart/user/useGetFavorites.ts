@@ -21,5 +21,5 @@ async function getFavorites(): Promise<
 }
 
 export default function useGetFavorites() {
-	return useQuery([], getFavorites,{refetchInterval: 30_000,staleTime:30_000})
+	return useQuery([], getFavorites,{refetchInterval: 30_000,staleTime:30_000,cacheTime:0.5*60*60*1000})
 }

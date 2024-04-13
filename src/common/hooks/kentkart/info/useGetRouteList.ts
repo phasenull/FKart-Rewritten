@@ -11,5 +11,5 @@ async function getRouteList({ region }: { region: string }): Promise<AxiosRespon
 }
 
 export default function useGetRouteList({ region }: { region: string }) {
-	return useQuery(["route_list", region], () => getRouteList({ region }), { staleTime: Infinity })
+	return useQuery(["route_list", region], () => getRouteList({ region }), { staleTime: Infinity,cacheTime:1*60*60*1000 })
 }
