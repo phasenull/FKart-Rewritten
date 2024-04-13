@@ -21,7 +21,6 @@ export default function RouteDetails(props: {
 	}
 	navigation: NativeStackNavigationProp<any>
 }) {
-	console.log("GO RouteDetails")
 	const { navigation, route } = props
 
 	const [direction, setDirection] = useState(parseInt(route?.params?.direction || "0") || 0)
