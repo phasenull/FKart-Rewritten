@@ -4,7 +4,7 @@ import { Text, View } from "react-native"
 import Application from "../../common/Application"
 import Divider from "../Divider"
 
-export function AnnouncementTouchable(props: { index: number; item: Announcement }) {
+export default function AnnouncementTouchable(props: { index: number; item: Announcement }) {
 	const { index, item: announcement } = props
 
 	return (
@@ -15,8 +15,8 @@ export function AnnouncementTouchable(props: { index: number; item: Announcement
 			key={announcement.id.toString() + announcement.title}
 			className="items-center flex-row gap-x-2 justify-start"
 		>
-			{/* announcement type */}
-			{/* <View
+			{/* MARK: announcement type */}
+			<View
 				className="px-2 h-6"
 				style={{
 					backgroundColor: "#000",
@@ -32,11 +32,11 @@ export function AnnouncementTouchable(props: { index: number; item: Announcement
 				>
 					{announcement.announcementType}
 				</Text>
-			</View> */}
+			</View>
 			{/* <Divider /> */}
 			<View className="flex-col">
 				<View className="flex-col">
-					{announcement.extra?.targetRoutes?.map((route: string) => (
+					{/* {announcement.extra?.targetRoutes?.map((route: string) => (
 						<View
 							key={route}
 							className="w-12 h-6"
@@ -57,7 +57,7 @@ export function AnnouncementTouchable(props: { index: number; item: Announcement
 								{route}
 							</Text>
 						</View>
-					))}
+					))} */}
 				</View>
 				<Text
 					style={{

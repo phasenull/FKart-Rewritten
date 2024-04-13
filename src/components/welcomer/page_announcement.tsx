@@ -3,7 +3,7 @@ import Application from "../../common/Application"
 import Animated, { FadeIn } from "react-native-reanimated"
 import * as Updates from "expo-updates"
 import { Announcement } from "../../common/interfaces/app/Announcement"
-import { AnnouncementTouchable } from "./AnnouncementTouchable"
+import  AnnouncementTouchable  from "./AnnouncementTouchable"
 import { useMemo } from "react"
 export function IIPageAnnouncement(props: { announcements: Announcement[] }) {
 	const { announcements } = props
