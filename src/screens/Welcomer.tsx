@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { InitialInfo } from "../components/welcomer/InitialInfo"
+import { InitialInfo } from "../components/welcomer/WelcomerRoot"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { Text, View } from "react-native"
 import Application from "../common/Application"
