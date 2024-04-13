@@ -4,7 +4,7 @@ import { RefreshControl, ScrollView, Switch, Text, TouchableOpacity, View } from
 import useGetRouteDetails from "../common/hooks/kentkart/info/useGetRouteDetails"
 import CustomLoadingIndicator from "../components/CustomLoadingIndicator"
 import RouteData from "../common/interfaces/KentKart/object/RouteData"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import BusData from "../common/interfaces/KentKart/object/BusData"
 import BusContainer from "../components/route_details/BusContainer"
 import Application from "../common/Application"
@@ -21,6 +21,7 @@ export default function RouteDetails(props: {
 	}
 	navigation: NativeStackNavigationProp<any>
 }) {
+	console.log("GO RouteDetails")
 	const { navigation, route } = props
 
 	const [direction, setDirection] = useState(parseInt(route?.params?.direction || "0") || 0)
@@ -78,7 +79,7 @@ export default function RouteDetails(props: {
 		)
 	}
 
-	if (!data?.data || !data_route || !(data_route as RouteData)?.busList) {
+	if (!data?.data || !data_route) {
 		return (
 			<View>
 				<Text>No data found</Text>
