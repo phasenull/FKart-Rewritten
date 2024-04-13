@@ -10,7 +10,7 @@ async function getAnnouncements({ region }: { region: string }) : Promise<AxiosR
 	announceList:KentKartAnnouncement[]
 }>> {
 	Logger.info("REQUEST useGetAnnouncements")
-	return Application.makeKentKartRequest(`${Application.endpoints.service}/rl1/api/info/announce?region=026`)
+	return Application.makeKentKartRequest(`${Application.endpoints.service}/rl1/api/info/announce?region=${region}`)
 }
 
 export function useGetAnnouncements() {
