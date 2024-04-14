@@ -9,6 +9,7 @@ export default function WelcomerPage(props: { navigation:NativeStackNavigationPr
 	const navigation = props.navigation as NativeStackNavigationProp<any>
 	const [checkedUpdates, setCheckedUpdates] = useState(false)
 	const [isUpdating,setIsUpdating] = useState(false)
+	const [availableUpdate,setAvailableUpdate] = useState<Updates.UpdateCheckResult | undefined>(undefined)
 	const [isUpdateAvailable, setIsUpdateAvailable] = useState<boolean | undefined>(undefined)
 	async function onFetchUpdateAsync() {
 		if (!Updates.isEnabled) {
@@ -24,6 +25,7 @@ export default function WelcomerPage(props: { navigation:NativeStackNavigationPr
 			// }
 			setCheckedUpdates(true)
 			setIsUpdateAvailable(update.isAvailable)
+			setAvailableUpdate(update)
 		} catch (error : any) {
 			if (!(error.message as string).startsWith("checkForUpdateAsync")) {
 				alert(`Error fetching latest Expo update: ${error}`)
@@ -37,13 +39,12 @@ export default function WelcomerPage(props: { navigation:NativeStackNavigationPr
 		if (isUpdating) {return}
 		setIsUpdating(true)
 		await Updates.fetchUpdateAsync();
-		alert("Updated! The app will be restarted.")
         await Updates.reloadAsync();
+		alert(`App has been updated!\nUpdate Note: ${availableUpdate?.reason || "No notes provided."}.`)
 	}
 	useEffect(() => {
 		onFetchUpdateAsync()
 	}, [])
-
 	const [show, setShow] = useState<"initial_info" | "auth_page">("initial_info")
 	if (!checkedUpdates) {
 		return (
