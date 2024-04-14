@@ -116,10 +116,7 @@ export default function MapData(props: {
 	const [easterEggEnabled, setEasterEggEnabled] = useState(false)
 	if (!routeDataToShow || !busListToShow || !userCity) {
 		return (
-			<View>
-				<Text>Map Data Error</Text>
-				<Text>No route data found</Text>
-			</View>
+			<CustomLoadingIndicator/>
 		)
 	}
 	return (
