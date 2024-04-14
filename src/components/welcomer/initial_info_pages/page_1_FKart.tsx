@@ -5,11 +5,11 @@ import * as Updates from "expo-updates"
 export function IIPage1() {
 	return (
 		<View className="justify-center flex-col flex-1 items-center">
-			<Animated.View  entering={FadeIn.duration(300)} className="flex-row items-end justify-center">
+			<Animated.View entering={FadeIn.duration(300)} className="flex-row items-end justify-center">
 				<Text className="text-6xl" style={{ fontWeight: "800", color: Application.styles.primary }}>
 					{Application.name}
 				</Text>
-				<Text className="text-md" style={{ fontWeight: "800", color: Application.styles.secondary,opacity:0.5 }}>
+				<Text className="text-md" style={{ fontWeight: "800", color: Application.styles.secondary, opacity: 0.5 }}>
 					{" "}
 					v{Application.version}-{Updates.runtimeVersion}
 				</Text>

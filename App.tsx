@@ -1,4 +1,4 @@
-import { LogBox, Text, View, useColorScheme } from "react-native"
+import { LogBox, Text, useColorScheme } from "react-native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { NavigationContainer } from "@react-navigation/native"
 import RootScreen from "./src/screens/RootScreen"
@@ -13,8 +13,7 @@ import MapData from "./src/screens/MapData"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import * as Linking from "expo-linking"
 import WelcomerPage from "./src/screens/Welcomer"
-import * as Updates from "expo-updates"
-import { useEffect, useState } from "react"
+
 const config = {
 	screens: {
 		route_details: "route_details/:fetch_from_id/:direction?/:bus_id?",
@@ -24,10 +23,12 @@ const linking = {
 	prefixes: [Linking.createURL("/"), "https://deep.fkart.project.phasenull.dev"],
 	config: config,
 }
+
 const queryClient = new QueryClient()
 export default function AppEntryComponent() {
 	LogBox.ignoreLogs(["Non-serializable values were found in the navigation state."])
 	LogBox.ignoreLogs(["Require cycle:", "Clipboard has been extracted from react-native"])
+
 	const colorScheme = useColorScheme()
 	console.log(colorScheme)
 	Application.__INIT()
@@ -42,10 +43,7 @@ export default function AppEntryComponent() {
 							statusBarHidden: false,
 						}}
 					>
-						<Stack.Screen
-							name="welcomer"
-							component={WelcomerPage as any}
-						/>
+						<Stack.Screen name="welcomer" component={WelcomerPage as any} />
 						<Stack.Screen name="home" component={RootScreen} />
 						<Stack.Screen name="auth" component={AuthPage} />
 						<Stack.Screen
@@ -90,3 +88,4 @@ export default function AppEntryComponent() {
 		</QueryClientProvider>
 	)
 }
+
