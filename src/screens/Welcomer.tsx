@@ -37,6 +37,7 @@ export default function WelcomerPage(props: { navigation:NativeStackNavigationPr
 		if (isUpdating) {return}
 		setIsUpdating(true)
 		await Updates.fetchUpdateAsync();
+		alert("Updated! The app will be restarted.")
         await Updates.reloadAsync();
 	}
 	useEffect(() => {
