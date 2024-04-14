@@ -148,3 +148,11 @@ TRIP PLANNER (PATH FINDING BUT NEVER WORKS PROPERLY OF COURSE)
 https://service.kentkart.com/rl1/api/trip
 
 
+https://vts.kentkart.com.tr/ -> Found. Redirecting to https://account.kentkart.com.tr/dialog/authorize?client_id=b3A4VTS&response_type=code&redirect_uri=https://vts.kentkart.com.tr/auth/handle&dc=
+DC IS UNIX TIME
+https://vts.kentkart.com.tr/api
+https://vts.kentkart.com.tr/auth/handle
+
+
+https://account.kentkart.com.tr/login
+https://account.kentkart.com.tr/forget?username=
