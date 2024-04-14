@@ -7,7 +7,7 @@ import BasicRouteInformation from "../../../interfaces/KentKart/object/BasicRout
 
 async function getRouteList({ region }: { region: string }): Promise<AxiosResponse<BaseKentKartResponse & { routeList: BasicRouteInformation[] }>> {
 	Logger.info("REQUEST useGetRouteList")
-	return Application.makeKentKartRequest(`${Application.endpoints.service}/rl1/web/nearest/find?region=${region}`)
+	return Application.makeKentKartRequest(`${Application.endpoints.service}/rl1/api/v2.0/route/list?region=${region}`)
 }
 
 export default function useGetRouteList({ region }: { region: string }) {

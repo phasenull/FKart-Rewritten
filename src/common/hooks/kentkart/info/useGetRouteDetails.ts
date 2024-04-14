@@ -14,7 +14,7 @@ async function getRouteDetails({ route_code, direction, include_time_table = fal
 		}
 	>
 > {
-	const url = `${Application.endpoints.service}/rl1/web/pathInfo`
+	const url = `${Application.endpoints.service}/rl1/api/v2.0/route/info`
 	const params: Record<string, string> = {
 		region: Application.region,
 		lang: "tr",
