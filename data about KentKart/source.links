@@ -9,8 +9,11 @@ https://service.kentkart.com/rl1/api/deleteAccountText
 https://service.kentkart.com/rl1/api/clarificationText/'+k.constants.SETTINGS_USER_REGION+'/'+v.globals.getLanguage()+'.pdf'
 
 
-
+LIST OF CITIES
 api/v2.0/city
+
+
+
 api/push/register
 api/v2.0/auth
 DELETE_ACCOUNT_PDF:'https://service.kentkart.com/rl1/api/deleteAccountText/',
