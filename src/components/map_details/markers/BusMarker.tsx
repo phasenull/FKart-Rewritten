@@ -7,45 +7,9 @@ import Application from "../../../common/Application"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import Logger from "../../../common/Logger"
 import RouteData from "../../../common/interfaces/KentKart/object/RouteData"
-export function BusCallout(props: { scheduled_data: any; route_data: RouteData; bus: BusData }) {
-	const { scheduled_data, bus, route_data } = props
-	const departure_time = scheduled_data?.departureTime?.slice(0, 5) || "--:--"
-	return (
-		<View
-			className="items-center justify-center flex-1 "
-			style={{
-				width: 30 * 4,
-				height: 12 * 4,
-				backgroundColor: Application.styles.white,
-				elevation: 10,
-				borderRadius: 16,
-			}}
-		>
-			{/* <View className="flex-col  bg-red-400" >
-				<Text
-				className="text-center"
-					style={{
-						color: Application.styles.secondary,
-						backgroundColor:"red"
-					}}
-				>
-					{bus.plateNumber}
-				</Text>
-				<Text
-					className="mx-auto"
-					style={{
-						color: Application.styles.secondary,
-						textAlign:"center",
-						backgroundColor:"red"
-					}}
-				>
-					{departure_time}
-				</Text>
-			</View> */}
-			{/* <MaterialCommunityIcons size={20} color={Application.styles.secondary} name="arrow-right-thick" /> */}
-		</View>
-	)
-}
+import { BusCallout } from "../callouts/BusCallout"
+
+
 export function BusMarker(props: { bus: BusData; coordinate: LatLng; easterEggEnabled?: boolean; navigation: NativeStackNavigationProp<any>; route_data?: RouteData }) {
 	const { route_data, bus, coordinate, easterEggEnabled, navigation } = props
 	const schedule_list = route_data?.timeTableList
@@ -57,7 +21,6 @@ export function BusMarker(props: { bus: BusData; coordinate: LatLng; easterEggEn
 	if (easterEggEnabled) {
 		return (
 			<Marker
-				removeClippedSubviews={false}
 				tracksViewChanges={false}
 				anchor={{ x: 0.5, y: 0.7 }}
 				style={{ alignItems: "center", overflow: "visible" }}
@@ -87,9 +50,10 @@ export function BusMarker(props: { bus: BusData; coordinate: LatLng; easterEggEn
 	}
 	return (
 		<Marker
-			tracksViewChanges={true}
-			anchor={{ x: 0.5, y: 0.96 }}
+			tracksViewChanges={false}
+			anchor={{ x: 0.5, y: 0.5 }}
 			zIndex={12}
+			key={bus.plateNumber}
 			coordinate={{ latitude: parseFloat(bus.lat), longitude: parseFloat(bus.lng) }}
 			flat={true}
 			title={bus.plateNumber}
