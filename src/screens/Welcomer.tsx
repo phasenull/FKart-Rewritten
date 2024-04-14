@@ -40,7 +40,7 @@ export default function WelcomerPage(props: { navigation:NativeStackNavigationPr
 		setIsUpdating(true)
 		await Updates.fetchUpdateAsync();
         await Updates.reloadAsync();
-		alert(`App has been updated!\nUpdate Note: ${availableUpdate?.reason || "No notes provided."}.`)
+		alert(`App has been updated!`)
 	}
 	useEffect(() => {
 		onFetchUpdateAsync()
