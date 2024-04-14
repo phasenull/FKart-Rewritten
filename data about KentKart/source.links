@@ -4,73 +4,147 @@
 "https://service.kentkart.com/rl1/";
 "https://service.kentkart.com/test/";
 
-
+DOES NOT WORK
 https://service.kentkart.com/rl1/api/deleteAccountText
+
+DOES NOT WORK
 https://service.kentkart.com/rl1/api/clarificationText/'+k.constants.SETTINGS_USER_REGION+'/'+v.globals.getLanguage()+'.pdf'
 
 
-LIST OF CITIES
-api/v2.0/city
+RETURNS THE LIST OF CITIES
+API_CITY:'api/v2.0/city'
 
+AUTH
+api/v2.0/auth
 
 
 api/push/register
-api/v2.0/auth
+
+
+DOES NOT WORK
 DELETE_ACCOUNT_PDF:'https://service.kentkart.com/rl1/api/deleteAccountText/',
+
+GOOGLE API KEY
 GOOGLE_API_KEY:'AIzaSyDEi26R3XBBCxx9enfbo7H-dD4uNwmtIZ0',
-SETTINGS_SERVICE_TYPE:'',
-API_CITY:'api/v2.0/city'
+
+ONE TIME PASSWORD
 OTP:'oauth/otp'
+
+OTP AUTH
 AUTHORIZE:'oauth/authorize'
+
+OTP TOKEN
 TOKEN:'oauth/token'
+
+CHANGE PIN
 CHANGE_PIN:'changePin'
+
 REGISTER_PUSH:'api/push/register'
+
 LOAD_ACCOUNT_INFO:'api/v2.0/auth'
+
+NO IDEA
 USER_PREFERENCES:'api/v2.0/user/preferences'
+
+NO IDEA
 ACCESS_LOGIN_PIN:'access_token_pin'
+
+CARD BALANCE CHECK
 GET_CHECKBALANCE:'api/card/balance'
+
+ACCOUNT FAVORITES POST | GET | DELETE
 GET_FAVORITES:'api/v3.0/favorite'
 SAVE_FAVORITE:'api/v3.0/favorite'
 DELETE_FAVORTE:'api/v3.0/favorite'
+
+FAVORITE LIMITS | GET 
 API_CARD_LIMITS:'api/card/limits'
+
+
 API_CARD_PUSHSET:'api/card/pushSet'
+
+ALSO FAVORITES BUT V4, LESS INFO
 API_FAVORITE_V4:'api/v4.0/favorite'
+
+NO IDEA | GET
 API_NFC_CARD:'api/v3.0/nfc/card'
+
+LOAD BALANCE | GET
 TRANSACTION_REQUEST:'api/transaction/request'
 TRANSACTION_REQUEST_BKM:'test/api/transaction/request'
 TRANSACTION_COMPLETE:'api/transaction/complete'
 GET_POS:'api/v2.0/pos'
+
+LIST CREDIT CARDS
 ACCOUNT_CCARD:'api/account/ccard'
+
 REMOVE_CREDIT_CARD:'api/account/merchant'
+
+GET ACCOUNT INFO
 GET_ACCOUNT:'api/account'
 API_UPDATE_ACCOUNT:'api/v4.0/account'
+
+SET UNNECESSARY FIELDS
 API_UPDATE_LOCATION:'api/account/location'
+
+FEEDBACK INPUTS | GET
 API_FEEDBACK_FIELDS:'api/feedback/fields'
+
+FEEDBACK
 API_INFO_FEEDBACK:'api/info/feedback'
 API_INFO_FEEDBACK_V4:'api/v4.0/info/feedback'
 API_ACCOUNT_V4_SEND_DELETION_OTP:'api/account/deleteAccountRequest'
 API_ACCOUNT_V4_VALIDATE_DELETION_OTP:'api/account/deleteAccountComplete'
+
+LIST ROUTES
 API_ROUTE_LIST:'api/v2.0/route/list'
+
+
 API_BUS_CLOSEST:'api/bus/closest'
+
+ROUTE DETAILS
 API_V2_ROUTE_INFO:'api/v2.0/route/info'
+
+UNNECESSARY POI STUFF
 API_POI:'api/poi/list'
+
+NEVER HAS DATA
 API_TARIFFS:'api/info/tariff'
+
+THEY CANT EVEN MAKE PROPER ANONUNCEMENTS
 API_ANNOUNCE:'api/info/announce'
+
+RETURNS DOCS LIKE TARIFFS
 API_DOCS:'api/info/docs'
+
+RETURNS PRODUCTS FOR E-LOADS
 API_PRODUCT:'api/products'
+
+SYNCS QR CODE
 API_SYNC:'api/abt/sync'
+
+THEY USE THIS FOR ANNOUNCEMENTS FOR SOME REASON BUT NEVER HAS DATA EXCEPT "DUYURU" "DUYURU"
 API_INFO_ADS:'api/info/ads'
+
+DELETE's something but no idea what, probably QR CODE
 API_ABT_CARD:'api/abt/card'
+
+
+GOOGLE API LINKS
 GOOGLE_PLACES:'https://maps.googleapis.com/maps/api/place/autocomplete/json'
 GOOGLE_PLACES_DETAILS:'https://maps.googleapis.com/maps/api/place/details/json'
 
-
+TRAM PATH (OUTDATED OF COURSE)
 https://www.ulasimpark.com.tr/img/AkcarayGuzergah.png
 
+
+PAYMENT STUFF
 https://service.kentkart.com/test/api/transaction/request
 https://service.kentkart.com/rl1/api/info/masterPass/jquery.min.js
-https://service.kentkart.com/rl1/api/trip
-https://service.kentkart.com/rl1/api/users/*
-
 https://service.kentkart.com/rl1/api/3dPayHost/fail
 https://service.kentkart.com/rl1/api/transaction/complete?region=004&lang=tr&authType=4
+
+TRIP PLANNER (PATH FINDING BUT NEVER WORKS PROPERLY OF COURSE)
+https://service.kentkart.com/rl1/api/trip
+
+
