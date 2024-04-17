@@ -21,8 +21,8 @@ export default abstract class Application {
 		service: `https://service.${Application.base_server}`,
 	}
 	public static readonly fkart_endpoints = {
-		// base: `${Application.base_fkart_server}`,
 		bus: `https://bus.${Application.base_fkart_server}`,
+		static: `https://static.${Application.base_fkart_server}`
 	}
 	public static getFormattedVersion() {
 		return `${Application.name} v${Application.version}-dev`
