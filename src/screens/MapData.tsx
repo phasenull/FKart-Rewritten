@@ -55,7 +55,7 @@ export default function MapData(props: {
 				fontWeight: "900",
 			},
 		})
-		const init_bus =props.route.params.initial_bus
+		const init_bus = props.route.params.initial_bus
 		if (init_bus) {
 			ref_map_view.current?.animateToRegion({
 				latitude: parseFloat(init_bus.lat) - 0.001,
@@ -85,7 +85,7 @@ export default function MapData(props: {
 			setFollowingBus(found_bus)
 		}
 	}, [fetchedRouteData])
-	const pressCounter = useRef({last_press:0,press_count:0})
+	const pressCounter = useRef({ last_press: 0, press_count: 0 })
 
 	useEffect(() => {
 		if (cityData?.data) {
@@ -115,9 +115,7 @@ export default function MapData(props: {
 	}
 	const [easterEggEnabled, setEasterEggEnabled] = useState(false)
 	if (!routeDataToShow || !busListToShow || !userCity) {
-		return (
-			<CustomLoadingIndicator/>
-		)
+		return <CustomLoadingIndicator />
 	}
 	return (
 		<View className="flex-1">
@@ -159,12 +157,14 @@ export default function MapData(props: {
 					)}
 				</View>
 				<ScrollView
+					style={{
+						maxHeight: 48 * 4,
+					}}
 					horizontal={true}
 					contentContainerStyle={{
 						paddingHorizontal: 20,
 						columnGap: 20,
 					}}
-					className="w-full"
 				>
 					{busListToShow.map((bus: BusData) => (
 						<BusContainer
@@ -191,7 +191,7 @@ export default function MapData(props: {
 						/>
 					))}
 				</ScrollView>
-				<Text className="self-center mb-4">Hello</Text>
+				<Text className="self-center absolute bottom-0">Hello</Text>
 			</BottomSheet>
 		</View>
 	)

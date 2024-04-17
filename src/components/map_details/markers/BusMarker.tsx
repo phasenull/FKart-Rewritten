@@ -9,7 +9,6 @@ import Logger from "../../../common/Logger"
 import RouteData from "../../../common/interfaces/KentKart/object/RouteData"
 import { BusCallout } from "../callouts/BusCallout"
 
-
 export function BusMarker(props: { bus: BusData; coordinate: LatLng; easterEggEnabled?: boolean; navigation: NativeStackNavigationProp<any>; route_data?: RouteData }) {
 	const { route_data, bus, coordinate, easterEggEnabled, navigation } = props
 	const schedule_list = route_data?.timeTableList
@@ -39,7 +38,7 @@ export function BusMarker(props: { bus: BusData; coordinate: LatLng; easterEggEn
 					style={{
 						objectFit: "fill",
 					}}
-					source={{ uri: `${DYNAMIC_CONTENT_URL}/assets/media/images/random/easter_eggs/pacman/character_0.png` }}
+					source={{ uri: `${DYNAMIC_CONTENT_URL}/assets/media/images/random/easter_eggs/pacman/character_0.png`, cache: "force-cache" }}
 					className="h-8 w-8 -rotate-90"
 				/>
 				<Callout removeClippedSubviews={false} style={{ overflow: "visible" }} tooltip={true}>
@@ -72,6 +71,7 @@ export function BusMarker(props: { bus: BusData; coordinate: LatLng; easterEggEn
 				className="top-4 w-12 h-8 relative self-center -scale-y-100"
 				source={{
 					uri: `${DYNAMIC_CONTENT_URL}/assets/media/images/icons/bus_bearing_colored.png`,
+					cache: "force-cache",
 				}}
 			/>
 			<MaterialCommunityIcons

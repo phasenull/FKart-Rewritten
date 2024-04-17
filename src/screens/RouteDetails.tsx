@@ -104,7 +104,6 @@ export default function RouteDetails(props: {
 					padding: 20,
 					columnGap: 20,
 				}}
-				className="w-full"
 			>
 				{data_route?.busList?.map((bus: BusData) => (
 					<BusContainer route_data={data_route} navigation={navigation} bus={bus} key={`BusContainer-${bus.plateNumber}`} />
