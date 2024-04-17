@@ -70,8 +70,8 @@ export default function MapData(props: {
 		if (path_list && path_list[0]) {
 			setRouteDataToShow(path_list[0])
 			const bus_list = path_list[0].busList
-			if (!bus_list || bus_list.length === 0) return
 			setBusListToShow(path_list[0].busList)
+			if (!bus_list || bus_list.length === 0) return
 			if (!followingBus) return
 			const found_bus = path_list[0].busList.find((bus: BusData) => bus.plateNumber === followingBus.plateNumber)
 			if (!found_bus) return
