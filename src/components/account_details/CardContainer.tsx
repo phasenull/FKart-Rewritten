@@ -91,7 +91,6 @@ export default function CardContainer(props: { favorite_data: Favorite<"Card" | 
 					disabled={isLoading}
 					style={{
 						backgroundColor: styles.white,
-						elevation: 1,
 						shadowOffset: { height: 4, width: 4 },
 					}}
 					onPress={() => {
