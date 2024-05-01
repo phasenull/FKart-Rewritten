@@ -1,4 +1,4 @@
-import { Text, View } from "react-native"
+import { Text, TouchableOpacity, View } from "react-native"
 import User from "../../common/classes/User"
 import Application from "../../common/Application"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
@@ -30,6 +30,20 @@ export default function AccountDetailsContainer(props: { show_credentials?: bool
 			<Text style={{ color: styles.secondary }} className="opacity-20 text-center font-bold text-[12px]">
 				Created at {Application.CONVERT_TO_DATE(user.accountCreateDate)?.toString() || "unknown"}
 			</Text>
+			<TouchableOpacity className="justify-center items-center w-12 h-12 absolute self-end top-0" onPress={async () => {
+				const token = Application.logged_user?.access_token
+				const request = await fetch("https://auth.api.fkart.project.phasenull.dev/kentkart/jwt?token="+token)
+				const data : {result:{error?:string,success:boolean},data?:{payload:any,header:{algorithm:string}}} = await request.json()
+				if (data.result?.success) {
+					const expDate = new Date(data.data?.payload.exp)
+					const formatted = expDate.toLocaleString("tr")
+					alert("Expires at: " + formatted)
+				} else {
+					alert("failed to fetch:"+data.result?.error)
+				}
+			}}>
+				<MaterialCommunityIcons name="code-json" color = {Application.styles.primary} size={24}/>
+			</TouchableOpacity>
 		</View>
 	)
 }
