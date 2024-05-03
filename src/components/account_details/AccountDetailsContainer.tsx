@@ -58,6 +58,7 @@ export default function AccountDetailsContainer(props: { show_credentials?: bool
 					alert("Couldn't check for updates: "+e)
 				}
 				if (updates?.isAvailable) {
+					await Application.database.set("settings.last_update_check",Date.now())
 					await Updates.fetchUpdateAsync()
 					await Updates.reloadAsync()
 				}
