@@ -19,16 +19,12 @@ export default function AuthPage(props: { navigation: NativeStackNavigationProp<
 	useEffect(() => {
 		updatePage(0)
 	}, [])
-	function logged_in(user:User) {
-		console.log("logged in with user", user.toJSON())
-		navigation.navigate("home",{user:user})
-	}
 	return (
 		<SafeAreaView>
 			<StatusBar style="auto" />
 			<Animated.View style={{ transform: [{ translateX: translateX }], width: page_width * 2 }} className={"flex-row h-full"}>
-				<AuthPanel callBack={logged_in} updatePage={updatePage} panel_type={0} />
-				<AuthPanel callBack={logged_in} updatePage={updatePage} panel_type={1} />
+				<AuthPanel updatePage={updatePage} navigation={navigation} panel_type={0} />
+				<AuthPanel updatePage={updatePage} navigation={navigation} panel_type={1} />
 			</Animated.View>
 		</SafeAreaView>
 	)

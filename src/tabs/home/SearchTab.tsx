@@ -1,5 +1,5 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import useGetRouteList from "../../common/hooks/kentkart/info/useGetRouteList"
+import useGetRouteList from "../../common/hooks/fkart/static/useGetRouteList"
 import Application from "../../common/Application"
 import {
 	ActivityIndicator,
