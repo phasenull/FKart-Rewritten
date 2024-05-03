@@ -24,7 +24,7 @@ import RouteList from "../../components/routes/RouteList"
 import SegmentedButtons from "../../components/SegmentedButtons"
 import FilterByRouteTypeModal from "../../components/routes/FilterByRouteTypeModal"
 import RouteSearchBar from "../../components/routes/RouteSearchBar"
-export default function Routes(props: { route: any; navigation: NativeStackNavigationProp<any> }) {
+export default function SearchTab(props: { route: any; navigation: NativeStackNavigationProp<any> }) {
 	const { data, isLoading, isError, error, refetch, isRefetching } = useGetRouteList({ region: Application.region })
 
 	const { navigation, route } = props
