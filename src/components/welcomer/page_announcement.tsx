@@ -21,7 +21,7 @@ export function IIPageAnnouncement(props: { announcements: Announcement[] }) {
 			</Text>
 				
 			<FlatList
-				className="mt-12 -mb-12"
+				className="mt-12 w-80 -mb-12"
 				style={{
 					backgroundColor: Application.styles.white,
 					maxHeight: 80 * 4,
@@ -32,7 +32,7 @@ export function IIPageAnnouncement(props: { announcements: Announcement[] }) {
 				contentContainerStyle={{
 					borderRadius: 16,
 				}}
-				renderItem={AnnouncementTouchable}
+				renderItem={(e)=>{return <AnnouncementTouchable index={e.index} item={e.item} />}}
 				data={announcements}
 			/>
 		</View>

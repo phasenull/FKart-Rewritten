@@ -13,7 +13,7 @@ export default function AnnouncementTouchable(props: { index: number; item: Anno
 				alert(announcement.description)
 			}}
 			key={announcement.id.toString() + announcement.title}
-			className="items-center flex-row gap-x-2 justify-start"
+			className="items-center flex-row my-0.5 gap-x-2 justify-start"
 		>
 			{/* MARK: announcement type */}
 			<View
@@ -34,31 +34,8 @@ export default function AnnouncementTouchable(props: { index: number; item: Anno
 				</Text>
 			</View>
 			{/* <Divider /> */}
-			<View className="flex-col">
-				<View className="flex-col">
-					{/* {announcement.extra?.targetRoutes?.map((route: string) => (
-						<View
-							key={route}
-							className="w-12 h-6"
-							style={{
-								backgroundColor: Application.styles.primary,
-								borderRadius: 6,
-							}}
-						>
-							<Text
-								className="text-center my-auto"
-								style={{
-									fontWeight: "900",
-									fontSize: 12,
-									color: Application.styles.white,
-									borderRadius: 6,
-								}}
-							>
-								{route}
-							</Text>
-						</View>
-					))} */}
-				</View>
+			<View className="flex-row mr-2 flex-1">
+
 				<Text
 					style={{
 						color: Application.styles.secondary,
@@ -68,6 +45,20 @@ export default function AnnouncementTouchable(props: { index: number; item: Anno
 					}}
 				>
 					{announcement.title}
+				</Text>
+				<Text style={{
+						color: Application.styles.secondary,
+						opacity:0.6,
+						fontSize: 12,
+						marginLeft:2*4,
+						fontWeight: "800",
+						textAlignVertical: "center",
+						overflow:"hidden",
+						flex:1
+					}}
+					numberOfLines={1}
+					>
+						{announcement.description}
 				</Text>
 			</View>
 		</TouchableOpacity>
