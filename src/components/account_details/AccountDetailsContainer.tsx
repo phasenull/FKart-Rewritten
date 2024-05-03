@@ -1,5 +1,6 @@
 import { Text, TouchableOpacity, View } from "react-native"
 import User from "../../common/classes/User"
+import * as Updates from "expo-updates"
 import Application from "../../common/Application"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { hideEmail, hidePhone } from "../../util"
@@ -37,12 +38,31 @@ export default function AccountDetailsContainer(props: { show_credentials?: bool
 				if (data.result?.success) {
 					const expDate = new Date(data.data?.payload.exp)
 					const formatted = expDate.toLocaleString("tr")
-					alert("Expires at: " + formatted)
+					alert("Access token expires at: " + formatted)
 				} else {
 					alert("failed to fetch:"+data.result?.error)
 				}
 			}}>
 				<MaterialCommunityIcons name="code-json" color = {Application.styles.primary} size={24}/>
+			</TouchableOpacity>
+			<TouchableOpacity className="justify-center items-center w-12 top-8 h-12 absolute self-end" onPress={async () => {
+				let updates
+				try {
+					const result = await Updates.checkForUpdateAsync()
+					if (result.isAvailable) {
+						updates = result
+					} else {
+						alert("No Update Found!")
+					}
+				} catch (e) {
+					alert("Couldn't check for updates: "+e)
+				}
+				if (updates?.isAvailable) {
+					await Updates.fetchUpdateAsync()
+					await Updates.reloadAsync()
+				}
+			}}>
+				<MaterialCommunityIcons name="package-variant-closed" color = {Application.styles.success} size={24}/>
 			</TouchableOpacity>
 		</View>
 	)
