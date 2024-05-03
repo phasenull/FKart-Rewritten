@@ -40,21 +40,8 @@ export default class User {
 	constructor() {
 		return this
 	}
-	public async login({
-		auth_type,
-		auth_value,
-		password,
-	}: {
-		auth_type: LoginTypes
-		auth_value: string
-		password: string
-	}) {
-		console.log(
-			`Attempting to login ${auth_value} ${password.slice(
-				0,
-				3
-			)}... ${auth_type}`
-		)
+	public async login({ auth_type, auth_value, password }: { auth_type: LoginTypes; auth_value: string; password: string }) {
+		console.log(`Attempting to login ${auth_value} ${password.slice(0, 3)}... ${auth_type}`)
 		const refresh_token = await API.getRefreshToken({
 			auth_type,
 			auth_value,
@@ -81,14 +68,36 @@ export default class User {
 		return this
 	}
 
-	static fromJSON(json: Object): User | null {
+	static fromJSON(json: User): User | null {
 		if (!json) {
 			return null
 		}
 		const new_user = new User()
-		Object.entries(json).map(([key, value]) => {
-			new_user[key as keyof User] = json[key]
-		})
+		new_user.name = json.name
+		new_user.surname = json.surname
+		new_user.email = json.email
+		new_user.phone = json.phone
+		new_user.refresh_token = json.refresh_token
+		new_user.access_token = json.access_token
+		new_user.user_id = json.user_id
+		new_user.accountId = json.accountId
+		new_user.identityNo = json.identityNo
+		new_user.activationStatus = json.activationStatus
+		new_user.accountCreateDate = json.accountCreateDate
+		new_user.cCardNo = json.cCardNo
+		new_user.cCardExprMonth = json.cCardExprMonth
+		new_user.cCardExprYear = json.cCardExprYear
+		new_user.nfcCardNo = json.nfcCardNo
+		new_user.systemid = json.systemid
+		new_user.datetime = json.datetime
+		new_user.timeDiff = json.timeDiff
+		new_user.runningTime = json.runningTime
+		new_user.payment_type = json.payment_type
+		new_user.home = json.home
+		new_user.country_code = json.country_code
+		new_user.work = json.work
+		new_user.file_url = json.file_url
+		new_user.additional_info = json.additional_info
 		return new_user
 	}
 	static fromString(json: string): User | null {
@@ -98,8 +107,7 @@ export default class User {
 		return JSON.stringify(Object.assign({}, this))
 	}
 	static async fromRefreshToken(refresh_token: string) {
-		const access_token =
-			(await API.getAuthToken({ refresh_token })) || ""
+		const access_token = (await API.getAuthToken({ refresh_token })) || ""
 		const user = await this.fromAccessToken(access_token)
 		user.refresh_token = refresh_token
 		return user

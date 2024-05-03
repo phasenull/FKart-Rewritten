@@ -3,7 +3,7 @@ import Application from "../common/Application";
 
 export default function CustomLoadingIndicator(props: {style?:StyleProp<ViewStyle>,color?:ColorValue,size?:number | "small" | "large" }) {
 	return <ActivityIndicator
-		className="mx-auto my-auto scale-150"
+		className="scale-150"
 		size={props.size || "large"}
 		style={props.style}
 		color={props.color || Application.styles.primary}

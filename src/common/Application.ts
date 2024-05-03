@@ -29,7 +29,7 @@ export default abstract class Application {
 		return `${Application.name} v${Application.version}-dev`
 	}
 	public static __is_init: boolean = false
-	public static logged_user: User | null = null
+	public static logged_user: User | undefined = undefined
 	public static readonly database = Database
 	public static readonly styles = {
 		primary: "#ffd60a",
@@ -101,14 +101,6 @@ export default abstract class Application {
 		user.refresh_token = refresh_token
 		return user
 	}
-	public static async logout() {
-		this.logged_user = null
-		await this.database.set("user", null)
-		await this.database.set("refresh_token", null)
-
-		await this.database.set("access_token", null)
-		Logger.info("Application.logout", "User logged out!")
-	}
 	public static async __INIT() {
 		if (this.__is_init) {
 			return
@@ -118,27 +110,7 @@ export default abstract class Application {
 				Logger.warning("Application.__INIT.PREFETCH_IMAGES","Failed to prefetch",url)
 			})
 		})
-		const user_data = await this.database.get("user")
-		const refresh_token = await this.database.get("refresh_token")
-		const access_token = await this.database.get("access_token")
-		let user: User | null = null
-		if (access_token) {
-			user = await User.fromAccessToken(access_token)
-			user.refresh_token = refresh_token
-			Logger.info("Application.__INIT.access_token", "User logged in!")
-		} else if (refresh_token) {
-			user = await User.fromRefreshToken(refresh_token)
-			Logger.info("Application.__INIT.refresh_token", "User logged in!")
-		}
-
-		if (!user) {
-			Logger.info("Application.__INIT", "User not logged in!")
-			this.__is_init = true
-			return
-		}
-		await user.getProfile()
-
-		this.logged_user = user
+		
 		this.__is_init = true
 	}
 	public static async userAuthCookieTimedOut() {
@@ -150,7 +122,7 @@ export default abstract class Application {
 		const new_user = await User.fromRefreshToken(user.refresh_token)
 		if (!new_user) {
 			return false
-			this.logged_user = null
+			this.logged_user = undefined
 		}
 		this.logged_user = new_user
 	}

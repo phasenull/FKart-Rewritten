@@ -30,7 +30,7 @@ export default function AuthPanel(props: AuthPanelProps) {
 	Logger.info(`UserContext: isFetching-${isFetching} loggedUser-${loggedUser?.name}`)
 	if (loggedUser) {
 		console.log("user is already logged in, redirecting to home!")
-		props.navigation.navigate("home",{user:loggedUser})
+		props.navigation.replace("home",{user:loggedUser})
 		return
 	}
 	const { panel_type, updatePage } = props
