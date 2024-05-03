@@ -15,7 +15,7 @@ export default function WelcomerPage(props: { navigation:NativeStackNavigationPr
 	const [lastCheck,setLastCheck] = useState<number>(0)
 	async function onFetchUpdateAsync() {
 		const last_check = await Application.database.get("settings.last_update_check") || 0
-		setLastCheck(lastCheck)
+		setLastCheck(last_check)
 		Logger.info("Welcomer.tsx",`Last update checked at ${new Date(last_check).toUTCString()} | ${last_check}`)
 		if (last_check && (Date.now() - last_check < Application.expo_updates_check_interval)) {
 			setCheckedUpdates(true)
