@@ -8,10 +8,8 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { useGetAnnouncements } from "../../common/hooks/kentkart/info/useGetAnnouncements"
 import { IIPageAnnouncement } from "./page_announcement"
 import { dateFromMessedKentKartDateFormat } from "../../util"
-const pages = [<IIPage1 />, <IIPage1 />, <IIPage1 />, <IIPage1 />, <IIPage1 />, <IIPage1 />, <IIPage1 />, <IIPage1 />]
-export function InitialInfo(props: { navigation: NativeStackNavigationProp<any> }) {
+export function InitialInfo(props: { last_check:number,navigation: NativeStackNavigationProp<any> }) {
 	const { data: announcements } = useGetAnnouncements()
-
 	return (
 		// <View className="flex-col flex-1 items-center justify-center">
 		<IIPaginator
@@ -20,7 +18,7 @@ export function InitialInfo(props: { navigation: NativeStackNavigationProp<any> 
 			// 	setPageIndex(newIndex)
 			// }}
 		>
-			<IIPage1 key={"app-info"} />
+			<IIPage1 last_check={props.last_check} key={"app-info"} />
 			<IIPage2 key={"community-made"} />
 			<IIPage3 key={"open-source"} />
 			<IIPageAnnouncement

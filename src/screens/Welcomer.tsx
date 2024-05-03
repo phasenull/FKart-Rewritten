@@ -12,8 +12,10 @@ export default function WelcomerPage(props: { navigation:NativeStackNavigationPr
 	const [isUpdating,setIsUpdating] = useState(false)
 	const [availableUpdate,setAvailableUpdate] = useState<Updates.UpdateCheckResult | undefined>(undefined)
 	const [isUpdateAvailable, setIsUpdateAvailable] = useState<boolean | undefined>(undefined)
+	const [lastCheck,setLastCheck] = useState<number>(0)
 	async function onFetchUpdateAsync() {
 		const last_check = await Application.database.get("settings.last_update_check") || 0
+		setLastCheck(lastCheck)
 		Logger.info("Welcomer.tsx",`Last update checked at ${new Date(last_check).toUTCString()} | ${last_check}`)
 		if (last_check && (Date.now() - last_check < Application.expo_updates_check_interval)) {
 			setCheckedUpdates(true)
@@ -95,6 +97,6 @@ export default function WelcomerPage(props: { navigation:NativeStackNavigationPr
 		)
 	}
 	if (show == "initial_info") {
-		return <InitialInfo navigation={navigation} />
+		return <InitialInfo last_check={lastCheck} navigation={navigation} />
 	}
 }
