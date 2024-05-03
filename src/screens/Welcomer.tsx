@@ -5,12 +5,19 @@ import { Text, View } from "react-native"
 import Application from "../common/Application"
 import CustomLoadingIndicator from "../components/CustomLoadingIndicator"
 import * as Updates from "expo-updates"
+import Logger from "../common/Logger"
 export default function WelcomerPage(props: { navigation:NativeStackNavigationProp<any> }) {
 	const navigation = props.navigation as NativeStackNavigationProp<any>
 	const [checkedUpdates, setCheckedUpdates] = useState(false)
 	const [isUpdating,setIsUpdating] = useState(false)
 	const [availableUpdate,setAvailableUpdate] = useState<Updates.UpdateCheckResult | undefined>(undefined)
 	const [isUpdateAvailable, setIsUpdateAvailable] = useState<boolean | undefined>(undefined)
+	const [last_check,set_last_check] = useState<undefined|number>(undefined)
+	async function getLastCheck() {
+		const result = await Application.database.get("settings.last_update_check") || 0
+		Logger.info("Welcomer.tsx",`Last update checked at ${new Date(result).toUTCString()} | ${result}`)
+		set_last_check(result)
+	}
 	async function onFetchUpdateAsync() {
 		if (!Updates.isEnabled) {
 			console.log("updates not enabled, returning")
@@ -18,8 +25,15 @@ export default function WelcomerPage(props: { navigation:NativeStackNavigationPr
 			setIsUpdateAvailable(false)
 			return
 		}
+		await getLastCheck()
+		if (last_check && (Date.now() - last_check < Application.expo_updates_check_interval)) {
+			setCheckedUpdates(true)
+			setIsUpdateAvailable(false)
+			return
+		}
 		try {
 			const update = await Updates.checkForUpdateAsync()
+			await Application.database.set("settings.last_update_check",Date.now())
 			// if (update.isAvailable) {
 			// 	alert(`Update available on channel ${Updates.channel}: ${update.}`)
 			// }

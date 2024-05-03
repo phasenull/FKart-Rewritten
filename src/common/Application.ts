@@ -12,6 +12,7 @@ export default abstract class Application {
 	public static readonly source_url = "https://github.com/phasenull/FKart-Rewritten"
 	public static region: string = "004"
 	public static version: string = "1.0.0"
+	public static readonly expo_updates_check_interval = 3*24*60*60*1_000 //check update in every 3 days
 	public static name: string = "FKart"
 	public static readonly base_server = "kentkart.com"
 	public static readonly base_fkart_server = "api.fkart.project.phasenull.dev"
