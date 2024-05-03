@@ -26,7 +26,7 @@ export default function WelcomerPage(props: { navigation:NativeStackNavigationPr
 			return
 		}
 		await getLastCheck()
-		if (last_check && (Date.now() - last_check < Application.expo_updates_check_interval)) {
+		if (last_check && (Date.now() - last_check > Application.expo_updates_check_interval)) {
 			setCheckedUpdates(true)
 			setIsUpdateAvailable(false)
 			return
