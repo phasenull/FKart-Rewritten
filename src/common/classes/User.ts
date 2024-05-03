@@ -60,7 +60,7 @@ export default class User {
 			auth_value,
 			password,
 		})
-		console.log("got refresh token", refresh_token)
+		// console.log("got refresh token", refresh_token)
 		if (!refresh_token) {
 			return false
 		}
@@ -68,14 +68,14 @@ export default class User {
 			refresh_token,
 		})
 		const access_token = auth_token
-		console.log("got access token", access_token)
+		// console.log("got access token", access_token)
 		if (!access_token) {
 			return false
 		}
 		this.refresh_token = refresh_token
 		this.access_token = access_token
 		const profile_data = await API.getProfile({ user: this })
-		console.log("got profile data", profile_data)
+		// console.log("got profile data", profile_data)
 		Object.assign(this, profile_data)
 
 		return this

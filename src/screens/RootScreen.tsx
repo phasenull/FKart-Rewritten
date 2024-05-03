@@ -170,6 +170,7 @@ export default function RootScreen(props: { navigation: NativeStackNavigationPro
 		)
 	}
 	if (prompt_log_in) {
+		console.log("render not logged in modal")
 		return <NotLoggedInModal navigation={navigation} onRequestClose={() => {}} param_visible={true} />
 	}
 	return <CustomLoadingIndicator />
