@@ -12,28 +12,23 @@ export default function WelcomerPage(props: { navigation:NativeStackNavigationPr
 	const [isUpdating,setIsUpdating] = useState(false)
 	const [availableUpdate,setAvailableUpdate] = useState<Updates.UpdateCheckResult | undefined>(undefined)
 	const [isUpdateAvailable, setIsUpdateAvailable] = useState<boolean | undefined>(undefined)
-	const [last_check,set_last_check] = useState<undefined|number>(undefined)
-	async function getLastCheck() {
-		const result = await Application.database.get("settings.last_update_check") || 0
-		Logger.info("Welcomer.tsx",`Last update checked at ${new Date(result).toUTCString()} | ${result}`)
-		set_last_check(result)
-	}
 	async function onFetchUpdateAsync() {
+		const last_check = await Application.database.get("settings.last_update_check") || 0
+		Logger.info("Welcomer.tsx",`Last update checked at ${new Date(last_check).toUTCString()} | ${last_check}`)
+		if (last_check && (Date.now() - last_check < Application.expo_updates_check_interval)) {
+			setCheckedUpdates(true)
+			setIsUpdateAvailable(false)
+			return
+		}
 		if (!Updates.isEnabled) {
 			console.log("updates not enabled, returning")
 			setCheckedUpdates(true)
 			setIsUpdateAvailable(false)
 			return
 		}
-		await getLastCheck()
-		if (last_check && (Date.now() - last_check > Application.expo_updates_check_interval)) {
-			setCheckedUpdates(true)
-			setIsUpdateAvailable(false)
-			return
-		}
 		try {
-			const update = await Updates.checkForUpdateAsync()
 			await Application.database.set("settings.last_update_check",Date.now())
+			const update = await Updates.checkForUpdateAsync()
 			// if (update.isAvailable) {
 			// 	alert(`Update available on channel ${Updates.channel}: ${update.}`)
 			// }
