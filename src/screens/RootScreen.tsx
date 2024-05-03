@@ -9,9 +9,11 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import MainTab from "../tabs/home/MainTab"
 import AccountTab from "../tabs/home/AccountTab"
-import Routes from "../tabs/home/Routes"
+import SearchTab from "../tabs/home/SearchTab"
 import CustomLoadingIndicator from "../components/CustomLoadingIndicator"
 import { TabIconWrapper } from "../components/root/TabIconWrapper"
+import WelcomerPage from "./Welcomer"
+import EditorTab from "../tabs/home/EditorTab"
 export default function RootScreen(props: { navigation: NativeStackNavigationProp<any>; route: { params?: { user?: User | undefined } } }) {
 	const { route } = props
 	const [user, setUser] = useState<User | undefined>(props.route.params?.user)
@@ -48,7 +50,7 @@ export default function RootScreen(props: { navigation: NativeStackNavigationPro
 				<StatusBar translucent={false} style="dark" />
 				<Tab.Navigator
 					backBehavior="initialRoute"
-					initialRouteName="Account"
+					initialRouteName="Settings"
 					screenOptions={{
 						tabBarItemStyle: {
 							borderRadius: 100,
@@ -76,13 +78,13 @@ export default function RootScreen(props: { navigation: NativeStackNavigationPro
 					}}
 				>
 					<Tab.Screen
-						name="Routes"
+						name="Editor"
 						initialParams={{ user: user }}
 						options={{
 							tabBarIcon: ({ focused, color, size }) => (
 								// <TabIconWrapper>
 									<MaterialCommunityIcons
-										name="bus"
+										name="pencil"
 										size={size}
 										style={{
 											bottom: (focused && 7) || 0,
@@ -95,7 +97,29 @@ export default function RootScreen(props: { navigation: NativeStackNavigationPro
 								// {/* </TabIconWrapper> */}
 							),
 						}}
-						component={Routes}
+						component={EditorTab}
+					/>
+					<Tab.Screen
+						name="Search"
+						initialParams={{ user: user }}
+						options={{
+							tabBarIcon: ({ focused, color, size }) => (
+								// <TabIconWrapper>
+									<MaterialCommunityIcons
+										name="magnify"
+										size={size}
+										style={{
+											bottom: (focused && 7) || 0,
+											backgroundColor: (focused && styles.primary) || styles.white,
+											borderRadius: 100,
+											paddingHorizontal: 6,
+										}}
+										color={color}
+									/>
+								// {/* </TabIconWrapper> */}
+							),
+						}}
+						component={SearchTab}
 					/>
 					<Tab.Screen
 						name="Home"
@@ -124,7 +148,7 @@ export default function RootScreen(props: { navigation: NativeStackNavigationPro
 							tabBarIcon: ({ focused, color, size }) => (
 								// <TabIconWrapper>
 									<MaterialCommunityIcons
-										name="account"
+										name="cog"
 										size={size}
 										style={{
 											bottom: (focused && 7) || 0,
@@ -137,7 +161,7 @@ export default function RootScreen(props: { navigation: NativeStackNavigationPro
 								// </TabIconWrapper>
 							),
 						}}
-						name="Account"
+						name="Settings"
 						initialParams={{ user: user }}
 						component={AccountTab}
 					/>
