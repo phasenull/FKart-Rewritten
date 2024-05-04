@@ -7,22 +7,19 @@ import { useContext } from "react"
 import { UserContext } from "../../common/contexts/UserContext"
 import KentKartAuthValidator from "../../components/validators/KentKartAuthValidator"
 import AuthWall from "../../components/AuthWall"
+import CardJSONData from "../../components/card_details/CardJSONData"
 
 export default function HomeTab(props: { route: any; navigation: NativeStackNavigationProp<any> }) {
 	const { navigation } = props
 	const styles = Application.styles
 	const { error, isError, isFetching, loggedUser: user, logout } = useContext(UserContext)
 	return (
-		<SafeAreaView style={{ backgroundColor: styles.dark }} className="h-full w-full justify-center">
+		<SafeAreaView style={{ backgroundColor: styles.dark }} className="h-full w-full justify-center items-center">
 			<StatusBar hidden={false} />
 			{/* login prompt */}
 			<KentKartAuthValidator else={<AuthWall navigation={navigation}/>}>
 				<Text className="mx-auto mt-4 font-bold opacity-50 text-[24px]">Hello, {`${user?.name} ${user?.surname}`}</Text>
-				<Text className="mx-auto mt-4 font-bold opacity-50 text-[24px]">
-					Your email is {`${user?.email?.slice(0, 5)}${"*".repeat(user?.email?.split("@")[0].slice(5).length as number)}@${user?.email?.split("@")[1]}`}
-				</Text>
-				<Text className="mx-auto mt-4 font-bold opacity-50 text-[24px]">Your phone is {hidePhone(user?.phone)}</Text>
-				<Text className="mx-auto mt-4 font-bold opacity-50 text-[24px]">Your id is {user?.accountId}</Text>
+				<CardJSONData favorite_data={user} card={{access_token:user?.access_token?.slice(0,20)+"..."}}/>
 
 				<TouchableOpacity
 					className="w-48 h-16 justify-center self-center"

@@ -1,13 +1,17 @@
 import { Image, Text, View } from "react-native"
 import Application from "../../../common/Application"
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated"
+import { TranslationsContext } from "../../../common/contexts/TranslationsContext"
+import { useContext } from "react"
 
 export function IIPage2() {
+	const {translations} = useContext(TranslationsContext)
+
 	return (
 		<View className="justify-center flex-col flex-1 items-center">
 			<Animated.View  entering={FadeIn.duration(300)} className="flex-row items-end justify-center">
 				<Text className="text-3xl" style={{ fontWeight: "800", color: Application.styles.secondary }}>
-					by people, for people
+					{translations.screens.welcomer.by_people_for_people}
 				</Text>
 			</Animated.View>
 			<Image
@@ -27,7 +31,7 @@ export function IIPage2() {
 					textAlign:"center"
 				}}
 			>
-				Guides, photos and data corrections{"\n"}provided by our volunteer editors
+				{translations.screens.welcomer.guides_and_data_corrections}
 			</Text>
 		</View>
 	)

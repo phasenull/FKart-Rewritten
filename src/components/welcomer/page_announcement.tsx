@@ -4,10 +4,13 @@ import Animated, { FadeIn } from "react-native-reanimated"
 import * as Updates from "expo-updates"
 import { Announcement } from "../../common/interfaces/app/Announcement"
 import  AnnouncementTouchable  from "./AnnouncementTouchable"
-import { useMemo } from "react"
+import { useContext, useMemo } from "react"
+import { TranslationsContext } from "../../common/contexts/TranslationsContext"
+import { UserContext } from "../../common/contexts/UserContext"
 export function IIPageAnnouncement(props: { announcements: Announcement[] }) {
 	const { announcements } = props
-
+	const {translations} = useContext(TranslationsContext)
+	const {loggedUser} = useContext(UserContext)
 	return (
 		<View className="justify-center flex-col flex-1 items-center px-4">
 			<Text
@@ -17,9 +20,8 @@ export function IIPageAnnouncement(props: { announcements: Announcement[] }) {
 					fontSize: 24,
 				}}
 			>
-				Hi {Application.logged_user?.name}, {"\n"}You have {announcements.length} unread announcements since you were gone
+				{translations.screens.welcomer.unread_announcements({announcement_count:announcements.length,user_name:loggedUser?.name})}
 			</Text>
-				
 			<FlatList
 				className="mt-12 w-80 -mb-12"
 				style={{

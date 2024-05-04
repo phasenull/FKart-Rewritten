@@ -11,6 +11,7 @@ import { UserContext, UserContextProvider } from "../../common/contexts/UserCont
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import SecondaryText from "../SecondaryText"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
+import { TranslationsContext } from "../../common/contexts/TranslationsContext"
 
 type AuthPanelProps = { updatePage: (index: number) => void; panel_type: number; navigation: NativeStackNavigationProp<any> }
 export default function AuthPanel(props: AuthPanelProps) {
@@ -35,16 +36,18 @@ export default function AuthPanel(props: AuthPanelProps) {
 		props.navigation.replace("home", { user: loggedUser })
 		return
 	}
+	const {translations} = useContext(TranslationsContext)
+
 	const { panel_type, updatePage } = props
 	const styles = Application.styles
 	return (
 		<View style={{ backgroundColor: styles.white }} className="py-4 flex-1 flex-col items-center justify-evenly w-1/2">
 			<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "padding"} className="mb-4 mt-12 flex-col mx-auto justify-center w-64">
 				<Text style={{ color: styles.secondaryDark }} className="text-4xl text-left font-bold">
-					{panel_type === 0 ? "Sign In" : "Sign Up"}
+					{panel_type === 0 ? translations.signin : translations.signup}
 				</Text>
 				<Text style={{ color: styles.secondaryDark }} className="text-lg opacity-50 font-bold">
-					{panel_type === 0 ? "Welcome Back!" : "Welcome!"}
+					{panel_type === 0 ? translations.screens.auth.signin.hello : translations.screens.auth.signup.hello}
 				</Text>
 				{/* username */}
 				<TextInput
@@ -52,7 +55,7 @@ export default function AuthPanel(props: AuthPanelProps) {
 					style={{ color: styles.secondary }}
 					placeholderTextColor={styles.secondaryDark}
 					inputMode={inputType === LoginTypes.email ? "email" : "tel"}
-					placeholder={inputType === LoginTypes.email ? "E-Mail" : "Phone Number"}
+					placeholder={inputType === LoginTypes.email ? translations.input_fields.email : translations.input_fields.phone}
 					className="mt-8 border-2 w-full h-16 border-slate-200 rounded-[10px] px-8 py-2 shadow-2xl"
 					value={input_fields[inputType === LoginTypes.email ? "email" : "tel"] || ""}
 					onChangeText={(text) => {
@@ -67,7 +70,7 @@ export default function AuthPanel(props: AuthPanelProps) {
 					style={{ color: styles.secondary }}
 					placeholderTextColor={styles.secondaryDark}
 					passwordRules={"minlength: 8; required: true;"}
-					placeholder={"Password"}
+					placeholder={translations.input_fields.password}
 					className="mt-8 border-2 w-full h-16 border-slate-200 rounded-[10px] px-8 py-2 shadow-2xl"
 					value={input_fields.password || ""}
 					onChangeText={(text) => {
@@ -84,7 +87,7 @@ export default function AuthPanel(props: AuthPanelProps) {
 						style={{ color: styles.secondary }}
 						placeholderTextColor={styles.secondaryDark}
 						passwordRules={"minlength: 8; required: true;"}
-						placeholder={"Password"}
+						placeholder={translations.input_fields.confirm_password}
 						className="mt-8 border-2 w-full h-16 border-slate-200 rounded-[10px] px-8 py-2 shadow-2xl"
 						value={input_fields.confirm_password || ""}
 						onChangeText={(text) => {
@@ -93,7 +96,7 @@ export default function AuthPanel(props: AuthPanelProps) {
 					/>
 				) : null}
 				<View className="flex flex-row items-center align-middle justify-end -mt-2">
-					<Text style={{ color: styles.secondaryDark }}>Use a phone number</Text>
+					<Text style={{ color: styles.secondaryDark }}>{translations.input_fields.use_phone}</Text>
 					<Switch
 						value={inputType === LoginTypes.phone}
 						thumbColor={styles.primaryDark}
@@ -136,9 +139,9 @@ export default function AuthPanel(props: AuthPanelProps) {
 							}}
 							colors={[styles.primary, styles.primaryDark]}
 						>
-							<Text style={{ color: styles.white }} className="text-2xl text-center font-bold pl-5 pr-2 py-3">
-								{panel_type === 0 ? "Sign In" : "Sign Up"}
-								{"    ➜"}
+							<Text style={{ color: styles.white }} className="text-2xl text-center font-bold pl-5 px-2 py-3">
+								{panel_type === 0 ? translations.signin : translations.signup}
+								{/* {"    ➜"} */}
 							</Text>
 						</LinearGradient>
 					</TouchableOpacity>
@@ -152,7 +155,7 @@ export default function AuthPanel(props: AuthPanelProps) {
 				}}
 			>
 				<MaterialCommunityIcons size={48} name="incognito" />
-				<SecondaryText>incognito mode</SecondaryText>
+				<SecondaryText>{translations.incognito_mode}</SecondaryText>
 			</TouchableOpacity>
 		</View>
 	)

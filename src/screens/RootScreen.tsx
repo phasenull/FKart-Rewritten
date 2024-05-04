@@ -15,7 +15,7 @@ import { TabIconWrapper } from "../components/root/TabIconWrapper"
 import WelcomerPage from "./Welcomer"
 import EditorTab from "../tabs/home/EditorTab"
 import { UserContext } from "../common/contexts/UserContext"
-import { TranslationsContext } from "../common/contexts/Translations"
+import { TranslationsContext } from "../common/contexts/TranslationsContext"
 export default function RootScreen(props: { navigation: NativeStackNavigationProp<any>; route: { params?: { user?: User | undefined } } }) {
 	const { route } = props
 	const { error, isError, isFetching, loggedUser: user } = useContext(UserContext)
@@ -79,7 +79,7 @@ export default function RootScreen(props: { navigation: NativeStackNavigationPro
 				}}
 			>
 				<Tab.Screen
-					name={translations["tabs.editor.name"]}
+					name={translations.tabs.editor.name}
 					initialParams={{ user: user }}
 					options={{
 						tabBarIcon: ({ focused, color, size }) => (
@@ -101,7 +101,7 @@ export default function RootScreen(props: { navigation: NativeStackNavigationPro
 					component={EditorTab}
 				/>
 				<Tab.Screen
-					name={translations["tabs.search.name"]}
+					name={translations.tabs.search.name}
 					initialParams={{ user: user }}
 					options={{
 						tabBarIcon: ({ focused, color, size }) => (
@@ -123,7 +123,7 @@ export default function RootScreen(props: { navigation: NativeStackNavigationPro
 					component={SearchTab}
 				/>
 				<Tab.Screen
-					name={translations["tabs.home.name"]}
+					name={translations.tabs.home.name}
 					initialParams={{ user: user }}
 					options={{
 						tabBarIcon: ({ focused, color, size }) => (
@@ -162,7 +162,7 @@ export default function RootScreen(props: { navigation: NativeStackNavigationPro
 							// </TabIconWrapper>
 						),
 					}}
-					name={translations["tabs.settings.name"]}
+					name={translations.tabs.settings.name}
 					initialParams={{ user: user }}
 					component={AccountTab}
 				/>

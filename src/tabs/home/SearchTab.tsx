@@ -40,9 +40,6 @@ export default function SearchTab(props: { route: any; navigation: NativeStackNa
 		console.log("refreshing data")
 		refetch()
 	}
-	if (isLoading || isRefetching) {
-		return <CustomLoadingIndicator />
-	}
 	if (isError) {
 		return (
 			<View>
@@ -63,27 +60,27 @@ export default function SearchTab(props: { route: any; navigation: NativeStackNa
 	}
 	return (
 		<View className="flex-1">
-			<View style={{elevation:20,zIndex:2, backgroundColor:Application.styles.dark}}>
+			<View style={{ elevation: 20, zIndex: 2, backgroundColor: Application.styles.dark }}>
 				<RouteSearchBar onChangeText={setSearchText} filterByRouteType={filterByRouteType} setFilterByRouteType={setFilterByRouteType} />
 				<View className="mt-3 h-4 gap-x-4 flex-row justify-center mb-3">
 					{[
 						{
-							key:"koy_minibusu",
+							key: "koy_minibusu",
 							color: "#C60D0D",
 							value: "Köy Minibüsü",
 						},
 						{
-							key:"ozel_halk_otobusu",
+							key: "ozel_halk_otobusu",
 							color: Application.styles.primary,
 							value: "Özel Halk Otobüsü",
 						},
 						{
-							key:"belediye_otobusu",
+							key: "belediye_otobusu",
 							color: "#1EA9BD",
 							value: "Belediye Otobüsü",
 						},
 						{
-							key:"feribot",
+							key: "feribot",
 							color: "#134395",
 							value: "Feribot",
 						},
@@ -97,7 +94,13 @@ export default function SearchTab(props: { route: any; navigation: NativeStackNa
 					})}
 				</View>
 			</View>
-			<RouteList data={data.data} navigation={navigation} onRefresh={refreshData} refreshing={isRefetching} searchText={searchText} route={route} routeType={filterByRouteType.value} />
+			{isLoading || isRefetching ? (
+				<View className="flex-1 justify-center mb-32">
+					<CustomLoadingIndicator size={48} />
+				</View>
+			) : (
+				<RouteList data={data.data} navigation={navigation} onRefresh={refreshData} refreshing={isRefetching} searchText={searchText} route={route} routeType={filterByRouteType.value} />
+			)}
 		</View>
 	)
 }

@@ -2,7 +2,10 @@ import { Image, Text, View } from "react-native"
 import Application from "../../../common/Application"
 import Animated, { FadeIn } from "react-native-reanimated"
 import * as Updates from "expo-updates"
+import { useContext } from "react"
+import { TranslationsContext } from "../../../common/contexts/TranslationsContext"
 export function IIPage1(props:{last_check:number}) {
+	const {translations} = useContext(TranslationsContext)
 	return (
 		<View className="justify-center flex-col flex-1 items-center">
 			<Animated.View entering={FadeIn.duration(300)} className="flex-row items-end justify-center">
@@ -29,8 +32,8 @@ export function IIPage1(props:{last_check:number}) {
 					fontSize: 16,
 				}}
 			>
-				unofficial public transit app for
-				<Text style={{ color: Application.styles.primary }}>{""} Kocaeli</Text>
+				{translations.screens.welcomer.unofficial_public_transit_app_for_kocaeli.map((e)=>e.mark ? 
+				<Text key={e.str} style={{ color: Application.styles.primary }}>{e.str}</Text> : e.str)}
 			</Text>
 			<Text
 				style={{
@@ -38,7 +41,7 @@ export function IIPage1(props:{last_check:number}) {
 					fontSize: 16,
 				}}
 			>
-				and 23 other cities!
+				{translations.screens.welcomer.and_23_other_cities}
 			</Text>
 			<Text
 				style={{
@@ -48,7 +51,7 @@ export function IIPage1(props:{last_check:number}) {
 					fontSize: 16,
 					opacity:0.1
 				}}>
-				Last Update Check:
+				{translations.screens.welcomer.last_update_check}
 				{"\n"}{new Date(props.last_check).toUTCString()}
 			</Text>
 		</View>

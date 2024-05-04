@@ -70,7 +70,7 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 				>
 					<AccountDetailsContainer show_credentials={is_show_secret} user={user} />
 					{isFavoritesLoading && !isFavoritesRefetching ? (
-						<View className="items-center bg-red-400 flex-1 justify-center">
+						<View className="items-center flex-1 justify-center">
 							<CustomLoadingIndicator />
 							<Text
 								style={{
@@ -86,7 +86,6 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 					) : (
 						cards?.map((p_card, index) => <CardContainer style={{ marginTop: 5 * 4 }} index={index} key={"card_" + index} favorite_data={p_card} navigation={navigation} />) || (
 							<View className="items-center flex-1 justify-center">
-								<CustomLoadingIndicator />
 								<Text
 									style={{
 										marginTop: 8 * 4,
@@ -95,7 +94,7 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 										fontSize: 24,
 									}}
 								>
-									Fetching Cards...
+									No cards found!
 								</Text>
 							</View>
 						)
