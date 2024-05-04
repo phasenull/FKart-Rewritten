@@ -7,7 +7,7 @@ import NotLoggedInModal from "../components/auth/NotLoggedInModal"
 import User from "../common/classes/User"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import MainTab from "../tabs/home/MainTab"
+import HomeTab from "../tabs/home/HomeTab"
 import AccountTab from "../tabs/home/AccountTab"
 import SearchTab from "../tabs/home/SearchTab"
 import CustomLoadingIndicator from "../components/CustomLoadingIndicator"
@@ -41,10 +41,6 @@ export default function RootScreen(props: { navigation: NativeStackNavigationPro
 				<Text>fetching</Text>
 			</View>
 		)
-	}
-	if (!user) {
-		navigation.navigate("auth")
-		return
 	}
 	// TODO separate these into different files
 
@@ -144,7 +140,7 @@ export default function RootScreen(props: { navigation: NativeStackNavigationPro
 							// {/* </TabIconWrapper> */}
 						),
 					}}
-					component={MainTab}
+					component={HomeTab}
 				/>
 				<Tab.Screen
 					options={{

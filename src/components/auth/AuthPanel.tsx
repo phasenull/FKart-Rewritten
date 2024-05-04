@@ -9,7 +9,10 @@ import { withTiming } from "react-native-reanimated"
 import Logger from "../../common/Logger"
 import { UserContext, UserContextProvider } from "../../common/contexts/UserContext"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-type AuthPanelProps = { updatePage: (index: number) => void; panel_type: number,navigation:NativeStackNavigationProp<any> }
+import SecondaryText from "../SecondaryText"
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
+
+type AuthPanelProps = { updatePage: (index: number) => void; panel_type: number; navigation: NativeStackNavigationProp<any> }
 export default function AuthPanel(props: AuthPanelProps) {
 	const [is_keyboard_open, setIsKeyboardOpen] = useState(false)
 	const [inputType, setInputType] = useState<LoginTypes>(LoginTypes.phone)
@@ -26,19 +29,17 @@ export default function AuthPanel(props: AuthPanelProps) {
 		setIsKeyboardOpen(false)
 	})
 
-	const { isFetching, loggedUser, loginUsingEmail, loginUsingPhone,isError,error } = useContext(UserContext)
-	Logger.info(`UserContext: isFetching-${isFetching} loggedUser-${loggedUser?.name}`)
+	const { isFetching, loggedUser, loginUsingEmail, loginUsingPhone, isError, error } = useContext(UserContext)
 	if (loggedUser) {
 		console.log("user is already logged in, redirecting to home!")
-		props.navigation.replace("home",{user:loggedUser})
+		props.navigation.replace("home", { user: loggedUser })
 		return
 	}
 	const { panel_type, updatePage } = props
 	const styles = Application.styles
-	const theme = Application.theme
 	return (
-		<View style={{ backgroundColor: styles.white }} className="h-full py-4 flex-1 items-center justify-evenly w-1/2">
-			<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "padding"} className="flex mb-4 mt-12 flex-col mx-auto justify-center h-64 w-64">
+		<View style={{ backgroundColor: styles.white }} className="py-4 flex-1 flex-col items-center justify-evenly w-1/2">
+			<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "padding"} className="mb-4 mt-12 flex-col mx-auto justify-center w-64">
 				<Text style={{ color: styles.secondaryDark }} className="text-4xl text-left font-bold">
 					{panel_type === 0 ? "Sign In" : "Sign Up"}
 				</Text>
@@ -101,39 +102,58 @@ export default function AuthPanel(props: AuthPanelProps) {
 						}}
 					/>
 				</View>
-				{isError? <Text style={{ color: styles.warning }}>
-					{error}
-				</Text> : null}
+				{isError ? <Text style={{ color: styles.warning }}>{error}</Text> : null}
 			</KeyboardAvoidingView>
 			{/* button */}
-			{is_keyboard_open ? null : (
-				<TouchableOpacity
-					onPress={async () => {
-						switch (inputType) {
-							case LoginTypes.phone:
-								if (panel_type === 0) {
-									console.log("login",inputType, LoginTypes.phone)
-									loginUsingPhone({password:input_fields.password,username:input_fields.tel})
-								}
-								break
-							case LoginTypes.email:
-								console.log(inputType, LoginTypes.email)
-								alert("not implemented yet")
-								break
-						}
-					}}
-					className="mt-8 mb-32 -mr-44 w-max"
-					activeOpacity={0.6}
-				>
-					<LinearGradient className="rounded-[16px] px-3" start={[0, 0.5]} end={[1, 0.5]} colors={[styles.primary, styles.primaryDark]}>
-						<Text style={{ color: styles.white }} className="text-2xl text-center font-bold pl-5 pr-2 py-3">
-							{panel_type === 0 ? "Sign In" : "Sign Up"}
-							{"    ➜"}
-						</Text>
-					</LinearGradient>
-				</TouchableOpacity>
-			)}
+			{
+				// is_keyboard_open
+				false ? null : (
+					<TouchableOpacity
+						onPress={async () => {
+							switch (inputType) {
+								case LoginTypes.phone:
+									if (panel_type === 0) {
+										console.log("login", inputType, LoginTypes.phone)
+										loginUsingPhone({ password: input_fields.password, username: input_fields.tel })
+									}
+									break
+								case LoginTypes.email:
+									console.log(inputType, LoginTypes.email)
+									alert("not implemented yet")
+									break
+							}
+						}}
+						disabled={isFetching}
+						className="right-8 self-end w-max"
+						activeOpacity={0.6}
+					>
+						<LinearGradient
+							className="rounded-[16px] px-3"
+							start={[0, 0.5]}
+							end={[1, 0.5]}
+							style={{
+								opacity: isFetching ? 0.3 : 1,
+							}}
+							colors={[styles.primary, styles.primaryDark]}
+						>
+							<Text style={{ color: styles.white }} className="text-2xl text-center font-bold pl-5 pr-2 py-3">
+								{panel_type === 0 ? "Sign In" : "Sign Up"}
+								{"    ➜"}
+							</Text>
+						</LinearGradient>
+					</TouchableOpacity>
+				)
+			}
 			<SwitchAuthPage style={{ marginBottom: is_keyboard_open ? 4 * 4 : 12 * 4 }} updatePage={updatePage} panel_type={panel_type} />
+			<TouchableOpacity
+				className="py-4 opacity-30 items-center"
+				onPress={() => {
+					props.navigation?.navigate("home", { canGoBack: false })
+				}}
+			>
+				<MaterialCommunityIcons size={48} name="incognito" />
+				<SecondaryText>incognito mode</SecondaryText>
+			</TouchableOpacity>
 		</View>
 	)
 }

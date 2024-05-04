@@ -8,14 +8,14 @@ import { BaseKentKartResponse } from "../../../interfaces/KentKart/BasicKentKart
 import Logger from "../../../Logger"
 
 async function getFavorites(): Promise<
-	AxiosResponse<Favorites & BaseKentKartResponse>
+	AxiosResponse<Favorites & BaseKentKartResponse> | undefined
 > {
 	const user = Application.logged_user
 	const url = `${Application.endpoints.service}/rl1/api/v4.0/favorite?authType=4&region=${Application.region}`
 
 	Logger.info("REQUEST useGetFavorites")
 	if (!user) {
-		throw new Error("User not logged in.")
+		return undefined
 	}
 	return Application.makeKentKartRequest(url)
 }

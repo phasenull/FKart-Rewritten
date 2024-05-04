@@ -67,6 +67,7 @@ export function UserContextProvider(props: { children: any }) {
 		<UserContext.Provider
 			value={{
 				logout: async () => {
+					setLoggedUser(undefined)
 					Application.logged_user = undefined
 					await Application.database.set("user", null)
 					await Application.database.set("refresh_token", null)

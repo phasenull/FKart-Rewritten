@@ -75,9 +75,7 @@ export function IIPaginator(props: {navigation:NativeStackNavigationProp<any>, i
 						if (page == props.children.length-1) {
 							const navigation = props.navigation
 							if (navigation) {
-								navigation.replace("home",{
-									user:Application.logged_user
-								})
+								navigation.replace("home")
 							} else {
 								alert("navigation is null")
 							}
