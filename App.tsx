@@ -14,6 +14,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler"
 import * as Linking from "expo-linking"
 import WelcomerPage from "./src/screens/Welcomer"
 import { UserContextProvider } from "./src/common/contexts/UserContext"
+import { TranslationsProvider } from "./src/common/contexts/Translations"
 
 const config = {
 	screens: {
@@ -37,55 +38,57 @@ export default function AppEntryComponent() {
 		<QueryClientProvider client={queryClient}>
 			<GestureHandlerRootView style={{ flex: 1 }}>
 				<UserContextProvider>
-					<NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
-						<Stack.Navigator
-							initialRouteName="welcomer"
-							screenOptions={{
-								headerShown: false,
-								statusBarHidden: false,
-							}}
-						>
-							<Stack.Screen name="welcomer" component={WelcomerPage as any} />
-							<Stack.Screen name="home" component={RootScreen} />
-							<Stack.Screen name="auth" component={AuthPage} />
-							<Stack.Screen
-								name="card_details"
-								options={{
-									headerShown: true,
-									headerTitle: "",
-									headerTransparent: true,
-									headerTitleAlign: "center",
-									headerTitleStyle: { color: "white" },
-									headerTintColor: "white",
+					<TranslationsProvider>
+						<NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
+							<Stack.Navigator
+								initialRouteName="welcomer"
+								screenOptions={{
+									headerShown: false,
+									statusBarHidden: false,
 								}}
-								component={CardDetails as any}
-							/>
-							<Stack.Screen
-								name="route_details"
-								options={{
-									headerShown: true,
-									title: "",
-								}}
-								component={RouteDetails as any}
-							/>
-							<Stack.Screen
-								name="bus_details"
-								options={{
-									headerShown: true,
-									title: "",
-								}}
-								component={BusDetails as any}
-							/>
-							<Stack.Screen
-								name="map_data"
-								options={{
-									headerShown: true,
-									title: "",
-								}}
-								component={MapData as any}
-							/>
-						</Stack.Navigator>
-					</NavigationContainer>
+							>
+								<Stack.Screen name="welcomer" component={WelcomerPage as any} />
+								<Stack.Screen name="home" component={RootScreen} />
+								<Stack.Screen name="auth" component={AuthPage} />
+								<Stack.Screen
+									name="card_details"
+									options={{
+										headerShown: true,
+										headerTitle: "",
+										headerTransparent: true,
+										headerTitleAlign: "center",
+										headerTitleStyle: { color: "white" },
+										headerTintColor: "white",
+									}}
+									component={CardDetails as any}
+								/>
+								<Stack.Screen
+									name="route_details"
+									options={{
+										headerShown: true,
+										title: "",
+									}}
+									component={RouteDetails as any}
+								/>
+								<Stack.Screen
+									name="bus_details"
+									options={{
+										headerShown: true,
+										title: "",
+									}}
+									component={BusDetails as any}
+								/>
+								<Stack.Screen
+									name="map_data"
+									options={{
+										headerShown: true,
+										title: "",
+									}}
+									component={MapData as any}
+								/>
+							</Stack.Navigator>
+						</NavigationContainer>
+					</TranslationsProvider>
 				</UserContextProvider>
 			</GestureHandlerRootView>
 		</QueryClientProvider>
