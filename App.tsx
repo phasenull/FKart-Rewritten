@@ -14,7 +14,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler"
 import * as Linking from "expo-linking"
 import WelcomerPage from "./src/screens/Welcomer"
 import { UserContextProvider } from "./src/common/contexts/UserContext"
-import { TranslationsProvider } from "./src/common/contexts/Translations"
+import { TranslationsProvider } from "./src/common/contexts/TranslationsContext"
 
 const config = {
 	screens: {
