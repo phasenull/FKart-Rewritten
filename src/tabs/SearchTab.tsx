@@ -24,6 +24,7 @@ import RouteList from "../components/tab_components/routes/RouteList"
 import SegmentedButtons from "../components/root/SegmentedButtons"
 import FilterByRouteTypeModal from "../components/tab_components/routes/FilterByRouteTypeModal"
 import RouteSearchBar from "../components/tab_components/routes/RouteSearchBar" 
+import SecondaryText from "../components/root/SecondaryText"
 export default function SearchTab(props: { route: any; navigation: NativeStackNavigationProp<any> }) {
 	const { data, isLoading, isError, error, refetch, isRefetching } = useGetRouteList({ region: Application.region })
 
@@ -48,10 +49,20 @@ export default function SearchTab(props: { route: any; navigation: NativeStackNa
 			</View>
 		)
 	}
+	if (isRefetching || isLoading) {
+		return (
+			<View className="items-center justify-center flex-1">
+				<CustomLoadingIndicator/>
+				<SecondaryText style={{marginTop:12*4,fontSize:32}}>
+					Fetching data...
+				</SecondaryText>
+			</View>
+		)
+	}
 	if (!data?.data) {
 		return (
-			<View>
-				<Text>No data found</Text>
+			<View className="items-center justify-center flex-1">
+				<SecondaryText>No data found</SecondaryText>
 			</View>
 		)
 	}
