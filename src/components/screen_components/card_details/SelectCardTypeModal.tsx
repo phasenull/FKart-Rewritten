@@ -1,5 +1,5 @@
 import { Modal, Text, TouchableOpacity, View } from "react-native"
-import CardTypes from "../../../common/enums/CardTypes"; 
+import CardTypes from "../../../common/enums/CardTypes";
 import Application from "../../../common/Application";
 import SegmentedButtons from "../../root/SegmentedButtons";
 
