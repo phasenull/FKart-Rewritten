@@ -7,7 +7,7 @@ import { useContext } from "react"
 import { UserContext } from "../common/contexts/UserContext"
 import KentKartAuthValidator from "../components/validators/KentKartAuthValidator"
 import AuthWall from "../components/root/AuthWall"
-import CardJSONData from "../../components/card_details/CardJSONData"
+import CardJSONData from "../components/screen_components/card_details/CardJSONData" 
 
 export default function HomeTab(props: { route: any; navigation: NativeStackNavigationProp<any> }) {
 	const { navigation } = props

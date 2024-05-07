@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useMemo, useState } from "react"
 import { Text, TouchableOpacity, View } from "react-native"
-import Application from "../../common/Application"
+import Application from "../../../common/Application";
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { TranslationsContext } from "../../common/contexts/TranslationsContext";
-import SelectLangModal from "../SelectLangModal";
-import { Langs } from "../../common/enums/Langs";
+import { TranslationsContext } from "../../../common/contexts/TranslationsContext";
+import SelectLangModal from "../../root/SelectLangModal";
+import { Langs } from "../../../common/enums/Langs";
 export function IIPaginator(props: {navigation:NativeStackNavigationProp<any>, initialIndex?: number; onPageChange?: (newIndex: number, previousIndex?: number) => void; children: any }) {
 	// console.log("IIPaginator Update",props?.children?.length)
 	const [page, setPage] = useState(props.initialIndex || 0)

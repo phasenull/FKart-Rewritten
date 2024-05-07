@@ -1,7 +1,7 @@
 import { Modal, Text, TouchableOpacity, View } from "react-native"
-import CardTypes from "../../common/enums/CardTypes"
-import Application from "../../common/Application"
-import SegmentedButtons from "../SegmentedButtons"
+import CardTypes from "../../../common/enums/CardTypes"; 
+import Application from "../../../common/Application";
+import SegmentedButtons from "../../root/SegmentedButtons";
 
 export default function SelectCardTypeModal(props: { defaultValue: CardTypes; visible?: boolean; onSelect: (value: CardTypes) => void; onDismiss: () => void }) {
 	const styles = Application.styles

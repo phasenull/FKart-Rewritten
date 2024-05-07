@@ -14,12 +14,12 @@ import BottomSheet, { TouchableOpacity } from "@gorhom/bottom-sheet"
 import { DYNAMIC_CONTENT_URL } from "../common/constants"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { ScrollView } from "react-native-gesture-handler"
-import BusContainer from "../components/route_details/BusContainer"
+import BusContainer from "../components/screen_components/route_details/BusContainer"
 import { BottomSheetMethods } from "@gorhom/bottom-sheet/lib/typescript/types"
-import Map from "../components/map_details/Map"
+import Map from "../components/screen_components/map_details/Map"
 import useGetRouteDetails from "../common/hooks/kentkart/info/useGetRouteDetails"
 import CustomLoadingIndicator from "../components/root/CustomLoadingIndicator"
-import FollowingBus from "../components/map_details/FollowingBus"
+import FollowingBus from "../components/screen_components/map_details/FollowingBus"
 export default function MapData(props: {
 	route: {
 		params: {

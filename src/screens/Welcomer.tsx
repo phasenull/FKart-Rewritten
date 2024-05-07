@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react"
-import { InitialInfo } from "../components/welcomer/WelcomerRoot"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { Text, View } from "react-native"
 import Application from "../common/Application"
 import CustomLoadingIndicator from "../components/root/CustomLoadingIndicator"
 import * as Updates from "expo-updates"
 import Logger from "../common/Logger"
+import { InitialInfo } from "../components/screen_components/welcomer/WelcomerRoot"
+
 export default function WelcomerPage(props: { navigation:NativeStackNavigationProp<any> }) {
 	const navigation = props.navigation as NativeStackNavigationProp<any>
 	const [checkedUpdates, setCheckedUpdates] = useState(false)

@@ -1,8 +1,8 @@
 import { Clipboard, Image, Linking, Text, ToastAndroid, Vibration, View } from "react-native"
-import Application from "../../../common/Application"
+import Application from "../../../../common/Application"
 import { TouchableOpacity } from "@gorhom/bottom-sheet"
 import Animated, { FadeIn, FadeInDown, FadeInUp, FadeOut } from "react-native-reanimated"
-import { TranslationsContext } from "../../../common/contexts/TranslationsContext"
+import { TranslationsContext } from "../../../../common/contexts/TranslationsContext"
 import { useContext } from "react"
 
 export function IIPage3() {

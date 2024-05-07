@@ -1,7 +1,7 @@
 import { Image, Text, View } from "react-native"
-import Application from "../../../common/Application"
+import Application from "../../../../common/Application"
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated"
-import { TranslationsContext } from "../../../common/contexts/TranslationsContext"
+import { TranslationsContext } from "../../../../common/contexts/TranslationsContext"
 import { useContext } from "react"
 
 export function IIPage2() {

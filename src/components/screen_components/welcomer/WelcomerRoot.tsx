@@ -5,9 +5,9 @@ import { IIPaginator } from "./InitialInfoPaginator"
 import { IIPage2 } from "./initial_info_pages/page_2_CommunityMade"
 import { IIPage3 } from "./initial_info_pages/page_3_OpenSource"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import { useGetAnnouncements } from "../../common/hooks/kentkart/info/useGetAnnouncements"
+import { useGetAnnouncements } from "../../../common/hooks/kentkart/info/useGetAnnouncements"
 import { IIPageAnnouncement } from "./page_announcement"
-import { dateFromMessedKentKartDateFormat } from "../../util"
+import { dateFromMessedKentKartDateFormat } from "../../../util"
 export function InitialInfo(props: { last_check:number,navigation: NativeStackNavigationProp<any> }) {
 	const { data: announcements } = useGetAnnouncements()
 	return (

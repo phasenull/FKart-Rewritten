@@ -1,8 +1,8 @@
 import { TouchableOpacity } from "react-native-gesture-handler"
-import { Announcement } from "../../common/interfaces/app/Announcement"
+import { Announcement } from "../../../common/interfaces/app/Announcement"
 import { Text, View } from "react-native"
-import Application from "../../common/Application"
-import Divider from "../Divider"
+import Application from "../../../common/Application"
+import Divider from "../../root/Divider"
 
 export default function AnnouncementTouchable(props: { index: number; item: Announcement }) {
 	const { index, item: announcement } = props

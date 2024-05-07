@@ -1,6 +1,6 @@
 import { useMemo } from "react"
 import { Text } from "react-native"
-import Application from "../../common/Application"
+import Application from "../../../common/Application";
 
 export default function CardJSONData(props: { card: any; favorite_data: any }) {
 	const { card, favorite_data } = props

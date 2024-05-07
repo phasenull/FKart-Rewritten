@@ -1,9 +1,9 @@
 import { Image, Text, View } from "react-native"
-import Application from "../../../common/Application"
+import Application from "../../../../common/Application"
 import Animated, { FadeIn } from "react-native-reanimated"
 import * as Updates from "expo-updates"
 import { useContext } from "react"
-import { TranslationsContext } from "../../../common/contexts/TranslationsContext"
+import { TranslationsContext } from "../../../../common/contexts/TranslationsContext"
 export function IIPage1(props:{last_check:number}) {
 	const {translations} = useContext(TranslationsContext)
 	return (

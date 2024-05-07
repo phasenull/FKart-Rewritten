@@ -1,6 +1,6 @@
 import { Modal, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native"
-import SegmentedButtons from "../SegmentedButtons"
-import Application from "../../common/Application"
+import SegmentedButtons from "../../root/SegmentedButtons"; 
+import Application from "../../../common/Application"; 
 import Animated, { FadeInDown, FadeInUp, FadeOutDown, FadeOutUp, SlideInUp, SlideOutUp, StretchInX, ZoomIn, ZoomInUp, ZoomOut, ZoomOutDown, ZoomOutUp } from "react-native-reanimated"
 
 export default function FilterByRouteTypeModal(props: { visible: boolean; setVisible: any; setFilterByRouteType: any; filterByRouteType: any }) {

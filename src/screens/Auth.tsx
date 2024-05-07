@@ -4,12 +4,14 @@ import { StatusBar } from "expo-status-bar"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { useContext, useEffect, useState } from "react"
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated"
-import AuthPanel from "../components/auth/AuthPanel"
+
 import User from "../common/classes/User"
+
 import KentKartAuthValidator from "../components/validators/KentKartAuthValidator"
 import SecondaryText from "../components/root/SecondaryText"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { UserContext } from "../common/contexts/UserContext"
+import AuthPanel from "../components/screen_components/auth/AuthPanel"
 
 export default function AuthPage(props: { navigation: NativeStackNavigationProp<any> }) {
 	const { navigation } = props

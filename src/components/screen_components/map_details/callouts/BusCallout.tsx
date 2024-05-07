@@ -1,10 +1,10 @@
 import { Text, View } from "react-native"
-import Application from "../../../common/Application"
-import RouteData from "../../../common/interfaces/KentKart/object/RouteData"
-import BusData from "../../../common/interfaces/KentKart/object/BusData"
+import Application from "../../../../common/Application"
+import RouteData from "../../../../common/interfaces/KentKart/object/RouteData"
+import BusData from "../../../../common/interfaces/KentKart/object/BusData"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import React from "react"
-import Divider from "../../Divider"
+import Divider from "../../../root/Divider"
 
 export function BusCallout(props: { scheduled_data: any; route_data: RouteData; bus: BusData }) {
 	const { scheduled_data, bus, route_data } = props

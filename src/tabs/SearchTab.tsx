@@ -17,13 +17,13 @@ import {
 } from "react-native"
 import BasicRouteInformation from "../common/interfaces/KentKart/object/BasicRouteInformation"
 import React, { useMemo, useState } from "react"
-import RouteTouchableContainer from "../../components/routes/RouteTouchableContainer"
+import RouteTouchableContainer from "../components/tab_components/routes/RouteTouchableContainer"
 import CustomLoadingIndicator from "../components/root/CustomLoadingIndicator"
 
-import RouteList from "../../components/routes/RouteList"
+import RouteList from "../components/tab_components/routes/RouteList"
 import SegmentedButtons from "../components/root/SegmentedButtons"
-import FilterByRouteTypeModal from "../../components/routes/FilterByRouteTypeModal"
-import RouteSearchBar from "../../components/routes/RouteSearchBar"
+import FilterByRouteTypeModal from "../components/tab_components/routes/FilterByRouteTypeModal"
+import RouteSearchBar from "../components/tab_components/routes/RouteSearchBar" 
 export default function SearchTab(props: { route: any; navigation: NativeStackNavigationProp<any> }) {
 	const { data, isLoading, isError, error, refetch, isRefetching } = useGetRouteList({ region: Application.region })
 

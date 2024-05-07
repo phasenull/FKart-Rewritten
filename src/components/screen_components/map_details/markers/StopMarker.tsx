@@ -1,11 +1,11 @@
 import { LatLng, Marker } from "react-native-maps"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import BasicStopInformation from "../../../common/interfaces/KentKart/object/BasicStopInformation"
-import Application from "../../../common/Application"
+import BasicStopInformation from "../../../../common/interfaces/KentKart/object/BasicStopInformation"
+import Application from "../../../../common/Application"
 import { Image } from "react-native"
-import { DYNAMIC_CONTENT_URL } from "../../../common/constants"
+import { DYNAMIC_CONTENT_URL } from "../../../../common/constants"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import Logger from "../../../common/Logger"
+import Logger from "../../../../common/Logger"
 
 export default function StopMarker(props: { busStop: BasicStopInformation; coordinate: LatLng; easterEggEnabled?: boolean; navigation: NativeStackNavigationProp<any> }) {
 	const { busStop, coordinate, easterEggEnabled, navigation } = props

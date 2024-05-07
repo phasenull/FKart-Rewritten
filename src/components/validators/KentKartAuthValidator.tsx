@@ -1,8 +1,7 @@
 import { useContext } from "react";
-import { UserContext } from "../../common/contexts/UserContext";
+import { Text, View } from "react-native";
 import Application from "../../common/Application";
-import { View } from "react-native";
-import { Text } from "react-native";
+import { UserContext } from "../../common/contexts/UserContext";
 import CustomLoadingIndicator from "../root/CustomLoadingIndicator";
 
 export default function KentKartAuthValidator(props:{children:any,else?:any}) {

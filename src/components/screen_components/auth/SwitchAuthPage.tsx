@@ -1,6 +1,6 @@
 import { RegisteredStyle, StyleProp, Text, TouchableOpacity, View, ViewStyle } from "react-native"
-import Application from "../../common/Application"
-import { TranslationsContext } from "../../common/contexts/TranslationsContext"
+import Application from "../../../common/Application";
+import { TranslationsContext } from "../../../common/contexts/TranslationsContext";
 import { useContext } from "react"
 
 export default function SwitchAuthPage(props: { style: StyleProp<ViewStyle>; updatePage: (index: number) => void; panel_type: number }) {

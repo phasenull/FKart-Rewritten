@@ -1,12 +1,12 @@
 import { FlatList, Image, Text, View } from "react-native"
-import Application from "../../common/Application"
+import Application from "../../../common/Application"
 import Animated, { FadeIn } from "react-native-reanimated"
 import * as Updates from "expo-updates"
-import { Announcement } from "../../common/interfaces/app/Announcement"
+import { Announcement } from "../../../common/interfaces/app/Announcement"
 import  AnnouncementTouchable  from "./AnnouncementTouchable"
 import { useContext, useMemo } from "react"
-import { TranslationsContext } from "../../common/contexts/TranslationsContext"
-import { UserContext } from "../../common/contexts/UserContext"
+import { TranslationsContext } from "../../../common/contexts/TranslationsContext" 
+import { UserContext } from "../../../common/contexts/UserContext"
 export function IIPageAnnouncement(props: { announcements: Announcement[] }) {
 	const { announcements } = props
 	const {translations} = useContext(TranslationsContext)

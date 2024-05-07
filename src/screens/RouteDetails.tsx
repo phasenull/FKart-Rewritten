@@ -6,7 +6,7 @@ import CustomLoadingIndicator from "../components/root/CustomLoadingIndicator"
 import RouteData from "../common/interfaces/KentKart/object/RouteData"
 import { useEffect, useMemo, useState } from "react"
 import BusData from "../common/interfaces/KentKart/object/BusData"
-import BusContainer from "../components/route_details/BusContainer"
+import BusContainer from "../components/screen_components/route_details/BusContainer"
 import Application from "../common/Application"
 
 export default function RouteDetails(props: {

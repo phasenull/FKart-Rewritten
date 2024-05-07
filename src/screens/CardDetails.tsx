@@ -12,14 +12,15 @@ import { LinearGradient } from "expo-linear-gradient"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { BasicCardData } from "../common/interfaces/KentKart/object/BasicCardData"
 import { Favorite } from "../common/interfaces/KentKart/object/Favorite"
-import CardControlPanel from "../components/card_details/CardControlPanel"
+
 import { useGetSyncCode } from "../common/hooks/kentkart/user/useGetSyncCode"
 import { getQRCode } from "../common/hooks/useGetQRCode"
 import CustomLoadingIndicator from "../components/root/CustomLoadingIndicator"
-import SelectCardTypeModal from "../components/card_details/SelectCardTypeModal"
-import CardDetailsHeader from "../components/card_details/CardDetailsHeader"
-import CardJSONData from "../components/card_details/CardJSONData"
-import VirtualCardQRCodePanel from "../components/card_details/VirtualCardQRCodePanel"
+import SelectCardTypeModal from "../components/screen_components/card_details/SelectCardTypeModal"
+import CardDetailsHeader from "../components/screen_components/card_details/CardDetailsHeader"
+import CardJSONData from "../components/screen_components/card_details/CardJSONData"
+import VirtualCardQRCodePanel from "../components/screen_components/card_details/VirtualCardQRCodePanel"
+import CardControlPanel from "../components/screen_components/card_details/CardControlPanel"
 export default function CardDetails(props: {
 	route: {
 		params: {

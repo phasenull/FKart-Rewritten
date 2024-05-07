@@ -3,7 +3,7 @@ import {
 	TouchableOpacity,
 	View,
 } from "react-native"
-import Application from "../../common/Application"
+import Application from "../../../common/Application"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { useEffect, useState } from "react"
 import FilterByRouteTypeModal from "./FilterByRouteTypeModal"
