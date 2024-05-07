@@ -61,7 +61,7 @@ function BottomTab(props: { state: any; descriptors: any; navigation: any }) {
 	return (
 		<View className="flex-row mx-2 px-1 pb-1 mb-2 absolute bottom-0" style={{ borderRadius: 100, backgroundColor: Application.styles.white, elevation: 4 }}>
 			{state.routes.map((route: any, index: number) => {
-				return <BottomTabButton descriptors={descriptors[route.key]} index={index} navigation={navigation} route={route} state={state} />
+				return <BottomTabButton key={route.key} descriptors={descriptors[route.key]} index={index} navigation={navigation} route={route} state={state} />
 			})}
 		</View>
 	)
