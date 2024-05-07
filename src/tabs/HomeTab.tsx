@@ -1,12 +1,12 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { SafeAreaView, StatusBar, Text, TouchableOpacity, View } from "react-native"
-import Application from "../../common/Application"
-import User from "../../common/classes/User"
-import { hidePhone } from "../../util"
+import Application from "../common/Application"
+import User from "../common/classes/User"
+import { hidePhone } from "../util"
 import { useContext } from "react"
-import { UserContext } from "../../common/contexts/UserContext"
-import KentKartAuthValidator from "../../components/validators/KentKartAuthValidator"
-import AuthWall from "../../components/AuthWall"
+import { UserContext } from "../common/contexts/UserContext"
+import KentKartAuthValidator from "../components/validators/KentKartAuthValidator"
+import AuthWall from "../components/root/AuthWall"
 import CardJSONData from "../../components/card_details/CardJSONData"
 
 export default function HomeTab(props: { route: any; navigation: NativeStackNavigationProp<any> }) {

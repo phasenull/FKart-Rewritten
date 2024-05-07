@@ -4,7 +4,7 @@ import Application from "../common/Application"
 import React, { useEffect, useState } from "react"
 import BusData from "../common/interfaces/KentKart/object/BusData"
 import { useGetBusImages } from "../common/hooks/fkart/bus/useGetBusImages"
-import CustomLoadingIndicator from "../components/CustomLoadingIndicator"
+import CustomLoadingIndicator from "../components/root/CustomLoadingIndicator"
 import * as ImagePicker from "expo-image-picker"
 
 import { putBusImages } from "../common/hooks/fkart/bus/usePutBusImages"

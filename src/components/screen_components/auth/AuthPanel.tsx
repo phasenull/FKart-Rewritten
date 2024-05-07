@@ -3,7 +3,7 @@ import Application from "../../common/Application"
 import { BlurView } from "expo-blur"
 import { LinearGradient } from "expo-linear-gradient"
 import LoginTypes from "../../common/enums/LoginTypes"
-import { Component, ReactNode, useContext, useState } from "react"
+import { Component, ReactNode, useContext, useEffect, useState } from "react"
 import SwitchAuthPage from "./SwitchAuthPage"
 import { withTiming } from "react-native-reanimated"
 import Logger from "../../common/Logger"
@@ -12,6 +12,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import SecondaryText from "../SecondaryText"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { TranslationsContext } from "../../common/contexts/TranslationsContext"
+import KentKartAuthValidator from "../validators/KentKartAuthValidator"
 
 type AuthPanelProps = { updatePage: (index: number) => void; panel_type: number; navigation: NativeStackNavigationProp<any> }
 export default function AuthPanel(props: AuthPanelProps) {
@@ -31,16 +32,12 @@ export default function AuthPanel(props: AuthPanelProps) {
 	})
 
 	const { isFetching, loggedUser, loginUsingEmail, loginUsingPhone, isError, error } = useContext(UserContext)
-	if (loggedUser) {
-		console.log("user is already logged in, redirecting to home!")
-		props.navigation.replace("home", { user: loggedUser })
-		return
-	}
-	const {translations} = useContext(TranslationsContext)
+	const { translations } = useContext(TranslationsContext)
 
 	const { panel_type, updatePage } = props
 	const styles = Application.styles
 	return (
+
 		<View style={{ backgroundColor: styles.white }} className="py-4 flex-1 flex-col items-center justify-evenly w-1/2">
 			<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "padding"} className="mb-4 mt-12 flex-col mx-auto justify-center w-64">
 				<Text style={{ color: styles.secondaryDark }} className="text-4xl text-left font-bold">
@@ -121,8 +118,10 @@ export default function AuthPanel(props: AuthPanelProps) {
 									}
 									break
 								case LoginTypes.email:
-									console.log(inputType, LoginTypes.email)
-									alert("not implemented yet")
+									if (panel_type === 0) {
+										console.log("login", inputType, LoginTypes.email)
+										loginUsingEmail({ password: input_fields.password, username: input_fields.email })
+									}
 									break
 							}
 						}}

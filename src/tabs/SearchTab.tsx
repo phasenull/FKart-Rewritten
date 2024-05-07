@@ -1,6 +1,6 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import useGetRouteList from "../../common/hooks/fkart/static/useGetRouteList"
-import Application from "../../common/Application"
+import useGetRouteList from "../common/hooks/fkart/static/useGetRouteList"
+import Application from "../common/Application"
 import {
 	ActivityIndicator,
 	FlatList,
@@ -15,13 +15,13 @@ import {
 	TouchableWithoutFeedbackComponent,
 	View,
 } from "react-native"
-import BasicRouteInformation from "../../common/interfaces/KentKart/object/BasicRouteInformation"
+import BasicRouteInformation from "../common/interfaces/KentKart/object/BasicRouteInformation"
 import React, { useMemo, useState } from "react"
 import RouteTouchableContainer from "../../components/routes/RouteTouchableContainer"
-import CustomLoadingIndicator from "../../components/CustomLoadingIndicator"
+import CustomLoadingIndicator from "../components/root/CustomLoadingIndicator"
 
 import RouteList from "../../components/routes/RouteList"
-import SegmentedButtons from "../../components/SegmentedButtons"
+import SegmentedButtons from "../components/root/SegmentedButtons"
 import FilterByRouteTypeModal from "../../components/routes/FilterByRouteTypeModal"
 import RouteSearchBar from "../../components/routes/RouteSearchBar"
 export default function SearchTab(props: { route: any; navigation: NativeStackNavigationProp<any> }) {

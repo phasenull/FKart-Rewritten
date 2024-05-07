@@ -1,26 +1,27 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { StatusBar } from "expo-status-bar"
-import { useContext, useEffect, useMemo, useState } from "react"
+import React, { useContext, useEffect, useMemo, useState } from "react"
 import { ActivityIndicator, Button, Keyboard, Modal, Pressable, SafeAreaView, Text, TouchableHighlight, TouchableOpacity, View, useWindowDimensions } from "react-native"
 import Application from "../common/Application"
 import NotLoggedInModal from "../components/auth/NotLoggedInModal"
 import User from "../common/classes/User"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import HomeTab from "../tabs/home/HomeTab"
-import AccountTab from "../tabs/home/AccountTab"
-import SearchTab from "../tabs/home/SearchTab"
-import CustomLoadingIndicator from "../components/CustomLoadingIndicator"
+import HomeTab from "../tabs/HomeTab"
+import AccountTab from "../tabs/AccountTab"
+import SearchTab from "../tabs/SearchTab"
+import CustomLoadingIndicator from "../components/root/CustomLoadingIndicator"
 import { TabIconWrapper } from "../components/root/TabIconWrapper"
 import WelcomerPage from "./Welcomer"
-import EditorTab from "../tabs/home/EditorTab"
+import EditorTab from "../tabs/EditorTab"
 import { UserContext } from "../common/contexts/UserContext"
 import { TranslationsContext } from "../common/contexts/TranslationsContext"
+import FKartAuthValidator from "../components/validators/FKartAuthValidator"
 export default function RootScreen(props: { navigation: NativeStackNavigationProp<any>; route: { params?: { user?: User | undefined } } }) {
 	const { route } = props
 	const { error, isError, isFetching, loggedUser: user } = useContext(UserContext)
 	const { navigation } = props
-	const {translations} = useContext(TranslationsContext)
+	const { translations } = useContext(TranslationsContext)
 	const [prompt_log_in, set_prompt_log_in] = useState(false)
 	const Tab = useMemo(() => {
 		return createBottomTabNavigator()
@@ -51,7 +52,7 @@ export default function RootScreen(props: { navigation: NativeStackNavigationPro
 			<StatusBar translucent={false} style="dark" />
 			<Tab.Navigator
 				backBehavior="initialRoute"
-				initialRouteName="Settings"
+				initialRouteName={translations.tabs.settings.name}
 				screenOptions={{
 					tabBarItemStyle: {
 						borderRadius: 100,
@@ -78,28 +79,30 @@ export default function RootScreen(props: { navigation: NativeStackNavigationPro
 					tabBarHideOnKeyboard: true,
 				}}
 			>
-				<Tab.Screen
-					name={translations.tabs.editor.name}
-					initialParams={{ user: user }}
-					options={{
-						tabBarIcon: ({ focused, color, size }) => (
-							// <TabIconWrapper>
-							<MaterialCommunityIcons
-								name="pencil"
-								size={size}
-								style={{
-									bottom: (focused && 7) || 0,
-									backgroundColor: (focused && styles.primary) || styles.white,
-									borderRadius: 100,
-									paddingHorizontal: 6,
-								}}
-								color={color}
-							/>
-							// {/* </TabIconWrapper> */}
-						),
-					}}
-					component={EditorTab}
-				/>
+				{
+					false ? <Tab.Screen
+						name={translations.tabs.editor.name}
+						initialParams={{ user: user }}
+						options={{
+							tabBarIcon: ({ focused, color, size }) => (
+								// <TabIconWrapper>
+								<MaterialCommunityIcons
+									name="pencil"
+									size={size}
+									style={{
+										bottom: (focused && 7) || 0,
+										backgroundColor: (focused && styles.primary) || styles.white,
+										borderRadius: 100,
+										paddingHorizontal: 6,
+									}}
+									color={color}
+								/>
+								// {/* </TabIconWrapper> */}
+							),
+						}}
+						component={EditorTab}
+					/> : null
+				}
 				<Tab.Screen
 					name={translations.tabs.search.name}
 					initialParams={{ user: user }}
@@ -122,6 +125,7 @@ export default function RootScreen(props: { navigation: NativeStackNavigationPro
 					}}
 					component={SearchTab}
 				/>
+
 				<Tab.Screen
 					name={translations.tabs.home.name}
 					initialParams={{ user: user }}

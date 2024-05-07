@@ -1,5 +1,5 @@
 import { Text, TouchableOpacity, View } from "react-native"
-import Application from "../common/Application"
+import Application from "../../common/Application"
 import React, { useEffect, useMemo, useState } from "react"
 
 export default function SegmentedButtons(props: {

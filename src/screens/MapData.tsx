@@ -18,7 +18,7 @@ import BusContainer from "../components/route_details/BusContainer"
 import { BottomSheetMethods } from "@gorhom/bottom-sheet/lib/typescript/types"
 import Map from "../components/map_details/Map"
 import useGetRouteDetails from "../common/hooks/kentkart/info/useGetRouteDetails"
-import CustomLoadingIndicator from "../components/CustomLoadingIndicator"
+import CustomLoadingIndicator from "../components/root/CustomLoadingIndicator"
 import FollowingBus from "../components/map_details/FollowingBus"
 export default function MapData(props: {
 	route: {

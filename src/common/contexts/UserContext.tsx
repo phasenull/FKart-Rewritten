@@ -44,21 +44,6 @@ export function UserContextProvider(props: { children: any }) {
 		}
 		get()
 	}, [])
-	useEffect(() => {
-		async function handle() {
-			if (loggedUser) {
-				await Application.database.set("access_token", loggedUser.access_token)
-				Application.logged_user = loggedUser
-				return
-			}
-			Application.logged_user = undefined
-			await Application.database.set("user", null)
-			await Application.database.set("refresh_token", null)
-			await Application.database.set("access_token", null)
-			Logger.info("UserContext.handle", "User session is invalid!")
-		}
-		handle()
-	}, [loggedUser])
 	const [isFetching, setisFetching] = useState<boolean>(false)
 	const [isError, setIsError] = useState<boolean>(false)
 	const [error, setError] = useState<undefined | string>(undefined)
@@ -68,10 +53,8 @@ export function UserContextProvider(props: { children: any }) {
 			value={{
 				logout: async () => {
 					setLoggedUser(undefined)
+					await handleUserChange(undefined)
 					Application.logged_user = undefined
-					await Application.database.set("user", null)
-					await Application.database.set("refresh_token", null)
-					await Application.database.set("access_token", null)
 					Logger.info("UserContext.logout", "User logged out!")
 				},
 				error: error,
@@ -88,6 +71,7 @@ export function UserContextProvider(props: { children: any }) {
 						setError(e.message)
 						setIsError(true)
 					}
+					await handleUserChange(user)
 					setisFetching(false)
 					setLoggedUser(user)
 					return user
@@ -101,6 +85,7 @@ export function UserContextProvider(props: { children: any }) {
 						setError(e.message)
 						setIsError(true)
 					}
+					await handleUserChange(user)
 					setisFetching(false)
 					setLoggedUser(user)
 					return user
@@ -111,7 +96,19 @@ export function UserContextProvider(props: { children: any }) {
 		</UserContext.Provider>
 	)
 }
-
+async function handleUserChange(user: User | undefined) {
+	Application.logged_user = user
+	if (user) {
+		await Application.database.set("access_token", user?.access_token)
+		await Application.database.set("refresh_token", user?.refresh_token)
+		Logger.info("UserContext.handleUserChange", "User session is valid, auth successfull!")
+	} else {
+		await Application.database.removeItem("access_token")
+		await Application.database.removeItem("refresh_token")
+		Logger.info("UserContext.handleUserChange","User session is NOT valid!")
+	}
+	return
+}
 async function loginUsingPhone(args: { username: string; password: string }): Promise<undefined | User> {
 	let user = new User()
 	const r = await user.login({ auth_type: LoginTypes.phone, auth_value: args.username, password: args.password })

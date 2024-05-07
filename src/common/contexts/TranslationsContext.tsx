@@ -7,6 +7,7 @@ import TRANSLATIONS_AR from "../../assets/translations/ar"
 import TRANSLATIONS_AZ from "../../assets/translations/az"
 import TRANSLATIONS_ES from "../../assets/translations/es"
 import TRANSLATIONS_PIRATE from "../../assets/translations/pirate"
+import Application from "../Application"
 
 export const TranslationsContext = createContext<{
 	lang: Langs
@@ -37,6 +38,17 @@ export function TranslationsProvider(props: { children: any }) {
 	const [lang, setLang] = useState<Langs>(Langs.tr)
 	const [translations, setTranslations] = useState<typeof TRANSLATIONS_EN>(getTranslationsFromLang(Langs.tr))
 	useEffect(()=>{
+		async function get() {
+			const langSetting = await Application.database.get("settings.lang") || Langs.tr
+			setLang(langSetting)
+		}
+		get()
+	},[])
+	useEffect(()=>{
+		async function handle() {
+			await Application.database.set("settings.lang",lang)
+		}
+		handle()
 		setTranslations(getTranslationsFromLang(lang))
 	},[lang])
 	return <TranslationsContext.Provider value={{ lang, setLang, translations }}>{props.children}</TranslationsContext.Provider>

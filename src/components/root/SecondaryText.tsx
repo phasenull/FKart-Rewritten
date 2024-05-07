@@ -1,5 +1,5 @@
 import { Text, TextProps } from "react-native";
-import Application from "../common/Application";
+import Application from "../../common/Application";
 
 export default function SecondaryText(props:TextProps) {
 	return <Text style={[{

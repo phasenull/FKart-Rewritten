@@ -1,10 +1,10 @@
 import { Text, TouchableOpacity, View } from "react-native"
-import User from "../../common/classes/User"
+import User from "../../../common/classes/User"
 import * as Updates from "expo-updates"
-import Application from "../../common/Application"
+import Application from "../../../common/Application"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import { hideEmail, hidePhone } from "../../util"
-import HorizontalDivider from "../HorizontalDivider"
+import { hideEmail, hidePhone } from "../../../util"
+import HorizontalDivider from "../../root/HorizontalDivider"
 
 export default function AccountDetailsContainer(props: { show_credentials?: boolean; user: User }) {
 	const show_credentials = props.show_credentials
