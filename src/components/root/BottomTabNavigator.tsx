@@ -37,7 +37,7 @@ function BottomTabButton(props: { state: any; descriptors: any; navigation: Nati
 				borderRadius: 32,
 				marginHorizontal: 1 * 4,
 				marginVertical: 2 * 4,
-				bottom: isFocused ? 8 : 0,
+				bottom: isFocused ? 1*4 : 0,
 			}}
 			className="items-center"
 		>
@@ -59,7 +59,7 @@ function BottomTabButton(props: { state: any; descriptors: any; navigation: Nati
 function BottomTab(props: { state: any; descriptors: any; navigation: any }) {
 	const { descriptors, navigation, state } = props
 	return (
-		<View className="flex-row mx-2 px-1 py-2 mb-2" style={{ borderRadius: 100, backgroundColor: Application.styles.white, elevation: 10 }}>
+		<View className="flex-row mx-2 px-1 pb-1 mb-2 absolute bottom-0" style={{ borderRadius: 100, backgroundColor: Application.styles.white, elevation: 4 }}>
 			{state.routes.map((route: any, index: number) => {
 				return <BottomTabButton descriptors={descriptors[route.key]} index={index} navigation={navigation} route={route} state={state} />
 			})}
