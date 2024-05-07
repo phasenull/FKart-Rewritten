@@ -4,20 +4,15 @@ import User from "../../../classes/User"
 import { useQueries, useQuery } from "react-query"
 import { Account } from "../../../interfaces/KentKart/object/Account"
 import Logger from "../../../Logger"
+import { BaseKentKartResponse } from "../../../interfaces/KentKart/BasicKentKartResponse"
 
-async function getProfile() {
-	const user = Application.logged_user
+async function getProfile(user?: User): Promise<AxiosResponse<BaseKentKartResponse & { accountInfo: Account }>> {
 	if (!user) {
 		throw new Error("User not logged in.")
 	}
 	Logger.info("REQUEST useGetProfileData")
 	const url = `${Application.endpoints.service}/rl1/api/account?region=${Application.region}&authType=4`
-	const request: Promise<
-		AxiosResponse<{
-			result: { code: number; message?: string }
-			accountInfo: Account
-		}>
-	> = Application.makeKentKartRequest(url, {
+	const request = Application.makeKentKartRequest(url, {
 		method: "GET",
 		headers: {
 			Authorization: `Bearer ${user.access_token}`,
@@ -25,6 +20,6 @@ async function getProfile() {
 	})
 	return request
 }
-export default function useGetProfileData() {
-	return useQuery(["useGetProfileData"],getProfile)
+export default function useGetProfileData(user?: User) {
+	return useQuery(["useGetProfileData"], () => getProfile(user))
 }

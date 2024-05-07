@@ -24,7 +24,7 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 	const { navigation } = props
 
 	const styles = Application.styles
-	const { loggedUser: user, error: userError, isError: userIsError, isFetching, logout } = useContext(UserContext) as Omit<UserContextInterface, "loggedUser"> & { loggedUser: User }
+	const { loggedUser: user, favoritesQuery, profileQuery } = useContext(UserContext) as Omit<UserContextInterface, "loggedUser"> & { loggedUser: User }
 	const [cards, setCards] = useState<Favorite<"Card">[] | undefined>(undefined)
 	const [virtualCards, setVirtualCards] = useState<Favorite<"QR">[] | undefined>(undefined)
 	const [is_show_secret, setIsShowSecret] = useState(false)
@@ -35,7 +35,7 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 		const favorite_cards_filtered: Favorite<"Card">[] = fav_list?.filter((p_card: Favorite<"Card">) => p_card.type === 2 || p_card.alias)
 		return favorite_cards_filtered
 	}
-	const { data: favoritesData, error: favoritesError, refetch: refetchFavorites, isError: isFavoritesError, isRefetching: isFavoritesRefetching, isLoading: isFavoritesLoading } = useGetFavorites()
+	const { data: favoritesData, refetch: refetchFavorites, isRefetching: isFavoritesRefetching, isLoading: isFavoritesLoading } = favoritesQuery
 	useEffect(() => {
 		if (!favoritesData?.data) {
 			return
@@ -49,16 +49,7 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 			{/* login prompt */}
 			<KentKartAuthValidator else={<AuthWall navigation={navigation} />}>
 				<ScrollView
-					refreshControl={
-						<RefreshControl
-							onRefresh={() => {
-								setCards(undefined)
-								setVirtualCards(undefined)
-								refetchFavorites()
-							}}
-							refreshing={isFavoritesLoading}
-						/>
-					}
+					refreshControl={<RefreshControl onRefresh={refetchFavorites} refreshing={isFavoritesLoading} />}
 					horizontal={false}
 					showsVerticalScrollIndicator={true}
 					contentContainerStyle={{
@@ -69,7 +60,7 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 					className="w-full"
 				>
 					<AccountDetailsContainer show_credentials={is_show_secret} user={user} />
-					{isFavoritesLoading && !isFavoritesRefetching ? (
+					{isFavoritesLoading ? (
 						<View className="items-center flex-1 justify-center">
 							<CustomLoadingIndicator />
 							<Text
@@ -84,7 +75,17 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 							</Text>
 						</View>
 					) : (
-						cards?.map((p_card, index) => <CardContainer style={{ marginTop: 5 * 4 }} index={index} key={"card_" + index} favorite_data={p_card} navigation={navigation} />) || (
+						cards?.map((p_card, index) => (
+							<CardContainer
+								style={{
+									marginTop: 5 * 4,
+								}}
+								index={index}
+								key={"card_" + index}
+								favorite_data={p_card}
+								navigation={navigation}
+							/>
+						)) || (
 							<View className="items-center flex-1 justify-center">
 								<Text
 									style={{
