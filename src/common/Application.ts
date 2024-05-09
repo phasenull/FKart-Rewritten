@@ -24,8 +24,8 @@ export default abstract class Application {
 	public static readonly fkart_endpoints = {
 		bus: `https://bus.api.${Application.base_fkart_server}`,
 		static: `https://static.api.${Application.base_fkart_server}`,
-		antir2d2: `https://anti-r2d2.api.${Application.base_fkart_server}/challange`,
-		auth: `https://auth.api.${Application.base_fkart_server}/challange`,
+		antir2d2: `https://anti-r2d2.api.${Application.base_fkart_server}`,
+		auth: `https://auth.api.${Application.base_fkart_server}`,
 	}
 	public static getFormattedVersion() {
 		return `${Application.name} v${Application.version}-dev`
