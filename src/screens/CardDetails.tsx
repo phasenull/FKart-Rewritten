@@ -69,7 +69,7 @@ export default function CardDetails(props: {
 	if (!card || !favorite_data) {
 		return (
 			<View className="flex-1 items-center justify-center">
-				<Text style={{ color: styles.warning, fontSize: 24 }}>No card data found</Text>
+				<Text style={{ color: styles.error, fontSize: 24 }}>No card data found</Text>
 			</View>
 		)
 	}

@@ -66,7 +66,7 @@ export default function CardContainer(props: { favorite_data: Favorite<"Card" | 
 					<TouchableOpacity
 						className="justify-center self-center items-center"
 						style={{
-							backgroundColor: Application.styles.warning,
+							backgroundColor: Application.styles.error,
 							elevation:10,
 							borderRadius:100,
 							width:16*4,

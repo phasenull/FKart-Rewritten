@@ -60,7 +60,7 @@ export default function BusContainer(props: {
 					{bus.pickMeUp === "1" ? (
 						<MaterialCommunityIcons
 							name="bus-stop-covered"
-							color={Application.styles.warning}
+							color={Application.styles.error}
 							size={20}
 						/>
 					) : null}

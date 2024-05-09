@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react"
+import { createContext, useContext, useEffect, useState } from "react"
 import { Langs } from "../enums/Langs"
 import TRANSLATIONS_EN from "../../assets/translations/en"
 import TRANSLATIONS_TR from "../../assets/translations/tr"
@@ -8,6 +8,7 @@ import TRANSLATIONS_AZ from "../../assets/translations/az"
 import TRANSLATIONS_ES from "../../assets/translations/es"
 import TRANSLATIONS_PIRATE from "../../assets/translations/pirate"
 import Application from "../Application"
+import { LoggerContext } from "./LoggerContext"
 
 export const TranslationsContext = createContext<{
 	lang: Langs
@@ -35,6 +36,7 @@ export function getTranslationsFromLang(lang?: Langs) {
 	}
 }
 export function TranslationsProvider(props: { children: any }) {
+	const {appendLog} = useContext(LoggerContext)
 	const [lang, setLang] = useState<Langs>(Langs.tr)
 	const [translations, setTranslations] = useState<typeof TRANSLATIONS_EN>(getTranslationsFromLang(Langs.tr))
 	useEffect(()=>{
@@ -47,6 +49,7 @@ export function TranslationsProvider(props: { children: any }) {
 	useEffect(()=>{
 		async function handle() {
 			await Application.database.set("settings.lang",lang)
+			appendLog({title:`Language set to "${translations.languages.locale}"`,level:"info"})
 		}
 		handle()
 		setTranslations(getTranslationsFromLang(lang))

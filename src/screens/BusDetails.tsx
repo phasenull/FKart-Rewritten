@@ -84,7 +84,7 @@ export default function BusDetails(props: { route: { params: { bus: BusData } };
 	if (!props?.route?.params?.bus) {
 		return (
 			<View className="flex-1 items-center justify-center">
-				<Text style={{ color: styles.warning, fontSize: 24 }}>No card data found</Text>
+				<Text style={{ color: styles.error, fontSize: 24 }}>No card data found</Text>
 			</View>
 		)
 	}
@@ -102,7 +102,7 @@ export default function BusDetails(props: { route: { params: { bus: BusData } };
 					padding: 20,
 				}}
 			>
-				<Text style={{ color: styles.warning, fontSize: 24 }}>{(error as { message: string })?.message}</Text>
+				<Text style={{ color: styles.error, fontSize: 24 }}>{(error as { message: string })?.message}</Text>
 				<TextInput onChangeText={setToken} placeholder={token} className="bg-slate-500 w-80 h-20 text-center"></TextInput>
 				<TouchableOpacity
 					className="bg-red-400 w-16 h-16"

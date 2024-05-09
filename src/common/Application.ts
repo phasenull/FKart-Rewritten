@@ -39,7 +39,7 @@ export default abstract class Application {
 		secondaryDark: "#001d3d",
 		black: "#000000",
 		white: "#ffffff",
-		warning: "#E95555",
+		error: "#E95555",
 		success: "#4BB543",
 	}
 	public static readonly sync_interval = 20 * 1000

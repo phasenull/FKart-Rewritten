@@ -102,7 +102,7 @@ export default function AuthPanel(props: AuthPanelProps) {
 						}}
 					/>
 				</View>
-				{isError ? <Text style={{ color: styles.warning }}>{error}</Text> : null}
+				{isError ? <Text style={{ color: styles.error }}>{error}</Text> : null}
 			</KeyboardAvoidingView>
 			{/* button */}
 			{

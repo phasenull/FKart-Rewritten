@@ -31,7 +31,7 @@ export default function SelectLangModal(props: { defaultValue: Langs; visible?: 
 					}}
 					onDismiss={onDismiss}
 				/>
-				<TouchableOpacity className="rounded-[12px] mt-4 justify-center h-12 px-4" onPress={onDismiss} style={{ backgroundColor: styles.warning }}>
+				<TouchableOpacity className="rounded-[12px] mt-4 justify-center h-12 px-4" onPress={onDismiss} style={{ backgroundColor: styles.error }}>
 					<Text style={{ color: styles.secondary, fontSize: 18, fontWeight: "600" }}>{translations.cancel}</Text>
 				</TouchableOpacity>
 			</View>

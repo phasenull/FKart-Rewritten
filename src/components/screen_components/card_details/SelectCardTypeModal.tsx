@@ -28,7 +28,7 @@ export default function SelectCardTypeModal(props: { defaultValue: CardTypes; vi
 					}}
 					onDismiss={onDismiss}
 				/>
-				<TouchableOpacity className="rounded-[12px] mt-4 justify-center h-12 px-4" onPress={onDismiss} style={{ backgroundColor: styles.warning }}>
+				<TouchableOpacity className="rounded-[12px] mt-4 justify-center h-12 px-4" onPress={onDismiss} style={{ backgroundColor: styles.error }}>
 					<Text style={{ color: styles.secondary, fontSize: 18, fontWeight: "600" }}>Cancel</Text>
 				</TouchableOpacity>
 			</View>

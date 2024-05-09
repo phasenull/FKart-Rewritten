@@ -36,7 +36,7 @@ export default function InputModal(props: {
 					style={{ borderColor: styles.secondary, borderWidth: 2, borderRadius: 8, color: styles.secondary, fontSize: 18, fontWeight: "500" }}
 				/>
 				<View className="flex-row justify-center items-center gap-x-4">
-					<TouchableOpacity className="rounded-[12px] items-center justify-center h-12 px-4" onPress={onDismiss} style={{ backgroundColor: styles.warning }}>
+					<TouchableOpacity className="rounded-[12px] items-center justify-center h-12 px-4" onPress={onDismiss} style={{ backgroundColor: styles.error }}>
 						<Text style={{ color: styles.secondary, fontSize: 18, fontWeight: "600" }}>{props.config?.cancel || "Cancel"}</Text>
 					</TouchableOpacity>
 					<TouchableOpacity

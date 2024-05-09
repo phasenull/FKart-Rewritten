@@ -7,19 +7,19 @@ import Logger from "../../../Logger"
 import { BaseKentKartResponse } from "../../../interfaces/KentKart/BasicKentKartResponse"
 
 async function getProfile(user?: User): Promise<AxiosResponse<BaseKentKartResponse & { accountInfo: Account }>> {
-	if (!user) {
-		throw new Error("User not logged in.")
-	}
 	Logger.info("REQUEST useGetProfileData")
 	const url = `${Application.endpoints.service}/rl1/api/account?region=${Application.region}&authType=4`
 	const request = Application.makeKentKartRequest(url, {
 		method: "GET",
 		headers: {
-			Authorization: `Bearer ${user.access_token}`,
+			Authorization: `Bearer ${user?.access_token}`,
 		},
 	})
 	return request
 }
-export default function useGetProfileData(user?: User) {
+export default function useGetProfileData(user: User | undefined) {
+	if (!user) {
+		console.trace("User arg is undefined")
+	}
 	return useQuery(["useGetProfileData"], () => getProfile(user))
 }

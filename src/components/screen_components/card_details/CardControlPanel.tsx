@@ -68,7 +68,7 @@ export default function CardControlPanel(props: {
 	if (!card || !favorite_data) {
 		return (
 			<View className="flex-1 items-center justify-center">
-				<Text style={{ color: styles.warning, fontSize: 24 }}>No card data found</Text>
+				<Text style={{ color: styles.error, fontSize: 24 }}>No card data found</Text>
 			</View>
 		)
 	}
@@ -150,7 +150,7 @@ export default function CardControlPanel(props: {
 							}
 						}}
 						className="flex-1 rounded-xl flex-row justify-center items-center h-12"
-						style={{ backgroundColor: favorite ? styles.warning : styles.primaryDark }}
+						style={{ backgroundColor: favorite ? styles.error : styles.primaryDark }}
 					>
 						<Text
 							className="text-center"

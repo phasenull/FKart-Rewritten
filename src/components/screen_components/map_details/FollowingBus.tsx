@@ -26,7 +26,7 @@ export default function FollowingBus(props: { onStopFollowing: () => void; bus?:
 			<TouchableOpacity
 				onPress={props.onStopFollowing}
 				style={{
-					backgroundColor: Application.styles.warning,
+					backgroundColor: Application.styles.error,
 					paddingHorizontal: 4 * 4,
 					paddingVertical: 2 * 4,
 					borderRadius: 16,
