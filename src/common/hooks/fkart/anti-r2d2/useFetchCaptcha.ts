@@ -2,7 +2,7 @@ import { useQuery } from "react-query"
 import axios, { AxiosResponse } from "axios"
 import Logger from "../../../Logger"
 import Application from "../../../Application"
-import BaseFKartResponse from "../../../interfaces/BaseFKartResponse"
+import BaseFKartResponse from "../../../interfaces/FKart/BaseFKartResponse"
 import Captcha from "../../../interfaces/FKart/Captcha"
 
 async function FetchCaptcha(): Promise<
