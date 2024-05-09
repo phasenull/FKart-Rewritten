@@ -38,7 +38,8 @@
     "expo-notifications": "~0.28.1",
     "expo-device": "~6.0.2",
     "react-native-view-shot": "3.8.0",
-    "expo-media-library": "~16.0.3"
+    "expo-media-library": "~16.0.3",
+    "expo-router": "~3.5.11"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
