@@ -9,7 +9,7 @@ import useGetProfileData from "../hooks/kentkart/user/useGetProfileData"
 import { Account } from "../interfaces/KentKart/object/Account"
 import { AxiosResponse } from "axios"
 import { UseQueryResult } from "react-query"
-import { BaseKentKartResponse } from "../interfaces/KentKart/BasicKentKartResponse"
+import { BaseKentKartResponse } from "../interfaces/KentKart/BaseKentKartResponse"
 import { LoggerContext } from "./LoggerContext"
 export interface UserContextInterface {
 	loggedUser: User | undefined

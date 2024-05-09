@@ -4,7 +4,7 @@ import User from "../../../classes/User"
 import { useQueries, useQuery } from "react-query"
 import { Account } from "../../../interfaces/KentKart/object/Account"
 import Logger from "../../../Logger"
-import { BaseKentKartResponse } from "../../../interfaces/KentKart/BasicKentKartResponse"
+import { BaseKentKartResponse } from "../../../interfaces/KentKart/BaseKentKartResponse"
 import { useContext } from "react"
 import { UserContext } from "../../../contexts/UserContext"
 

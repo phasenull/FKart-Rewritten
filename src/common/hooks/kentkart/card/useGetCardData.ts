@@ -1,6 +1,6 @@
 import { useQuery } from "react-query"
 import Application from "../../../Application"
-import { BaseKentKartResponse } from "../../../interfaces/KentKart/BasicKentKartResponse"
+import { BaseKentKartResponse } from "../../../interfaces/KentKart/BaseKentKartResponse"
 import { BasicCardData } from "../../../interfaces/KentKart/object/BasicCardData"
 import { AxiosResponse } from "axios"
 import Logger from "../../../Logger"
