@@ -18,10 +18,10 @@ export default interface CardTransaction<T extends ["Dolum","Kullanım"]> {
 	"refundAmount": T extends "Kullanım" ? string : never,
 	"refundFormattedDate": T extends "Kullanım" ? string : never
 	"boardingDateTime": T extends "Kullanım" ? string : never,
-	"lineEndName": " ",
-	"lineStartName": "Kullanım",
-	"routeCode": "-",
-	"usageAmt": "7.00",
+	"lineEndName": T extends "Kullanım" ? " " : never
+	"lineStartName":T extends "Kullanım" ? "Kullanım" : never
+	"routeCode": T extends "Kullanım" ? "-" : never
+	"usageAmt": T extends "Kullanım" ? string : never
 	
 	// DOLUM
 	"datetime": T extends "Dolum" ? string : never,
