@@ -15,15 +15,17 @@ export default abstract class Application {
 	public static readonly expo_updates_check_interval = 3*24*60*60*1_000 //check update in every 3 days
 	public static name: string = "FKart"
 	public static readonly base_server = "kentkart.com"
-	public static readonly base_fkart_server = "api.fkart.project.phasenull.dev"
+	public static readonly base_fkart_server = "fkart.project.phasenull.dev"
 	public static readonly endpoints = {
 		base: `https://${Application.base_server}`,
 		auth: `https://auth.${Application.base_server}`,
 		service: `https://service.${Application.base_server}`,
 	}
 	public static readonly fkart_endpoints = {
-		bus: `https://bus.${Application.base_fkart_server}`,
-		static: `https://static.${Application.base_fkart_server}`
+		bus: `https://bus.api.${Application.base_fkart_server}`,
+		static: `https://static.api.${Application.base_fkart_server}`,
+		antir2d2: `https://anti-r2d2.api.${Application.base_fkart_server}/challange`,
+		auth: `https://auth.api.${Application.base_fkart_server}/challange`,
 	}
 	public static getFormattedVersion() {
 		return `${Application.name} v${Application.version}-dev`
