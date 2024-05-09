@@ -26,9 +26,9 @@ export interface UserContextInterface {
 export const UserContext = createContext<UserContextInterface>({} as any)
 export function UserContextProvider(props: { children: any }) {
 	const [loggedUser, setLoggedUser] = useState<User | undefined>()
-	const favoritesQuery = useGetFavorites(loggedUser)
+	const favoritesQuery = useGetFavorites()
 	const {appendLog} = useContext(LoggerContext)
-	const profileQuery = useGetProfileData(loggedUser)
+	const profileQuery = useGetProfileData()
 	useEffect(() => {
 		async function get() {
 			setisFetching(true)

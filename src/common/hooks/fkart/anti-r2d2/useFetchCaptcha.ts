@@ -13,9 +13,9 @@ async function FetchCaptcha(): Promise<
 	>
 > {
 	Logger.info("REQUEST fetchCaptcha")
-	return axios(`${Application.fkart_endpoints.antir2d2}/challange`,{method:"POST"})
+	return axios(`${Application.fkart_endpoints.antir2d2}/challange`, { method: "POST" })
 }
 
 export default function useFetchCaptcha() {
-	return useQuery(["fetchCaptcha"], FetchCaptcha, {staleTime:30*1000,enabled:false})
+	return useQuery(["fetchCaptcha"], ()=>FetchCaptcha(), { staleTime: 30 * 1000, enabled: false,retry:false })
 }

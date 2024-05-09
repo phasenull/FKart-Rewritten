@@ -36,7 +36,7 @@ export interface IFKartContext {
 			| AxiosResponse<
 					BaseFKartResponse & {
 						captcha: Captcha
-						token: string
+						captcha_token: string
 					}
 			  >
 			| undefined,
@@ -87,7 +87,7 @@ export function FKartContextProvider(props: { children: any }) {
 			return
 		}
 		appendLog({ title: `Captcha validated! ${captchaValidateResult.__code}`, level: "info" })
-		setCaptchaSession({ ...captchaValidateResult, token: captchaValidateQuery.data?.data?.token })
+		setCaptchaSession({ ...captchaValidateResult, token: captchaValidateQuery.data?.data.captcha_token })
 	}, [captchaValidateQuery.data])
 
 	function pushUser() {
