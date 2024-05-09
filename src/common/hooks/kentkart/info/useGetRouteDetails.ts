@@ -52,6 +52,6 @@ export default function useGetRouteDetails({
 				direction,
 				include_time_table,
 			}),
-		{ staleTime: include_time_table ? Infinity : 5000, refetchInterval: interval }
+		{ staleTime: 5000, refetchInterval: interval }
 	)
 }

@@ -25,5 +25,5 @@ async function getSyncCode(card_alias: string | undefined): Promise<
 }
 
 export function useGetSyncCode(card_alias: string | undefined) {
-	return useQuery(["syncCode", card_alias], () => getSyncCode(card_alias), { staleTime: 1000, refetchInterval: Application.sync_interval, refetchIntervalInBackground: true })
+	return useQuery(["syncCode", card_alias], () => getSyncCode(card_alias), { staleTime: 20*1000, refetchInterval: Application.sync_interval, refetchIntervalInBackground: true })
 }

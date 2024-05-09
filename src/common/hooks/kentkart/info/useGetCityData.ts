@@ -13,5 +13,5 @@ async function getCityData() : Promise<AxiosResponse<BaseKentKartResponse & {
 }
 
 export default function useGetCityData() {
-	return useQuery("city", getCityData, { staleTime: Infinity})
+	return useQuery("city", getCityData, { staleTime: Infinity,cacheTime:24*60*60*1000})
 }

@@ -16,8 +16,8 @@ async function getCardTransactions(
 
 export function useGetTransactions(card_alias: string,term:string) {
 	return useQuery(
-		["getCardData", card_alias],
+		["getCardData", card_alias,term],
 		() => getCardTransactions(card_alias,term),
-		{ staleTime: 30_000,refetchInterval: 30_000,refetchIntervalInBackground: false }
+		{ staleTime: Infinity }
 	)
 }

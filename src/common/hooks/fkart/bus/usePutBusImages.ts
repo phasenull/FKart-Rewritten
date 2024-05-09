@@ -43,5 +43,5 @@ export function usePutBusImages(
 	bus: BusData,
 	image: string | undefined
 ) {
-	return useQuery(["putBusImages",bus.plateNumber,image], () => putBusImages(bus, image))
+	return useQuery(["putBusImages",bus.plateNumber], () => putBusImages(bus, image))
 }

@@ -4,8 +4,6 @@ import Logger from "../../../Logger"
 import axios, { AxiosResponse } from "axios"
 import { BaseKentKartResponse } from "../../../interfaces/KentKart/BasicKentKartResponse"
 import BasicRouteInformation from "../../../interfaces/KentKart/object/BasicRouteInformation"
-import { useContext } from "react"
-import { LoggerContext } from "../../../contexts/LoggerContext"
 
 async function getRouteList({ region }: { region: string }): Promise<AxiosResponse<BaseKentKartResponse & { routeList: BasicRouteInformation[] }>> {
 	Logger.info("REQUEST useGetRouteList")
@@ -13,5 +11,5 @@ async function getRouteList({ region }: { region: string }): Promise<AxiosRespon
 }
 
 export default function useGetRouteList({ region }: { region: string }) {
-	return useQuery(["route_list", region], () => getRouteList({ region }), { cacheTime:1*60*60*1000 })
+	return useQuery(["route_list", region], () => getRouteList({ region }), {staleTime:3*60*1000, cacheTime:24*60*60*1000 })
 }
