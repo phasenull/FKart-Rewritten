@@ -5,14 +5,23 @@ import Application from "../../common/Application"
 import { Clipboard, ToastAndroid, Vibration } from "react-native"
 import { useEffect, useMemo, useRef, useState } from "react"
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated"
+import { Log } from "../../common/contexts/LoggerContext"
 
-export default function LogPop(props: { title: string; description: string; destroyLogPop: () => void; at: number }) {
+const colors = {
+	log:Application.styles.white,
+	info:Application.styles.success,
+	warn:Application.styles.primaryDark,
+	error:Application.styles.error,
+}
+
+export default function LogPop(props: { log:Log, destroyLogPop: () => void}) {
 	const linear = useSharedValue(100)
 	const animatedChanged = useAnimatedStyle(() => {
 		return {
 			width: `${linear.value}%`,
 		}
 	})
+	const {log,destroyLogPop} = props
 	return useMemo(() => {
 		const duration = 5_000
 		setTimeout(props.destroyLogPop, duration)
@@ -21,19 +30,19 @@ export default function LogPop(props: { title: string; description: string; dest
 		return (
 			<TouchableOpacity
 				onLongPress={() => {
-					Clipboard.setString(`~Error:\n${props.title}\n~Description:\n${props.description}`)
+					Clipboard.setString(`~Error:\n${log.title}\n~Description:\n${log.description}`)
 					Vibration.vibrate(100)
 					ToastAndroid.show("Copied LogPop to clipboard!", 1000)
 				}}
 				style={{
-					backgroundColor: Application.styles.warning,
+					backgroundColor: colors[log.level || "error"],
 					marginTop: 4 * 4,
 					paddingLeft: 4 * 4,
 					borderRadius: 4,
 					flexDirection: "row",
 				}}
 			>
-				<SecondaryText style={{ marginRight: 4 * 4 }}>{props.title}</SecondaryText>
+				<SecondaryText style={{ marginRight: 4 * 4 }}>{log.title}</SecondaryText>
 				<TouchableOpacity onPress={props.destroyLogPop}>
 					<MaterialCommunityIcons name="close" size={24} color={Application.styles.white} />
 				</TouchableOpacity>
