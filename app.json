@@ -6,9 +6,9 @@
 		"orientation": "portrait",
 		"scheme": "fkart",
 		"userInterfaceStyle": "automatic",
-		"icon": "./assets/icon.png",
+		"icon": "./src/assets/media/images/nice_icon.png",
 		"splash": {
-			"image": "./assets/splash.png",
+			"image": "./src/assets/media/images/nice_icon.png",
 			"resizeMode": "contain",
 			"backgroundColor": "#ffffff"
 		},
@@ -21,7 +21,7 @@
 		},
 		"android": {
 			"adaptiveIcon": {
-				"foregroundImage": "./assets/adaptive-icon.png",
+				"foregroundImage": "./src/assets/media/images/nice_icon.png",
 				"backgroundColor": "#ffffff"
 			},
 			"package": "com.phasenull.FKart",
