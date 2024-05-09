@@ -6,9 +6,9 @@
 		"orientation": "portrait",
 		"scheme": "fkart",
 		"userInterfaceStyle": "automatic",
-		"icon": "./src/assets/media/images/nice_icon.png",
+		"icon": "./src/assets/media/images/icon.png",
 		"splash": {
-			"image": "./src/assets/media/images/nice_icon.png",
+			"image": "./src/assets/media/images/icon.png",
 			"resizeMode": "contain",
 			"backgroundColor": "#ffffff"
 		},
