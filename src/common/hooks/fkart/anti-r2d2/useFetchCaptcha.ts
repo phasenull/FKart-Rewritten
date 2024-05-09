@@ -17,5 +17,5 @@ async function FetchCaptcha(): Promise<
 }
 
 export default function useFetchCaptcha() {
-	return useQuery(["fetchCaptcha"], FetchCaptcha, {staleTime:30*1000})
+	return useQuery(["fetchCaptcha"], FetchCaptcha, {staleTime:30*1000,enabled:false})
 }

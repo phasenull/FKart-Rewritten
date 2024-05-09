@@ -5,7 +5,7 @@ import Application from "../../../Application"
 import BaseFKartResponse from "../../../interfaces/FKart/BaseFKartResponse"
 import Captcha from "../../../interfaces/FKart/Captcha"
 
-async function FetchCaptcha(): Promise<
+async function ValidateCaptcha(args:{session_id:string,code:string}): Promise<
 	AxiosResponse<
 		BaseFKartResponse & {
 			captcha: Captcha
@@ -16,6 +16,6 @@ async function FetchCaptcha(): Promise<
 	return axios(`${Application.fkart_endpoints.antir2d2}/validate`,{method:"POST"})
 }
 
-export default function useFetchCaptcha() {
-	return useQuery(["validateCaptcha"], FetchCaptcha, {staleTime:30*1000})
+export default function useValidateCaptcha(args:{session_id:string,code:string}) {
+	return useQuery(["validateCaptcha",args.session_id,args.code], ()=>ValidateCaptcha(args), {staleTime:30*1000})
 }

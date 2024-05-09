@@ -11,7 +11,7 @@ import { Favorite, Favorites } from "../common/interfaces/KentKart/Favorite"
 import { AddCard } from "../components/tab_components/account_details/AddCard"
 import { UserContext, UserContextInterface } from "../common/contexts/UserContext"
 import KentKartAuthValidator from "../components/validators/KentKartAuthValidator"
-import AuthWall from "../components/root/AuthWall"
+import AuthWall from "../components/root/walls/AuthWall"
 export default function AccountTab(props?: { route: any; navigation: NativeStackNavigationProp<any> | any }) {
 	if (!props) {
 		return (
