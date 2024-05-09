@@ -4,7 +4,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import Application from "../../../common/Application"
 import { useState } from "react"
 import { FavoriteCardInputAliasModal } from "./FavoriteCardInputAliasModal"
-import { useAddFavoriteCard } from "../../../common/hooks/kentkart/user/useRenameCard"
+import { useAddFavoriteCard } from "../../../common/hooks/kentkart/card/useRenameCard"
 import useGetFavorites from "../../../common/hooks/kentkart/user/useGetFavorites"
 
 export function AddCard() {

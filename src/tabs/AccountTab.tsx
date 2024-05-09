@@ -6,7 +6,6 @@ import AccountDetailsContainer from "../components/tab_components/account_detail
 import { useContext, useEffect, useState } from "react"
 
 import CardContainer from "../components/tab_components/account_details/CardContainer"
-import useGetFavorites from "../common/hooks/kentkart/user/useGetFavorites"
 import CustomLoadingIndicator from "../components/root/CustomLoadingIndicator"
 import { Favorite, Favorites } from "../common/interfaces/KentKart/object/Favorite"
 import { AddCard } from "../components/tab_components/account_details/AddCard"

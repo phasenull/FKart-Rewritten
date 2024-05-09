@@ -6,7 +6,7 @@ import { Text, TouchableOpacity, View } from "react-native"
 import { useEffect, useMemo, useState } from "react"
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import { useAddFavoriteCard, useRemoveFavoriteCard } from "../../../common/hooks/kentkart/user/useRenameCard"
+import { useAddFavoriteCard, useRemoveFavoriteCard } from "../../../common/hooks/kentkart/card/useRenameCard"
 import InputModal from "../../root/InputModal"
 import Logger from "../../../common/Logger"
 import useGetFavorites from "../../../common/hooks/kentkart/user/useGetFavorites"

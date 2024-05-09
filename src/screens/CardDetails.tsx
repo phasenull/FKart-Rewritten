@@ -13,7 +13,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { BasicCardData } from "../common/interfaces/KentKart/object/BasicCardData"
 import { Favorite } from "../common/interfaces/KentKart/object/Favorite"
 
-import { useGetSyncCode } from "../common/hooks/kentkart/user/useGetSyncCode"
+import { useGetSyncCode } from "../common/hooks/kentkart/card/useGetSyncCode"
 import { getQRCode } from "../common/hooks/useGetQRCode"
 import CustomLoadingIndicator from "../components/root/CustomLoadingIndicator"
 import SelectCardTypeModal from "../components/screen_components/card_details/SelectCardTypeModal"
