@@ -10,6 +10,7 @@
     "bundle": "react-native bundle --platform android --dev false --entry-file index.ts --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/build/intermediates/res/merged/release"
   },
   "dependencies": {
+    "@expo/vector-icons": "^14.0.1",
     "@gorhom/bottom-sheet": "^4.6.0",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-navigation/bottom-tabs": "^6.5.11",
@@ -20,7 +21,6 @@
     "expo-image-picker": "~15.0.4",
     "expo-linear-gradient": "~13.0.2",
     "expo-linking": "~6.3.1",
-    "expo-router": "~3.5.11",
     "expo-splash-screen": "~0.27.4",
     "expo-status-bar": "~1.12.1",
     "expo-updates": "~0.25.10",
@@ -34,7 +34,11 @@
     "react-native-screens": "3.31.1",
     "react-native-vector-icons": "^10.0.3",
     "react-query": "^3.39.3",
-    "tailwindcss": "3.3.2"
+    "tailwindcss": "3.3.2",
+    "expo-notifications": "~0.28.1",
+    "expo-device": "~6.0.2",
+    "react-native-view-shot": "3.8.0",
+    "expo-media-library": "~16.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
