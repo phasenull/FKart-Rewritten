@@ -1,6 +1,6 @@
 import { LatLng, Marker } from "react-native-maps"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import BasicStopInformation from "../../../../common/interfaces/KentKart/object/BasicStopInformation"
+import BasicStopInformation from "../../../../common/interfaces/KentKart/BasicStopInformation"
 import Application from "../../../../common/Application"
 import { Image } from "react-native"
 import { DYNAMIC_CONTENT_URL } from "../../../../common/constants"

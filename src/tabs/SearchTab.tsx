@@ -15,7 +15,7 @@ import {
 	TouchableWithoutFeedbackComponent,
 	View,
 } from "react-native"
-import BasicRouteInformation from "../common/interfaces/KentKart/object/BasicRouteInformation"
+import BasicRouteInformation from "../common/interfaces/KentKart/BasicRouteInformation"
 import React, { useMemo, useState } from "react"
 import RouteTouchableContainer from "../components/tab_components/routes/RouteTouchableContainer"
 import CustomLoadingIndicator from "../components/root/CustomLoadingIndicator"

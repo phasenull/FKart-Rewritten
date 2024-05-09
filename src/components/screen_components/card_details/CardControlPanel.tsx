@@ -1,6 +1,6 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import { Favorite } from "../../../common/interfaces/KentKart/object/Favorite" 
-import { BasicCardData } from "../../../common/interfaces/KentKart/object/BasicCardData"
+import { Favorite } from "../../../common/interfaces/KentKart/Favorite" 
+import { BasicCardData } from "../../../common/interfaces/KentKart/BasicCardData"
 import Application from "../../../common/Application"
 import { Text, TouchableOpacity, View } from "react-native"
 import { useEffect, useMemo, useState } from "react"

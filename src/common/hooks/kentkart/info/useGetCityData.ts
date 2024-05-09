@@ -2,7 +2,7 @@ import { useQuery } from "react-query";
 import Application from "../../../Application";
 import { AxiosResponse } from "axios";
 import { BaseKentKartResponse } from "../../../interfaces/KentKart/BaseKentKartResponse";
-import { ICityInformation } from "../../../interfaces/KentKart/object/CityInformation";
+import { ICityInformation } from "../../../interfaces/KentKart/CityInformation";
 import Logger from "../../../Logger";
 
 async function getCityData() : Promise<AxiosResponse<BaseKentKartResponse & {

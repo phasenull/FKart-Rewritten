@@ -1,5 +1,5 @@
 import { StyleProp, Text, View, ViewStyle } from "react-native"
-import BusData from "../../../common/interfaces/KentKart/object/BusData"
+import BusData from "../../../common/interfaces/KentKart/BusData"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import Application from "../../../common/Application"
 import { BottomSheetModal } from "@gorhom/bottom-sheet"

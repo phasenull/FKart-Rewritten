@@ -10,8 +10,8 @@ import Logger from "../common/Logger"
 import { LinearGradient } from "expo-linear-gradient"
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import { BasicCardData } from "../common/interfaces/KentKart/object/BasicCardData"
-import { Favorite } from "../common/interfaces/KentKart/object/Favorite"
+import { BasicCardData } from "../common/interfaces/KentKart/BasicCardData"
+import { Favorite } from "../common/interfaces/KentKart/Favorite"
 
 import { useGetSyncCode } from "../common/hooks/kentkart/card/useGetSyncCode"
 import { getQRCode } from "../common/hooks/useGetQRCode"

@@ -1,6 +1,6 @@
 import axios from "axios"
 import Application from "../../../Application"
-import BusData from "../../../interfaces/KentKart/object/BusData"
+import BusData from "../../../interfaces/KentKart/BusData"
 import { useQuery } from "react-query"
 import buffer from "buffer"
 import Logger from "../../../Logger"

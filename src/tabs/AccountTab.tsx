@@ -7,7 +7,7 @@ import { useContext, useEffect, useState } from "react"
 
 import CardContainer from "../components/tab_components/account_details/CardContainer"
 import CustomLoadingIndicator from "../components/root/CustomLoadingIndicator"
-import { Favorite, Favorites } from "../common/interfaces/KentKart/object/Favorite"
+import { Favorite, Favorites } from "../common/interfaces/KentKart/Favorite"
 import { AddCard } from "../components/tab_components/account_details/AddCard"
 import { UserContext, UserContextInterface } from "../common/contexts/UserContext"
 import KentKartAuthValidator from "../components/validators/KentKartAuthValidator"
