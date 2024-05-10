@@ -4,17 +4,30 @@ const TRANSLATIONS_TR: typeof TRANSLATIONS_EN = {
 	languages: {
 		locale: "Türkçe",
 	},
-	or:"ya da",
-	select_language:"Dili değiştir",
+	or: "ya da",
+	select_language: "Dili değiştir",
 	signin: "Giriş Yap",
 	signup: "Kayıt Ol",
-	incognito_mode:"gizli mod",
-	cancel:"iptal",
-	ok:"TM",
+	incognito_mode: "gizli mod",
+	cancel: "iptal",
+	ok: "tamam",
 	authwall: {
 		we_are_not_able_to_show_this_page_to_you: "Onu gösteremiyoruz malesef!",
 	},
 	screens: {
+		fkart: {
+			editor:"Editör",
+			auth: {
+				welcomer: {
+					what_is_an_editor_title: "İyi de Editör ne demek?",
+					what_is_an_editor_desc:
+						"TR Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ullamcorper tristique nibh, et porta sapien iaculis ac. Etiam eleifend, augue eu luctus porttitor, eros mi vehicula tellus, congue lobortis ex ligula sit amet augue.",
+					what_do_i_need_to_be_an_editor_title: "Ben de Editör olmak istiyorum!",
+					what_do_i_need_to_be_an_editor_desc:
+						"TR Fusce aliquam, ante eu maximus tincidunt, urna elit maximus enim, quis fringilla lacus sem in diam. Donec tempor volutpat ultrices. Duis sit amet accumsan urna. Praesent placerat, ex a suscipit tristique.",
+				},
+			},
+		},
 		auth: {
 			signup: {
 				hello: "Hoşgeldin!",
@@ -51,11 +64,11 @@ const TRANSLATIONS_TR: typeof TRANSLATIONS_EN = {
 		},
 	},
 	input_fields: {
-		email:"e-posta",
-		password:"şifre",
-		confirm_password:"şifreyi onayla",
-		phone:"telefon numarası",
-		use_phone:"Telefon numarası kullan"
+		email: "e-posta",
+		password: "şifre",
+		confirm_password: "şifreyi onayla",
+		phone: "telefon numarası",
+		use_phone: "Telefon numarası kullan",
 	},
 	tabs: {
 		editor: {

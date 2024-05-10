@@ -19,6 +19,17 @@ const TRANSLATIONS_EN = {
 		we_are_not_able_to_show_this_page_to_you: "We are not able to show this page to you",
 	},
 	screens: {
+		fkart: {
+			editor:"Editor",
+			auth: {
+				welcomer : {
+					what_is_an_editor_title:"But, what is an Editor?",
+					what_is_an_editor_desc: "EN Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ullamcorper tristique nibh, et porta sapien iaculis ac. Etiam eleifend, augue eu luctus porttitor, eros mi vehicula tellus, congue lobortis ex ligula sit amet augue.",
+					what_do_i_need_to_be_an_editor_title:"I wanna be an Editor too!",
+					what_do_i_need_to_be_an_editor_desc: "EN Fusce aliquam, ante eu maximus tincidunt, urna elit maximus enim, quis fringilla lacus sem in diam. Donec tempor volutpat ultrices. Duis sit amet accumsan urna. Praesent placerat, ex a suscipit tristique.",
+				}
+			}
+		},
 		welcomer: {
 			last_update_check: "Last Update Check:",
 			unofficial_public_transit_app_for_kocaeli: [
