@@ -2,6 +2,7 @@ const TRANSLATIONS_PIRATE = {
 	languages: {
 		locale: "Pirate",
 	},
+	or:"or",
 	select_language:"Select yer language",
 	signin: "Find yer ship!",
 	signup: "Get a ship!",

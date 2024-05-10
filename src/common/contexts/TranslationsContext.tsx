@@ -21,14 +21,14 @@ export function getTranslationsFromLang(lang?: Langs) {
 			return TRANSLATIONS_TR
 		case Langs.en:
 			return TRANSLATIONS_EN
-		case Langs.de:
-			return TRANSLATIONS_DE
-		case Langs.ar:
-			return TRANSLATIONS_AR
-		case Langs.az:
-			return TRANSLATIONS_AZ
-		case Langs.es:
-			return TRANSLATIONS_ES
+		// case Langs.de:
+		// 	return TRANSLATIONS_DE
+		// case Langs.ar:
+		// 	return TRANSLATIONS_AR
+		// case Langs.az:
+		// 	return TRANSLATIONS_AZ
+		// case Langs.es:
+		// 	return TRANSLATIONS_ES
 		case Langs.pirate:
 			return TRANSLATIONS_PIRATE
 		default:

@@ -1,8 +1,7 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { Text, View } from "react-native"
 import FKartAuthValidator from "../components/validators/FKartAuthValidator"
-import FKartAuthWall from "../components/root/walls/FKartAuthWall";
-import FKartTesting from "../screens/FKart/testing";
+import FKartAuthWall from "../components/walls/FKartAuthWall";
 
 export default function EditorTab(props: { route: any; navigation: NativeStackNavigationProp<any> }) {
 	return (

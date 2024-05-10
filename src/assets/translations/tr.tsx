@@ -4,6 +4,7 @@ const TRANSLATIONS_TR: typeof TRANSLATIONS_EN = {
 	languages: {
 		locale: "Türkçe",
 	},
+	or:"ya da",
 	select_language:"Dili değiştir",
 	signin: "Giriş Yap",
 	signup: "Kayıt Ol",

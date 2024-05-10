@@ -6,8 +6,8 @@ import { hidePhone } from "../util"
 import { useContext } from "react"
 import { UserContext } from "../common/contexts/UserContext"
 import KentKartAuthValidator from "../components/validators/KentKartAuthValidator"
-import AuthWall from "../components/root/walls/AuthWall"
 import CardJSONData from "../components/screen_components/card_details/CardJSONData" 
+import AuthWall from "../components/walls/AuthWall"
 
 export default function HomeTab(props: { route: any; navigation: NativeStackNavigationProp<any> }) {
 	const { navigation } = props
@@ -19,7 +19,7 @@ export default function HomeTab(props: { route: any; navigation: NativeStackNavi
 			{/* login prompt */}
 			<KentKartAuthValidator else={<AuthWall navigation={navigation}/>}>
 				<Text className="mx-auto font-bold opacity-50 text-[24px]">Hello, {`${user?.name} ${user?.surname}`}</Text>
-				<CardJSONData favorite_data={user} card={{access_token:user?.access_token?.slice(0,20)+"..."}}/>
+				<CardJSONData favorite_data={user} card={{access_token:user?.access_token?.slice(0,10)+"...",refresh_token:user?.refresh_token?.slice(0,4)+"..."}}/>
 
 				<TouchableOpacity
 					className="w-48 h-16 justify-center self-center"

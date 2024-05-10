@@ -1,7 +1,7 @@
 const TRANSLATIONS_EN = {
 	languages: {
 		locale: "English",
-	},
+	},or:"or",
 	select_language:"Select language",
 	signin: "Sign In",
 	signup: "Sign Up",
