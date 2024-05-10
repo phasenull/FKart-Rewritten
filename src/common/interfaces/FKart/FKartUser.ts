@@ -21,3 +21,4 @@ export default interface FKartUser {
 	username: string
 	created_at: number
 }
+// todo: settings does not return on pushUser

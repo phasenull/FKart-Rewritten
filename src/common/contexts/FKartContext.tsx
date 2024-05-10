@@ -17,7 +17,7 @@ import FKartUser from "../interfaces/FKart/FKartUser"
 import useValidateCaptcha from "../hooks/fkart/anti-r2d2/useValidateCaptcha"
 import BaseFKartResponse from "../interfaces/FKart/BaseFKartResponse"
 import usePushUser from "../hooks/fkart/auth/usePushUser"
-import Credentials from "../interfaces/app/Credentials"
+import ICredentials from "../interfaces/app/Credentials"
 export interface IFKartContext {
 	fkartUser: FKartUser | undefined
 	userManager: {
@@ -29,8 +29,8 @@ export interface IFKartContext {
 			  >
 			| undefined
 		>
-		credentials:Credentials | undefined
-		setCredentials:(credentials:Credentials)=>void
+		credentials:ICredentials | undefined
+		setCredentials:(credentials:ICredentials)=>void
 		pushUser:()=>void
 	}
 	captchaManager: {
@@ -66,7 +66,7 @@ export function FKartContextProvider(props: { children: any }) {
 	const [loggedUser, setLoggedUser] = useState<FKartUser | undefined>()
 
 	const [credentials, setCredentials] = useState<
-		| Credentials
+		| ICredentials
 		| undefined
 	>()
 	const [isFetching, setisFetching] = useState<boolean>(false)
