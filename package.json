@@ -5,9 +5,7 @@
   "scripts": {
     "start": "expo start",
     "android": "expo run:android",
-    "ios": "expo run:ios",
-    "web": "expo start --web",
-    "bundle": "react-native bundle --platform android --dev false --entry-file index.ts --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/build/intermediates/res/merged/release"
+    "ios": "expo run:ios"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.1",
@@ -38,7 +36,6 @@
     "react-native-screens": "3.31.1",
     "react-native-vector-icons": "^10.0.3",
     "react-native-view-shot": "3.8.0",
-    "react-native-vision-camera": "^4.0.3",
     "react-query": "^3.39.3",
     "tailwindcss": "3.3.2"
   },
