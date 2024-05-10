@@ -7,8 +7,6 @@ import NothingToSeeHere from "./NothingToSeeHere"
 export default function FKartAuthWall(props: { navigation: NativeStackNavigationProp<any> }) {
 	const { navigation } = props
 	return (
-		<FKartAuthValidator else={<FKartAuthTypeSelector navigation={navigation} />}>
-			<NothingToSeeHere navigation={navigation} />
-		</FKartAuthValidator>
+		<FKartAuthTypeSelector navigation={navigation} />
 	)
 }

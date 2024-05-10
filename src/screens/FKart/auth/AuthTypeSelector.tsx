@@ -3,13 +3,13 @@ import { StatusBar } from "expo-status-bar"
 import SecondaryText from "../../../components/root/SecondaryText"
 import { useContext, useEffect } from "react"
 import { TranslationsContext } from "../../../common/contexts/TranslationsContext"
-import Button from "../../../components/Button"
+import Button from "../../../components/ui/Button"
 import Application from "../../../common/Application"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { BackHandler, Image, Text, View, useWindowDimensions } from "react-native"
 import Animated, { FadeIn, useSharedValue, withSpring, withTiming } from "react-native-reanimated"
 import { TouchableOpacity } from "react-native-gesture-handler"
-import PushUserScreen from "./push/pushUserScreen"
+import PushUserPage from "./push/PushUserPage"
 
 export default function FKartAuthTypeSelector(props: { navigation: NativeStackNavigationProp<any> }) {
 	const { navigation } = props
@@ -18,7 +18,7 @@ export default function FKartAuthTypeSelector(props: { navigation: NativeStackNa
 	const translateY = useSharedValue(0)
 	const styles = Application.styles
 	function updatePage(index: number) {
-		translateY.value = withSpring(page_height * (0 - index) - page_height, { duration: 1500 })
+		translateY.value = withSpring(page_height * (0 - index) - page_height, { duration: 500, dampingRatio: 0.75 })
 	}
 	useEffect(() => {
 		updatePage(0)
@@ -36,8 +36,10 @@ export default function FKartAuthTypeSelector(props: { navigation: NativeStackNa
 
 	return (
 		<Animated.View style={{ transform: [{ translateY: translateY }], height: page_height * 3 }} className={"flex-col"}>
-			<PushUserScreen />
-			<View id="initial" className="flex-1">
+			<PushUserPage goBack={() => updatePage(0)}>
+				
+			</PushUserPage>
+			<View className="flex-1">
 				<TouchableOpacity
 					className="absolute top-4 right-4 self-end rounded-full"
 					onPress={() => navigation.navigate("fkart.auth.welcomer")}
@@ -66,7 +68,9 @@ export default function FKartAuthTypeSelector(props: { navigation: NativeStackNa
 					<Button text={`${translations.or} ${translations.signin}`} onPress={() => updatePage(1)} type="text" />
 				</View>
 			</View>
-			<View id="signup" className="flex-1"></View>
+			<View className="flex-1">
+				<SecondaryText>SignIn</SecondaryText>
+			</View>
 		</Animated.View>
 	)
 }
