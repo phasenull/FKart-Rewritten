@@ -41,13 +41,14 @@ function getThemeFromLabel(label: Theme) {
 export function ThemeProvider(props: { children: any }) {
 	
 	const colorScheme = useColorScheme()
-	const [themeLabel, setThemeLabel] = useState<Theme>(colorScheme === "light" ? Theme.LIGHT : Theme.DARK)
-	useEffect(()=>{
-		const new_label = colorScheme === "light" ? Theme.LIGHT : Theme.DARK
-		setThemeLabel(new_label)
-		setTheme(getThemeFromLabel(new_label))
-		console.log(new_label,colorScheme)
-	},[colorScheme])
+	// const [themeLabel, setThemeLabel] = useState<Theme>(colorScheme === "light" ? Theme.LIGHT : Theme.DARK)
+	const [themeLabel, setThemeLabel] = useState<Theme>(Theme.DARK)
+	// useEffect(()=>{
+	// 	const new_label = colorScheme === "light" ? Theme.LIGHT : Theme.DARK
+	// 	setThemeLabel(new_label)
+	// 	setTheme(getThemeFromLabel(new_label))
+	// 	console.log(new_label,colorScheme)
+	// },[colorScheme])
 	const [theme, setTheme] = useState(getThemeFromLabel(themeLabel))
 	return <ThemeContext.Provider value={{ theme: theme, themeLabel: themeLabel, setThemeLabel: setThemeLabel }}>{props.children}</ThemeContext.Provider>
 }
