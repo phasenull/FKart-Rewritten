@@ -1,4 +1,4 @@
-import { KeyboardAvoidingView, SafeAreaView, ScrollView, Text, TouchableOpacity, View, useWindowDimensions } from "react-native"
+import { TouchableOpacity, View, useWindowDimensions } from "react-native"
 import Application from "../common/Application"
 import { StatusBar } from "expo-status-bar"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
@@ -35,16 +35,16 @@ export default function AuthPage(props: { navigation: NativeStackNavigationProp<
 	return (
 		<KentKartAuthValidator
 			else={
-				<SafeAreaView>
+				<View>
 					<StatusBar style="auto" />
 					<Animated.View style={{ transform: [{ translateX: translateX }], width: page_width * 2 }} className={"flex-row h-full"}>
 						<AuthPanel updatePage={updatePage} navigation={navigation} panel_type={0} />
 						<AuthPanel updatePage={updatePage} navigation={navigation} panel_type={1} />
 					</Animated.View>
-				</SafeAreaView>
+				</View>
 			}
 		>
-			<SafeAreaView className="items-center justify-center flex-1">
+			<View className="items-center justify-center flex-1">
 				<MaterialCommunityIcons name="help" size={48*4} style={{opacity:0.3,marginBottom:2*4}}/>
 				<SecondaryText>Nothing to see here!</SecondaryText>
 				<TouchableOpacity
@@ -69,7 +69,7 @@ export default function AuthPage(props: { navigation: NativeStackNavigationProp<
 						Go home
 					</SecondaryText>
 				</TouchableOpacity>
-			</SafeAreaView>
+			</View>
 		</KentKartAuthValidator>
 	)
 }

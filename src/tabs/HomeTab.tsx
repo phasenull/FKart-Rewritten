@@ -1,5 +1,5 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import { SafeAreaView, StatusBar, Text, TouchableOpacity, View } from "react-native"
+import { StatusBar, Text, TouchableOpacity, View } from "react-native"
 import Application from "../common/Application"
 import User from "../common/classes/User"
 import { hidePhone } from "../util"
@@ -14,7 +14,7 @@ export default function HomeTab(props: { route: any; navigation: NativeStackNavi
 	const styles = Application.styles
 	const { error, isError, isFetching, loggedUser: user, logout } = useContext(UserContext)
 	return (
-		<SafeAreaView style={{ backgroundColor: styles.dark }} className="h-full w-full justify-center items-center">
+		<View style={{ backgroundColor: styles.dark }} className="h-full w-full justify-center items-center">
 			<StatusBar hidden={false} />
 			{/* login prompt */}
 			<KentKartAuthValidator else={<AuthWall navigation={navigation}/>}>
@@ -38,6 +38,6 @@ export default function HomeTab(props: { route: any; navigation: NativeStackNavi
 					</Text>
 				</TouchableOpacity>
 			</KentKartAuthValidator>
-		</SafeAreaView>
+		</View>
 	)
 }

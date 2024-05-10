@@ -1,7 +1,7 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { StatusBar } from "expo-status-bar"
 import React, { useContext, useEffect, useMemo, useState } from "react"
-import { ActivityIndicator, Button, Keyboard, Modal, Pressable, SafeAreaView, Text, TouchableHighlight, TouchableOpacity, View, useWindowDimensions } from "react-native"
+import { ActivityIndicator, Button, Keyboard, Modal, Pressable,  Text, TouchableHighlight, TouchableOpacity, View, useWindowDimensions } from "react-native"
 import Application from "../common/Application"
 import NotLoggedInModal from "../components/screen_components/auth/NotLoggedInModal"
 import User from "../common/classes/User"
