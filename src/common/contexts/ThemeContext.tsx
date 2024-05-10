@@ -2,6 +2,7 @@ import { Children, createContext, useState } from "react"
 import DarkTheme from "../../assets/themes/dark"
 import LightTheme from "../../assets/themes/light"
 import NightsWatchTheme from "../../assets/themes/nights_watch"
+import { useColorScheme } from "react-native"
 
 export interface ITheme {
 	primary: string
@@ -33,7 +34,9 @@ function getThemeFromLabel(label: Theme) {
 	}
 }
 export function ThemeProvider(props: { children: any }) {
-	const [themeLabel, setThemeLabel] = useState<Theme>(Theme.LIGHT)
+	
+	const colorScheme = useColorScheme()
+	const [themeLabel, setThemeLabel] = useState<Theme>(colorScheme === "light" ? Theme.LIGHT : Theme.DARK)
 	const [theme, setTheme] = useState(getThemeFromLabel(themeLabel))
 	return <ThemeContext.Provider value={{ theme: theme, themeLabel: themeLabel, setThemeLabel: setThemeLabel }}>{props.children}</ThemeContext.Provider>
 }
