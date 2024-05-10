@@ -9,6 +9,7 @@ import { UserContext } from "../../../common/contexts/UserContext"
 import LoginTypes from "../../../common/enums/LoginTypes"
 import SecondaryText from "../../root/SecondaryText"
 import SwitchAuthPage from "./SwitchAuthPage"
+import { ThemeContext } from "../../../common/contexts/ThemeContext"
 
 type AuthPanelProps = { updatePage: (index: number) => void; panel_type: number; navigation: NativeStackNavigationProp<any> }
 export default function AuthPanel(props: AuthPanelProps) {
@@ -31,22 +32,22 @@ export default function AuthPanel(props: AuthPanelProps) {
 	const { translations } = useContext(TranslationsContext)
 
 	const { panel_type, updatePage } = props
-	const styles = Application.styles
+	const {theme} = useContext(ThemeContext)
 	return (
 
-		<View style={{ backgroundColor: styles.white }} className="py-4 flex-1 flex-col items-center justify-evenly w-1/2">
+		<View style={{ backgroundColor: theme.white }} className="py-4 flex-1 flex-col items-center justify-evenly w-1/2">
 			<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "padding"} className="mb-4 mt-12 flex-col mx-auto justify-center w-64">
-				<Text style={{ color: styles.secondaryDark }} className="text-4xl text-left font-bold">
+				<Text style={{ color: theme.secondaryDark }} className="text-4xl text-left font-bold">
 					{panel_type === 0 ? translations.signin : translations.signup}
 				</Text>
-				<Text style={{ color: styles.secondaryDark }} className="text-lg opacity-50 font-bold">
+				<Text style={{ color: theme.secondaryDark }} className="text-lg opacity-50 font-bold">
 					{panel_type === 0 ? translations.screens.auth.signin.hello : translations.screens.auth.signup.hello}
 				</Text>
 				{/* username */}
 				<TextInput
 					autoComplete={inputType === LoginTypes.email ? "email" : "tel"}
-					style={{ color: styles.secondary }}
-					placeholderTextColor={styles.secondaryDark}
+					style={{ color: theme.secondary }}
+					placeholderTextColor={theme.secondaryDark}
 					inputMode={inputType === LoginTypes.email ? "email" : "tel"}
 					placeholder={inputType === LoginTypes.email ? translations.input_fields.email : translations.input_fields.phone}
 					className="mt-8 border-2 w-full h-16 border-slate-200 rounded-[10px] px-8 py-2 shadow-2xl"
@@ -60,8 +61,8 @@ export default function AuthPanel(props: AuthPanelProps) {
 					inputMode="text"
 					autoComplete={"password"}
 					secureTextEntry={true}
-					style={{ color: styles.secondary }}
-					placeholderTextColor={styles.secondaryDark}
+					style={{ color: theme.secondary }}
+					placeholderTextColor={theme.secondaryDark}
 					passwordRules={"minlength: 8; required: true;"}
 					placeholder={translations.input_fields.password}
 					className="mt-8 border-2 w-full h-16 border-slate-200 rounded-[10px] px-8 py-2 shadow-2xl"
@@ -77,8 +78,8 @@ export default function AuthPanel(props: AuthPanelProps) {
 						inputMode="text"
 						autoComplete={"password"}
 						secureTextEntry={true}
-						style={{ color: styles.secondary }}
-						placeholderTextColor={styles.secondaryDark}
+						style={{ color: theme.secondary }}
+						placeholderTextColor={theme.secondaryDark}
 						passwordRules={"minlength: 8; required: true;"}
 						placeholder={translations.input_fields.confirm_password}
 						className="mt-8 border-2 w-full h-16 border-slate-200 rounded-[10px] px-8 py-2 shadow-2xl"
@@ -89,16 +90,16 @@ export default function AuthPanel(props: AuthPanelProps) {
 					/>
 				) : null}
 				<View className="flex flex-row items-center align-middle justify-end -mt-2">
-					<Text style={{ color: styles.secondaryDark }}>{translations.input_fields.use_phone}</Text>
+					<Text style={{ color: theme.secondaryDark }}>{translations.input_fields.use_phone}</Text>
 					<Switch
 						value={inputType === LoginTypes.phone}
-						thumbColor={styles.primaryDark}
+						thumbColor={theme.primaryDark}
 						onValueChange={(value) => {
 							setInputType(value ? LoginTypes.phone : LoginTypes.email)
 						}}
 					/>
 				</View>
-				{isError ? <Text style={{ color: styles.error }}>{error}</Text> : null}
+				{isError ? <Text style={{ color: theme.error }}>{error}</Text> : null}
 			</KeyboardAvoidingView>
 			{/* button */}
 			{
@@ -132,9 +133,9 @@ export default function AuthPanel(props: AuthPanelProps) {
 							style={{
 								opacity: isFetching ? 0.3 : 1,
 							}}
-							colors={[styles.primary, styles.primaryDark]}
+							colors={[theme.primary, theme.primaryDark]}
 						>
-							<Text style={{ color: styles.white }} className="text-2xl text-center font-bold pl-5 px-2 py-3">
+							<Text style={{ color: theme.white }} className="text-2xl text-center font-bold pl-5 px-2 py-3">
 								{panel_type === 0 ? translations.signin : translations.signup}
 								{/* {"    ➜"} */}
 							</Text>

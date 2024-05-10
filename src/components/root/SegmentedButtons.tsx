@@ -1,6 +1,7 @@
 import { Text, TouchableOpacity, View } from "react-native"
 import Application from "../../common/Application"
-import React, { useEffect, useMemo, useState } from "react"
+import React, { useContext, useEffect, useMemo, useState } from "react"
+import { ThemeContext } from "../../common/contexts/ThemeContext"
 
 export default function SegmentedButtons(props: {
 	values: Array<{
@@ -27,12 +28,14 @@ export default function SegmentedButtons(props: {
 		values.find((value) => value.key === defaultKey) ||
 			values[0]
 	)
+	const {theme} = useContext(ThemeContext)
+
 	return useMemo(
 		() => (
 			<View
 				className="flex-row  rounded-full overflow-hidden"
 				style={{
-					borderColor: Application.styles.primary,
+					borderColor: theme.primary,
 					borderWidth: 3,
 					borderRadius: 100,
 					
@@ -45,8 +48,8 @@ export default function SegmentedButtons(props: {
 							style={{
 								backgroundColor:
 									selected.value === item.value
-										? Application.styles.primary
-										: Application.styles.white,
+										? theme.primary
+										: theme.white,
 								paddingHorizontal: props.paddingX || 16,
 							}}
 							className="py-2 items-center justify-center"
@@ -59,7 +62,7 @@ export default function SegmentedButtons(props: {
 							<Text
 								className="text-center"
 								style={{
-									color: Application.styles.secondary,
+									color: theme.secondary,
 									fontWeight: "bold",
 									fontSize: 16,
 								}}
@@ -71,7 +74,7 @@ export default function SegmentedButtons(props: {
 							<View
 								key={`${item.key}-${index}-separator`}
 								className="opacity-10 h-2/3 self-center w-0.5 "
-								style={{ backgroundColor: Application.styles.secondary }}
+								style={{ backgroundColor: theme.secondary }}
 							/>
 						)}
 					</React.Fragment>

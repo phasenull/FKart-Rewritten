@@ -1,10 +1,14 @@
 import { Text, TextProps } from "react-native";
 import Application from "../../common/Application";
+import { useContext } from "react";
+import { ThemeContext } from "../../common/contexts/ThemeContext";
 
 export default function SecondaryText(props:TextProps) {
+	const {theme} = useContext(ThemeContext)
+
 	return <Text style={[{
 		fontWeight:"800",
-		color:Application.styles.secondary,
+		color:theme.secondary,
 		fontSize:18,
 	},props.style]} >
 		{props.children}

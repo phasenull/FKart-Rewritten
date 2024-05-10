@@ -1,14 +1,14 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { Modal, Text, TouchableOpacity, View } from "react-native"
 import Application from "../../../common/Application"
 import { Navigator } from "expo-router"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
+import { ThemeContext } from "../../../common/contexts/ThemeContext"
 
 export default function NotLoggedInModal(props: { param_visible: boolean; onRequestClose: () => void; navigation: NativeStackNavigationProp<any> }) {
 	const { param_visible } = props
 	const [visible, setVisible] = useState(param_visible)
-	const theme = Application.theme
-	const styles = Application.styles
+	const {theme} = useContext(ThemeContext)
 	return (
 		<Modal
 			collapsable={true}
@@ -20,7 +20,7 @@ export default function NotLoggedInModal(props: { param_visible: boolean; onRequ
 			transparent={true}
 			animationType="slide"
 		>
-			<View style={theme.modal} className="w-80 h-max px-8 pt-8 pb-4 my-auto mx-auto">
+			<View className="w-80 h-max px-8 pt-8 pb-4 my-auto mx-auto">
 				<Text className="text-lg">Hey!</Text>
 				<Text className="text-sm">Seems like you are not signed in! You can either sign in or use incognito mode. </Text>
 				<View className="flex flex-row mt-16 justify-between">

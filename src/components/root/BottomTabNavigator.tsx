@@ -12,6 +12,7 @@ import HomeTab from "../../tabs/HomeTab"
 import SearchTab from "../../tabs/SearchTab"
 import { Text, TouchableOpacity, View } from "react-native"
 import SecondaryText from "./SecondaryText"
+import { ThemeContext } from "../../common/contexts/ThemeContext"
 
 function BottomTabButton(props: { state: any; descriptors: any; navigation: NativeStackNavigationProp<any>; route: any; index: number }) {
 	const { descriptors, navigation, state, index, route } = props
@@ -23,9 +24,9 @@ function BottomTabButton(props: { state: any; descriptors: any; navigation: Nati
 			navigation.navigate(route.name, route.params)
 		}
 	}
-
-	const primaryColor = isFocused ? Application.styles.white : Application.styles.secondary
-	const backgroundColor = isFocused ? Application.styles.primary : Application.styles.white
+	const {theme} = useContext(ThemeContext)
+	const primaryColor = isFocused ? theme.white : theme.secondary
+	const backgroundColor = isFocused ? theme.primary : theme.white
 	return (
 		<TouchableOpacity
 			disabled={isFocused}
@@ -58,8 +59,9 @@ function BottomTabButton(props: { state: any; descriptors: any; navigation: Nati
 }
 function BottomTab(props: { state: any; descriptors: any; navigation: any }) {
 	const { descriptors, navigation, state } = props
+	const {theme} = useContext(ThemeContext)
 	return (
-		<View className="flex-row mx-2 px-1 pb-1 mb-2 absolute bottom-0" style={{ borderRadius: 100, backgroundColor: Application.styles.white, elevation: 4 }}>
+		<View className="flex-row mx-2 px-1 pb-1 mb-2 absolute bottom-0" style={{ borderRadius: 100, backgroundColor: theme.white, elevation: 4 }}>
 			{state.routes.map((route: any, index: number) => {
 				return <BottomTabButton key={route.key} descriptors={descriptors[route.key]} index={index} navigation={navigation} route={route} state={state} />
 			})}
@@ -67,11 +69,7 @@ function BottomTab(props: { state: any; descriptors: any; navigation: any }) {
 	)
 }
 export function BottomTabNavigator(props: { navigation: NativeStackNavigationProp<any> }) {
-	const { error, isError, isFetching, loggedUser: user } = useContext(UserContext)
-	const { navigation } = props
 	const { translations } = useContext(TranslationsContext)
-	const [prompt_log_in, set_prompt_log_in] = useState(false)
-	const styles = Application.styles
 	const Tab = useMemo(() => {
 		return createBottomTabNavigator()
 	}, [])
