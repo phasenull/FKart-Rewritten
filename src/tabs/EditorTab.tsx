@@ -6,7 +6,7 @@ import FKartTesting from "../screens/FKart/testing";
 
 export default function EditorTab(props: { route: any; navigation: NativeStackNavigationProp<any> }) {
 	return (
-		<FKartAuthValidator else={<FKartTesting navigation={props.navigation}/>}>
+		<FKartAuthValidator else={<FKartAuthWall navigation={props.navigation}/>}>
 			<View className="flex-1 justify-center">
 				<Text className="self-center">Editor Page</Text>
 			</View>
