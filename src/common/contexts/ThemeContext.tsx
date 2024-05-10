@@ -42,7 +42,7 @@ export function ThemeProvider(props: { children: any }) {
 	
 	const colorScheme = useColorScheme()
 	// const [themeLabel, setThemeLabel] = useState<Theme>(colorScheme === "light" ? Theme.LIGHT : Theme.DARK)
-	const [themeLabel, setThemeLabel] = useState<Theme>(Theme.DARK)
+	const [themeLabel, setThemeLabel] = useState<Theme>(Theme.LIGHT)
 	// useEffect(()=>{
 	// 	const new_label = colorScheme === "light" ? Theme.LIGHT : Theme.DARK
 	// 	setThemeLabel(new_label)
