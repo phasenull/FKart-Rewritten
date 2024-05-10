@@ -17,7 +17,8 @@ import { UserContextProvider } from "./src/common/contexts/UserContext"
 import { TranslationsProvider } from "./src/common/contexts/TranslationsContext"
 import { LoggerContext, LoggerContextProvider } from "./src/common/contexts/LoggerContext"
 import { FKartContextProvider } from "./src/common/contexts/FKartContext"
-import FKartAuthPage from "./src/screens/FKart/auth/FKartAuth"
+import FKartAuthPage from "./src/components/walls/FKartAuthWall"
+import FKartWelcomer from "./src/screens/FKart/auth/push/Welcomer"
 
 const config = {
 	screens: {
@@ -53,7 +54,10 @@ export default function AppEntryComponent() {
 										}}
 									>
 										<Stack.Screen name="welcomer" component={WelcomerPage as any} />
-										<Stack.Screen name = "fkart_auth" component={FKartAuthPage}/>
+										<Stack.Screen name = "fkart.auth" component={FKartAuthPage}/>
+										<Stack.Screen name = "fkart.auth.welcomer" component={FKartWelcomer}/>
+										<Stack.Screen name = "fkart.auth.signin" component={FKartWelcomer}/>
+										<Stack.Screen name = "fkart.auth.signup" component={FKartWelcomer}/>
 										<Stack.Screen name="home" component={RootScreen} />
 										<Stack.Screen name="auth" component={AuthPage} />
 										<Stack.Screen

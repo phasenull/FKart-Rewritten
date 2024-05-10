@@ -1,9 +1,9 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { SafeAreaView } from "react-native-safe-area-context"
-import SecondaryText from "../SecondaryText"
+import SecondaryText from "../root/SecondaryText"
 import { TouchableOpacity } from "react-native-gesture-handler"
-import Application from "../../../common/Application"
+import Application from "../../common/Application"
 
 export default function (props: { navigation: NativeStackNavigationProp<any> }) {
 	return (
