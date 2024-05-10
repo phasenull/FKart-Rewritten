@@ -50,6 +50,6 @@ export default function RouteTouchableContainer(props: { navigation: NativeStack
 				</Text>
 			</TouchableOpacity>
 		),
-		[item]
+		[item,theme]
 	)
 }

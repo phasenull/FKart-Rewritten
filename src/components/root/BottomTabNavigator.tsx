@@ -25,8 +25,8 @@ function BottomTabButton(props: { state: any; descriptors: any; navigation: Nati
 		}
 	}
 	const { theme } = useContext(ThemeContext)
-	const primaryColor = isFocused ? theme.text : theme.secondary
-	const backgroundColor = isFocused ? theme.primary : theme.text
+	const primaryColor = isFocused ? theme.text.primary : theme.secondary
+	const backgroundColor = isFocused ? theme.primary : theme.text.white
 	return (
 		<TouchableOpacity
 			disabled={isFocused}
@@ -61,7 +61,7 @@ function BottomTab(props: BottomTabBarProps) {
 	const { descriptors, navigation, state, insets } = props as BottomTabBarProps & {navigation:NativeStackNavigationProp<any>}
 	const theme = Object.values(descriptors)[0].options.tabBarStyle as ITheme
 	return (
-		<View className="flex-row mx-2 px-1 pb-1 mb-2 absolute bottom-0" style={{ borderRadius: 100, elevation: 4,backgroundColor:theme?.text }}>
+		<View className="flex-row mx-2 px-1 pb-1 mb-2 absolute bottom-0" style={{ borderRadius: 100, elevation: 4,backgroundColor:theme?.text.white }}>
 			{state.routes.map((route: any, index: number) => {
 				return <BottomTabButton key={route.key} descriptors={descriptors[route.key]} index={index} navigation={navigation} route={route} state={state} />
 			})}

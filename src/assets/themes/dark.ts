@@ -7,8 +7,12 @@ const DarkTheme:ITheme = {
 	secondary: "#273c4b",
 	secondaryDark: "#b5c2c7",
 	black: "#fff",
-	text:"#fff",
-	white: "#444444",
+	text: {
+		primary:"#fff",
+		white: "#fff",
+		secondary: "#273c4b",
+	},
+	white: "#879da9",
 	error: "#E95555",
 	success: "#4BB543",
 }

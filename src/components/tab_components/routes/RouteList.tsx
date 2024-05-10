@@ -64,6 +64,7 @@ export default function RouteList(props: {
 					</Text>
 				)}
 				contentContainerStyle={{
+					backgroundColor:theme.dark,
 					paddingBottom:80
 				}}
 				// contentContainerStyle={{ paddingTop: 60 }}

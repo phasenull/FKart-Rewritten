@@ -14,7 +14,11 @@ export interface ITheme {
 	white: string
 	error: string
 	success: string
-	text:string
+	text:{
+		primary:string,
+		secondary:string,
+		white:string,
+	}
 }
 export enum Theme {
 	"LIGHT"="LIGHT",
