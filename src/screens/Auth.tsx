@@ -12,25 +12,24 @@ import SecondaryText from "../components/root/SecondaryText"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { UserContext } from "../common/contexts/UserContext"
 import AuthPanel from "../components/screen_components/auth/AuthPanel"
+import { ThemeContext } from "../common/contexts/ThemeContext"
 
 export default function AuthPage(props: { navigation: NativeStackNavigationProp<any> }) {
 	const { navigation } = props
-	const theme = Application.theme
+	const { theme } = useContext(ThemeContext)
+
 	const page_width = useWindowDimensions().width
 	const translateX = useSharedValue(0)
-	const styles = Application.styles
 	function updatePage(index: number) {
 		translateX.value = withTiming(page_width * (1 - index) - page_width, { duration: 250 })
 	}
 	useEffect(() => {
 		updatePage(0)
 	}, [])
-	const {loggedUser} = useContext(UserContext)
+	const { loggedUser } = useContext(UserContext)
 	if (loggedUser) {
 		navigation.replace("home")
-		return <View>
-			
-		</View>
+		return <View></View>
 	}
 	return (
 		<KentKartAuthValidator
@@ -45,7 +44,7 @@ export default function AuthPage(props: { navigation: NativeStackNavigationProp<
 			}
 		>
 			<View className="items-center justify-center flex-1">
-				<MaterialCommunityIcons name="help" size={48*4} style={{opacity:0.3,marginBottom:2*4}}/>
+				<MaterialCommunityIcons name="help" size={48 * 4} style={{ opacity: 0.3, marginBottom: 2 * 4 }} />
 				<SecondaryText>Nothing to see here!</SecondaryText>
 				<TouchableOpacity
 					activeOpacity={0.5}
@@ -53,8 +52,8 @@ export default function AuthPage(props: { navigation: NativeStackNavigationProp<
 						borderRadius: 16,
 						paddingHorizontal: 32,
 						paddingVertical: 12,
-						marginTop:12*4,
-						backgroundColor: Application.styles.primary,
+						marginTop: 12 * 4,
+						backgroundColor: theme.primary,
 					}}
 					onPress={() => {
 						const navigation = props.navigation
@@ -65,9 +64,7 @@ export default function AuthPage(props: { navigation: NativeStackNavigationProp<
 						}
 					}}
 				>
-					<SecondaryText style={{color:Application.styles.white,fontSize:32}}>
-						Go home
-					</SecondaryText>
+					<SecondaryText style={{ color: theme.white, fontSize: 32 }}>Go home</SecondaryText>
 				</TouchableOpacity>
 			</View>
 		</KentKartAuthValidator>

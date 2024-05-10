@@ -7,7 +7,9 @@ import  AnnouncementTouchable  from "./AnnouncementTouchable"
 import { useContext, useMemo } from "react"
 import { TranslationsContext } from "../../../common/contexts/TranslationsContext" 
 import { UserContext } from "../../../common/contexts/UserContext"
+import { ThemeContext } from "../../../common/contexts/ThemeContext"
 export function IIPageAnnouncement(props: { announcements: Announcement[] }) {
+	const {theme} = useContext(ThemeContext)
 	const { announcements } = props
 	const {translations} = useContext(TranslationsContext)
 	const {loggedUser} = useContext(UserContext)
@@ -15,7 +17,7 @@ export function IIPageAnnouncement(props: { announcements: Announcement[] }) {
 		<View className="justify-center flex-col flex-1 items-center px-4">
 			<Text
 				style={{
-					color: Application.styles.secondary,
+					color: theme.secondary,
 					fontWeight: "800",
 					fontSize: 24,
 				}}
@@ -25,7 +27,7 @@ export function IIPageAnnouncement(props: { announcements: Announcement[] }) {
 			<FlatList
 				className="mt-12 w-80 -mb-12"
 				style={{
-					backgroundColor: Application.styles.white,
+					backgroundColor: theme.white,
 					maxHeight: 80 * 4,
 					borderRadius: 16,
 					elevation: 4,

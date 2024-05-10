@@ -3,13 +3,15 @@ import { TranslationsContext } from "../../../../../common/contexts/Translations
 import { useContext } from "react"
 import Animated, { FadeIn } from "react-native-reanimated"
 import Application from "../../../../../common/Application"
+import { ThemeContext } from "../../../../../common/contexts/ThemeContext"
 
 export default function HowDoIBecomeOne(props: {}) {
 	const { translations } = useContext(TranslationsContext)
+	const {theme} = useContext(ThemeContext)
 	return (
 		<View className="justify-center flex-col flex-1 items-center">
 			<Animated.View entering={FadeIn.duration(300)} className="flex-row items-end justify-center">
-				<Text className="text-3xl" style={{ fontWeight: "800", color: Application.styles.secondary }}>
+				<Text className="text-3xl" style={{ fontWeight: "800", color: theme.secondary }}>
 					{translations.screens.fkart.auth.welcomer.what_do_i_need_to_be_an_editor_title}
 				</Text>
 			</Animated.View>
@@ -24,7 +26,7 @@ export default function HowDoIBecomeOne(props: {}) {
 			/>
 			<Text
 				style={{
-					color: Application.styles.secondary,
+					color: theme.secondary,
 					fontWeight: "600",
 					fontSize: 16,
 					textAlign: "center",

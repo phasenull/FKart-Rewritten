@@ -9,13 +9,14 @@ import { getQRCode } from "../../../common/hooks/useGetQRCode"
 import { Favorite } from "../../../common/interfaces/KentKart/Favorite"
 import { useGetCardData } from "../../../common/hooks/kentkart/card/useGetCardData"
 import { BasicCardData } from "../../../common/interfaces/KentKart/BasicCardData"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import CustomLoadingIndicator from "../../root/CustomLoadingIndicator"
 import CardImages from "../../../common/enums/CardImages"
 import { formatAlias } from "../../../util"
 import { Swipeable } from "react-native-gesture-handler"
 import { useRemoveFavoriteCard } from "../../../common/hooks/kentkart/card/useRenameCard"
 import useGetFavorites from "../../../common/hooks/kentkart/user/useGetFavorites"
+import { ThemeContext } from "../../../common/contexts/ThemeContext"
 
 export default function CardContainer(props: { favorite_data: Favorite<"Card" | "QR">; index: number; navigation: any; style?: ViewStyle }) {
 	const { favorite_data, index, navigation } = props
@@ -39,7 +40,8 @@ export default function CardContainer(props: { favorite_data: Favorite<"Card" | 
 		}
 	}, [data?.data])
 
-	const styles = Application.styles
+	const {theme} = useContext(ThemeContext)
+
 	if (isError) {
 		return (
 			<View>
@@ -66,7 +68,7 @@ export default function CardContainer(props: { favorite_data: Favorite<"Card" | 
 					<TouchableOpacity
 						className="justify-center self-center items-center"
 						style={{
-							backgroundColor: Application.styles.error,
+							backgroundColor: theme.error,
 							elevation:10,
 							borderRadius:100,
 							width:16*4,
@@ -81,7 +83,7 @@ export default function CardContainer(props: { favorite_data: Favorite<"Card" | 
 							}
 						}}
 					>
-						<MaterialCommunityIcons color={Application.styles.white} name="trash-can" size={44} />
+						<MaterialCommunityIcons color={theme.white} name="trash-can" size={44} />
 					</TouchableOpacity>
 				)}
 			>
@@ -90,7 +92,7 @@ export default function CardContainer(props: { favorite_data: Favorite<"Card" | 
 					className="items-center flex-row py-5 px-5 w-80 h-32 rounded-[16px]"
 					disabled={isLoading}
 					style={{
-						backgroundColor: styles.white,
+						backgroundColor: theme.white,
 						shadowOffset: { height: 4, width: 4 },
 					}}
 					onPress={() => {
@@ -127,13 +129,13 @@ export default function CardContainer(props: { favorite_data: Favorite<"Card" | 
 					) : null}
 					<View className="flex-1 flex-row items-center justify-between">
 						<View className="flex-col flex-2 w-full">
-							<Text numberOfLines={1} style={{ color: styles.primary }} className="flex-1 text-2xl font-bold w-full bottom-2 text-left">
+							<Text numberOfLines={1} style={{ color: theme.primary }} className="flex-1 text-2xl font-bold w-full bottom-2 text-left">
 								{favorite_data.description || (card?.virtualCard && "QR Kart") || "Adsız Kart"}
 							</Text>
 							<Text
 								style={{
-									color: styles.white,
-									backgroundColor: styles.secondary,
+									color: theme.white,
+									backgroundColor: theme.secondary,
 									width: 30 * 4,
 								}}
 								className="rounded-full mt-3 px-4 bottom-5 relative justify-center font-bold text-[12px] text-center"
@@ -142,17 +144,17 @@ export default function CardContainer(props: { favorite_data: Favorite<"Card" | 
 							</Text>
 							{card ? (
 								<View className="flex-1 flex-row">
-									<Text adjustsFontSizeToFit={true} style={{ color: styles.secondary, fontSize: 34, textAlignVertical: "bottom" }} className="opacity-50 font-bold text-left">
+									<Text adjustsFontSizeToFit={true} style={{ color: theme.secondary, fontSize: 34, textAlignVertical: "bottom" }} className="opacity-50 font-bold text-left">
 										{card.balance || "key_error (balance)"} TL
 									</Text>
-									{isLoading || isRefetching ? <CustomLoadingIndicator color={Application.styles.secondary} style={{ marginLeft: 10 }} size={15} /> : null}
+									{isLoading || isRefetching ? <CustomLoadingIndicator color={theme.secondary} style={{ marginLeft: 10 }} size={15} /> : null}
 								</View>
 							) : (
-								<CustomLoadingIndicator color={Application.styles.secondary} size={20} />
+								<CustomLoadingIndicator color={theme.secondary} size={20} />
 							)}
 						</View>
 						<View className="flex-1 items-end -mr-3 justify-center opacity-[0.15] ">
-							<MaterialCommunityIcons color={styles.secondary} name="arrow-right-thick" style={{ width: 40 }} size={50} className="flex-1 " />
+							<MaterialCommunityIcons color={theme.secondary} name="arrow-right-thick" style={{ width: 40 }} size={50} className="flex-1 " />
 						</View>
 					</View>
 				</TouchableOpacity>

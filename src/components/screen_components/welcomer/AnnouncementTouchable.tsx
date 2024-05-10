@@ -3,9 +3,12 @@ import { Announcement } from "../../../common/interfaces/app/Announcement"
 import { Text, View } from "react-native"
 import Application from "../../../common/Application"
 import Divider from "../../root/Divider"
+import { useContext } from "react"
+import { ThemeContext } from "../../../common/contexts/ThemeContext"
 
 export default function AnnouncementTouchable(props: { index: number; item: Announcement }) {
 	const { index, item: announcement } = props
+	const {theme} = useContext(ThemeContext)
 
 	return (
 		<TouchableOpacity
@@ -38,7 +41,7 @@ export default function AnnouncementTouchable(props: { index: number; item: Anno
 
 				<Text
 					style={{
-						color: Application.styles.secondary,
+						color: theme.secondary,
 						fontSize: 16,
 						fontWeight: "800",
 						textAlignVertical: "center",
@@ -47,7 +50,7 @@ export default function AnnouncementTouchable(props: { index: number; item: Anno
 					{announcement.title}
 				</Text>
 				<Text style={{
-						color: Application.styles.secondary,
+						color: theme.secondary,
 						opacity:0.6,
 						fontSize: 12,
 						marginLeft:2*4,

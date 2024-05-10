@@ -2,9 +2,13 @@ import { Modal, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "r
 import SegmentedButtons from "../../root/SegmentedButtons"; 
 import Application from "../../../common/Application"; 
 import Animated, { FadeInDown, FadeInUp, FadeOutDown, FadeOutUp, SlideInUp, SlideOutUp, StretchInX, ZoomIn, ZoomInUp, ZoomOut, ZoomOutDown, ZoomOutUp } from "react-native-reanimated"
+import { useContext } from "react";
+import { ThemeContext } from "../../../common/contexts/ThemeContext";
 
 export default function FilterByRouteTypeModal(props: { visible: boolean; setVisible: any; setFilterByRouteType: any; filterByRouteType: any }) {
 	const { visible, setVisible, setFilterByRouteType, filterByRouteType } = props
+	const {theme} = useContext(ThemeContext)
+
 	if (!visible) return null
 	return (
 		<View style={{ flex: 1, zIndex: 2,top:12*4 }}>
@@ -23,7 +27,7 @@ export default function FilterByRouteTypeModal(props: { visible: boolean; setVis
 				exiting={ZoomOut.duration(150)}
 				className="absolute w-80 px-4 rounded-[16px] py-5 mt-20 mx-auto items-center justify-center self-center"
 				style={{
-					backgroundColor: Application.styles.white,
+					backgroundColor: theme.white,
 					shadowOffset: { height: 4, width: 4 },
 				}}
 			>

@@ -2,8 +2,9 @@ import { FlatList, RefreshControl, Text } from "react-native"
 import BasicRouteInformation from "../../../common/interfaces/KentKart/BasicRouteInformation" 
 import RouteTouchableContainer from "./RouteTouchableContainer"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import { useMemo } from "react"
+import { useContext, useMemo } from "react"
 import Application from "../../../common/Application"
+import { ThemeContext } from "../../../common/contexts/ThemeContext"
 export default function RouteList(props: {
 	data: { routeList: BasicRouteInformation[] }
 	refreshing: boolean
@@ -16,6 +17,7 @@ export default function RouteList(props: {
 	function renderRoute({ index, item }: { index: number; item: BasicRouteInformation }) {
 		return <RouteTouchableContainer item={item} navigation={props.navigation} route={props.route} />
 	}
+	const {theme} = useContext(ThemeContext)
 	const { routeType } = props
 	const { data, refreshing, onRefresh, searchText } = props
 
@@ -57,7 +59,7 @@ export default function RouteList(props: {
 			<FlatList
 				refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
 				ListEmptyComponent={() => (
-					<Text className="text-xl mx-auto mt-5 font-bold" style={{ color: Application.styles.secondary }}>
+					<Text className="text-xl mx-auto mt-5 font-bold" style={{ color: theme.secondary }}>
 						No data found!
 					</Text>
 				)}

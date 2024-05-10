@@ -10,13 +10,14 @@ import { BackHandler, Image, Text, View, useWindowDimensions } from "react-nativ
 import Animated, { FadeIn, useSharedValue, withSpring, withTiming } from "react-native-reanimated"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import PushUserPage from "./push/PushUserPage"
+import { ThemeContext } from "../../../common/contexts/ThemeContext"
 
 export default function FKartAuthTypeSelector(props: { navigation: NativeStackNavigationProp<any> }) {
 	const { navigation } = props
 	const { translations } = useContext(TranslationsContext)
 	const page_height = useWindowDimensions().height
 	const translateY = useSharedValue(0)
-	const styles = Application.styles
+	const { theme } = useContext(ThemeContext)
 	function updatePage(index: number) {
 		translateY.value = withSpring(page_height * (0 - index) - page_height, { duration: 500, dampingRatio: 0.75 })
 	}
@@ -36,22 +37,20 @@ export default function FKartAuthTypeSelector(props: { navigation: NativeStackNa
 
 	return (
 		<Animated.View style={{ transform: [{ translateY: translateY }], height: page_height * 3 }} className={"flex-col"}>
-			<PushUserPage goBack={() => updatePage(0)}>
-				
-			</PushUserPage>
+			<PushUserPage goBack={() => updatePage(0)}></PushUserPage>
 			<View className="flex-1">
 				<TouchableOpacity
 					className="absolute top-4 right-4 self-end rounded-full"
 					onPress={() => navigation.navigate("fkart.auth.welcomer")}
 					style={{
-						backgroundColor: Application.styles.white,
+						backgroundColor: theme.white,
 					}}
 				>
-					<MaterialCommunityIcons name="help" size={18 * 4} color={Application.styles.secondary} />
+					<MaterialCommunityIcons name="help" size={18 * 4} color={theme.secondary} />
 				</TouchableOpacity>
 				<View className="flex-1 items-center justify-center">
 					<Animated.View entering={FadeIn.duration(300)} className="flex-row items-end justify-center">
-						<Text className="text-3xl" style={{ fontWeight: "800", color: Application.styles.secondary }}>
+						<Text className="text-3xl" style={{ fontWeight: "800", color: theme.secondary }}>
 							{Application.name} {translations.screens.fkart.editor}
 						</Text>
 					</Animated.View>

@@ -4,15 +4,17 @@ import Animated, { FadeIn } from "react-native-reanimated"
 import * as Updates from "expo-updates"
 import { useContext } from "react"
 import { TranslationsContext } from "../../../../common/contexts/TranslationsContext"
+import { ThemeContext } from "../../../../common/contexts/ThemeContext"
 export function IIPage1(props:{last_check:number}) {
+	const {theme} = useContext(ThemeContext)
 	const {translations} = useContext(TranslationsContext)
 	return (
 		<View className="justify-center flex-col flex-1 items-center">
 			<Animated.View entering={FadeIn.duration(300)} className="flex-row items-end justify-center">
-				<Text className="text-6xl" style={{ fontWeight: "800", color: Application.styles.primary }}>
+				<Text className="text-6xl" style={{ fontWeight: "800", color: theme.primary }}>
 					{Application.name}
 				</Text>
-				<Text className="text-md" style={{ fontWeight: "800", color: Application.styles.secondary, opacity: 0.5 }}>
+				<Text className="text-md" style={{ fontWeight: "800", color: theme.secondary, opacity: 0.5 }}>
 					{" "}
 					v{Application.version}-{Updates.runtimeVersion}
 				</Text>
@@ -27,17 +29,17 @@ export function IIPage1(props:{last_check:number}) {
 			/>
 			<Text
 				style={{
-					color: Application.styles.secondary,
+					color: theme.secondary,
 					fontWeight: "600",
 					fontSize: 16,
 				}}
 			>
 				{translations.screens.welcomer.unofficial_public_transit_app_for_kocaeli.map((e)=>e.mark ? 
-				<Text key={e.str} style={{ color: Application.styles.primary }}>{e.str}</Text> : e.str)}
+				<Text key={e.str} style={{ color: theme.primary }}>{e.str}</Text> : e.str)}
 			</Text>
 			<Text
 				style={{
-					color: Application.styles.secondary,
+					color: theme.secondary,
 					fontSize: 16,
 				}}
 			>
@@ -47,7 +49,7 @@ export function IIPage1(props:{last_check:number}) {
 				style={{
 					position:"absolute",
 					bottom:0,
-					color: Application.styles.secondary,
+					color: theme.secondary,
 					fontSize: 16,
 					opacity:0.1
 				}}>

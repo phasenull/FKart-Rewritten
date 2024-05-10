@@ -2,14 +2,15 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import BasicRouteInformation from "../../../common/interfaces/KentKart/BasicRouteInformation"
 import { Text, TouchableOpacity, View } from "react-native"
 import Application from "../../../common/Application"
-import { useMemo } from "react"
+import { useContext, useMemo } from "react"
 import Divider from "../../root/Divider"
 import Animated from "react-native-reanimated"
+import { ThemeContext } from "../../../common/contexts/ThemeContext"
 
 export default function RouteTouchableContainer(props: { navigation: NativeStackNavigationProp<any>; route: any; item: BasicRouteInformation }) {
 	const { item } = props
 	const { navigation } = props
-
+	const {theme} = useContext(ThemeContext)
 	return useMemo(
 		() => (
 			<TouchableOpacity
@@ -22,14 +23,14 @@ export default function RouteTouchableContainer(props: { navigation: NativeStack
 					<View
 						className="px-2 h-6"
 						style={{
-							backgroundColor: item.routeColor === "006633" ? Application.styles.primary : `#${item.routeColor}`,
+							backgroundColor: item.routeColor === "006633" ? theme.primary : `#${item.routeColor}`,
 							borderRadius: 6,
 						}}
 					>
 						<Text
 							className="text-center my-auto"
 							style={{
-								color: item.routeColor === "006633" ? Application.styles.secondary : `#${item.routeTextColor}`,
+								color: item.routeColor === "006633" ? theme.secondary : `#${item.routeTextColor}`,
 								fontWeight: "900",
 							}}
 						>
@@ -41,7 +42,7 @@ export default function RouteTouchableContainer(props: { navigation: NativeStack
 				<Text
 					className="my-auto ml-1 mr-4 flex-1"
 					style={{
-						color: Application.styles.secondary,
+						color: theme.secondary,
 						fontWeight: "500",
 					}}
 				>

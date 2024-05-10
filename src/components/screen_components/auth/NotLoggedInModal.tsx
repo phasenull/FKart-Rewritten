@@ -25,7 +25,9 @@ export default function NotLoggedInModal(props: { param_visible: boolean; onRequ
 				<Text className="text-sm">Seems like you are not signed in! You can either sign in or use incognito mode. </Text>
 				<View className="flex flex-row mt-16 justify-between">
 					<TouchableOpacity
-						style={theme.buttonPrimary}
+						style={{
+							backgroundColor:theme.primary
+						}}
 						className="px-4 py-2"
 						onPress={() => {
 							props?.navigation?.push("auth")
@@ -35,7 +37,7 @@ export default function NotLoggedInModal(props: { param_visible: boolean; onRequ
 					</TouchableOpacity>
 					<TouchableOpacity
 						disabled={false}
-						style={theme.buttonSecondary}
+						style={{backgroundColor:theme.secondary}}
 						className="px-4 py-2"
 						onPress={() => {
 							setVisible(false)

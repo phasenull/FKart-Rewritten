@@ -5,7 +5,7 @@ import CardImages from "../common/enums/CardImages"
 import CardTypes from "../common/enums/CardTypes"
 import Animated, { Easing, FadeInDown, FadeInLeft, FadeOutUp, FlipInEasyX, FlipInEasyY, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated"
 import Card from "../common/classes/Card"
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import Logger from "../common/Logger"
 import { LinearGradient } from "expo-linear-gradient"
 
@@ -21,6 +21,7 @@ import CardDetailsHeader from "../components/screen_components/card_details/Card
 import CardJSONData from "../components/screen_components/card_details/CardJSONData"
 import VirtualCardQRCodePanel from "../components/screen_components/card_details/VirtualCardQRCodePanel"
 import CardControlPanel from "../components/screen_components/card_details/CardControlPanel"
+import { ThemeContext } from "../common/contexts/ThemeContext"
 export default function CardDetails(props: {
 	route: {
 		params: {
@@ -31,7 +32,7 @@ export default function CardDetails(props: {
 	}
 	navigation: NativeStackNavigationProp<any>
 }) {
-	const styles = Application.styles
+	const {theme} = useContext(ThemeContext)
 	const [loading, setLoading] = useState(false)
 	const favorite_data = props?.route.params?.favorite_data
 	const card = props?.route.params?.card
@@ -51,7 +52,7 @@ export default function CardDetails(props: {
 		get()
 		navigation.setOptions({
 			headerTitle: `${favorite_data.description || (is_virtual && "QR Kart") || "unnamed card"}`,
-			headerTintColor: styles.white,
+			headerTintColor: theme.white,
 			headerTitleAlign: "left",
 			headerTitleStyle: {
 				fontWeight: "bold",
@@ -69,7 +70,7 @@ export default function CardDetails(props: {
 	if (!card || !favorite_data) {
 		return (
 			<View className="flex-1 items-center justify-center">
-				<Text style={{ color: styles.error, fontSize: 24 }}>No card data found</Text>
+				<Text style={{ color: theme.error, fontSize: 24 }}>No card data found</Text>
 			</View>
 		)
 	}

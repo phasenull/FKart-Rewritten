@@ -7,6 +7,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { TranslationsContext } from "../../../common/contexts/TranslationsContext";
 import SelectLangModal from "../../root/SelectLangModal";
 import { Langs } from "../../../common/enums/Langs";
+import { ThemeContext } from "../../../common/contexts/ThemeContext";
 export function IIPaginator(props: {navigation:NativeStackNavigationProp<any>, initialIndex?: number; onPageChange?: (newIndex: number, previousIndex?: number) => void; children: any }) {
 	// console.log("IIPaginator Update",props?.children?.length)
 	const [page, setPage] = useState(props.initialIndex || 0)
@@ -14,6 +15,7 @@ export function IIPaginator(props: {navigation:NativeStackNavigationProp<any>, i
 		const result = Math.max(0, Math.min(page + dir, props.children.length - 1))
 		setPage(result)
 	}
+	const {theme} = useContext(ThemeContext)
 	const {translations,setLang,lang} = useContext(TranslationsContext)
 	const [showTranslationSelector,setShowTranslationSelector] = useState(false)
 	const [dontShowAgain, setDontShowAgain] = useState(false)
@@ -23,8 +25,8 @@ export function IIPaginator(props: {navigation:NativeStackNavigationProp<any>, i
 	return (
 		<View className="flex-1 justify-between items-center">
 			<SelectLangModal defaultValue={lang} onDismiss={()=>setShowTranslationSelector(false)} visible={showTranslationSelector} onSelect={setLang} />
-			<TouchableOpacity style={{backgroundColor:Application.styles.white,borderRadius:16}} className="p-4 absolute self-center mt-4" onPress={()=>setShowTranslationSelector(true)}>
-				<MaterialCommunityIcons name="translate" color={Application.styles.secondary} size={48}/>
+			<TouchableOpacity style={{backgroundColor:theme.white,borderRadius:16}} className="p-4 absolute self-center mt-4" onPress={()=>setShowTranslationSelector(true)}>
+				<MaterialCommunityIcons name="translate" color={theme.secondary} size={48}/>
 			</TouchableOpacity>
 			<View className="flex-1">
 				{props.children[page] || (
@@ -42,10 +44,10 @@ export function IIPaginator(props: {navigation:NativeStackNavigationProp<any>, i
 				>
 					<MaterialCommunityIcons
 						name={dontShowAgain ? "checkbox-marked-outline" : "checkbox-blank-outline"}
-						style={{ opacity: dontShowAgain ? 1 : 0.4, color: dontShowAgain ? Application.styles.primary : Application.styles.secondary }}
+						style={{ opacity: dontShowAgain ? 1 : 0.4, color: dontShowAgain ? theme.primary : theme.secondary }}
 						size={22}
 					/>
-					<Text style={{ fontWeight: "800", fontSize: 16, color: Application.styles.secondary, opacity: 0.4 }}>{translations.screens.welcomer.dont_show_again}</Text>
+					<Text style={{ fontWeight: "800", fontSize: 16, color: theme.secondary, opacity: 0.4 }}>{translations.screens.welcomer.dont_show_again}</Text>
 				</TouchableOpacity>
 			) : null}
 			<View className="flex-row w-80 mt-4 justify-center mb-4 gap-x-2">
@@ -55,7 +57,7 @@ export function IIPaginator(props: {navigation:NativeStackNavigationProp<any>, i
 						paddingHorizontal: 16,
 						paddingVertical: 12,
 						marginRight: 4,
-						backgroundColor: Application.styles.white,
+						backgroundColor: theme.white,
 					}}
 					onPress={() => {
 						movePage(-1)
@@ -63,7 +65,7 @@ export function IIPaginator(props: {navigation:NativeStackNavigationProp<any>, i
 				>
 					<Text
 						style={{
-							color: Application.styles.secondary,
+							color: theme.secondary,
 							opacity: 0.3,
 							fontWeight: "600",
 						}}
@@ -78,7 +80,7 @@ export function IIPaginator(props: {navigation:NativeStackNavigationProp<any>, i
 						borderRadius: 16,
 						paddingHorizontal: 32,
 						paddingVertical: 12,
-						backgroundColor: Application.styles.primary,
+						backgroundColor: theme.primary,
 					}}
 					onPress={() => {
 						if (page == props.children.length-1) {
@@ -94,7 +96,7 @@ export function IIPaginator(props: {navigation:NativeStackNavigationProp<any>, i
 				>
 					<Text
 						style={{
-							color: Application.styles.white,
+							color: theme.white,
 							fontWeight: "600",
 						}}
 						className="text-[36px] text-center"
@@ -110,7 +112,7 @@ export function IIPaginator(props: {navigation:NativeStackNavigationProp<any>, i
 				className="flex-row my-2 justify-center gap-x-4"
 			>
 				{[...Array(props.children.length).keys()].map((e, i) => {
-					const color = i <= page ? Application.styles.primary : Application.styles.secondary
+					const color = i <= page ? theme.primary : theme.secondary
 					return (
 						<View key={i} className="items-end justify-center">
 							{i !== props.children.length - 1 ? (

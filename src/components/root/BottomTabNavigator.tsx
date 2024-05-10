@@ -1,4 +1,4 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
+import { BottomTabBarProps, createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { useContext, useMemo, useState } from "react"
 import Application from "../../common/Application"
@@ -12,7 +12,7 @@ import HomeTab from "../../tabs/HomeTab"
 import SearchTab from "../../tabs/SearchTab"
 import { Text, TouchableOpacity, View } from "react-native"
 import SecondaryText from "./SecondaryText"
-import { ThemeContext } from "../../common/contexts/ThemeContext"
+import { ITheme, ThemeContext } from "../../common/contexts/ThemeContext"
 
 function BottomTabButton(props: { state: any; descriptors: any; navigation: NativeStackNavigationProp<any>; route: any; index: number }) {
 	const { descriptors, navigation, state, index, route } = props
@@ -24,9 +24,9 @@ function BottomTabButton(props: { state: any; descriptors: any; navigation: Nati
 			navigation.navigate(route.name, route.params)
 		}
 	}
-	const {theme} = useContext(ThemeContext)
-	const primaryColor = isFocused ? theme.white : theme.secondary
-	const backgroundColor = isFocused ? theme.primary : theme.white
+	const { theme } = useContext(ThemeContext)
+	const primaryColor = isFocused ? theme.text : theme.secondary
+	const backgroundColor = isFocused ? theme.primary : theme.text
 	return (
 		<TouchableOpacity
 			disabled={isFocused}
@@ -38,7 +38,7 @@ function BottomTabButton(props: { state: any; descriptors: any; navigation: Nati
 				borderRadius: 32,
 				marginHorizontal: 1 * 4,
 				marginVertical: 2 * 4,
-				bottom: isFocused ? 1*4 : 0,
+				bottom: isFocused ? 1 * 4 : 0,
 			}}
 			className="items-center"
 		>
@@ -51,17 +51,17 @@ function BottomTabButton(props: { state: any; descriptors: any; navigation: Nati
 			>
 				{options.tabBarIcon({ focused: isFocused, color: primaryColor, size: 32 })}
 			</View>
-			<SecondaryText style={{ color: primaryColor, fontSize: 16, position: "absolute", bottom:isFocused?0:-6 }} numberOfLines={1}>
+			<SecondaryText style={{ color: primaryColor, fontSize: 16, position: "absolute", bottom: isFocused ? 0 : -6 }} numberOfLines={1}>
 				{label}
 			</SecondaryText>
 		</TouchableOpacity>
 	)
 }
-function BottomTab(props: { state: any; descriptors: any; navigation: any }) {
-	const { descriptors, navigation, state } = props
-	const {theme} = useContext(ThemeContext)
+function BottomTab(props: BottomTabBarProps) {
+	const { descriptors, navigation, state, insets } = props as BottomTabBarProps & {navigation:NativeStackNavigationProp<any>}
+	const theme = Object.values(descriptors)[0].options.tabBarStyle as ITheme
 	return (
-		<View className="flex-row mx-2 px-1 pb-1 mb-2 absolute bottom-0" style={{ borderRadius: 100, backgroundColor: theme.white, elevation: 4 }}>
+		<View className="flex-row mx-2 px-1 pb-1 mb-2 absolute bottom-0" style={{ borderRadius: 100, elevation: 4,backgroundColor:theme?.text }}>
 			{state.routes.map((route: any, index: number) => {
 				return <BottomTabButton key={route.key} descriptors={descriptors[route.key]} index={index} navigation={navigation} route={route} state={state} />
 			})}
@@ -70,6 +70,8 @@ function BottomTab(props: { state: any; descriptors: any; navigation: any }) {
 }
 export function BottomTabNavigator(props: { navigation: NativeStackNavigationProp<any> }) {
 	const { translations } = useContext(TranslationsContext)
+
+	const { theme } = useContext(ThemeContext)
 	const Tab = useMemo(() => {
 		return createBottomTabNavigator()
 	}, [])
@@ -79,6 +81,7 @@ export function BottomTabNavigator(props: { navigation: NativeStackNavigationPro
 			initialRouteName={translations.tabs.settings.name}
 			tabBar={BottomTab}
 			screenOptions={{
+				tabBarStyle: theme as any,
 				headerShown: false,
 			}}
 		>

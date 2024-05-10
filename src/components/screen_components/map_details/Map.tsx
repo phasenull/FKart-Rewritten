@@ -1,4 +1,4 @@
-import { LegacyRef, useMemo } from "react"
+import { LegacyRef, useContext, useMemo } from "react"
 import MapView, { Callout, Marker, PROVIDER_GOOGLE, Polyline } from "react-native-maps"
 import { ICityInformation } from "../../../common/interfaces/KentKart/CityInformation"
 import RouteData from "../../../common/interfaces/KentKart/RouteData"
@@ -11,6 +11,7 @@ import { DYNAMIC_CONTENT_URL } from "../../../common/constants"
 import Logger from "../../../common/Logger"
 import StopMarker from "./markers/StopMarker"
 import {BusMarker} from "./markers/BusMarker"
+import { ThemeContext } from "../../../common/contexts/ThemeContext"
 const styled_map = require("./MapStyle.json")
 export default function Map(props: {
 	forwardRef: LegacyRef<MapView> | undefined
@@ -20,6 +21,7 @@ export default function Map(props: {
 	navigation: NativeStackNavigationProp<any>
 	easterEggEnabled?: boolean
 }) {
+	const {theme} = useContext(ThemeContext)
 	const { forwardRef, routeDataToShow, userCity, easterEggEnabled, busListToShow, navigation } = props
 	return useMemo(() => {
 		Logger.info("Map.tsx", "Map", "Rendering Map")
@@ -41,7 +43,7 @@ export default function Map(props: {
 						latitude: parseFloat(e.lat),
 						longitude: parseFloat(e.lng),
 					}))}
-					strokeColor={easterEggEnabled ? "#fff": Application.styles.primaryDark}
+					strokeColor={easterEggEnabled ? "#fff": theme.primaryDark}
 					strokeWidth={5}
 				/>
 				{routeDataToShow.busStopList.map((busStop, index) => (

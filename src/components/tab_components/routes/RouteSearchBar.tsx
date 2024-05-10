@@ -5,8 +5,9 @@ import {
 } from "react-native"
 import Application from "../../../common/Application"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import FilterByRouteTypeModal from "./FilterByRouteTypeModal"
+import { ThemeContext } from "../../../common/contexts/ThemeContext"
 
 export default function RouteSearchBar(props: {
 	onChangeText: (e: string) => void
@@ -23,6 +24,7 @@ export default function RouteSearchBar(props: {
 		onPress?: any
 	}) => void
 }) {
+	const {theme} = useContext(ThemeContext)
 	const {
 		onChangeText,
 		filterByRouteType,
@@ -45,7 +47,7 @@ export default function RouteSearchBar(props: {
 				<View
 					className="flex-1 w-80 px-4 rounded-full items-center justify-center flex-row"
 					style={{
-						backgroundColor: Application.styles.white,
+						backgroundColor: theme.white,
 						elevation: 10,
 						shadowOffset: { height: 4, width: 4 },
 					}}
@@ -57,7 +59,7 @@ export default function RouteSearchBar(props: {
 							onPress={() => setSearchText("")}
 						>
 							<MaterialCommunityIcons
-								color={Application.styles.secondary}
+								color={theme.secondary}
 								size={24}
 								name="close-circle-outline"
 							/>
@@ -68,14 +70,14 @@ export default function RouteSearchBar(props: {
 						onChangeText={(text) => setSearchText(text)}
 						placeholder="Search Routes"
 						style={{
-							color: Application.styles.secondaryDark,
+							color: theme.secondaryDark,
 							fontSize: 16,
 							fontWeight: "600",
 						}}
 						value={searchText}
 					/>
 					<MaterialCommunityIcons
-						color={Application.styles.secondary}
+						color={theme.secondary}
 						size={28}
 						name="magnify"
 					/>
@@ -86,7 +88,7 @@ export default function RouteSearchBar(props: {
 					}}
 					className="ml-1.5 h-14 w-12 rounded-full items-center justify-center"
 					style={{
-						backgroundColor: Application.styles.white,
+						backgroundColor: theme.white,
 						elevation: 10,
 						shadowOffset: { height: 4, width: 4 },
 					}}

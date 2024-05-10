@@ -8,11 +8,15 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import Logger from "../../../../common/Logger"
 import RouteData from "../../../../common/interfaces/KentKart/RouteData" 
 import { BusCallout } from "../callouts/BusCallout"
+import { useContext } from "react"
+import { ThemeContext } from "../../../../common/contexts/ThemeContext"
 
 export function BusMarker(props: { bus: BusData; coordinate: LatLng; easterEggEnabled?: boolean; navigation: NativeStackNavigationProp<any>; route_data?: RouteData }) {
 	const { route_data, bus, coordinate, easterEggEnabled, navigation } = props
 	const schedule_list = route_data?.timeTableList
 	const scheduled_data = schedule_list?.find((e) => e.tripId === bus.tripId)
+	const {theme} = useContext(ThemeContext)
+
 	if (!bus || !coordinate || !navigation || !route_data) {
 		Logger.warning("BusMarker.tsx", "BusMarker", "Bus, coordinate or navigation is null")
 		return
@@ -76,11 +80,11 @@ export function BusMarker(props: { bus: BusData; coordinate: LatLng; easterEggEn
 			/>
 			<MaterialCommunityIcons
 				style={{
-					backgroundColor: Application.styles.primary,
+					backgroundColor: theme.primary,
 					elevation: 10,
 					borderRadius: 50,
 					padding: 2,
-					color: Application.styles.white,
+					color: theme.white,
 					transform: [{ rotateZ: "180deg" }],
 				}}
 				name="bus"

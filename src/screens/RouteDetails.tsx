@@ -4,10 +4,11 @@ import { RefreshControl, ScrollView, Switch, Text, TouchableOpacity, View } from
 import useGetRouteDetails from "../common/hooks/kentkart/info/useGetRouteDetails"
 import CustomLoadingIndicator from "../components/root/CustomLoadingIndicator"
 import RouteData from "../common/interfaces/KentKart/RouteData"
-import { useEffect, useMemo, useState } from "react"
+import { useContext, useEffect, useMemo, useState } from "react"
 import BusData from "../common/interfaces/KentKart/BusData"
 import BusContainer from "../components/screen_components/route_details/BusContainer"
 import Application from "../common/Application"
+import { ThemeContext } from "../common/contexts/ThemeContext"
 
 export default function RouteDetails(props: {
 	route: {
@@ -33,6 +34,7 @@ export default function RouteDetails(props: {
 			</View>
 		)
 	}
+	const {theme} = useContext(ThemeContext)
 	const { data, error, isLoading, refetch, isRefetching } = useGetRouteDetails({
 		route_code: id_to_fetch,
 		include_time_table: true,
@@ -117,7 +119,7 @@ export default function RouteDetails(props: {
 							bus_list: data_route.busList,
 						})
 					}
-					style={{ alignSelf: "center", elevation: 2, backgroundColor: Application.styles.primary, borderRadius: 16, paddingVertical: 2 * 4, paddingHorizontal: 4 * 4 }}
+					style={{ alignSelf: "center", elevation: 2, backgroundColor: theme.primary, borderRadius: 16, paddingVertical: 2 * 4, paddingHorizontal: 4 * 4 }}
 				>
 					<Text>Open Map View</Text>
 				</TouchableOpacity>

@@ -6,7 +6,7 @@ import RouteData from "../common/interfaces/KentKart/RouteData"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import Application from "../common/Application"
 import useGetCityData from "../common/hooks/kentkart/info/useGetCityData"
-import React, { LegacyRef, Ref, useEffect, useRef, useState } from "react"
+import React, { LegacyRef, Ref, useContext, useEffect, useRef, useState } from "react"
 import { ICityInformation } from "../common/interfaces/KentKart/CityInformation"
 import IPoint from "../common/interfaces/KentKart/Point"
 import BasicStopInformation from "../common/interfaces/KentKart/BasicStopInformation"
@@ -20,6 +20,7 @@ import Map from "../components/screen_components/map_details/Map"
 import useGetRouteDetails from "../common/hooks/kentkart/info/useGetRouteDetails"
 import CustomLoadingIndicator from "../components/root/CustomLoadingIndicator"
 import FollowingBus from "../components/screen_components/map_details/FollowingBus"
+import { ThemeContext } from "../common/contexts/ThemeContext"
 export default function MapData(props: {
 	route: {
 		params: {
@@ -38,6 +39,7 @@ export default function MapData(props: {
 	const { navigation } = props
 	const [userCity, setUserCity] = useState<ICityInformation | undefined>(undefined)
 	const [direction, setDirection] = useState(routeDataToShow.direction)
+	const {theme} = useContext(ThemeContext)
 	const {
 		data: fetchedRouteData,
 		isRefetching: isRouteRefetching,
@@ -51,7 +53,7 @@ export default function MapData(props: {
 		navigation.setOptions({
 			title: `Route ${props.route.params.route_data.displayRouteCode} - Map View`,
 			headerTitleStyle: {
-				color: Application.styles.secondary,
+				color: theme.secondary,
 				fontWeight: "900",
 			},
 		})
@@ -125,14 +127,14 @@ export default function MapData(props: {
 			<BottomSheet
 				ref={ref_bottom_sheet as Ref<BottomSheetMethods>}
 				backgroundStyle={{
-					backgroundColor: Application.styles.dark,
+					backgroundColor: theme.dark,
 				}}
 				snapPoints={["12%", "35%", "90%"]}
 				index={1}
 				enablePanDownToClose={false}
 			>
 				<View style={{ marginHorizontal: 4 * 4 }} className="px-2 self-center w-full flex-row justify-between items-center h-12">
-					<Text style={{ fontWeight: "600", maxWidth: "90%", color: Application.styles.secondary }}>{routeDataToShow.headSign}</Text>
+					<Text style={{ fontWeight: "600", maxWidth: "90%", color: theme.secondary }}>{routeDataToShow.headSign}</Text>
 					{isRouteRefetching ? (
 						<CustomLoadingIndicator size={20} style={{ marginHorizontal: 0, marginVertical: 5, marginRight: 12 }} />
 					) : (
@@ -145,10 +147,10 @@ export default function MapData(props: {
 							<MaterialCommunityIcons
 								style={{
 									borderRadius: 40,
-									backgroundColor: Application.styles.secondary,
+									backgroundColor: theme.secondary,
 									padding: 5,
 								}}
-								color={Application.styles.white}
+								color={theme.white}
 								size={30}
 								name="arrow-left-right"
 							/>

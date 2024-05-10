@@ -1,7 +1,7 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { Button, Clipboard, Image, Linking, RefreshControl, ScrollView, Text, TextInput, ToastAndroid, TouchableOpacity, TouchableWithoutFeedback, Vibration, View } from "react-native"
 import Application from "../common/Application"
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import BusData from "../common/interfaces/KentKart/BusData"
 import { useGetBusImages } from "../common/hooks/fkart/bus/useGetBusImages"
 import CustomLoadingIndicator from "../components/root/CustomLoadingIndicator"
@@ -10,8 +10,10 @@ import * as ImagePicker from "expo-image-picker"
 import { putBusImages } from "../common/hooks/fkart/bus/usePutBusImages"
 import { Buffer } from "buffer"
 import Animated from "react-native-reanimated"
+import { ThemeContext } from "../common/contexts/ThemeContext"
 export default function BusDetails(props: { route: { params: { bus: BusData } }; navigation: NativeStackNavigationProp<any> }) {
-	const styles = Application.styles
+	const { theme } = useContext(ThemeContext)
+
 	const [loading, setLoading] = useState(false)
 	const { navigation } = props
 	const { bus } = props.route.params
@@ -20,7 +22,7 @@ export default function BusDetails(props: { route: { params: { bus: BusData } };
 	useEffect(() => {
 		navigation.setOptions({
 			headerTitle: `${props.route?.params?.bus?.plateNumber || "unnamed bus"}`,
-			headerTintColor: styles.secondary,
+			headerTintColor: theme.secondary,
 			headerTitleAlign: "left",
 			headerTitleStyle: {
 				fontWeight: "bold",
@@ -84,7 +86,7 @@ export default function BusDetails(props: { route: { params: { bus: BusData } };
 	if (!props?.route?.params?.bus) {
 		return (
 			<View className="flex-1 items-center justify-center">
-				<Text style={{ color: styles.error, fontSize: 24 }}>No card data found</Text>
+				<Text style={{ color: theme.error, fontSize: 24 }}>No card data found</Text>
 			</View>
 		)
 	}
@@ -102,7 +104,7 @@ export default function BusDetails(props: { route: { params: { bus: BusData } };
 					padding: 20,
 				}}
 			>
-				<Text style={{ color: styles.error, fontSize: 24 }}>{(error as { message: string })?.message}</Text>
+				<Text style={{ color: theme.error, fontSize: 24 }}>{(error as { message: string })?.message}</Text>
 				<TextInput onChangeText={setToken} placeholder={token} className="bg-slate-500 w-80 h-20 text-center"></TextInput>
 				<TouchableOpacity
 					className="bg-red-400 w-16 h-16"
@@ -126,7 +128,7 @@ export default function BusDetails(props: { route: { params: { bus: BusData } };
 		>
 			<View
 				style={{
-					backgroundColor: Application.styles.white,
+					backgroundColor: theme.white,
 					borderRadius: 16,
 					elevation: 10,
 					shadowOffset: { height: 4, width: 4 },
@@ -139,7 +141,7 @@ export default function BusDetails(props: { route: { params: { bus: BusData } };
 			</View>
 			<View
 				style={{
-					backgroundColor: Application.styles.white,
+					backgroundColor: theme.white,
 					borderRadius: 16,
 					elevation: 10,
 					shadowOffset: { height: 4, width: 4 },
@@ -157,7 +159,7 @@ export default function BusDetails(props: { route: { params: { bus: BusData } };
 
 			<View
 				style={{
-					backgroundColor: Application.styles.white,
+					backgroundColor: theme.white,
 					borderRadius: 16,
 					elevation: 10,
 					shadowOffset: { height: 4, width: 4 },
@@ -178,7 +180,7 @@ export default function BusDetails(props: { route: { params: { bus: BusData } };
 					}}
 					key={`${image_data.url}`}
 					style={{
-						backgroundColor: Application.styles.white,
+						backgroundColor: theme.white,
 						borderRadius: 16,
 						elevation: 10,
 						shadowOffset: { height: 4, width: 4 },
@@ -193,7 +195,7 @@ export default function BusDetails(props: { route: { params: { bus: BusData } };
 							uri: image_data.url,
 							// cache: "force-cache",
 						}}
-						style={{ objectFit: "contain", width: 80 * 4, height: 80*4 }}
+						style={{ objectFit: "contain", width: 80 * 4, height: 80 * 4 }}
 					/>
 					<Text>{image_data.url}</Text>
 				</TouchableOpacity>

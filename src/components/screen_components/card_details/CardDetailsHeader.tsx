@@ -1,5 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient"
-import { useMemo } from "react"
+import { useContext, useMemo } from "react"
 import { View, TouchableOpacity, ToastAndroid, Vibration, Text, Clipboard, Image } from "react-native"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import Application from "../../../common/Application"
@@ -7,6 +7,7 @@ import { BasicCardData } from "../../../common/interfaces/KentKart/BasicCardData
 import CardTypes from "../../../common/enums/CardTypes" 
 import CardImages from "../../../common/enums/CardImages" 
 import Animated, { FadeInDown, FadeInLeft } from "react-native-reanimated"
+import { ThemeContext } from "../../../common/contexts/ThemeContext"
 
 export default function CardDetailsHeader(props: {
 	card: BasicCardData<"Basic" | "QR">
@@ -14,11 +15,11 @@ export default function CardDetailsHeader(props: {
 	setShowEditCardTypeModal: (value: boolean) => void
 }) {
 	const { card, card_type, setShowEditCardTypeModal } = props
-	const styles = Application.styles
+	const {theme} = useContext(ThemeContext)
 	return useMemo(() => {
 		console.log("card_details_header render")
 		return (
-			<LinearGradient colors={[styles.primary, styles.white]} end={{ x: 0.8, y: 0.9 }} className="flex-row h-56 w-full mb-20" style={{ backgroundColor: styles.primary }}>
+			<LinearGradient colors={[theme.primary, theme.white]} end={{ x: 0.8, y: 0.9 }} className="flex-row h-56 w-full mb-20" style={{ backgroundColor: theme.primary }}>
 				<Animated.View className="flex-col flex-1 ml-5 self-end mb-4 "
 				entering={FadeInLeft.duration(500)}>
 
@@ -44,7 +45,7 @@ export default function CardDetailsHeader(props: {
 							<Text className="opacity-70 text-white text-xl">Kart Numarası</Text>
 							<Text className="font-bold bottom-1 text-white text-xl">{card.aliasNo}</Text>
 						</View>
-						<MaterialCommunityIcons style={{ color: styles.white }} size={20} name="content-copy" />
+						<MaterialCommunityIcons style={{ color: theme.white }} size={20} name="content-copy" />
 					</TouchableOpacity>
 				</Animated.View>
 				<Animated.View entering={FadeInDown.duration(500)} className="flex-1 mr-24">
@@ -59,7 +60,7 @@ export default function CardDetailsHeader(props: {
 								uri: CardImages[card_type],
 							}}
 						/>
-						{card_type === "QR" ? null : <MaterialCommunityIcons style={{ bottom: 16 * 4, right: 4 * 4, alignSelf: "flex-end" }} color={styles.dark} name="image-edit" size={36} />}
+						{card_type === "QR" ? null : <MaterialCommunityIcons style={{ bottom: 16 * 4, right: 4 * 4, alignSelf: "flex-end" }} color={theme.dark} name="image-edit" size={36} />}
 					</TouchableOpacity>
 				</Animated.View>
 			</LinearGradient>

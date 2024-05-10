@@ -1,12 +1,14 @@
 import { RegisteredStyle, StyleProp, Text, TouchableOpacity, View, ViewStyle } from "react-native"
-import Application from "../../../common/Application";
-import { TranslationsContext } from "../../../common/contexts/TranslationsContext";
+import Application from "../../../common/Application"
+import { TranslationsContext } from "../../../common/contexts/TranslationsContext"
 import { useContext } from "react"
+import { ThemeContext } from "../../../common/contexts/ThemeContext";
 
 export default function SwitchAuthPage(props: { style: StyleProp<ViewStyle>; updatePage: (index: number) => void; panel_type: number }) {
 	const { updatePage } = props
 	const { panel_type } = props
-	const styles = Application.styles
+	const { theme } = useContext(ThemeContext)
+
 	const { translations } = useContext(TranslationsContext)
 
 	return (
@@ -19,7 +21,13 @@ export default function SwitchAuthPage(props: { style: StyleProp<ViewStyle>; upd
 		>
 			<Text style={{ textShadowRadius: 3, fontSize: 24 }} className="justify-center text-slate-400 font-extrabold">
 				{(props.panel_type ? translations.screens.auth.signup.signin_instead : translations.screens.auth.signin.signup_instead).map((e) =>
-					e.mark ? <Text key={e.str} style={{ color: styles.primaryDark }}>{e.str}</Text> : e.str
+					e.mark ? (
+						<Text key={e.str} style={{ color: theme.primaryDark }}>
+							{e.str}
+						</Text>
+					) : (
+						e.str
+					)
 				)}
 			</Text>
 		</TouchableOpacity>

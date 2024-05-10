@@ -8,13 +8,14 @@ import { UserContext } from "../common/contexts/UserContext"
 import KentKartAuthValidator from "../components/validators/KentKartAuthValidator"
 import CardJSONData from "../components/screen_components/card_details/CardJSONData" 
 import AuthWall from "../components/walls/AuthWall"
+import { ThemeContext } from "../common/contexts/ThemeContext"
 
 export default function HomeTab(props: { route: any; navigation: NativeStackNavigationProp<any> }) {
 	const { navigation } = props
-	const styles = Application.styles
+	const {theme} = useContext(ThemeContext)
 	const { error, isError, isFetching, loggedUser: user, logout } = useContext(UserContext)
 	return (
-		<View style={{ backgroundColor: styles.dark }} className="h-full w-full justify-center items-center">
+		<View style={{ backgroundColor: theme.dark }} className="h-full w-full justify-center items-center">
 			<StatusBar hidden={false} />
 			{/* login prompt */}
 			<KentKartAuthValidator else={<AuthWall navigation={navigation}/>}>
@@ -27,13 +28,13 @@ export default function HomeTab(props: { route: any; navigation: NativeStackNavi
 						logout()
 					}}
 					style={{
-						backgroundColor: styles.secondary,
+						backgroundColor: theme.secondary,
 						padding: 10,
 						borderRadius: 10,
 						bottom:9.5*4
 					}}
 				>
-					<Text style={{ color: styles.white }} className="font-bold text-center">
+					<Text style={{ color: theme.white }} className="font-bold text-center">
 						Logout
 					</Text>
 				</TouchableOpacity>

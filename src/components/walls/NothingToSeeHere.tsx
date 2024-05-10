@@ -4,8 +4,11 @@ import SecondaryText from "../root/SecondaryText"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import Application from "../../common/Application"
 import { View } from "react-native"
+import { useContext } from "react"
+import { ThemeContext } from "../../common/contexts/ThemeContext"
 
 export default function (props: { navigation: NativeStackNavigationProp<any> }) {
+	const {theme} = useContext(ThemeContext)
 	return (
 		<View className="items-center justify-center flex-1">
 			<MaterialCommunityIcons name="help" size={48 * 4} style={{ opacity: 0.3, marginBottom: 2 * 4 }} />
@@ -17,7 +20,7 @@ export default function (props: { navigation: NativeStackNavigationProp<any> }) 
 					paddingHorizontal: 32,
 					paddingVertical: 12,
 					marginTop: 12 * 4,
-					backgroundColor: Application.styles.primary,
+					backgroundColor: theme.primary,
 				}}
 				onPress={() => {
 					const navigation = props.navigation
@@ -28,7 +31,7 @@ export default function (props: { navigation: NativeStackNavigationProp<any> }) 
 					}
 				}}
 			>
-				<SecondaryText style={{ color: Application.styles.white, fontSize: 32 }}>Go home</SecondaryText>
+				<SecondaryText style={{ color: theme.white, fontSize: 32 }}>Go home</SecondaryText>
 			</TouchableOpacity>
 		</View>
 	)

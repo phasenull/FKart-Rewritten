@@ -10,10 +10,11 @@ import Application from "../../../common/Application"
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import Divider from "../../root/Divider"
-import React from "react"
+import React, { useContext } from "react"
 import RouteData from "../../../common/interfaces/KentKart/RouteData"
 import { useGetBusImages } from "../../../common/hooks/fkart/bus/useGetBusImages"
 import CustomLoadingIndicator from "../../root/CustomLoadingIndicator"
+import { ThemeContext } from "../../../common/contexts/ThemeContext"
 export default function BusContainer(props: {
 	navigation: NativeStackNavigationProp<any>
 	bus: BusData
@@ -21,6 +22,7 @@ export default function BusContainer(props: {
 	onPress?: () => void
 	onLongPress?: () => void
 }) {
+	const {theme} = useContext(ThemeContext)
 	const { bus, navigation, route_data } = props
 	const schedule_list = route_data?.timeTableList
 	const departure_time = (schedule_list?.find((e) => e.tripId === bus.tripId)?.departureTime)?.slice(0,5) || "--:--"
@@ -36,7 +38,7 @@ export default function BusContainer(props: {
 	return (
 		<TouchableOpacity
 			style={{
-				backgroundColor: Application.styles.white,
+				backgroundColor: theme.white,
 				borderRadius: 16,
 				elevation: 2,
 				shadowOffset: { height: 4, width: 4 },
@@ -54,13 +56,13 @@ export default function BusContainer(props: {
 				<Text
 					className="text-center font-bold mr-2"
 					style={{
-						color: Application.styles.secondary,
+						color: theme.secondary,
 					}}
 				>
 					{bus.pickMeUp === "1" ? (
 						<MaterialCommunityIcons
 							name="bus-stop-covered"
-							color={Application.styles.error}
+							color={theme.error}
 							size={20}
 						/>
 					) : null}
@@ -76,7 +78,7 @@ export default function BusContainer(props: {
 						<View className="flex-row ml-2">
 							{bus.disabledPerson === "1" ? (
 								<MaterialCommunityIcons
-									color={Application.styles.primary}
+									color={theme.primary}
 									size={16}
 									name="human-wheelchair"
 								/>
@@ -84,14 +86,14 @@ export default function BusContainer(props: {
 							{bus.ac === "1" ? (
 								<MaterialCommunityIcons
 									size={16}
-									color={Application.styles.primary}
+									color={theme.primary}
 									name="air-conditioner"
 								/>
 							) : null}
 							{bus.bike === "1" ? (
 								<MaterialCommunityIcons
 									size={16}
-									color={Application.styles.primary}
+									color={theme.primary}
 									name="bike"
 								/>
 							) : null}
@@ -102,7 +104,7 @@ export default function BusContainer(props: {
 			{/* MARK: Image */}
 			<View className="w-full flex-1 items-center justify-center">
 				{isLoading ? (
-					<CustomLoadingIndicator color={Application.styles.white} style={{ height: "100%" }} />
+					<CustomLoadingIndicator color={theme.white} style={{ height: "100%" }} />
 				) : data?.data.data[0] ? (
 					<React.Fragment>
 						<Image
@@ -131,12 +133,12 @@ export default function BusContainer(props: {
 			</View>
 			{/* MARK: Bus Stop */}
 			<Text
-				style={{ color: Application.styles.secondary }}
+				style={{ color: theme.secondary }}
 				className="text-center self-center items-center justify-center font-bold"
 			>
 				<MaterialCommunityIcons
 					name="map-marker"
-					color={Application.styles.primary}
+					color={theme.primary}
 					size={20}
 				/>{" "}
 				{bus.stopId}{" "}

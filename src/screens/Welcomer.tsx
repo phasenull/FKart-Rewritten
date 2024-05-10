@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { Text, View } from "react-native"
 import Application from "../common/Application"
@@ -6,6 +6,7 @@ import CustomLoadingIndicator from "../components/root/CustomLoadingIndicator"
 import * as Updates from "expo-updates"
 import Logger from "../common/Logger"
 import { InitialInfo } from "../components/screen_components/welcomer/WelcomerRoot"
+import { ThemeContext } from "../common/contexts/ThemeContext"
 
 export default function WelcomerPage(props: { navigation:NativeStackNavigationProp<any> }) {
 	const navigation = props.navigation as NativeStackNavigationProp<any>
@@ -14,6 +15,7 @@ export default function WelcomerPage(props: { navigation:NativeStackNavigationPr
 	const [availableUpdate,setAvailableUpdate] = useState<Updates.UpdateCheckResult | undefined>(undefined)
 	const [isUpdateAvailable, setIsUpdateAvailable] = useState<boolean | undefined>(undefined)
 	const [lastCheck,setLastCheck] = useState<number>(0)
+	const {theme} = useContext(ThemeContext)
 	async function onFetchUpdateAsync() {
 		const last_check = await Application.database.get("settings.last_update_check") || 0
 		setLastCheck(last_check)
@@ -60,14 +62,14 @@ export default function WelcomerPage(props: { navigation:NativeStackNavigationPr
 	const [show, setShow] = useState<"initial_info" | "auth_page">("initial_info")
 	if (!checkedUpdates) {
 		return (
-			<View className="flex-1 gap-y-10 flex-col items-center justify-center" style={{ backgroundColor: Application.styles.dark }}>
+			<View className="flex-1 gap-y-10 flex-col items-center justify-center" style={{ backgroundColor: theme.dark }}>
 				<View>
 					<CustomLoadingIndicator size={48} />
 				</View>
 				<Text
 					// className="bg-red-400"
 					style={{
-						color: Application.styles.secondary,
+						color: theme.secondary,
 						fontWeight: "800",
 						fontSize: 24,
 					}}
@@ -80,14 +82,14 @@ export default function WelcomerPage(props: { navigation:NativeStackNavigationPr
 	if (isUpdateAvailable) {
 		update()
 		return (
-			<View className="flex-1 gap-y-10 flex-col items-center justify-center" style={{ backgroundColor: Application.styles.dark }}>
+			<View className="flex-1 gap-y-10 flex-col items-center justify-center" style={{ backgroundColor: theme.dark }}>
 				<View>
 					<CustomLoadingIndicator size={48} />
 				</View>
 				<Text
 					// className="bg-red-400"
 					style={{
-						color: Application.styles.secondary,
+						color: theme.secondary,
 						fontWeight: "800",
 						fontSize: 24,
 					}}

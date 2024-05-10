@@ -6,9 +6,13 @@ import { Image } from "react-native"
 import { DYNAMIC_CONTENT_URL } from "../../../../common/constants"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import Logger from "../../../../common/Logger"
+import { useContext } from "react"
+import { ThemeContext } from "../../../../common/contexts/ThemeContext"
 
 export default function StopMarker(props: { busStop: BasicStopInformation; coordinate: LatLng; easterEggEnabled?: boolean; navigation: NativeStackNavigationProp<any> }) {
 	const { busStop, coordinate, easterEggEnabled, navigation } = props
+	const {theme} = useContext(ThemeContext)
+
 	if (!busStop || !coordinate || !navigation) {
 		Logger.warning("StopMarker.tsx", "StopMarker", "BusStop, coordinate or navigation is null")
 		return 
@@ -28,19 +32,19 @@ export default function StopMarker(props: { busStop: BasicStopInformation; coord
 	}
 	return (
 		<Marker tracksViewChanges={false} anchor={{ x: 0.5, y: 0.5 }} style={{ alignItems: "center" }} coordinate={coordinate} title={busStop.stopName}>
-			<MaterialCommunityIcons name="bus-stop" size={22} color={Application.styles.secondary} />
+			<MaterialCommunityIcons name="bus-stop" size={22} color={theme.secondary} />
 			{/* <Callout
 		// tooltip={true}
 		className=" w-48"
 		// style={{
-		// 	backgroundColor: Application.styles.white,
+		// 	backgroundColor: theme.white,
 		// 	borderRadius: 8,
 		// 	paddingHorizontal: 1 * 4,
 		// }}
 	>
 		<Text
 			className="w-48"
-			style={{ color: Application.styles.secondary, fontWeight: "800", fontSize: 15, textAlign: "center" }}
+			style={{ color: theme.secondary, fontWeight: "800", fontSize: 15, textAlign: "center" }}
 			// numberOfLines={1}
 			// adjustsFontSizeToFit={true}
 		>

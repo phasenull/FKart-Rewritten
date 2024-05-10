@@ -12,7 +12,9 @@ import { AddCard } from "../components/tab_components/account_details/AddCard"
 import { UserContext, UserContextInterface } from "../common/contexts/UserContext"
 import KentKartAuthValidator from "../components/validators/KentKartAuthValidator"
 import AuthWall from "../components/walls/AuthWall"
+import { ThemeContext } from "../common/contexts/ThemeContext"
 export default function AccountTab(props?: { route: any; navigation: NativeStackNavigationProp<any> | any }) {
+	const {theme} = useContext(ThemeContext)
 	if (!props) {
 		return (
 			<View>
@@ -22,7 +24,6 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 	}
 	const { navigation } = props
 
-	const styles = Application.styles
 	const { loggedUser: user, favoritesQuery, profileQuery } = useContext(UserContext) as Omit<UserContextInterface, "loggedUser"> & { loggedUser: User }
 	const [cards, setCards] = useState<Favorite<"Card">[] | undefined>(undefined)
 	const [virtualCards, setVirtualCards] = useState<Favorite<"QR">[] | undefined>(undefined)
@@ -37,6 +38,7 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 	const { data: favoritesData, refetch: refetchFavorites, isRefetching: isFavoritesRefetching, isLoading: isFavoritesLoading } = favoritesQuery
 	useEffect(() => {
 		if (!favoritesData?.data) {
+			console.log("no fav data",(favoritesQuery.error as any)?.response?.data)
 			return
 		}
 		const favorite_cards_filtered = get_cards_from_fav_list(favoritesData.data.userFavorites)
@@ -44,7 +46,7 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 		setVirtualCards(favoritesData.data.virtualCards)
 	}, [favoritesData?.data])
 	return (
-		<View style={{ backgroundColor: styles.dark }} className="flex-1 items-center justify-center">
+		<View style={{ backgroundColor: theme.dark }} className="flex-1 items-center justify-center">
 			{/* login prompt */}
 			<KentKartAuthValidator else={<AuthWall navigation={navigation} />}>
 				<ScrollView
@@ -65,7 +67,7 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 							<Text
 								style={{
 									marginTop: 8 * 4,
-									color: Application.styles.secondary,
+									color: theme.secondary,
 									fontWeight: "800",
 									fontSize: 24,
 								}}
@@ -89,7 +91,7 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 								<Text
 									style={{
 										marginTop: 8 * 4,
-										color: Application.styles.secondary,
+										color: theme.secondary,
 										fontWeight: "800",
 										fontSize: 24,
 									}}
