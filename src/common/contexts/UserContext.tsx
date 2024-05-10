@@ -39,15 +39,15 @@ export function UserContextProvider(props: { children: any }) {
 			if (access_token) {
 				user = await User.fromAccessToken(access_token)
 				user.refresh_token = refresh_token
-				appendLog({title:"User Logged in!",description:"UserContext.init.access_token User logged in!",level:"info"})
+				// appendLog({title:"User Logged in!",description:"UserContext.init.access_token User logged in!",level:"info"})
 				Logger.info("UserContext.init.access_token", "User logged in!")
 			} else if (refresh_token) {
 				user = await User.fromRefreshToken(refresh_token)
-				appendLog({title:"User Logged in!",description:"UserContext.init.refresh_token User logged in!",level:"info"})
+				// appendLog({title:"User Logged in!",description:"UserContext.init.refresh_token User logged in!",level:"info"})
 				Logger.info("UserContext.init.refresh_token", "User logged in!")
 			}
 			if (!user) {
-				appendLog({title:"User not logged in!",description:"UserContext.init",level:"warn"})
+				// appendLog({title:"User not logged in!",description:"UserContext.init",level:"warn"})
 
 				Logger.info("UserContext.init", "User not logged in!")
 				setisFetching(false)
@@ -72,7 +72,7 @@ export function UserContextProvider(props: { children: any }) {
 					setLoggedUser(undefined)
 					await handleUserChange(undefined)
 					Application.logged_user = undefined
-					appendLog({title:"User logged out!",description:"UserContext.logout",level:"info"})
+					// appendLog({title:"User logged out!",description:"UserContext.logout",level:"info"})
 					Logger.info("UserContext.logout", "User logged out!")
 				},
 				error: error,
@@ -87,10 +87,10 @@ export function UserContextProvider(props: { children: any }) {
 					let user = undefined
 					try {
 						user = await loginUsingPhone(args)
-						appendLog({title:"Logged in!",description:"UserContext.loginUsingPhone",level:"info"})
+						// appendLog({title:"Logged in!",description:"UserContext.loginUsingPhone",level:"info"})
 					} catch (e: any) {
 						setError(e.message)
-						appendLog({title:"Error on login!",description:"UserContext.loginUsingPhone",level:"error"})
+						// appendLog({title:"Error on login!",description:"UserContext.loginUsingPhone",level:"error"})
 						setIsError(true)
 					}
 					await handleUserChange(user)
@@ -103,10 +103,10 @@ export function UserContextProvider(props: { children: any }) {
 					let user = undefined
 					try {
 						user = await loginUsingEmail(args)
-						appendLog({title:"Logged in!",description:"UserContext.loginUsingEmail",level:"info"})
+						// appendLog({title:"Logged in!",description:"UserContext.loginUsingEmail",level:"info"})
 					} catch (e: any) {
 						setError(e.message)
-						appendLog({title:"Error on login!",description:"UserContext.loginUsingEmail",level:"error"})
+						// appendLog({title:"Error on login!",description:"UserContext.loginUsingEmail",level:"error"})
 						setIsError(true)
 					}
 					await handleUserChange(user)

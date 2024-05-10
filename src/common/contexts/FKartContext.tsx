@@ -92,7 +92,7 @@ export function FKartContextProvider(props: { children: any }) {
 		if (!captcha_result) {
 			return
 		}
-		appendLog({ title: `Captcha fetched! ${captcha_result.__code}`, level: "info" })
+		// appendLog({ title: `Captcha fetched! ${captcha_result.__code}`, level: "info" })
 		setCredentials({ ...credentials, captcha_token: captcha_result.token })
 		setCaptchaSession({...captcha_result,captcha_token:undefined})
 	}, [captchaChallangeQuery.data])
@@ -100,17 +100,17 @@ export function FKartContextProvider(props: { children: any }) {
 	// captcha validate listener
 	useEffect(() => {
 		const captchaValidateResult = captchaValidateQuery.data?.data
-		console.log(captchaValidateResult)
+		console.log("captchaValidateResult",captchaValidateResult)
 		if (!captchaValidateResult || !captchaValidateResult.captcha_token) {
 			return
 		}
-		appendLog({ title: `Captcha validated! ${captchaValidateResult?.captcha.__code}`, level: "info" })
+		// appendLog({ title: `Captcha validated! ${captchaValidateResult?.captcha.__code}`, level: "info" })
 		setCaptchaSession({ ...captchaValidateResult?.captcha, captcha_token: captchaValidateQuery.data?.data.captcha_token })
 	}, [captchaValidateQuery.data])
 
 	function pushUser() {
 		if (!captchaSession) {
-			appendLog({ title: "Captcha session is undefined!", level: "warn" })
+			// appendLog({ title: "Captcha session is undefined!", level: "warn" })
 			return
 		}
 		pushUserQuery.refetch()
@@ -129,10 +129,10 @@ export function FKartContextProvider(props: { children: any }) {
 					setisFetching(true)
 					let user = undefined
 					try {
-						appendLog({ title: "FKart Logged in!", description: "FKartEditorContext.fetchRefreshToken", level: "info" })
+						// appendLog({ title: "FKart Logged in!", description: "FKartEditorContext.fetchRefreshToken", level: "info" })
 					} catch (e: any) {
 						setError(e.message)
-						appendLog({ title: "Error on FKart login!", description: "FKartEditorContext.fetchRefreshToken", level: "error" })
+						// appendLog({ title: "Error on FKart login!", description: "FKartEditorContext.fetchRefreshToken", level: "error" })
 						setIsError(true)
 					}
 					setisFetching(false)

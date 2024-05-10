@@ -25,7 +25,6 @@ export default abstract class Card {
 	public static async getTypeFromCard<T extends BasicCardData<"Basic" | "QR"> & Favorite<"Card" | "QR">>(card: T): Promise<CardTypes> {
 		const card_alias = card.aliasNo || card.favorite || card.alias
 		const is_virtual = card.type === "33" || card.cardType === "33" || card.virtualCard === "1"
-		// console.log(card_alias, is_virtual)
 		if (is_virtual) {
 			return CardTypes.QR
 		}

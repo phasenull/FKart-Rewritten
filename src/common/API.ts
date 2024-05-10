@@ -45,7 +45,7 @@ export default abstract class API {
 				params: body,
 			}
 		)
-		console.log(request.status, request.data)
+		console.log("API.getRefreshToken",request.status, request.data)
 		if (!(request.status === 200)) {
 			throw new Error(
 				"Access token failed! (status code not 200)"

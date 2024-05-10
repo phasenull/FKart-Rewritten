@@ -36,12 +36,11 @@ export default function AppEntryComponent() {
 	LogBox.ignoreLogs(["Require cycle:", "Clipboard has been extracted from react-native"])
 
 	const colorScheme = useColorScheme()
-	console.log(colorScheme)
+	console.log("colorScheme-"+colorScheme)
 	Application.__INIT()
 	return (
 		<QueryClientProvider client={queryClient}>
 			<GestureHandlerRootView style={{ flex: 1 }}>
-				<LoggerContextProvider>
 					<FKartContextProvider>
 						<UserContextProvider>
 							<TranslationsProvider>
@@ -101,7 +100,6 @@ export default function AppEntryComponent() {
 							</TranslationsProvider>
 						</UserContextProvider>
 					</FKartContextProvider>
-				</LoggerContextProvider>
 			</GestureHandlerRootView>
 		</QueryClientProvider>
 	)

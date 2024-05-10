@@ -24,6 +24,5 @@ async function postUser(credentials?: { password?: string; username?: string},ca
 }
 
 export default function usePushUser(credentials?: { password?: string; username?: string }, captcha_token?: string) {
-	console.log(credentials,captcha_token)
 	return useQuery(["pushUser"], () => postUser(credentials,captcha_token), { enabled: false, retry: false })
 }
