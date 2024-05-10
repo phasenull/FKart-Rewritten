@@ -14,7 +14,7 @@ export function IIPaginator(props: {navigation:NativeStackNavigationProp<any>, i
 		const result = Math.max(0, Math.min(page + dir, props.children.length - 1))
 		setPage(result)
 	}
-	const {translations,setLang} = useContext(TranslationsContext)
+	const {translations,setLang,lang} = useContext(TranslationsContext)
 	const [showTranslationSelector,setShowTranslationSelector] = useState(false)
 	const [dontShowAgain, setDontShowAgain] = useState(false)
 	useEffect(()=>{
@@ -22,7 +22,7 @@ export function IIPaginator(props: {navigation:NativeStackNavigationProp<any>, i
 	},[dontShowAgain])
 	return (
 		<View className="flex-1 justify-between items-center">
-			<SelectLangModal defaultValue={Langs.tr} onDismiss={()=>setShowTranslationSelector(false)} visible={showTranslationSelector} onSelect={setLang} />
+			<SelectLangModal defaultValue={lang} onDismiss={()=>setShowTranslationSelector(false)} visible={showTranslationSelector} onSelect={setLang} />
 			<TouchableOpacity style={{backgroundColor:Application.styles.white,borderRadius:16}} className="p-4 absolute self-center mt-4" onPress={()=>setShowTranslationSelector(true)}>
 				<MaterialCommunityIcons name="translate" color={Application.styles.secondary} size={48}/>
 			</TouchableOpacity>

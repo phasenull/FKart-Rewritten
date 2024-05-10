@@ -14,11 +14,11 @@ export function Paginator(props: {navigation:NativeStackNavigationProp<any>, ini
 		const result = Math.max(0, Math.min(page + dir, props.children.length - 1))
 		setPage(result)
 	}
-	const {translations,setLang} = useContext(TranslationsContext)
+	const {translations,setLang,lang} = useContext(TranslationsContext)
 	const [showTranslationSelector,setShowTranslationSelector] = useState(false)
 	return (
 		<View className="flex-1 justify-between items-center">
-			<SelectLangModal defaultValue={Langs.tr} onDismiss={()=>setShowTranslationSelector(false)} visible={showTranslationSelector} onSelect={setLang} />
+			<SelectLangModal defaultValue={lang} onDismiss={()=>setShowTranslationSelector(false)} visible={showTranslationSelector} onSelect={setLang} />
 			<TouchableOpacity style={{backgroundColor:Application.styles.white,borderRadius:16}} className="p-4 absolute self-center mt-4" onPress={()=>setShowTranslationSelector(true)}>
 				<MaterialCommunityIcons name="translate" color={Application.styles.secondary} size={48}/>
 			</TouchableOpacity>
@@ -80,7 +80,7 @@ export function Paginator(props: {navigation:NativeStackNavigationProp<any>, ini
 						}}
 						className="text-[36px] text-center"
 					>
-						{page == props.children.length - 1 ? translations.screens.welcomer.lets_start : translations.screens.welcomer.next}
+						{page == props.children.length - 1 ? translations.ok : translations.screens.welcomer.next}
 					</Text>
 				</TouchableOpacity>
 			</View>
