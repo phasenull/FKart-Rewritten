@@ -36,8 +36,6 @@ export default function AppEntryComponent() {
 	LogBox.ignoreLogs(["Non-serializable values were found in the navigation state."])
 	LogBox.ignoreLogs(["Require cycle:", "Clipboard has been extracted from react-native"])
 
-	const colorScheme = useColorScheme()
-	console.log("colorScheme-" + colorScheme)
 	Application.__INIT()
 	return (
 		<QueryClientProvider client={queryClient}>

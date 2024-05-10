@@ -1,4 +1,4 @@
-import { Children, createContext, useState } from "react"
+import { Children, createContext, useEffect, useState } from "react"
 import DarkTheme from "../../assets/themes/dark"
 import LightTheme from "../../assets/themes/light"
 import NightsWatchTheme from "../../assets/themes/nights_watch"
@@ -14,11 +14,12 @@ export interface ITheme {
 	white: string
 	error: string
 	success: string
+	text:string
 }
 export enum Theme {
-	"LIGHT",
-	"DARK",
-	"NIGHT's WATCH",
+	"LIGHT"="LIGHT",
+	"DARK"="DARK",
+	"NIGHT's WATCH"="NIGHT's WATCH",
 }
 export const ThemeContext = createContext<{ theme: ITheme; themeLabel: Theme; setThemeLabel: (theme: Theme) => void }>({} as any)
 function getThemeFromLabel(label: Theme) {
@@ -28,15 +29,21 @@ function getThemeFromLabel(label: Theme) {
 		case Theme["NIGHT's WATCH"]:
 			return NightsWatchTheme
 		case Theme.LIGHT:
-			return DarkTheme
+			return LightTheme
 		default:
-			return DarkTheme
+			return LightTheme
 	}
 }
 export function ThemeProvider(props: { children: any }) {
 	
 	const colorScheme = useColorScheme()
 	const [themeLabel, setThemeLabel] = useState<Theme>(colorScheme === "light" ? Theme.LIGHT : Theme.DARK)
+	useEffect(()=>{
+		const new_label = colorScheme === "light" ? Theme.LIGHT : Theme.DARK
+		setThemeLabel(new_label)
+		setTheme(getThemeFromLabel(new_label))
+		console.log(new_label,colorScheme)
+	},[colorScheme])
 	const [theme, setTheme] = useState(getThemeFromLabel(themeLabel))
 	return <ThemeContext.Provider value={{ theme: theme, themeLabel: themeLabel, setThemeLabel: setThemeLabel }}>{props.children}</ThemeContext.Provider>
 }

@@ -1,11 +1,14 @@
-const DarkTheme = {
-	primary: "#ffd60a",
-	dark: "#122256",
+import { ITheme } from "../../common/contexts/ThemeContext"
+
+const DarkTheme:ITheme = {
+	primary: "#879da9",
+	dark: "#232c3a",
 	primaryDark: "#ffc300",
-	secondary: "#003566",
-	secondaryDark: "#001d3d",
-	black: "#000000",
-	white: "#223d96",
+	secondary: "#273c4b",
+	secondaryDark: "#b5c2c7",
+	black: "#fff",
+	text:"#fff",
+	white: "#444444",
 	error: "#E95555",
 	success: "#4BB543",
 }
