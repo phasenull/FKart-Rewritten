@@ -5,5 +5,5 @@ export enum Langs {
 	// ar="ar",
 	// es="es",
 	// az="az",
-	pirate="pirate"
+	// pirate="pirate"
 }

@@ -29,30 +29,30 @@ export function getTranslationsFromLang(lang?: Langs) {
 		// 	return TRANSLATIONS_AZ
 		// case Langs.es:
 		// 	return TRANSLATIONS_ES
-		case Langs.pirate:
-			return TRANSLATIONS_PIRATE
+		// case Langs.pirate:
+		//		return TRANSLATIONS_PIRATE
 		default:
 			return TRANSLATIONS_EN
 	}
 }
 export function TranslationsProvider(props: { children: any }) {
-	const {appendLog} = useContext(LoggerContext)
+	const { appendLog } = useContext(LoggerContext)
 	const [lang, setLang] = useState<Langs>(Langs.tr)
 	const [translations, setTranslations] = useState<typeof TRANSLATIONS_EN>(getTranslationsFromLang(Langs.tr))
-	useEffect(()=>{
+	useEffect(() => {
 		async function get() {
-			const langSetting = await Application.database.get("settings.lang") || Langs.tr
+			const langSetting = (await Application.database.get("settings.lang")) || Langs.tr
 			setLang(langSetting)
 		}
 		get()
-	},[])
-	useEffect(()=>{
+	}, [])
+	useEffect(() => {
 		async function handle() {
-			await Application.database.set("settings.lang",lang)
-			appendLog({title:`Language set to "${translations.languages.locale}"`,level:"info"})
+			await Application.database.set("settings.lang", lang)
+			// appendLog({title:`Language set to "${translations.languages.locale}"`,level:"info"})
 		}
 		handle()
 		setTranslations(getTranslationsFromLang(lang))
-	},[lang])
+	}, [lang])
 	return <TranslationsContext.Provider value={{ lang, setLang, translations }}>{props.children}</TranslationsContext.Provider>
 }
