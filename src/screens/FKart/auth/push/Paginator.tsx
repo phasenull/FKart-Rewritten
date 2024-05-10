@@ -65,7 +65,7 @@ export function Paginator(props: {navigation:NativeStackNavigationProp<any>, ini
 						if (page == props.children.length-1) {
 							const navigation = props.navigation
 							if (navigation) {
-								navigation.replace("home")
+								navigation.navigate("home")
 							} else {
 								alert("navigation is null")
 							}
