@@ -17,7 +17,7 @@ import { UserContextProvider } from "./src/common/contexts/UserContext"
 import { TranslationsProvider } from "./src/common/contexts/TranslationsContext"
 import { LoggerContext, LoggerContextProvider } from "./src/common/contexts/LoggerContext"
 import { FKartContextProvider } from "./src/common/contexts/FKartContext"
-import FKartAuthPage from "./src/screens/FKart/FKartAuth"
+import FKartAuthPage from "./src/screens/FKart/auth/FKartAuth"
 
 const config = {
 	screens: {

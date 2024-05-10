@@ -66,7 +66,7 @@ export default abstract class Application {
 		const whitelist = [...Object.values(this.endpoints)]
 		const check = whitelist.map((v) => input.toString().includes(v)).includes(true)
 		if (!check) {
-			throw new Error(`Url ${input} is not allowed!`)
+			throw new Error(`Url ${input} is not whitelisted!`)
 		}
 		return axios(input as string, {
 			headers: {
