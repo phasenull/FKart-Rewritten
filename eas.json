@@ -3,9 +3,9 @@
 		"version": ">= 5.9.3"
 	},
 	"build": {
-		"development": {
+		"apk": {
 			"distribution": "internal",
-			"channel": "master",
+			"channel": "preview",
 			"android": {
 				"buildType": "apk",
 				"gradleCommand": ":app:assembleRelease"
@@ -14,17 +14,12 @@
 				"buildConfiguration": "Debug"
 			}
 		},
-		"apk": {
-			"android": {
-				"buildType": "apk"
-			},
-			"ios": {
-				"buildConfiguration": "Debug"
-			}
-		},
 		"preview": {
+			"distribution": "internal",
+			"channel": "preview",
 			"android": {
-				"buildType": "apk"
+				"buildType": "apk",
+				"gradleCommand": ":app:assembleRelease"
 			}
 		},
 		"production": {
