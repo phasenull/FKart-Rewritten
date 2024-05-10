@@ -2,7 +2,7 @@
 	"expo": {
 		"name": "FKart",
 		"slug": "FKart",
-		"version": "24.5.9",
+		"version": "24.5.10",
 		"orientation": "portrait",
 		"scheme": "fkart",
 		"userInterfaceStyle": "automatic",
@@ -25,7 +25,7 @@
 				"backgroundColor": "#ffffff"
 			},
 			"package": "com.phasenull.FKart",
-			"runtimeVersion": "11.4.24",
+			"runtimeVersion": "24.5.10",
 			"config": {
 				"googleMaps": {
 					"apiKey":"AIzaSyDEi26R3XBBCxx9enfbo7H-dD4uNwmtIZ0"
