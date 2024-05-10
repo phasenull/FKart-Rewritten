@@ -19,6 +19,7 @@ import { LoggerContext, LoggerContextProvider } from "./src/common/contexts/Logg
 import { FKartContextProvider } from "./src/common/contexts/FKartContext"
 import FKartAuthPage from "./src/components/walls/FKartAuthWall"
 import FKartWelcomer from "./src/screens/FKart/auth/push/Welcomer"
+import { ThemeProvider } from "./src/common/contexts/ThemeContext"
 
 const config = {
 	screens: {
@@ -36,13 +37,14 @@ export default function AppEntryComponent() {
 	LogBox.ignoreLogs(["Require cycle:", "Clipboard has been extracted from react-native"])
 
 	const colorScheme = useColorScheme()
-	console.log("colorScheme-"+colorScheme)
+	console.log("colorScheme-" + colorScheme)
 	Application.__INIT()
 	return (
 		<QueryClientProvider client={queryClient}>
 			<GestureHandlerRootView style={{ flex: 1 }}>
-					<FKartContextProvider>
-						<UserContextProvider>
+				<FKartContextProvider>
+					<UserContextProvider>
+						<ThemeProvider>
 							<TranslationsProvider>
 								<NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
 									<Stack.Navigator
@@ -53,10 +55,10 @@ export default function AppEntryComponent() {
 										}}
 									>
 										<Stack.Screen name="welcomer" component={WelcomerPage as any} />
-										<Stack.Screen name = "fkart.auth" component={FKartAuthPage}/>
-										<Stack.Screen name = "fkart.auth.welcomer" component={FKartWelcomer}/>
-										<Stack.Screen name = "fkart.auth.signin" component={FKartWelcomer}/>
-										<Stack.Screen name = "fkart.auth.signup" component={FKartWelcomer}/>
+										<Stack.Screen name="fkart.auth" component={FKartAuthPage} />
+										<Stack.Screen name="fkart.auth.welcomer" component={FKartWelcomer} />
+										<Stack.Screen name="fkart.auth.signin" component={FKartWelcomer} />
+										<Stack.Screen name="fkart.auth.signup" component={FKartWelcomer} />
 										<Stack.Screen name="home" component={RootScreen} />
 										<Stack.Screen name="auth" component={AuthPage} />
 										<Stack.Screen
@@ -98,8 +100,9 @@ export default function AppEntryComponent() {
 									</Stack.Navigator>
 								</NavigationContainer>
 							</TranslationsProvider>
-						</UserContextProvider>
-					</FKartContextProvider>
+						</ThemeProvider>
+					</UserContextProvider>
+				</FKartContextProvider>
 			</GestureHandlerRootView>
 		</QueryClientProvider>
 	)
