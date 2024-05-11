@@ -23,7 +23,7 @@ export default function GetUserPage(props: { goBack: () => void }) {
 	useEffect(()=>{
 		setProcessing(userManager.__getUserQuery.isRefetching || userManager.__getUserQuery.isFetching)
 		setError((userManager.__getUserQuery?.error as any)?.response?.data?.result?.error)
-		console.log("userManager update!")
+		// console.log("userManager update!")
 	},[userManager.__getUserQuery])
 	useEffect(()=>{
 		updateCredentials()
