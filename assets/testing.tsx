@@ -1,26 +1,16 @@
-import { ScrollView, Text, TextInput, TouchableOpacity, View, useWindowDimensions } from "react-native"
-import Application from "/common/Application"
-import { StatusBar } from "expo-status-bar"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import { useContext, useEffect, useState } from "react"
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated"
+import { useContext } from "react"
+import { ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native"
 
-import User from "/common/classes/User"
 
-import KentKartAuthValidator from "/components/validators/KentKartAuthValidator"
-import SecondaryText from "/components/root/SecondaryText"
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import { UserContext } from "/common/contexts/UserContext"
-import AuthPanel from "/pages/auth/AuthPanel"
-import { FKartContext } from "/common/contexts/FKartContext"
-import FKartAuthValidator from "/components/validators/FKartAuthValidator"
-import CardJSONData from "/components/screen_components/card_details/CardJSONData"
-import Logger from "/common/Logger"
+import Logger from "common/Logger"
+import { FKartContext } from "common/contexts/FKartContext"
+import SecondaryText from "components/root/SecondaryText"
 
 export default function FKartTesting(props: { navigation: NativeStackNavigationProp<any> }) {
 	const { navigation } = props
 	const { fkartUser, captchaManager, fetchRefreshToken, userManager } = useContext(FKartContext)
-	Logger.warning("userManager.pushUserQuery",userManager.__pushUserQuery.error?.response?.data?.result?.error)
+	Logger.warning("userManager.pushUserQuery",(userManager.__pushUserQuery.error as any)?.response?.data?.result?.error)
 	return (
 		<View className="items-center justify-center flex-1">
 			<SecondaryText className="mb-12">FKart Testing</SecondaryText>

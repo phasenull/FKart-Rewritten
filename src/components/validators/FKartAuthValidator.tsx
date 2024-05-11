@@ -2,7 +2,7 @@ import { useContext } from "react"
 import { FKartContext } from "common/contexts/FKartContext"
 
 export default function FKartAuthValidator(props: { children: any; else?: any }) {
-	const { fetchRefreshToken, fkartUser } = useContext(FKartContext)
+	const { fkartUser } = useContext(FKartContext)
 	// if (isFetching) {
 	// 	return (
 	// 		<View>
@@ -14,5 +14,5 @@ export default function FKartAuthValidator(props: { children: any; else?: any })
 	if (fkartUser) {
 		return props.children
 	}
-	return props.else || null
+	return props.else ? props.else : null
 }

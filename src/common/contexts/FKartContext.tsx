@@ -10,6 +10,7 @@ import ICredentials from "common/interfaces/app/Credentials"
 import { createContext, useContext, useEffect, useState } from "react"
 import { UseQueryResult } from "react-query"
 import { LoggerContext } from "./LoggerContext"
+import useGetUser from "common/hooks/fkart/auth/useGetUser"
 export interface IFKartContext {
 	fkartUser: FKartUser | undefined
 	userManager: {
@@ -21,9 +22,18 @@ export interface IFKartContext {
 			  >
 			| undefined
 		>
+		__getUserQuery: UseQueryResult<
+			| AxiosResponse<
+					BaseFKartResponse & {
+						user:FKartUser
+					}
+			  >
+			| undefined
+		>
 		credentials:ICredentials | undefined
 		setCredentials:(credentials:ICredentials)=>void
 		pushUser:()=>void
+		getUser:()=>void
 	}
 	captchaManager: {
 		captchaSession: Captcha | undefined
@@ -68,7 +78,7 @@ export function FKartContextProvider(props: { children: any }) {
 	const captchaValidateQuery = useValidateCaptcha(captchaSession)
 	const pushUserQuery = usePushUser(credentials,captchaSession?.captcha_token)
 	const accessUserQuery = usePushUser(credentials)
-	const getUserQuery = usePushUser(credentials)
+	const getUserQuery = useGetUser(credentials)
 	function challange() {
 		captchaChallangeQuery.refetch()
 	}
@@ -100,6 +110,9 @@ export function FKartContextProvider(props: { children: any }) {
 		setCaptchaSession({ ...captchaValidateResult?.captcha, captcha_token: captchaValidateQuery.data?.data.captcha_token })
 	}, [captchaValidateQuery.data])
 
+	function getUser() {
+		getUserQuery.refetch()
+	}
 	function pushUser() {
 		if (!captchaSession) {
 			// appendLog({ title: "Captcha session is undefined!", level: "warn" })
@@ -114,6 +127,8 @@ export function FKartContextProvider(props: { children: any }) {
 					credentials:credentials,
 					setCredentials:setCredentials,
 					pushUser:pushUser,
+					getUser:getUser,
+					__getUserQuery:getUserQuery,
 					__pushUserQuery:pushUserQuery,
 				},
 				fkartUser: loggedUser,
