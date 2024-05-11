@@ -1,6 +1,6 @@
 import { Text, TouchableOpacity,View } from "react-native"
 import SegmentedButtons from "components/root/SegmentedButtons";
-import Animated, { StretchInX, ZoomOut} from "react-native-reanimated"
+import Animated, { BounceIn, BounceInDown, BounceInLeft, BounceInUp, BounceOut, BounceOutDown, BounceOutRight, StretchInX, ZoomInUp, ZoomOut, ZoomOutDown, ZoomOutUp} from "react-native-reanimated"
 import { useContext } from "react";
 import { ThemeContext } from "common/contexts/ThemeContext";
 
@@ -22,8 +22,8 @@ export default function FilterByRouteTypeModal(props: { visible: boolean; setVis
 				onPress={() => setVisible(false)}
 			/>
 			<Animated.View
-				entering={StretchInX.duration(150)}
-				exiting={ZoomOut.duration(150)}
+				entering={ZoomInUp.duration(150)}
+				exiting={ZoomOutUp.duration(150)}
 				className="absolute w-80 px-4 rounded-[16px] py-5 mt-20 mx-auto items-center justify-center self-center"
 				style={{
 					backgroundColor: theme.white,
