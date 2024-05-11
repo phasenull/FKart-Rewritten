@@ -1,6 +1,6 @@
 import { FlatList, RefreshControl, Text } from "react-native"
 import BasicRouteInformation from "common/interfaces/KentKart/BasicRouteInformation" 
-import RouteTouchableContainer from "./RouteTouchableContainer"
+import RouteTouchable from "./RouteTouchable"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { useContext, useMemo } from "react"
 import Application from "common/Application"
@@ -15,7 +15,7 @@ export default function RouteList(props: {
 	routeType?: string
 }) {
 	function renderRoute({ index, item }: { index: number; item: BasicRouteInformation }) {
-		return <RouteTouchableContainer item={item} navigation={props.navigation} route={props.route} />
+		return <RouteTouchable item={item} navigation={props.navigation} route={props.route} />
 	}
 	const {theme} = useContext(ThemeContext)
 	const { routeType } = props
@@ -63,8 +63,11 @@ export default function RouteList(props: {
 						No data found!
 					</Text>
 				)}
-				contentContainerStyle={{
+				style={{
 					backgroundColor:theme.dark,
+
+				}}
+				contentContainerStyle={{
 					paddingBottom:80
 				}}
 				// contentContainerStyle={{ paddingTop: 60 }}
