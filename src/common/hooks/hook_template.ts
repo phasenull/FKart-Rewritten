@@ -1,8 +1,8 @@
 import { useQuery } from "react-query";
 import { AxiosResponse } from "axios";
-import { BaseKentKartResponse } from "../interfaces/KentKart/BaseKentKartResponse";
-import Logger from "../Logger";
-import Application from "../Application";
+import { BaseKentKartResponse } from "common/interfaces/KentKart/BaseKentKartResponse";
+import Logger from "common/Logger";
+import Application from "common/Application";
 
 async function getTemplate() : Promise<AxiosResponse<BaseKentKartResponse & {
 }>> {

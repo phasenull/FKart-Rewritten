@@ -1,11 +1,10 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import SecondaryText from "../root/SecondaryText"
+import SecondaryText from "components/root/SecondaryText"
 import { TouchableOpacity } from "react-native-gesture-handler"
-import Application from "../../common/Application"
 import { View } from "react-native"
 import { useContext } from "react"
-import { ThemeContext } from "../../common/contexts/ThemeContext"
+import { ThemeContext } from "common/contexts/ThemeContext"
 
 export default function (props: { navigation: NativeStackNavigationProp<any> }) {
 	const {theme} = useContext(ThemeContext)

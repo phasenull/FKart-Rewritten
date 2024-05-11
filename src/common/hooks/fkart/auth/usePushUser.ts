@@ -1,9 +1,9 @@
 import { useQuery } from "react-query"
 import axios, { AxiosResponse } from "axios"
-import BaseFKartResponse from "../../../interfaces/FKart/BaseFKartResponse"
-import Logger from "../../../Logger"
-import Application from "../../../Application"
-import FKartUser from "../../../interfaces/FKart/FKartUser"
+import BaseFKartResponse from "common/interfaces/FKart/BaseFKartResponse"
+import Logger from "common/Logger"
+import Application from "common/Application"
+import FKartUser from "common/interfaces/FKart/FKartUser"
 
 async function postUser(credentials?: { password?: string; username?: string},captcha_token?: string ): Promise<
 	AxiosResponse<

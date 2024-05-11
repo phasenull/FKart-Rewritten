@@ -3,11 +3,10 @@ import {
 	TouchableOpacity,
 	View,
 } from "react-native"
-import Application from "../../../common/Application"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { useContext, useEffect, useState } from "react"
 import FilterByRouteTypeModal from "./FilterByRouteTypeModal"
-import { ThemeContext } from "../../../common/contexts/ThemeContext"
+import { ThemeContext } from "common/contexts/ThemeContext"
 
 export default function RouteSearchBar(props: {
 	onChangeText: (e: string) => void

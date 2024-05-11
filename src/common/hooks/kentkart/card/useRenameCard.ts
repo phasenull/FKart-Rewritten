@@ -1,6 +1,6 @@
 import { useQuery } from "react-query"
-import Application from "../../../Application"
-import Logger from "../../../Logger"
+import Application from "common/Application"
+import Logger from "common/Logger"
 
 async function FavoriteCard(card_or_fav_id: string, name: string | undefined, type: "add" | "remove") {
 	if (!name || !card_or_fav_id) {

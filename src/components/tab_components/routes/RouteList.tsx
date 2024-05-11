@@ -1,10 +1,10 @@
 import { FlatList, RefreshControl, Text } from "react-native"
-import BasicRouteInformation from "../../../common/interfaces/KentKart/BasicRouteInformation" 
+import BasicRouteInformation from "common/interfaces/KentKart/BasicRouteInformation" 
 import RouteTouchableContainer from "./RouteTouchableContainer"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { useContext, useMemo } from "react"
-import Application from "../../../common/Application"
-import { ThemeContext } from "../../../common/contexts/ThemeContext"
+import Application from "common/Application"
+import { ThemeContext } from "common/contexts/ThemeContext"
 export default function RouteList(props: {
 	data: { routeList: BasicRouteInformation[] }
 	refreshing: boolean

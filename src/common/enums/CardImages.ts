@@ -1,4 +1,4 @@
-import { DYNAMIC_CONTENT_URL } from "../constants";
+import { DYNAMIC_CONTENT_URL } from "common/constants";
 
 
 enum CardImages {

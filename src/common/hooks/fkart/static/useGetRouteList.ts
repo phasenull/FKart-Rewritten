@@ -1,9 +1,9 @@
 import { useQuery } from "react-query"
-import Application from "../../../Application"
-import Logger from "../../../Logger"
+import Application from "common/Application"
+import Logger from "common/Logger"
 import axios, { AxiosResponse } from "axios"
-import { BaseKentKartResponse } from "../../../interfaces/KentKart/BaseKentKartResponse"
-import BasicRouteInformation from "../../../interfaces/KentKart/BasicRouteInformation"
+import { BaseKentKartResponse } from "common/interfaces/KentKart/BaseKentKartResponse"
+import BasicRouteInformation from "common/interfaces/KentKart/BasicRouteInformation"
 
 async function getRouteList({ region }: { region: string }): Promise<AxiosResponse<BaseKentKartResponse & { routeList: BasicRouteInformation[] }>> {
 	Logger.info("REQUEST useGetRouteList")

@@ -1,11 +1,10 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import { Text, TouchableOpacity, View } from "react-native"
-import SecondaryText from "../root/SecondaryText"
-import Application from "../../common/Application"
+import { TouchableOpacity, View } from "react-native"
+import SecondaryText from "components/root/SecondaryText"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { useContext } from "react"
-import { TranslationsContext } from "../../common/contexts/TranslationsContext"
-import { ThemeContext } from "../../common/contexts/ThemeContext"
+import { TranslationsContext } from "common/contexts/TranslationsContext"
+import { ThemeContext } from "common/contexts/ThemeContext"
 
 export default function AuthWall(props: { navigation: NativeStackNavigationProp<any> }) {
 	const {theme} = useContext(ThemeContext)

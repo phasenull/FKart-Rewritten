@@ -1,8 +1,8 @@
 import axios from "axios"
-import Application from "../../../Application"
-import BusData from "../../../interfaces/KentKart/BusData"
+import Application from "common/Application"
+import BusData from "common/interfaces/KentKart/BusData"
 import { useQuery } from "react-query"
-import Logger from "../../../Logger"
+import Logger from "common/Logger"
 
 async function getBusImages(bus: BusData) {
 	Logger.info(`REQUEST useGetBusImages ${bus.plateNumber}`)

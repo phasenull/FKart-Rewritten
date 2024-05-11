@@ -1,10 +1,10 @@
 import { useQuery } from "react-query";
-import Application from "../../../Application";
+import Application from "common/Application";
 import { AxiosResponse } from "axios";
-import { BaseKentKartResponse } from "../../../interfaces/KentKart/BaseKentKartResponse";
-import { ICityInformation } from "../../../interfaces/KentKart/CityInformation";
-import Logger from "../../../Logger";
-import { KentKartAnnouncement } from "../../../interfaces/KentKart/KentKartAnnouncement";
+import { BaseKentKartResponse } from "common/interfaces/KentKart/BaseKentKartResponse";
+import { ICityInformation } from "common/interfaces/KentKart/CityInformation";
+import Logger from "common/Logger";
+import { KentKartAnnouncement } from "common/interfaces/KentKart/KentKartAnnouncement";
 
 async function getAnnouncements({ region }: { region: string }) : Promise<AxiosResponse<BaseKentKartResponse & {
 	announceList:KentKartAnnouncement[]

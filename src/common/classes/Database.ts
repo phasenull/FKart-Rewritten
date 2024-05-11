@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import Logger from "../Logger"
+import Logger from "common/Logger"
 
 export default abstract class Database {
 	public static async get(key: string) {

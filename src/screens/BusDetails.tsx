@@ -1,16 +1,15 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import { Button, Clipboard, Image, Linking, RefreshControl, ScrollView, Text, TextInput, ToastAndroid, TouchableOpacity, TouchableWithoutFeedback, Vibration, View } from "react-native"
-import Application from "../common/Application"
+import { Button, Clipboard, Image, Linking, RefreshControl, Text, TextInput, ToastAndroid, TouchableOpacity, TouchableWithoutFeedback, Vibration, View } from "react-native"
+import Application from "common/Application"
 import React, { useContext, useEffect, useState } from "react"
-import BusData from "../common/interfaces/KentKart/BusData"
-import { useGetBusImages } from "../common/hooks/fkart/bus/useGetBusImages"
-import CustomLoadingIndicator from "../components/root/CustomLoadingIndicator"
+import BusData from "common/interfaces/KentKart/BusData"
+import { useGetBusImages } from "common/hooks/fkart/bus/useGetBusImages"
+import CustomLoadingIndicator from "components/root/CustomLoadingIndicator"
 import * as ImagePicker from "expo-image-picker"
 
-import { putBusImages } from "../common/hooks/fkart/bus/usePutBusImages"
-import { Buffer } from "buffer"
+import { putBusImages } from "common/hooks/fkart/bus/usePutBusImages"
 import Animated from "react-native-reanimated"
-import { ThemeContext } from "../common/contexts/ThemeContext"
+import { ThemeContext } from "common/contexts/ThemeContext"
 export default function BusDetails(props: { route: { params: { bus: BusData } }; navigation: NativeStackNavigationProp<any> }) {
 	const { theme } = useContext(ThemeContext)
 

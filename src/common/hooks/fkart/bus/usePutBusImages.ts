@@ -1,9 +1,9 @@
 import axios from "axios"
-import Application from "../../../Application"
-import BusData from "../../../interfaces/KentKart/BusData"
+import Application from "common/Application"
+import BusData from "common/interfaces/KentKart/BusData"
 import { useQuery } from "react-query"
 import buffer from "buffer"
-import Logger from "../../../Logger"
+import Logger from "common/Logger"
 export async function putBusImages(
 	bus: BusData,
 	image: string | undefined

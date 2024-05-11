@@ -1,7 +1,7 @@
 import { DimensionValue, StyleProp, View, ViewStyle } from "react-native"
-import Application from "../../common/Application"
+import Application from "common/Application"
 import { useContext } from "react"
-import { ThemeContext } from "../../common/contexts/ThemeContext"
+import { ThemeContext } from "common/contexts/ThemeContext"
 
 export default function Divider(props: { style?: StyleProp<ViewStyle>; className?: string; height?: DimensionValue }) {
 	

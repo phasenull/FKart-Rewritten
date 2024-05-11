@@ -1,8 +1,8 @@
 import { ButtonProps, Text } from "react-native"
-import Application from "../../common/Application"
+import Application from "common/Application"
 import { TouchableOpacity, TouchableOpacityProps } from "react-native-gesture-handler"
 import { useContext } from "react";
-import { ThemeContext } from "../../common/contexts/ThemeContext";
+import { ThemeContext } from "common/contexts/ThemeContext";
 
 export default function Button(props: { text: string; children?: any; type?: "primary" | "secondary" | "text" } & TouchableOpacityProps) {
 	const type = props.type || "primary"

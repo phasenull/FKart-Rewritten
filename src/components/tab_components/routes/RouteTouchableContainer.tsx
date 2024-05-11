@@ -1,11 +1,9 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import BasicRouteInformation from "../../../common/interfaces/KentKart/BasicRouteInformation"
+import BasicRouteInformation from "common/interfaces/KentKart/BasicRouteInformation"
 import { Text, TouchableOpacity, View } from "react-native"
-import Application from "../../../common/Application"
 import { useContext, useMemo } from "react"
-import Divider from "../../root/Divider"
-import Animated from "react-native-reanimated"
-import { ThemeContext } from "../../../common/contexts/ThemeContext"
+import Divider from "components/root/Divider" 
+import { ThemeContext } from "common/contexts/ThemeContext"
 
 export default function RouteTouchableContainer(props: { navigation: NativeStackNavigationProp<any>; route: any; item: BasicRouteInformation }) {
 	const { item } = props

@@ -1,11 +1,11 @@
 import { Modal, Text, TouchableOpacity, View } from "react-native"
-import CardTypes from "../../common/enums/CardTypes"
-import Application from "../../common/Application"
+import CardTypes from "common/enums/CardTypes"
+import Application from "common/Application"
 import SegmentedButtons from "./SegmentedButtons"
-import { Langs } from "../../common/enums/Langs";
+import { Langs } from "common/enums/Langs";
 import { useContext } from "react";
-import { TranslationsContext, getTranslationsFromLang } from "../../common/contexts/TranslationsContext";
-import { ThemeContext } from "../../common/contexts/ThemeContext";
+import { TranslationsContext, getTranslationsFromLang } from "common/contexts/TranslationsContext";
+import { ThemeContext } from "common/contexts/ThemeContext";
 
 export default function SelectLangModal(props: { defaultValue: Langs; visible?: boolean; onSelect: (value: Langs) => void; onDismiss: () => void }) {
 	const {theme} = useContext(ThemeContext)

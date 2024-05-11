@@ -1,4 +1,4 @@
-import { ITheme } from "../../common/contexts/ThemeContext"
+import { ITheme } from "common/contexts/ThemeContext"
 
 const NightsWatchTheme:ITheme = {
 	primary: "#ffd60a",
@@ -9,7 +9,11 @@ const NightsWatchTheme:ITheme = {
 	black: "#000000",
 	white: "#ffffff",
 	error: "#E95555",
-	text:"#fff",
+	text:{
+		primary:"#fff",
+		secondary:"#fff",
+		white:"#fff"
+	},
 	success: "#4BB543",
 }
 export default NightsWatchTheme

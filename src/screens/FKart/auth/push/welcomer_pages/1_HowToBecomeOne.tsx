@@ -1,9 +1,8 @@
 import { Image, Text, View } from "react-native"
-import { TranslationsContext } from "../../../../../common/contexts/TranslationsContext"
+import { TranslationsContext } from "common/contexts/TranslationsContext"
 import { useContext } from "react"
 import Animated, { FadeIn } from "react-native-reanimated"
-import Application from "../../../../../common/Application"
-import { ThemeContext } from "../../../../../common/contexts/ThemeContext"
+import { ThemeContext } from "common/contexts/ThemeContext"
 
 export default function HowDoIBecomeOne(props: {}) {
 	const { translations } = useContext(TranslationsContext)

@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { Text, View } from "react-native";
-import Application from "../../common/Application";
-import { UserContext } from "../../common/contexts/UserContext";
-import CustomLoadingIndicator from "../root/CustomLoadingIndicator";
+import Application from "common/Application";
+import { UserContext } from "common/contexts/UserContext";
+import CustomLoadingIndicator from "components/root/CustomLoadingIndicator";
 
 export default function KentKartAuthValidator(props:{children:any,else?:any}) {
 	const {loggedUser,isFetching} = useContext(UserContext)

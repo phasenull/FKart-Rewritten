@@ -1,8 +1,6 @@
 import { useContext, useEffect, useState } from "react"
-import Application from "../../common/Application"
 import { Modal, Text, TextInput, TouchableOpacity, View } from "react-native"
-import { formatAlias } from "../../util"
-import { ThemeContext } from "../../common/contexts/ThemeContext"
+import { ThemeContext } from "common/contexts/ThemeContext"
 
 export default function InputModal(props: {
 	visible?: boolean

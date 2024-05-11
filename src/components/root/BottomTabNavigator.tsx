@@ -1,18 +1,18 @@
 import { BottomTabBarProps, createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { useContext, useMemo, useState } from "react"
-import Application from "../../common/Application"
-import { TranslationsContext } from "../../common/contexts/TranslationsContext"
-import { UserContext } from "../../common/contexts/UserContext"
+import Application from "common/Application"
+import { TranslationsContext } from "common/contexts/TranslationsContext"
+import { UserContext } from "common/contexts/UserContext"
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import AccountTab from "../../tabs/AccountTab"
-import EditorTab from "../../tabs/EditorTab"
-import HomeTab from "../../tabs/HomeTab"
-import SearchTab from "../../tabs/SearchTab"
+import AccountTab from "tabs/AccountTab"
+import EditorTab from "tabs/EditorTab"
+import HomeTab from "tabs/HomeTab"
+import SearchTab from "tabs/SearchTab"
 import { Text, TouchableOpacity, View } from "react-native"
 import SecondaryText from "./SecondaryText"
-import { ITheme, ThemeContext } from "../../common/contexts/ThemeContext"
+import { ITheme, ThemeContext } from "common/contexts/ThemeContext"
 
 function BottomTabButton(props: { state: any; descriptors: any; navigation: NativeStackNavigationProp<any>; route: any; index: number }) {
 	const { descriptors, navigation, state, index, route } = props

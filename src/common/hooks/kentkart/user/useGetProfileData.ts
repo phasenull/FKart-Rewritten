@@ -1,12 +1,12 @@
 import { AxiosResponse } from "axios"
-import Application from "../../../Application"
-import User from "../../../classes/User"
+import Application from "common/Application"
+import User from "common/classes/User"
 import { useQueries, useQuery } from "react-query"
-import { Account } from "../../../interfaces/KentKart/Account"
-import Logger from "../../../Logger"
-import { BaseKentKartResponse } from "../../../interfaces/KentKart/BaseKentKartResponse"
+import { Account } from "common/interfaces/KentKart/Account"
+import Logger from "common/Logger"
+import { BaseKentKartResponse } from "common/interfaces/KentKart/BaseKentKartResponse"
 import { useContext } from "react"
-import { UserContext } from "../../../contexts/UserContext"
+import { UserContext } from "common/contexts/UserContext"
 
 async function getProfile(user?: User): Promise<AxiosResponse<BaseKentKartResponse & { accountInfo: Account }>> {
 	Logger.info("REQUEST useGetProfileData")

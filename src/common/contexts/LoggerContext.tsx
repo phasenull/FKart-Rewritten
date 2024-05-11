@@ -1,8 +1,6 @@
-import { createContext, useEffect, useMemo, useRef, useState } from "react"
+import { createContext, useState } from "react"
 import { View } from "react-native"
-import SecondaryText from "../../components/root/SecondaryText"
-import LogPop from "../../components/root/LogPop"
-import * as Updates from "expo-updates"
+import LogPop from "components/root/LogPop"
 export interface Log {
 	uid: string
 	title: string

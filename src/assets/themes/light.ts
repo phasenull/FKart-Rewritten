@@ -1,4 +1,4 @@
-import { ITheme } from "../../common/contexts/ThemeContext"
+import { ITheme } from "common/contexts/ThemeContext"
 
 const LightTheme:ITheme = {
 	primary: "#ffd60a",

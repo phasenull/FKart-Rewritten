@@ -1,21 +1,21 @@
 import { ScrollView, Text, TextInput, TouchableOpacity, View, useWindowDimensions } from "react-native"
-import Application from "../src/common/Application"
+import Application from "/common/Application"
 import { StatusBar } from "expo-status-bar"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { useContext, useEffect, useState } from "react"
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated"
 
-import User from "../src/common/classes/User"
+import User from "/common/classes/User"
 
-import KentKartAuthValidator from "../src/components/validators/KentKartAuthValidator"
-import SecondaryText from "../src/components/root/SecondaryText"
+import KentKartAuthValidator from "/components/validators/KentKartAuthValidator"
+import SecondaryText from "/components/root/SecondaryText"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import { UserContext } from "../src/common/contexts/UserContext"
-import AuthPanel from "../src/components/screen_components/auth/AuthPanel"
-import { FKartContext } from "../src/common/contexts/FKartContext"
-import FKartAuthValidator from "../src/components/validators/FKartAuthValidator"
-import CardJSONData from "../src/components/screen_components/card_details/CardJSONData"
-import Logger from "../src/common/Logger"
+import { UserContext } from "/common/contexts/UserContext"
+import AuthPanel from "/pages/auth/AuthPanel"
+import { FKartContext } from "/common/contexts/FKartContext"
+import FKartAuthValidator from "/components/validators/FKartAuthValidator"
+import CardJSONData from "/components/screen_components/card_details/CardJSONData"
+import Logger from "/common/Logger"
 
 export default function FKartTesting(props: { navigation: NativeStackNavigationProp<any> }) {
 	const { navigation } = props

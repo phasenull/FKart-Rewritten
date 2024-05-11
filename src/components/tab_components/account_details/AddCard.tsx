@@ -1,12 +1,12 @@
 import { Text, View } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import Application from "../../../common/Application"
+import Application from "common/Application"
 import { useContext, useState } from "react"
 import { FavoriteCardInputAliasModal } from "./FavoriteCardInputAliasModal"
-import { useAddFavoriteCard } from "../../../common/hooks/kentkart/card/useRenameCard"
-import useGetFavorites from "../../../common/hooks/kentkart/user/useGetFavorites"
-import { ThemeContext } from "../../../common/contexts/ThemeContext"
+import { useAddFavoriteCard } from "common/hooks/kentkart/card/useRenameCard"
+import useGetFavorites from "common/hooks/kentkart/user/useGetFavorites"
+import { ThemeContext } from "common/contexts/ThemeContext"
 
 export function AddCard() {
 	const [alias,setAlias] = useState("")

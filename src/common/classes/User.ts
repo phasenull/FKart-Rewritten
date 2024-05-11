@@ -1,7 +1,5 @@
-import LoginTypes from "../enums/LoginTypes"
-import API from "../API"
-import Application from "../Application"
-import Logger from "../Logger"
+import LoginTypes from "common/enums/LoginTypes"
+import API from "common/API"
 
 export default class User {
 	//💀💀💀💀

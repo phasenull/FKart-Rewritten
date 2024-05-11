@@ -1,7 +1,7 @@
 import { useQuery } from "react-query"
-import Application from "../Application"
+import Application from "common/Application"
 import axios from "axios"
-import Logger from "../Logger"
+import Logger from "common/Logger"
 
 export function getQRCode(data: string | undefined) {
 	if (!data) {

@@ -1,11 +1,9 @@
 import { useQuery } from "react-query"
 import axios, { AxiosResponse } from "axios"
-import Logger from "../../../Logger"
-import Application from "../../../Application"
-import BaseFKartResponse from "../../../interfaces/FKart/BaseFKartResponse"
-import Captcha from "../../../interfaces/FKart/Captcha"
-import { useContext } from "react"
-import { FKartContext } from "../../../contexts/FKartContext"
+import Logger from "common/Logger"
+import Application from "common/Application"
+import BaseFKartResponse from "common/interfaces/FKart/BaseFKartResponse"
+import Captcha from "common/interfaces/FKart/Captcha"
 
 async function ValidateCaptcha(captcha: Captcha | undefined): Promise<
 	AxiosResponse<

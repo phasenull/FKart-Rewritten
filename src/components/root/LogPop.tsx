@@ -1,11 +1,11 @@
 import { TouchableOpacity } from "react-native-gesture-handler"
 import SecondaryText from "./SecondaryText"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import Application from "../../common/Application"
+import Application from "common/Application"
 import { Clipboard, ToastAndroid, Vibration } from "react-native"
 import { useEffect, useMemo, useRef, useState } from "react"
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated"
-import { Log } from "../../common/contexts/LoggerContext"
+import { Log } from "common/contexts/LoggerContext"
 
 const colors = {
 	log:Application.styles.white,

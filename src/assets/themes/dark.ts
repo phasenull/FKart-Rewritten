@@ -1,4 +1,4 @@
-import { ITheme } from "../../common/contexts/ThemeContext"
+import { ITheme } from "common/contexts/ThemeContext"
 
 const DarkTheme:ITheme = {
 	primary: "#879da9",

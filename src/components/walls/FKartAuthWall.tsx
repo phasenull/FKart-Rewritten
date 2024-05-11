@@ -1,8 +1,6 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 
-import FKartAuthTypeSelector from "../../screens/FKart/auth/AuthTypeSelector"
-import FKartAuthValidator from "../validators/FKartAuthValidator"
-import NothingToSeeHere from "./NothingToSeeHere"
+import FKartAuthTypeSelector from "screens/fkart/auth/AuthTypeSelector"
 
 export default function FKartAuthWall(props: { navigation: NativeStackNavigationProp<any> }) {
 	const { navigation } = props
