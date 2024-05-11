@@ -51,7 +51,7 @@ function BottomTabButton(props: { state: any; descriptors: any; navigation: Nati
 			>
 				{options.tabBarIcon({ focused: isFocused, color: primaryColor, size: 32 })}
 			</View>
-			<SecondaryText style={{ color: primaryColor, fontSize: 16, position: "absolute", bottom: isFocused ? 0 : -6 }} numberOfLines={1}>
+			<SecondaryText style={{ color: primaryColor, fontSize: 16, position: "absolute", bottom: isFocused ? 0 : -6,fontWeight:"800" }} numberOfLines={1}>
 				{label}
 			</SecondaryText>
 		</TouchableOpacity>
