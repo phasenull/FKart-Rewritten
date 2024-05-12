@@ -14,12 +14,13 @@ export default function SimplyButton(
 		processing?: boolean
 		processingText?: string
 		processingTimeout?: number
+		color?:string
 	} & TouchableOpacityProps
 ) {
 	const type = props.type || "primary"
 	const text = props.text || "props.text"
 	const { theme } = useContext(ThemeContext)
-	const bg_color = type === "primary" ? theme.primary : theme.secondary
+	const bg_color = props.color || (type === "primary" ? theme.primary : theme.secondary)
 	const size = props.size === "medium" ? "medium" : "large"
 	const processing = props.processing
 	const processingText = props.processingText || text
