@@ -1,5 +1,6 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { TouchableOpacity } from "@gorhom/bottom-sheet"
+import { FKartContext } from "common/contexts/FKartContext"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import { TranslationsContext } from "common/contexts/TranslationsContext"
 import SecondaryText from "components/root/SecondaryText"
@@ -17,6 +18,7 @@ export default function TwoFASessionModal(props: { onDissmiss: () => void; visib
 	}
 	const [selectionIndex, setSelectionIndex] = useState<{ end: number; start: number }>({ end: 0, start: 0 })
 	const [text, setText] = useState<string>("")
+	const {userManager} = useContext(FKartContext)
 	return (
 		<Modal transparent={true} visible={props.visible} style={{ backgroundColor: theme.success }}>
 			<Animated.View
@@ -27,6 +29,13 @@ export default function TwoFASessionModal(props: { onDissmiss: () => void; visib
 			>
 				<SecondaryText style={{ fontSize: 24 }}>2FA Code Required!</SecondaryText>
 				<MaterialCommunityIcons name="lock" color={theme.secondary} size={24 * 4} />
+				
+				<SecondaryText style={{fontSize:18,textAlign:"center",color:theme.success}}>
+					We've sent {userManager.credentials?.username || "error@error"} an email containing your secret code!
+				</SecondaryText>
+				<SecondaryText style={{fontSize:12,opacity:0.3}}>
+					ref-no: {userManager.credentials?.twoFA_session || "error"}
+				</SecondaryText>
 				<View className="flex-row mt-4 px-12 justify-center">
 					<TextInput
 						inputMode="numeric"
@@ -60,11 +69,11 @@ export default function TwoFASessionModal(props: { onDissmiss: () => void; visib
 						))}
 				</View>
 				<SecondaryText style={{ color: theme.error }} className="my-4">
-					Invalid 2FA code!
+					{(userManager.__getUserQuery.error as any)?.response?.data.result.error}
 				</SecondaryText>
 				<View className="self-center gap-x-4 justify-center flex-row">
 					<SimplyButton onPress={() => props.onDissmiss()} text={translations.cancel} color={theme.error} size="medium"></SimplyButton>
-					<SimplyButton onPress={() => props.onSave(text)} text={translations.ok} size="medium"></SimplyButton>
+					<SimplyButton onPress={() => props.onSave(text)} processing={userManager.__getUserQuery.isRefetching} text={translations.ok} size="medium"></SimplyButton>
 				</View>
 			</Animated.View>
 		</Modal>

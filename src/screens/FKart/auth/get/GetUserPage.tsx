@@ -9,35 +9,35 @@ import { TouchableWithoutFeedback } from "react-native-gesture-handler"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { FKartContext } from "common/contexts/FKartContext"
 import TwoFASessionModal from "../TwoFASessionModal"
+import CardJSONData from "screens/card_details/CardJSONData"
 
 export default function GetUserPage(props: { goBack: () => void }) {
-	const { userManager } = useContext(FKartContext)
+	const { userManager,fkartUser } = useContext(FKartContext)
 	const { theme } = useContext(ThemeContext)
 	const { translations } = useContext(TranslationsContext)
 	const [processing, setProcessing] = useState(false)
 	const [error, setError] = useState<undefined | string>()
 	const [inputPassword, setInputPassword] = useState<string | undefined>(undefined)
 	const [inputEmail, setInputEmail] = useState<string | undefined>(undefined)
-	const [twoFAModalVisible,setFAModalVisible] = useState<boolean>(false)
+	const [twoFAModalVisible, setFAModalVisible] = useState<boolean>(false)
 	function updateCredentials() {
 		userManager.setCredentials({ ...userManager.credentials, password: inputPassword, username: inputEmail })
 	}
 	useEffect(() => {
 		const data = userManager.__getUserQuery.data?.data
 		if (!data) return
-		console.log("data:", data)
 		const twoFA = data.twoFA_session_id
-		setFAModalVisible(twoFA && true || false)
+		if (data.session?.refresh_token) {
+			setFAModalVisible(false)
+			return
+		}
+		setFAModalVisible((twoFA && true) || false)
 		userManager.setCredentials({ ...userManager.credentials, twoFA_session: twoFA })
 	}, [userManager.__getUserQuery.data])
 	useEffect(() => {
 		setProcessing(userManager.__getUserQuery.isRefetching || userManager.__getUserQuery.isFetching)
 		setError((userManager.__getUserQuery?.error as any)?.response?.data?.result?.error)
-		// console.log("userManager update!")
 	}, [userManager.__getUserQuery])
-	useEffect(() => {
-		console.log("credentials update", userManager.credentials)
-	}, [userManager.credentials])
 	useEffect(() => {
 		updateCredentials()
 	}, [inputPassword, inputEmail])
@@ -46,8 +46,14 @@ export default function GetUserPage(props: { goBack: () => void }) {
 		userManager.setCredentials({})
 	}
 	return (
-		<View className="flex-1 justify-center items-center bg-cyan-400" style={{ backgroundColor: theme.dark }}>
-			<TwoFASessionModal visible={twoFAModalVisible} onDissmiss={clearAll} onSave={(code) => console.log(`twoFA try: ${code}`)} />
+		<View className="flex-1 justify-center items-center" style={{ backgroundColor: theme.dark }}>
+			<TwoFASessionModal
+				visible={twoFAModalVisible}
+				onDissmiss={clearAll}
+				onSave={(code) => {
+					userManager.setCredentials({ ...userManager.credentials, twoFA_code: code })
+				}}
+			/>
 			<View style={{ width: "80%" }}>
 				<SimplyTextInput
 					onChangeText={setInputEmail}
