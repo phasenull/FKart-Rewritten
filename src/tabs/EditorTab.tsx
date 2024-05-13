@@ -1,7 +1,8 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import { Text, View } from "react-native"
+import { Text,  View } from "react-native"
 import FKartAuthValidator from "components/validators/FKartAuthValidator"
 import FKartAuthWall from "components/walls/FKartAuthWall"
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function EditorTab(props: { route: any; navigation: NativeStackNavigationProp<any> }) {
 	return (

@@ -3,25 +3,19 @@ import { useContext, useMemo } from "react"
 import { View, TouchableOpacity, ToastAndroid, Vibration, Text, Clipboard, Image } from "react-native"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { BasicCardData } from "common/interfaces/KentKart/BasicCardData"
-import CardTypes from "common/enums/CardTypes" 
-import CardImages from "common/enums/CardImages" 
+import CardTypes from "common/enums/CardTypes"
+import CardImages from "common/enums/CardImages"
 import Animated, { FadeInDown, FadeInLeft } from "react-native-reanimated"
 import { ThemeContext } from "common/contexts/ThemeContext"
 
-export default function CardDetailsHeader(props: {
-	card: BasicCardData<"Basic" | "QR">
-	card_type: CardTypes
-	setShowEditCardTypeModal: (value: boolean) => void
-}) {
+export default function CardDetailsHeader(props: { card: BasicCardData<"Basic" | "QR">; card_type: CardTypes; setShowEditCardTypeModal: (value: boolean) => void }) {
 	const { card, card_type, setShowEditCardTypeModal } = props
-	const {theme} = useContext(ThemeContext)
+	const { theme } = useContext(ThemeContext)
 	return useMemo(() => {
 		console.log("card_details_header render")
 		return (
 			<LinearGradient colors={[theme.primary, theme.white]} end={{ x: 0.8, y: 0.9 }} className="flex-row h-56 w-full mb-20" style={{ backgroundColor: theme.primary }}>
-				<Animated.View className="flex-col flex-1 ml-5 self-end mb-4 "
-				entering={FadeInLeft.duration(500)}>
-
+				<Animated.View className="flex-col flex-1 ml-5 self-end mb-4 " entering={FadeInLeft.duration(500)}>
 					<Text className="opacity-70 top-3 text-white text-xl">Bakiye</Text>
 					<View className="flex-row items-baseline text-white gap-x-2 mb-4">
 						<Text className="font-bold text-white text-[48px]">{card.balance}</Text>
@@ -64,5 +58,5 @@ export default function CardDetailsHeader(props: {
 				</Animated.View>
 			</LinearGradient>
 		)
-	},[card,card_type])
+	}, [card, card_type])
 }

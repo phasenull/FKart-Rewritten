@@ -13,7 +13,7 @@ export default function SimplyTextInput(props: { label?: string; leftIcon?: any 
 	const [input, setInput] = useState<undefined | string>(undefined)
 	return (
 		<View className="mt-5 flex-row">
-			<View className="absolute z-20 self-center ml-2 opacity-30 content-center">{props.leftIcon || null}</View>
+			<View className="absolute self-center ml-2 opacity-30 content-center">{props.leftIcon || null}</View>
 			<TextInput
 				onFocus={(e) => setIsFocused(true)}
 				onBlur={() => setIsFocused(false)}

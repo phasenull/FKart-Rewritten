@@ -13,7 +13,7 @@ export default function SwitchAuthPage(props: { style: StyleProp<ViewStyle>; upd
 	return (
 		<TouchableOpacity
 			style={props.style}
-			className="z-50 py-6"
+			className="py-6"
 			onPress={() => {
 				updatePage(1 - panel_type)
 			}}

@@ -1,8 +1,8 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { useContext, useEffect } from "react"
-import { BackHandler, Image, Keyboard, Text, View, useWindowDimensions } from "react-native"
-import { TouchableOpacity, TouchableWithoutFeedback } from "react-native-gesture-handler"
+import { BackHandler, Image, Keyboard, Text, TouchableWithoutFeedback, View, useWindowDimensions } from "react-native"
+
 import Animated, { FadeIn, useSharedValue, withSpring } from "react-native-reanimated"
 import Application from "common/Application"
 import { ThemeContext } from "common/contexts/ThemeContext"
@@ -11,6 +11,7 @@ import SecondaryText from "components/root/SecondaryText"
 import SimplyButton from "components/ui/SimplyButton"
 import PushUserPage from "./push/PushUserPage"
 import GetUserPage from "./get/GetUserPage"
+import { TouchableOpacity } from "react-native"
 
 export default function FKartAuthTypeSelector(props: { navigation: NativeStackNavigationProp<any> }) {
 	const { navigation } = props
@@ -36,9 +37,14 @@ export default function FKartAuthTypeSelector(props: { navigation: NativeStackNa
 	}, [])
 
 	return (
-		<TouchableWithoutFeedback onPress={()=>Keyboard.dismiss()}>
-			<Animated.View style={{ transform: [{ translateY: translateY }], height: page_height * 3 }} className={"flex-col"}>
-				<PushUserPage goBack={() => updatePage(0)}></PushUserPage>
+		<TouchableWithoutFeedback
+			onPress={() => {
+				console.log("dismiss")
+				Keyboard.dismiss()
+			}}
+		>
+			<Animated.View style={{ transform: [{ translateY: translateY }], height: page_height * 3,zIndex:3 }} className={"flex-col"}>
+				<PushUserPage goBack={() => updatePage(0)} />
 				<View className="flex-1">
 					<TouchableOpacity
 						className="absolute top-4 right-4 self-end rounded-full"

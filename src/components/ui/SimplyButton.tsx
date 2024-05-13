@@ -1,5 +1,5 @@
-import { Text, View } from "react-native"
-import { TouchableOpacity, TouchableOpacityProps } from "react-native-gesture-handler"
+import { Text, TouchableOpacity, TouchableOpacityProps, TouchableWithoutFeedback, View } from "react-native"
+
 import { useContext, useEffect } from "react"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import CustomLoadingIndicator from "components/root/CustomLoadingIndicator"
