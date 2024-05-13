@@ -39,7 +39,6 @@ export default function FKartAuthTypeSelector(props: { navigation: NativeStackNa
 	return (
 		<TouchableWithoutFeedback
 			onPress={() => {
-				console.log("dismiss")
 				Keyboard.dismiss()
 			}}
 		>

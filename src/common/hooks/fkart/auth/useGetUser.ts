@@ -7,14 +7,14 @@ import FKartUser from "common/interfaces/FKart/FKartUser"
 import ICredentials from "common/interfaces/app/Credentials"
 import { ToastAndroid } from "react-native"
 
-async function getUser(
-	credentials?: ICredentials,
-): Promise<
-	AxiosResponse<
-		BaseFKartResponse & {
-			user: FKartUser
-		}
-	>
+async function getUser(credentials?: ICredentials): Promise<
+	| AxiosResponse<
+			| BaseFKartResponse & {
+					session?: { user: FKartUser; refresh_token: string; is_2fa_enabled: boolean }
+					twoFA_session_id?: string
+			  }
+	  >
+	| undefined
 > {
 	Logger.info("REQUEST getUser")
 	return axios(`${Application.fkart_endpoints.auth}/user/get`, {
@@ -23,13 +23,18 @@ async function getUser(
 			email: credentials?.username,
 			password: credentials?.password,
 			twoFA_session_id: credentials?.twoFA_session,
-			twoFA_code:credentials?.twoFA_code
+			twoFA_code: credentials?.twoFA_code,
 		}),
 	})
 }
 
 export default function useGetUser(credentials?: ICredentials) {
-	return useQuery(["pushUser"], () => getUser(credentials), { enabled: false, retry: false,useErrorBoundary:false, onError:(e : any)=>{
-		// ToastAndroid.show(`error ${e?.response?.data?.result?.error}`,1000)
-	} })
+	return useQuery(["pushUser"], () => getUser(credentials), {
+		enabled: false,
+		retry: false,
+		useErrorBoundary: false,
+		onError: (e: any) => {
+			// ToastAndroid.show(`error ${e?.response?.data?.result?.error}`,1000)
+		},
+	})
 }

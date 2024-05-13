@@ -11,6 +11,8 @@ import { createContext, useContext, useEffect, useState } from "react"
 import { UseQueryResult } from "react-query"
 import { LoggerContext } from "./LoggerContext"
 import useGetUser from "common/hooks/fkart/auth/useGetUser"
+import Logger from "common/Logger"
+import Application from "common/Application"
 export interface IFKartContext {
 	fkartUser: FKartUser | undefined
 	userManager: {
@@ -25,8 +27,7 @@ export interface IFKartContext {
 		__getUserQuery: UseQueryResult<
 			| AxiosResponse<
 					| BaseFKartResponse & {
-							user?: FKartUser
-
+							session?: { user: FKartUser; refresh_token: string; is_2fa_enabled: boolean }
 							twoFA_session_id?: string
 					  }
 			  >
@@ -36,6 +37,7 @@ export interface IFKartContext {
 		setCredentials: (credentials: ICredentials) => void
 		pushUser: () => void
 		getUser: () => void
+		logout: () => void
 	}
 	captchaManager: {
 		captchaSession: Captcha | undefined
@@ -60,7 +62,6 @@ export interface IFKartContext {
 			| undefined
 		>
 	}
-	fetchRefreshToken: (args: { username: string; password: string }) => Promise<undefined | User>
 }
 export const FKartContext = createContext<IFKartContext>({} as any)
 export function FKartContextProvider(props: { children: any }) {
@@ -70,13 +71,10 @@ export function FKartContextProvider(props: { children: any }) {
 	const [loggedUser, setLoggedUser] = useState<FKartUser | undefined>()
 
 	const [credentials, setCredentials] = useState<ICredentials | undefined>()
-	const [isFetching, setisFetching] = useState<boolean>(false)
-	const [isError, setIsError] = useState<boolean>(false)
-	const [error, setError] = useState<undefined | string>(undefined)
 	const captchaChallangeQuery = useFetchCaptcha()
 	const captchaValidateQuery = useValidateCaptcha(captchaSession)
 	const pushUserQuery = usePushUser(credentials, captchaSession?.captcha_token)
-	const accessUserQuery = usePushUser(credentials)
+	// const accessUserQuery = usePushUser(credentials)
 	const getUserQuery = useGetUser(credentials)
 	function challange() {
 		captchaChallangeQuery.refetch()
@@ -97,7 +95,24 @@ export function FKartContextProvider(props: { children: any }) {
 		setCredentials({ ...credentials, captcha_token: captcha_result.token })
 		setCaptchaSession({ ...captcha_result, captcha_token: undefined })
 	}, [captchaChallangeQuery.data])
-
+	async function saveUser(user:FKartUser) {
+		console.log("Save user!",user.username)
+		await Application.database.set("fkart.user", user)
+	}
+	async function loadUser() {
+		const loadedUser = await Application.database.get("fkart.user") as FKartUser
+		console.log("Loading FKart User!",loadedUser?.username || "undefined")
+		setLoggedUser(loadedUser)
+	}
+	useEffect(() => {
+		const data = getUserQuery.data?.data
+		console.log("getUser request update")
+		if (!data) return console.log("no data!")
+		if (data.session) {
+		saveUser(data.session.user)
+			setLoggedUser(data.session.user)
+		}
+	}, [getUserQuery.data])
 	// captcha validate listener
 	useEffect(() => {
 		const captchaValidateResult = captchaValidateQuery.data?.data
@@ -108,8 +123,18 @@ export function FKartContextProvider(props: { children: any }) {
 		// appendLog({ title: `Captcha validated! ${captchaValidateResult?.captcha.__code}`, level: "info" })
 		setCaptchaSession({ ...captchaValidateResult?.captcha, captcha_token: captchaValidateQuery.data?.data.captcha_token })
 	}, [captchaValidateQuery.data])
-
+	useEffect(() => {
+		loadUser()
+	}, [])
+	useEffect(() => {
+		Logger.info("UserContext", "Detected change in credentials!")
+		if (credentials?.twoFA_code && credentials.twoFA_session) {
+			getUser()
+			setCredentials({ ...credentials, twoFA_code: undefined })
+		}
+	}, [credentials])
 	function getUser() {
+		console.log("pre-fetch credentials", credentials)
 		getUserQuery.refetch()
 	}
 	function pushUser() {
@@ -119,6 +144,11 @@ export function FKartContextProvider(props: { children: any }) {
 		}
 		pushUserQuery.refetch()
 	}
+	function logout() {
+		Logger.info("FKartContext", "Logged out!")
+		setCredentials(undefined)
+		setLoggedUser(undefined)
+	}
 	return (
 		<FKartContext.Provider
 			value={{
@@ -127,24 +157,11 @@ export function FKartContextProvider(props: { children: any }) {
 					setCredentials: setCredentials,
 					pushUser: pushUser,
 					getUser: getUser,
+					logout: logout,
 					__getUserQuery: getUserQuery,
 					__pushUserQuery: pushUserQuery,
 				},
 				fkartUser: loggedUser,
-				fetchRefreshToken: async (args: { username: string; password: string; twoFA?: string }) => {
-					setisFetching(true)
-					let user = undefined
-					try {
-						// appendLog({ title: "FKart Logged in!", description: "FKartEditorContext.fetchRefreshToken", level: "info" })
-					} catch (e: any) {
-						setError(e.message)
-						// appendLog({ title: "Error on FKart login!", description: "FKartEditorContext.fetchRefreshToken", level: "error" })
-						setIsError(true)
-					}
-					setisFetching(false)
-					setLoggedUser(user)
-					return user
-				},
 				captchaManager: {
 					__captchaChallangeQuery: captchaChallangeQuery,
 					challange: challange,
