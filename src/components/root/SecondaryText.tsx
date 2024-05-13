@@ -16,7 +16,6 @@ export default function SecondaryText(props: TextProps) {
 				},
 				props.style,
 			]}
-			{...props}
 		>
 			{props.children}
 		</Text>
