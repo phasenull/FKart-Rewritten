@@ -20,7 +20,7 @@ export default function Map(props: {
 	const {theme} = useContext(ThemeContext)
 	const { forwardRef, routeDataToShow, userCity, easterEggEnabled, busListToShow, navigation } = props
 	return useMemo(() => {
-		Logger.info("Map.tsx", "Map", "Rendering Map")
+		// Logger.info("Map.tsx", "Map", "Rendering Map")
 		return (
 			<MapView
 				ref={forwardRef}

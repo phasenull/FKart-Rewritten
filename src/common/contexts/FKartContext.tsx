@@ -8,11 +8,12 @@ import Captcha from "common/interfaces/FKart/Captcha"
 import FKartUser from "common/interfaces/FKart/FKartUser"
 import ICredentials from "common/interfaces/app/Credentials"
 import { createContext, useContext, useEffect, useState } from "react"
-import { UseQueryResult } from "react-query"
+import { UseQueryResult, useQuery } from "react-query"
 import { LoggerContext } from "./LoggerContext"
 import useGetUser from "common/hooks/fkart/auth/useGetUser"
 import Logger from "common/Logger"
 import Application from "common/Application"
+import { getAccessUserAsync } from "common/hooks/fkart/auth/accessUserAsync"
 export interface IFKartContext {
 	fkartUser: FKartUser | undefined
 	userManager: {
@@ -29,6 +30,14 @@ export interface IFKartContext {
 					| BaseFKartResponse & {
 							session?: { user: FKartUser; refresh_token: string; is_2fa_enabled: boolean }
 							twoFA_session_id?: string
+					  }
+			  >
+			| undefined
+		>
+		__accessUserQuery: UseQueryResult<
+			| AxiosResponse<
+					| BaseFKartResponse & {
+							session?: { user: FKartUser; access_token: string }
 					  }
 			  >
 			| undefined
@@ -66,13 +75,22 @@ export interface IFKartContext {
 export const FKartContext = createContext<IFKartContext>({} as any)
 export function FKartContextProvider(props: { children: any }) {
 	const { appendLog } = useContext(LoggerContext)
-
 	const [captchaSession, setCaptchaSession] = useState<(Captcha & { captcha_token?: string }) | undefined>()
 	const [loggedUser, setLoggedUser] = useState<FKartUser | undefined>()
-
 	const [credentials, setCredentials] = useState<ICredentials | undefined>()
 	const captchaChallangeQuery = useFetchCaptcha()
 	const captchaValidateQuery = useValidateCaptcha(captchaSession)
+	const accessUserQuery: UseQueryResult<
+		| AxiosResponse<
+				BaseFKartResponse & {
+					session?: {
+						access_token: string
+						user: FKartUser
+					}
+				}
+		  >
+		| undefined
+	> = useQuery(["accessUser", credentials], () => getAccessUserAsync(credentials?.refresh_token), { enabled: false })
 	const pushUserQuery = usePushUser(credentials, captchaSession?.captcha_token)
 	// const accessUserQuery = usePushUser(credentials)
 	const getUserQuery = useGetUser(credentials)
@@ -95,21 +113,39 @@ export function FKartContextProvider(props: { children: any }) {
 		setCredentials({ ...credentials, captcha_token: captcha_result.token })
 		setCaptchaSession({ ...captcha_result, captcha_token: undefined })
 	}, [captchaChallangeQuery.data])
-	async function saveUser(user:FKartUser) {
-		console.log("Save user!",user.username)
-		await Application.database.set("fkart.user", user)
+	async function saveUser(refresh_token: string) {
+		console.log("Save user!", refresh_token?.slice(0,5)+"...")
+		await Application.database.set("fkart.refresh_token", refresh_token)
 	}
-	async function loadUser() {
-		const loadedUser = await Application.database.get("fkart.user") as FKartUser
-		console.log("Loading FKart User!",loadedUser?.username || "undefined")
-		setLoggedUser(loadedUser)
+	async function loadUser(refreshToken?: string) {
+		refreshToken = refreshToken || ((await Application.database.get("fkart.refresh_token")) as string)
+		if (!refreshToken) return
+		console.log("Loading FKart User!", refreshToken.slice(0, 5) + "..." || "undefined")
+		setCredentials({ ...credentials, refresh_token: refreshToken })
+		accessUserQuery.refetch()
 	}
+	useEffect(()=>{
+		const error = accessUserQuery.isError as any
+		if (!error) return
+		console.log(Object.keys(error))
+		const message = error?.response?.data
+		Logger.error("FkartContext.accessUserQuery",`Error while logging in! ${message || "unknown error"}`)
+	},[accessUserQuery])
+	useEffect(() => {
+		const data = accessUserQuery.data?.data
+		if (!data?.session?.access_token) {return}
+		const data_user = data.session.user
+		const data_access_token = data.session.access_token
+		setCredentials({...credentials,access_token:data_access_token})
+		setLoggedUser(data_user)
+		Logger.info("FKartContext.accessUserQuery",`Logged in as ${data_user.username}`)
+	}, [accessUserQuery.data])
 	useEffect(() => {
 		const data = getUserQuery.data?.data
 		console.log("getUser request update")
 		if (!data) return console.log("no data!")
 		if (data.session) {
-		saveUser(data.session.user)
+			saveUser(data.session.refresh_token)
 			setLoggedUser(data.session.user)
 		}
 	}, [getUserQuery.data])
@@ -158,6 +194,7 @@ export function FKartContextProvider(props: { children: any }) {
 					pushUser: pushUser,
 					getUser: getUser,
 					logout: logout,
+					__accessUserQuery: accessUserQuery,
 					__getUserQuery: getUserQuery,
 					__pushUserQuery: pushUserQuery,
 				},
