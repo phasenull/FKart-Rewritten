@@ -18,6 +18,9 @@ async function getUser(credentials?: ICredentials): Promise<
 > {
 	Logger.info("REQUEST getUser")
 	return axios(`${Application.fkart_endpoints.auth}/user/get`, {
+		headers:{
+			"User-Agent":Application.getFormattedVersion()
+		},
 		method: "POST",
 		data: JSON.stringify({
 			email: credentials?.username,
