@@ -25,6 +25,7 @@ export interface IFKartContext {
 			  >
 			| undefined
 		>
+		accessToken?:string,
 		__getUserQuery: UseQueryResult<
 			| AxiosResponse<
 					| BaseFKartResponse & {
@@ -78,6 +79,8 @@ export function FKartContextProvider(props: { children: any }) {
 	const [captchaSession, setCaptchaSession] = useState<(Captcha & { captcha_token?: string }) | undefined>()
 	const [loggedUser, setLoggedUser] = useState<FKartUser | undefined>()
 	const [credentials, setCredentials] = useState<ICredentials | undefined>()
+	const [accessToken,setAccessToken] = useState<string|undefined>()
+	const [refreshToken,setRefreshToken] = useState<string|undefined>()
 	const captchaChallangeQuery = useFetchCaptcha()
 	const captchaValidateQuery = useValidateCaptcha(captchaSession)
 	const accessUserQuery: UseQueryResult<
@@ -90,9 +93,8 @@ export function FKartContextProvider(props: { children: any }) {
 				}
 		  >
 		| undefined
-	> = useQuery(["accessUser", credentials], () => getAccessUserAsync(credentials?.refresh_token), { enabled: false })
+	> = useQuery(["accessUser"], () => getAccessUserAsync(refreshToken), { enabled: false,staleTime:0 })
 	const pushUserQuery = usePushUser(credentials, captchaSession?.captcha_token)
-	// const accessUserQuery = usePushUser(credentials)
 	const getUserQuery = useGetUser(credentials)
 	function challange() {
 		captchaChallangeQuery.refetch()
@@ -117,12 +119,12 @@ export function FKartContextProvider(props: { children: any }) {
 		console.log("Save user!", refresh_token?.slice(0,5)+"...")
 		await Application.database.set("fkart.refresh_token", refresh_token)
 	}
-	async function loadUser(refreshToken?: string) {
-		refreshToken = refreshToken || ((await Application.database.get("fkart.refresh_token")) as string)
-		if (!refreshToken) return
-		console.log("Loading FKart User!", refreshToken.slice(0, 5) + "..." || "undefined")
-		setCredentials({ ...credentials, refresh_token: refreshToken })
-		accessUserQuery.refetch()
+	async function loadUser(p_refreshToken?: string) {
+		p_refreshToken = p_refreshToken || ((await Application.database.get("fkart.refresh_token")) as string)
+		if (!p_refreshToken) return Logger.error("FKartContext.loadUser","no refresh token found to auth!")
+		console.log("Loading FKart User!", p_refreshToken.slice(0, 5) + "..." || "undefined")
+		setRefreshToken(p_refreshToken)
+		accessUserQuery.refetch({queryKey:p_refreshToken+Date.now()})
 	}
 	useEffect(()=>{
 		const error = accessUserQuery.isError as any
@@ -136,7 +138,7 @@ export function FKartContextProvider(props: { children: any }) {
 		if (!data?.session?.access_token) {return}
 		const data_user = data.session.user
 		const data_access_token = data.session.access_token
-		setCredentials({...credentials,access_token:data_access_token})
+		setAccessToken(data_access_token)
 		setLoggedUser(data_user)
 		Logger.info("FKartContext.accessUserQuery",`Logged in as ${data_user.username}`)
 	}, [accessUserQuery.data])
@@ -160,7 +162,7 @@ export function FKartContextProvider(props: { children: any }) {
 		setCaptchaSession({ ...captchaValidateResult?.captcha, captcha_token: captchaValidateQuery.data?.data.captcha_token })
 	}, [captchaValidateQuery.data])
 	useEffect(() => {
-		loadUser()
+		loadUser(refreshToken)
 	}, [])
 	useEffect(() => {
 		Logger.info("UserContext", "Detected change in credentials!")
@@ -190,6 +192,7 @@ export function FKartContextProvider(props: { children: any }) {
 			value={{
 				userManager: {
 					credentials: credentials,
+					accessToken:accessToken,
 					setCredentials: setCredentials,
 					pushUser: pushUser,
 					getUser: getUser,
