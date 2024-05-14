@@ -100,7 +100,7 @@ export function FKartContextProvider(props: { children: any }) {
 		,
 		{ enabled: true, staleTime: 0 }
 	)
-	
+
 	const pushUserQuery = usePushUser(credentials, captchaSession?.captcha_token)
 	const getUserQuery = useGetUser(credentials)
 	function challange() {
@@ -190,10 +190,13 @@ export function FKartContextProvider(props: { children: any }) {
 		}
 		pushUserQuery.refetch()
 	}
-	function logout() {
+	async function logout() {
 		Logger.info("FKartContext", "Logged out!")
+		setRefreshToken(undefined)
+		setAccessToken(undefined)
 		setCredentials(undefined)
 		setLoggedUser(undefined)
+		await Application.database.removeItem("fkart.refrest_token")
 	}
 	return (
 		<FKartContext.Provider
