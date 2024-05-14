@@ -156,6 +156,7 @@ export function FKartContextProvider(props: { children: any }) {
 		if (!data) return console.log("no data!")
 		if (data.session) {
 			saveUser(data.session.refresh_token)
+			setRefreshToken(data.session.refresh_token)
 			setLoggedUser(data.session.user)
 		}
 	}, [getUserQuery.data])
