@@ -1,21 +1,19 @@
 import { Callout, LatLng, Marker } from "react-native-maps"
 import BusData from "common/interfaces/KentKart/BusData"
-import { Image} from "react-native"
+import { Image } from "react-native"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import { DYNAMIC_CONTENT_URL } from "common/constants" 
+import { DYNAMIC_CONTENT_URL } from "common/constants"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import Logger from "common/Logger"
-import RouteData from "common/interfaces/KentKart/RouteData" 
+import RouteData from "common/interfaces/KentKart/RouteData"
 import { BusCallout } from "../callouts/BusCallout"
 import { useContext } from "react"
 import { ThemeContext } from "common/contexts/ThemeContext"
-
 export function BusMarker(props: { bus: BusData; coordinate: LatLng; easterEggEnabled?: boolean; navigation: NativeStackNavigationProp<any>; route_data?: RouteData }) {
 	const { route_data, bus, coordinate, easterEggEnabled, navigation } = props
 	const schedule_list = route_data?.timeTableList
 	const scheduled_data = schedule_list?.find((e) => e.tripId === bus.tripId)
-	const {theme} = useContext(ThemeContext)
-
+	const { theme } = useContext(ThemeContext)
 	if (!bus || !coordinate || !navigation || !route_data) {
 		Logger.warning("BusMarker.tsx", "BusMarker", "Bus, coordinate or navigation is null")
 		return
@@ -72,10 +70,7 @@ export function BusMarker(props: { bus: BusData; coordinate: LatLng; easterEggEn
 					objectFit: "fill",
 				}}
 				className="top-4 w-12 h-8 relative self-center -scale-y-100"
-				source={{
-					uri: `${DYNAMIC_CONTENT_URL}/assets/media/images/icons/bus_bearing_colored.png`,
-					cache: "force-cache",
-				}}
+				source={require("assets/media/images/bus_bearing_colored.png")}
 			/>
 			<MaterialCommunityIcons
 				style={{
