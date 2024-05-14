@@ -7,7 +7,7 @@ import API from "./API"
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios"
 import { Image } from "react-native"
 import { PREFETCH_IMAGES } from "./constants"
-
+import * as Updates from "expo-updates"
 export default abstract class Application {
 	public static readonly source_url = "https://github.com/phasenull/FKart-Rewritten"
 	public static region: string = "004"
@@ -28,7 +28,7 @@ export default abstract class Application {
 		auth: `https://auth.api.${Application.base_fkart_server}`,
 	}
 	public static getFormattedVersion() {
-		return `${Application.name} v${Application.version}-dev`
+		return `${Application.name}:${Updates.channel || "expogo"}:${Updates.manifest.id}`
 	}
 	public static __is_init: boolean = false
 	public static logged_user: User | undefined = undefined
