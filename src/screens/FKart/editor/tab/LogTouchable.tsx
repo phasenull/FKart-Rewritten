@@ -15,10 +15,9 @@ export default function LogTouchable(props: { log: Log }) {
 			return `${Math.round(diff/(60*60*1000))} hours ago`
 		}
 		else if (diff > (60*1000)) {
-			return `${Math.ceil(diff / (60*1000))} minutes ago`
+			return `${Math.ceil(diff / (60*1000))} mins ago`
 		}
-		return `${Math.ceil(diff/1000)} seconds ago`
-		return `unknown`
+		return `now`
 	}
 	const dateText = ((Date.now()-log.at) < 24*60*60*1_000)? convertDiffToText(Date.now()-log.at) : new Date(log.at).toLocaleDateString()
 	return (
