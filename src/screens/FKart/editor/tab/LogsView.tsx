@@ -14,7 +14,7 @@ export default function LogsView(props: ViewProps) {
 	// Only use in components that are child of a FKartValidator
 	const { userManager } = useContext(FKartContext)
 	const { theme } = useContext(ThemeContext)
-	const { isFetching, data, isRefetching, isError, error } = useQuery(["getLogs"], () => getLogsAsync(userManager.accessToken), { refetchInterval: 60 * 1000, staleTime: 5 * 1000 })
+	const { isFetching, data, isRefetching, isError, error } = useQuery(["getLogs"], () => getLogsAsync(userManager.accessToken), { refetchInterval: 60 * 1000, staleTime: 5 * 1000,retry:false })
 	if (isFetching && !isRefetching) {
 		return <CustomLoadingIndicator size={12 * 4} />
 	}
