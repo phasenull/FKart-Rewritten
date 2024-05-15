@@ -45,7 +45,7 @@ export default function SeasonValidator(props: { children: any }) {
 				<SecondaryText style={{ fontSize: 36 }}>Winter is here!</SecondaryText>
 				<SecondaryText style={{marginTop:4*4}}>This service is not available in winter.</SecondaryText>
 				<SecondaryText style={{opacity:0.3,fontSize:12}}>
-					Days since winter: {Math.floor(data.data.since/(24*60*60*1_000))}
+					Days since winter: {Math.floor((Date.now()-data.data.since)/(24*60*60*1_000))}
 				</SecondaryText>
 			</View>
 		)
