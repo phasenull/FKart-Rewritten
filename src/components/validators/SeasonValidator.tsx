@@ -11,7 +11,7 @@ import { processColorsInProps } from "react-native-reanimated/lib/typescript/rea
 import { UseQueryResult, useQuery } from "react-query"
 
 export default function SeasonValidator(props:{children:any}) {
-	const { data, error, isError, isFetching, isRefetching } = useQuery(["getSeason"], getSeasonAsync) as UseQueryResult<
+	const { data, error, isError, isFetching, isRefetching } = useQuery(["getSeason"], getSeasonAsync,{refetchInterval:5*60*1000,staleTime:5*60*1000,retry:2}) as UseQueryResult<
 		AxiosResponse<
 			BaseFKartResponse & {
 				season: "summer" | "winter"
@@ -30,6 +30,7 @@ export default function SeasonValidator(props:{children:any}) {
 	if (!data?.data || isError || error) {
 		return (
 			<View className="flex-1 items-center justify-center">
+			<MaterialCommunityIcons name="snowflake-off" size={24*4} />
 				<SecondaryText style={{ color: theme.error }}>Season service is not available, cant proceed</SecondaryText>
 			</View>
 		)
@@ -37,7 +38,7 @@ export default function SeasonValidator(props:{children:any}) {
 	const season = data?.data.season
 	if (season === "winter") {
 		return <View className="flex-1 items-center justify-center">
-			<MaterialCommunityIcons size={24*4} />
+			<MaterialCommunityIcons name="snowflake" size={24*4} />
 			<SecondaryText style={{fontSize:36}}>
 				Winter is here!
 			</SecondaryText>

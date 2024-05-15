@@ -13,8 +13,9 @@ import { UserContext, UserContextInterface } from "common/contexts/UserContext"
 import KentKartAuthValidator from "components/validators/KentKartAuthValidator"
 import AuthWall from "components/walls/AuthWall"
 import { ThemeContext } from "common/contexts/ThemeContext"
+import SeasonValidator from "components/validators/SeasonValidator"
 export default function AccountTab(props?: { route: any; navigation: NativeStackNavigationProp<any> | any }) {
-	const {theme} = useContext(ThemeContext)
+	const { theme } = useContext(ThemeContext)
 	if (!props) {
 		return (
 			<View>
@@ -38,7 +39,7 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 	const { data: favoritesData, refetch: refetchFavorites, isRefetching: isFavoritesRefetching, isLoading: isFavoritesLoading } = favoritesQuery
 	useEffect(() => {
 		if (!favoritesData?.data) {
-			console.log("no fav data",(favoritesQuery.error as any)?.response?.data)
+			console.log("no fav data", (favoritesQuery.error as any)?.response?.data)
 			return
 		}
 		const favorite_cards_filtered = get_cards_from_fav_list(favoritesData.data.userFavorites)
@@ -48,46 +49,23 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 	return (
 		<View style={{ backgroundColor: theme.dark }} className="flex-1 items-center justify-center">
 			{/* login prompt */}
-			<KentKartAuthValidator else={<AuthWall navigation={navigation} />}>
-				<ScrollView
-					refreshControl={<RefreshControl onRefresh={refetchFavorites} refreshing={isFavoritesLoading} />}
-					horizontal={false}
-					showsVerticalScrollIndicator={true}
-					contentContainerStyle={{
-						paddingBottom: 100,
-						justifyContent: "center",
-						alignItems: "center",
-					}}
-					className="w-full"
-				>
-					<AccountDetailsContainer show_credentials={is_show_secret} user={user} />
-					{isFavoritesLoading ? (
-						<View className="items-center flex-1 justify-center">
-							<CustomLoadingIndicator />
-							<Text
-								style={{
-									marginTop: 8 * 4,
-									color: theme.secondary,
-									fontWeight: "800",
-									fontSize: 24,
-								}}
-							>
-								Fetching Favorites...
-							</Text>
-						</View>
-					) : (
-						cards?.map((p_card, index) => (
-							<CardContainer
-								style={{
-									marginTop: 5 * 4,
-								}}
-								index={index}
-								key={"card_" + index}
-								favorite_data={p_card}
-								navigation={navigation}
-							/>
-						)) || (
+			<SeasonValidator>
+				<KentKartAuthValidator else={<AuthWall navigation={navigation} />}>
+					<ScrollView
+						refreshControl={<RefreshControl onRefresh={refetchFavorites} refreshing={isFavoritesLoading} />}
+						horizontal={false}
+						showsVerticalScrollIndicator={true}
+						contentContainerStyle={{
+							paddingBottom: 100,
+							justifyContent: "center",
+							alignItems: "center",
+						}}
+						className="w-full"
+					>
+						<AccountDetailsContainer show_credentials={is_show_secret} user={user} />
+						{isFavoritesLoading ? (
 							<View className="items-center flex-1 justify-center">
+								<CustomLoadingIndicator />
 								<Text
 									style={{
 										marginTop: 8 * 4,
@@ -96,17 +74,41 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 										fontSize: 24,
 									}}
 								>
-									No cards found!
+									Fetching Favorites...
 								</Text>
 							</View>
-						)
-					)}
+						) : (
+							cards?.map((p_card, index) => (
+								<CardContainer
+									style={{
+										marginTop: 5 * 4,
+									}}
+									index={index}
+									key={"card_" + index}
+									favorite_data={p_card}
+									navigation={navigation}
+								/>
+							)) || (
+								<View className="items-center flex-1 justify-center">
+									<Text
+										style={{
+											marginTop: 8 * 4,
+											color: theme.secondary,
+											fontWeight: "800",
+											fontSize: 24,
+										}}
+									>
+										No cards found!
+									</Text>
+								</View>
+							)
+						)}
 
-					{virtualCards?.map((p_card, index) => (
-						<CardContainer style={{ marginTop: 5 * 4 }} favorite_data={p_card} navigation={navigation} key={"virtual_card_" + index} index={index} />
-					))}
-					<AddCard />
-					{/* <TouchableOpacity
+						{virtualCards?.map((p_card, index) => (
+							<CardContainer style={{ marginTop: 5 * 4 }} favorite_data={p_card} navigation={navigation} key={"virtual_card_" + index} index={index} />
+						))}
+						<AddCard />
+						{/* <TouchableOpacity
 					className="justify-end"
 					onPress={async () => {
 						await Application.logout()
@@ -122,15 +124,16 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 						shadowOffset: { height: 2, width: 2 },
 					}}
 				>
-					<Text
-						style={{ color: styles.white }}
-						className="font-bold text-lg text-center"
+				<Text
+				style={{ color: styles.white }}
+				className="font-bold text-lg text-center"
 					>
-						Logout
+					Logout
 					</Text>
 				</TouchableOpacity> */}
-				</ScrollView>
-			</KentKartAuthValidator>
+					</ScrollView>
+				</KentKartAuthValidator>
+			</SeasonValidator>
 		</View>
 	)
 }
