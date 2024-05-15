@@ -26,6 +26,7 @@ export default abstract class Application {
 		static: `https://static.api.${Application.base_fkart_server}`,
 		antir2d2: `https://anti-r2d2.api.${Application.base_fkart_server}`,
 		auth: `https://auth.api.${Application.base_fkart_server}`,
+		api: `https://api.${Application.base_fkart_server}`,
 	}
 	public static getFormattedVersion() {
 		return `${Application.name}:${Updates.channel || "expogo"}:${Updates.manifest.id}`
