@@ -93,13 +93,7 @@ export function FKartContextProvider(props: { children: any }) {
 				}
 		  >
 		| undefined
-	> = useQuery(
-		["accessUser",refreshToken],
-		() => 
-			getAccessUserAsync(refreshToken)
-		,
-		{ enabled: true, staleTime: 0 }
-	)
+	> = useQuery(["accessUser", refreshToken], () => getAccessUserAsync(refreshToken), { enabled: true, staleTime: 0, refetchInterval: 5 * 60 * 1000, retry: false })
 
 	const pushUserQuery = usePushUser(credentials, captchaSession?.captcha_token)
 	const getUserQuery = useGetUser(credentials)
