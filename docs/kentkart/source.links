@@ -111,7 +111,7 @@ API_POI:'api/poi/list'
 NEVER HAS DATA
 API_TARIFFS:'api/info/tariff'
 
-THEY CANT EVEN MAKE PROPER ANONUNCEMENTS
+THEY USE THIS FOR ANNOUNCEMENTS FOR SOME REASON BUT NEVER ADD DATA EXCEPT "DUYURU" "DUYURU"
 API_ANNOUNCE:'api/info/announce'
 
 RETURNS DOCS LIKE TARIFFS
@@ -120,10 +120,16 @@ API_DOCS:'api/info/docs'
 RETURNS PRODUCTS FOR E-LOADS
 API_PRODUCT:'api/products'
 
-SYNCS QR CODE
+SYNCS ABT CODE
 API_SYNC:'api/abt/sync'
+{
+	alias:number
+}
 
-THEY USE THIS FOR ANNOUNCEMENTS FOR SOME REASON BUT NEVER HAS DATA EXCEPT "DUYURU" "DUYURU"
+SYNCS QR CODE - returns 24 Card Number is not registered in the System (not available in region 004)
+API_SYNC:'api/qr/sync'
+
+???
 API_INFO_ADS:'api/info/ads'
 
 DELETE's something but no idea what, probably QR CODE
@@ -144,7 +150,7 @@ https://service.kentkart.com/rl1/api/info/masterPass/jquery.min.js
 https://service.kentkart.com/rl1/api/3dPayHost/fail
 https://service.kentkart.com/rl1/api/transaction/complete?region=004&lang=tr&authType=4
 
-TRIP PLANNER (PATH FINDING BUT NEVER WORKS PROPERLY OF COURSE)
+TRIP PLANNER (PATH FINDING / nvm it works but note useful in most cases)
 https://service.kentkart.com/rl1/api/trip
 
 
