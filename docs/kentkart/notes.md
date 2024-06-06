@@ -9,7 +9,8 @@ ERROR_149: QR card does not belong to authenticated account
 
 ERROR_131: You cannot delete your card / ticket because the expiration date has not passed.
 
-
+404 returns authType:"" (cant find any controller to go through)
+404 (deep routing) returns authType:"4" (cant find any route in a controller)
 
 auth types
 
