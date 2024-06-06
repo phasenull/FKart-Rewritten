@@ -162,3 +162,6 @@ https://vts.kentkart.com.tr/auth/handle
 
 https://account.kentkart.com.tr/login
 https://account.kentkart.com.tr/forget?username=
+
+https://service.kentkart.com/rl1/api/gtfs -> exists; requires auth; returns 404 with authType 4; returs 113 with authType 3
+https://service.kentkart.com/rl1/gtfs -> requires rl1 admin login
