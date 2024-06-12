@@ -14,6 +14,8 @@ import CardDetailsHeader from "./CardDetailsHeader"
 import CardJSONData from "./CardJSONData"
 import SelectCardTypeModal from "./SelectCardTypeModal"
 import VirtualCardQRCodePanel from "./VirtualCardQRCodePanel"
+import { useGetTransactions } from "common/hooks/kentkart/card/useGetTransactions"
+import { convertDiffToText } from "common/util"
 export default function CardDetails(props: {
 	route: {
 		params: {
@@ -24,7 +26,7 @@ export default function CardDetails(props: {
 	}
 	navigation: NativeStackNavigationProp<any>
 }) {
-	const {theme} = useContext(ThemeContext)
+	const { theme } = useContext(ThemeContext)
 	const [loading, setLoading] = useState(false)
 	const favorite_data = props?.route.params?.favorite_data
 	const card = props?.route.params?.card
@@ -33,6 +35,7 @@ export default function CardDetails(props: {
 	if (is_virtual) {
 		syncData = useGetSyncCode(card?.aliasNo || favorite_data?.favorite).data
 	}
+	const { data: transaction_data } = useGetTransactions(card.aliasNo, { month: new Date(Date.now()).getMonth(), year: new Date(Date.now()).getFullYear() })
 	const [cardToken, setCardToken] = useState<undefined | { expireDate: string; token: string; aliasNo: string }>(undefined)
 	const { navigation } = props
 	const [card_type, setCardType] = useState(CardTypes.undefined)
@@ -92,6 +95,12 @@ export default function CardDetails(props: {
 			) : null} */}
 			<VirtualCardQRCodePanel card={card} token={cardToken} />
 			<CardJSONData card={card} favorite_data={favorite_data} />
+			<CardJSONData
+				card={transaction_data?.data.transactionList.map(
+					(e) => `${Date.now() - e.unixtime*1000 < 24 * 60 * 60 * 1_000 ? convertDiffToText(Date.now() - e.unixtime*1000) : new Date(e.unixtime*1000).toLocaleDateString()}        ${e.type === "0" ? "+":"-"} ${e.amount || e.usageAmt}`
+				)}
+				favorite_data={{}}
+			/>
 		</ScrollView>
 	)
 }

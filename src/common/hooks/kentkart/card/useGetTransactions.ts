@@ -3,8 +3,9 @@ import Application from "common/Application"
 import { BaseKentKartResponse } from "common/interfaces/KentKart/BaseKentKartResponse"
 import { BasicCardData } from "common/interfaces/KentKart/BasicCardData"
 import { AxiosResponse } from "axios"
+import CardTransaction from "common/interfaces/KentKart/CardTransaction"
 
-async function getCardTransactions(card_alias: string, term: string): Promise<AxiosResponse<BaseKentKartResponse & {}>> {
+async function getCardTransactions(card_alias: string, term: string): Promise<AxiosResponse<BaseKentKartResponse & {transactionList:CardTransaction<any>[]}>> {
 	// Logger.info(`REQUEST useGetCardData ${card_alias}`)
 	const url = `${Application.endpoints.service}/rl1/api/card/transaction?region=${Application.region}&lang=tr&authType=4&token=${Application.logged_user?.access_token}&alias=${card_alias}&term=${term}`
 	return Application.makeKentKartRequest(url)

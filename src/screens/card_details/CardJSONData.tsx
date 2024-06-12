@@ -10,13 +10,15 @@ export default function CardJSONData(props: { card: any; favorite_data: any }) {
 		<Text
 			className="p-4 my-10 w-80"
 			style={{
-				backgroundColor: theme.dark,
+				backgroundColor: theme.white,
+				userSelect:"text",
 				borderRadius: 16,
-				elevation: 10,
+				// elevation: 10,
+				fontWeight:"400",
 				color: theme.secondaryDark,
 			}}
 		>
-			Data: {JSON.stringify({ ...favorite_data, ...card }, null, 4)}
+			{JSON.stringify({ ...favorite_data, ...card }, null, 4)}
 			{/* Loads in line: {JSON.stringify(card.loads_in_line, null, 4)} */}
 		</Text>
 	)
