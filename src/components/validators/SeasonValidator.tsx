@@ -50,6 +50,5 @@ export default function SeasonValidator(props: { children: any }) {
 			</View>
 		)
 	}
-	Logger.info("SeasonValidator","🎶It's always summer, under the sea\nI know, I know, oh, oh, oh🎶")
 	return props.children
 }
