@@ -14,9 +14,9 @@ import { LoggerContext } from "./LoggerContext"
 export interface UserContextInterface {
 	loggedUser: User | undefined
 	isFetching: boolean
-	favoritesQuery:UseQueryResult<AxiosResponse<Favorites & BaseKentKartResponse, any> | undefined, unknown>
+	favoritesQuery: UseQueryResult<AxiosResponse<Favorites & BaseKentKartResponse, any> | undefined, unknown>
 
-	profileQuery:UseQueryResult<AxiosResponse< BaseKentKartResponse & {accountInfo: Account}, any>, unknown>
+	profileQuery: UseQueryResult<AxiosResponse<BaseKentKartResponse & { accountInfo: Account }, any>, unknown>
 	loginUsingPhone: (args: { username: string; password: string }) => Promise<undefined | User>
 	loginUsingEmail: (args: { username: string; password: string }) => Promise<undefined | User>
 	isError: boolean
@@ -27,7 +27,7 @@ export const UserContext = createContext<UserContextInterface>({} as any)
 export function UserContextProvider(props: { children: any }) {
 	const [loggedUser, setLoggedUser] = useState<User | undefined>()
 	const favoritesQuery = useGetFavorites()
-	const {appendLog} = useContext(LoggerContext)
+	const { appendLog } = useContext(LoggerContext)
 	const profileQuery = useGetProfileData()
 	useEffect(() => {
 		async function get() {
@@ -36,28 +36,33 @@ export function UserContextProvider(props: { children: any }) {
 			const refresh_token = await Application.database.get("refresh_token")
 			const access_token = await Application.database.get("access_token")
 			let user
-			if (access_token) {
-				user = await User.fromAccessToken(access_token)
-				user.refresh_token = refresh_token
-				// appendLog({title:"User Logged in!",description:"UserContext.init.access_token User logged in!",level:"info"})
-				Logger.info("UserContext.init.access_token", "User logged in!")
-			} else if (refresh_token) {
+			// if (access_token) {
+			// 	user = await User.fromAccessToken(access_token)
+			// 	user.refresh_token = refresh_token
+			// 	// if (user) {
+			// 	// appendLog({title:"User Logged in!",description:"UserContext.init.access_token User logged in!",level:"info"})
+			// 	// 	Logger.info("UserContext.init.access_token", "User logged in!")
+			// 	// }
+			// }
+			if (refresh_token) {
 				user = await User.fromRefreshToken(refresh_token)
-				// appendLog({title:"User Logged in!",description:"UserContext.init.refresh_token User logged in!",level:"info"})
-				Logger.info("UserContext.init.refresh_token", "User logged in!")
-			}
-			if (!user) {
-				// appendLog({title:"User not logged in!",description:"UserContext.init",level:"warn"})
-
-				Logger.info("UserContext.init", "User not logged in!")
+				const fetch_profile = await user.fetchProfile()
+				Application.logged_user = fetch_profile
 				setisFetching(false)
-				return
+				setLoggedUser(fetch_profile)
+				console.log(fetch_profile)
+				if (fetch_profile) {
+					return
+				}
+					// appendLog({ title: "User Logged in!", description: "UserContext.init.refresh_token User logged in!", level: "info" })
+				// if (user) {
+				// Logger.info("UserContext.init.refresh_token", "User logged in!")
+				// }
 			}
-			await user.getProfile()
-
-			Application.logged_user = user
+			// appendLog({title:"User not logged in!",description:"UserContext.init",level:"warn"})
+			Logger.info("UserContext.init", "User not logged in!")
 			setisFetching(false)
-			setLoggedUser(user)
+			return
 		}
 		get()
 	}, [])
@@ -79,8 +84,8 @@ export function UserContextProvider(props: { children: any }) {
 				isError: isError,
 				loggedUser: loggedUser,
 				isFetching: isFetching,
-				profileQuery:profileQuery,
-				favoritesQuery:favoritesQuery,
+				profileQuery: profileQuery,
+				favoritesQuery: favoritesQuery,
 				loginUsingPhone: async (args) => {
 					setisFetching(true)
 
@@ -129,7 +134,7 @@ async function handleUserChange(user: User | undefined) {
 	} else {
 		await Application.database.removeItem("access_token")
 		await Application.database.removeItem("refresh_token")
-		Logger.info("UserContext.handleUserChange","User session is NOT valid!")
+		Logger.info("UserContext.handleUserChange", "User session is NOT valid!")
 	}
 	return
 }

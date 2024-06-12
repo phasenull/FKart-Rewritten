@@ -82,7 +82,7 @@ export default abstract class API {
 		refresh_token,
 	}: {
 		refresh_token: string
-	}): Promise<string> {
+	}): Promise<string|null> {
 		const request = await Application.makeKentKartRequest(
 			`${Application.endpoints.auth}/rl1/oauth/token`,
 			{
@@ -99,10 +99,12 @@ export default abstract class API {
 			}
 		)
 		if (request.status !== 200) {
-			throw new Error("Get Token failed! (status code not 200)")
+			Logger.warning(`Get Token failed! (status code not 200)`)
+			return null
 		}
 		if (request.data?.result?.code !== 0) {
-			throw new Error("Get Token failed.")
+			Logger.warning(`Get Token failed. \n${JSON.stringify(request.data?.result,undefined,4)}`)
+			return null
 		}
 		return request.data.accessToken
 	}

@@ -116,8 +116,13 @@ export default class User {
 		return user
 	}
 
-	async getProfile() {
-		const profile_data = await API.getProfile({ user: this })
+	async fetchProfile() {
+		let profile_data
+		try {
+			profile_data = await API.getProfile({ user: this })
+		} catch {
+			return
+		}
 		Object.assign(this, profile_data)
 		return this
 	}
