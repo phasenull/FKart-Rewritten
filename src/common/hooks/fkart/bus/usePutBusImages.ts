@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios, { AxiosRequestConfig } from "axios"
 import Application from "common/Application"
 import BusData from "common/interfaces/KentKart/BusData"
 import { useQuery } from "react-query"
@@ -6,7 +6,8 @@ import buffer from "buffer"
 import Logger from "common/Logger"
 export async function putBusImages(
 	bus: BusData,
-	image: string | undefined
+	image: string | undefined,
+	config?:AxiosRequestConfig
 ) {
 	if (!image) return
 	const file = await fetch(image)
@@ -36,6 +37,7 @@ export async function putBusImages(
 			"Content-Type": img_type,
 		},
 		data: img_base64,
+		...config,
 	})
 }
 

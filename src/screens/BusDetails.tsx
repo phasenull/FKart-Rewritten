@@ -17,7 +17,7 @@ export default function BusDetails(props: { route: { params: { bus: BusData } };
 	const { navigation } = props
 	const { bus } = props.route.params
 	const { data, isError, isLoading, isRefetching, error, refetch } = useGetBusImages(bus)
-
+	const [uploadPercentage, setUploadPercentage] = useState<undefined | number>(undefined)
 	useEffect(() => {
 		navigation.setOptions({
 			headerTitle: `${props.route?.params?.bus?.plateNumber || "unnamed bus"}`,
@@ -70,10 +70,14 @@ export default function BusDetails(props: { route: { params: { bus: BusData } };
 			})
 		}
 		try {
-			request = await putBusImages(bus, image)
+			request = await putBusImages(bus, image, {
+				onUploadProgress: (e) => {
+					setUploadPercentage(Math.floor((e?.progress || 0) * 100))
+				},
+			})
 			refetch()
 		} catch (error) {
-			ToastAndroid.show(`Error: ${error}`, ToastAndroid.SHORT)
+			ToastAndroid.show(`Error: ${request?.request.error.data.result.error}`, ToastAndroid.SHORT)
 			return
 		}
 		if (request?.status === 200) {
@@ -85,7 +89,7 @@ export default function BusDetails(props: { route: { params: { bus: BusData } };
 	if (!props?.route?.params?.bus) {
 		return (
 			<View className="flex-1 items-center justify-center">
-				<Text style={{ color: theme.error, fontSize: 24 }}>No card data found</Text>
+				<Text style={{ color: theme.error, fontSize: 24 }}>No data found</Text>
 			</View>
 		)
 	}
@@ -151,7 +155,7 @@ export default function BusDetails(props: { route: { params: { bus: BusData } };
 				{image && (
 					<React.Fragment>
 						<Image className="w-80 h-36" source={{ uri: image }} />
-						<Button title="Upload" onPress={uploadImage}></Button>
+						<Button title={`Upload${uploadPercentage !== undefined ? ` %${uploadPercentage}` : ""}`} onPress={uploadImage}></Button>
 					</React.Fragment>
 				)}
 			</View>
