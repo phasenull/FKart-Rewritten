@@ -15,7 +15,15 @@ export function formatAlias(alias:string | undefined) {
 	const part3 : string = alias?.slice(10,11) as string
 	return `${part1 + "X".repeat(5-(part1?.length as number))}-${part2 + "X".repeat(5-(part2?.length as number))}-${part3 + "X".repeat(1-(part3?.length as number))}`
 }
-
+export function convertDiffToText(diff:number) {
+	if (diff >= 60*60*1000) {
+		return `${Math.round(diff/(60*60*1000))} hours ago`
+	}
+	else if (diff > (60*1000)) {
+		return `${Math.ceil(diff / (60*1000))} mins ago`
+	}
+	return `now`
+}
 export function dateFromMessedKentKartDateFormat(input:string) {
 	if (input.length != 16) return new Date()
 	const date = new Date(Date.parse(input))

@@ -1,5 +1,6 @@
 import { ThemeContext } from "common/contexts/ThemeContext"
 import Log from "common/interfaces/FKart/Log"
+import { convertDiffToText } from "common/util"
 import SecondaryText from "components/root/SecondaryText"
 import { useContext } from "react"
 import { Text, TouchableOpacity } from "react-native"
@@ -10,15 +11,7 @@ export default function LogTouchable(props: { log: Log }) {
 	if (!log) {
 		return null
 	}
-	function convertDiffToText(diff:number) {
-		if (diff >= 60*60*1000) {
-			return `${Math.round(diff/(60*60*1000))} hours ago`
-		}
-		else if (diff > (60*1000)) {
-			return `${Math.ceil(diff / (60*1000))} mins ago`
-		}
-		return `now`
-	}
+
 	const dateText = ((Date.now()-log.at) < 24*60*60*1_000)? convertDiffToText(Date.now()-log.at) : new Date(log.at).toLocaleDateString()
 	return (
 		<TouchableOpacity

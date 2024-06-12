@@ -24,5 +24,5 @@ async function getFavorites(user?:User): Promise<
 export default function useGetFavorites() {
 	
 	const {loggedUser:user} = useContext(UserContext)
-	return useQuery(["getFavorites"], ()=>getFavorites(user),{refetchInterval: 30_000,cacheTime:0.5*60*60*1000})
+	return useQuery(["getFavorites"], ()=>getFavorites(user),{refetchInterval: 30_000})
 }

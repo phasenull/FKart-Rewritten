@@ -123,6 +123,7 @@ export default class User {
 		} catch {
 			return
 		}
+		if (!profile_data) return
 		Object.assign(this, profile_data)
 		return this
 	}
