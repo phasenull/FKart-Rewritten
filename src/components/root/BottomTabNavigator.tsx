@@ -25,43 +25,65 @@ function BottomTabButton(props: { state: any; descriptors: any; navigation: Nati
 		}
 	}
 	const { theme } = useContext(ThemeContext)
-	const primaryColor = isFocused ? theme.text.primary : theme.secondary
-	const backgroundColor = isFocused ? theme.primary : theme.text.white
+	const primaryColor = isFocused ? theme.primary : theme.text.white
+	const backgroundColor = isFocused ? theme.text.white : "transparent"
 	return (
 		<TouchableOpacity
 			disabled={isFocused}
 			key={route.key}
 			onPress={onPress}
 			style={{
-				flex: 1,
-				backgroundColor: backgroundColor,
-				borderRadius: 32,
-				marginHorizontal: 1 * 4,
+				backgroundColor: "transparent",
+				flex: isFocused ? 1.5 : 1,
+				// marginHorizontal: 1 * 4,
 				marginVertical: 2 * 4,
-				bottom: isFocused ? 1 * 4 : 0,
 			}}
-			className="items-center"
 		>
 			<View
-				className="h-12 w-12 rounded-full items-center"
+				className="flex-row self-center py-2 items-center px-2 space-x-1"
 				style={{
-					bottom: isFocused ? 2 * 4 : 0,
+					// justifyContent: isFocused ? "space-between" : "center",
 					backgroundColor: backgroundColor,
+					borderRadius: 32,
+					// width: "max",
 				}}
 			>
-				{options.tabBarIcon({ focused: isFocused, color: primaryColor, size: 32 })}
+				<View
+					className="rounded-full justify-center items-center"
+					style={
+						{
+							// backgroundColor: backgroundColor,
+						}
+					}
+				>
+					{options.tabBarIcon({ focused: isFocused, color: primaryColor, size: isFocused ? 24 : 32 })}
+				</View>
+				{isFocused ? (
+					<SecondaryText
+						style={{ color: theme.text.secondary, fontSize: 16, fontWeight: "800" }}
+						numberOfLines={1}
+						// className="bg-red-400"
+					>
+						{label}
+					</SecondaryText>
+				) : null}
 			</View>
-			<SecondaryText style={{ color: primaryColor, fontSize: 16, position: "absolute", bottom: isFocused ? 0 : -6,fontWeight:"800" }} numberOfLines={1}>
-				{label}
-			</SecondaryText>
 		</TouchableOpacity>
 	)
 }
 function BottomTab(props: BottomTabBarProps) {
-	const { descriptors, navigation, state, insets } = props as BottomTabBarProps & {navigation:NativeStackNavigationProp<any>}
+	const { descriptors, navigation, state, insets } = props as BottomTabBarProps & { navigation: NativeStackNavigationProp<any> }
 	const theme = Object.values(descriptors)[0].options.tabBarStyle as ITheme
 	return (
-		<View className="flex-row mx-2 px-1 pb-1 mb-2 absolute bottom-0" style={{ borderRadius: 100, elevation: 4,backgroundColor:theme?.text.white }}>
+		<View
+			className="flex-row mx-2 items-center self-center max-w-80 w-[90%] mb-4 absolute bottom-0"
+			style={{
+				borderRadius: 100,
+				elevation: 4,
+				height:18*4,
+				backgroundColor: theme?.secondaryDark,
+			}}
+		>
 			{state.routes.map((route: any, index: number) => {
 				return <BottomTabButton key={route.key} descriptors={descriptors[route.key]} index={index} navigation={navigation} route={route} state={state} />
 			})}
