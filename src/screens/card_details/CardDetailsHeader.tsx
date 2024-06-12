@@ -18,7 +18,7 @@ export default function CardDetailsHeader(props: { card: BasicCardData<"Basic" |
 				<Animated.View className="flex-col flex-1 ml-5 self-end mb-4 " entering={FadeInLeft.duration(500)}>
 					<Text className="opacity-70 top-3 text-white text-xl">Bakiye</Text>
 					<View className="flex-row items-baseline text-white gap-x-2 mb-4">
-						<Text className="font-bold text-white text-[48px]">{card.balance}</Text>
+						<Text className="font-bold text-white text-[48px]" numberOfLines={1} adjustsFontSizeToFit={true}>{card.balance}</Text>
 						<Text className="text-[28px] text-white font-bold">TL</Text>
 					</View>
 					<TouchableOpacity
