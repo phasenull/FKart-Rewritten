@@ -8,11 +8,13 @@ import { ThemeContext } from "common/contexts/ThemeContext"
 import { useContext } from "react"
 import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
 
-export default function AccountDetailsContainer(props: { show_credentials?: boolean; user: IKentKartUser }) {
+export default function AccountDetailsContainer(props: { show_credentials?: boolean; user?: IKentKartUser }) {
 	const show_credentials = props.show_credentials
 	const user = props.user
 	const {theme} = useContext(ThemeContext)
-
+	if (!user) {
+		return
+	}
 	return (
 		<View className="py-5 mt-5 px-10 w-80 rounded-[16px] justify-center" style={{ backgroundColor: theme.white, shadowOffset: { height: 4, width: 4 } }}>
 			<Text style={{ color: theme.secondary }} className="opacity-50 font-bold text-2xl">

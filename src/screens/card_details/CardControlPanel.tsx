@@ -5,10 +5,12 @@ import { Text, TouchableOpacity, View } from "react-native"
 import { useContext, useEffect, useMemo, useState } from "react"
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import { useAddFavoriteCard, useRemoveFavoriteCard } from "common/hooks/kentkart/card/useRenameCard"
+import { useAddFavoriteCard,useRemoveFavoriteCard } from "common/hooks/kentkart/cardHooks"
 import InputModal from "components/root/InputModal"
 import Logger from "common/Logger"
 import { ThemeContext } from "common/contexts/ThemeContext"
+import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
+import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
 export default function CardControlPanel(props: {
 	card: BasicCardData<"Basic" | "QR">
 	favorite_data: Favorite<"Card" | "QR">
@@ -25,6 +27,7 @@ export default function CardControlPanel(props: {
 	const [favorite, setFavorite] = useState(favorite_data ? true : false)
 	const [card_description, setCardDescription] = useState<string | undefined>(undefined)
 	const [show_rename_modal, setShowRenameModal] = useState(false)
+	const user = useKentKartAuthStore((state)=>state.user)
 	const {
 		data: request_result,
 		error: request_error,
@@ -36,9 +39,11 @@ export default function CardControlPanel(props: {
 	} = useAddFavoriteCard({
 		card_or_fav_id: card.aliasNo,
 		name: card_description,
+		user:user as IKentKartUser
 	})
 	const { refetch: refetchRemoveCard, data: dataRemoveCard } = useRemoveFavoriteCard({
 		card_or_fav_id: card.aliasNo,
+		user:user as IKentKartUser
 	})
 	useEffect(() => {
 		// console.log("favoriteData",favoriteData?.data?.userFavorites,card.aliasNo)
@@ -140,6 +145,7 @@ export default function CardControlPanel(props: {
 						<MaterialCommunityIcons name="cash-plus" size={24} color={theme.secondary} />
 					</TouchableOpacity>
 					<TouchableOpacity
+						disabled={!user}
 						onPress={() => {
 							if (favorite) {
 								refetchRemoveCard()

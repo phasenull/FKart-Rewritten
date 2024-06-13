@@ -2,26 +2,29 @@ import Card from "common/classes/Card"
 import { Text, ToastAndroid, TouchableOpacity, Vibration, View, ViewStyle } from "react-native"
 import Animated, { FadeInRight } from "react-native-reanimated"
 
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import { Clipboard } from "react-native"
-import { Favorite } from "common/interfaces/KentKart/Favorite"
-import { useGetCardData } from "common/hooks/kentkart/card/useGetCardData"
-import { BasicCardData } from "common/interfaces/KentKart/BasicCardData"
-import { useContext, useEffect, useState } from "react"
-import CustomLoadingIndicator from "components/root/CustomLoadingIndicator"
-import CardImages from "common/enums/CardImages"
-import { formatAlias } from "common/util"
-import { Swipeable } from "react-native-gesture-handler"
-import { useRemoveFavoriteCard } from "common/hooks/kentkart/card/useRenameCard"
-import useGetFavorites from "common/hooks/kentkart/user/useGetFavorites"
 import { ThemeContext } from "common/contexts/ThemeContext"
+import CardImages from "common/enums/CardImages"
+import { useGetCardData, useRemoveFavoriteCard } from "common/hooks/kentkart/cardHooks"
+import useGetFavorites from "common/hooks/kentkart/user/useGetFavorites"
+import { BasicCardData } from "common/interfaces/KentKart/BasicCardData"
+import { Favorite } from "common/interfaces/KentKart/Favorite"
+import { formatAlias } from "common/util"
+import CustomLoadingIndicator from "components/root/CustomLoadingIndicator"
+import { useContext, useEffect, useState } from "react"
+import { Clipboard } from "react-native"
+import { Swipeable } from "react-native-gesture-handler"
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
+import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
+import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
 
 export default function CardContainer(props: { favorite_data: Favorite<"Card" | "QR">; index: number; navigation: any; style?: ViewStyle }) {
 	const { favorite_data, index, navigation } = props
-	const { data, isLoading, isRefetching, isError } = useGetCardData(favorite_data.favorite || favorite_data.alias)
+	const user = useKentKartAuthStore((state) => state.user)
+	if (!user) return
+	const { data, isLoading, isRefetching, isError } = useGetCardData({ card_alias: favorite_data.favorite || favorite_data.alias, user: user })
 	const [card, setCard] = useState<BasicCardData<any> | undefined>(undefined)
-	const {refetch:unFavoriteRefetch} = useRemoveFavoriteCard({card_or_fav_id:card?.aliasNo as string})
-	const {refetch:refetchAccountFavorites} = useGetFavorites()
+	const { refetch: unFavoriteRefetch } = useRemoveFavoriteCard({ card_or_fav_id: card?.aliasNo as string, user: user })
+	const { refetch: refetchAccountFavorites } = useGetFavorites()
 	const [cardImage, setCardImage] = useState<CardImages | undefined>(undefined)
 	useEffect(() => {
 		async function get() {
@@ -38,7 +41,7 @@ export default function CardContainer(props: { favorite_data: Favorite<"Card" | 
 		}
 	}, [data?.data])
 
-	const {theme} = useContext(ThemeContext)
+	const { theme } = useContext(ThemeContext)
 
 	if (isError) {
 		return (
@@ -58,7 +61,7 @@ export default function CardContainer(props: { favorite_data: Favorite<"Card" | 
 		>
 			<Swipeable
 				containerStyle={{
-					overflow:"visible",
+					overflow: "visible",
 				}}
 				friction={1}
 				overshootRight={false}
@@ -67,14 +70,14 @@ export default function CardContainer(props: { favorite_data: Favorite<"Card" | 
 						className="justify-center self-center items-center"
 						style={{
 							backgroundColor: theme.error,
-							elevation:10,
-							borderRadius:100,
-							width:16*4,
-							height:16*4,
-							padding:4,
-							marginHorizontal:10
+							elevation: 10,
+							borderRadius: 100,
+							width: 16 * 4,
+							height: 16 * 4,
+							padding: 4,
+							marginHorizontal: 10,
 						}}
-						onPress={()=>{
+						onPress={() => {
 							if (card?.aliasNo) {
 								unFavoriteRefetch()
 								refetchAccountFavorites()

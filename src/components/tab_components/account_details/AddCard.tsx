@@ -4,15 +4,18 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import ApplicationConfig from "common/ApplicationConfig"
 import { useContext, useState } from "react"
 import { FavoriteCardInputAliasModal } from "./FavoriteCardInputAliasModal"
-import { useAddFavoriteCard } from "common/hooks/kentkart/card/useRenameCard"
+import { useAddFavoriteCard } from "common/hooks/kentkart/cardHooks"
 import useGetFavorites from "common/hooks/kentkart/user/useGetFavorites"
 import { ThemeContext } from "common/contexts/ThemeContext"
+import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 
 export function AddCard() {
 	const [alias,setAlias] = useState("")
 	const {theme} = useContext(ThemeContext)
 	const {refetch:refetchAccountFavorites} = useGetFavorites()
-	const {refetch:refetchFavorite} = useAddFavoriteCard({card_or_fav_id:alias,name:"My Favorite Card"})
+	const user = useKentKartAuthStore((state)=>state.user)
+	if (!user) return
+	const {refetch:refetchFavorite} = useAddFavoriteCard({card_or_fav_id:alias,name:"My Favorite Card",user:user})
 	const [visible, setVisible] = useState(false)
 	function onSave(alias:string) {
 		setAlias(alias)
