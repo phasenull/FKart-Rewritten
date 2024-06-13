@@ -1,4 +1,4 @@
-export interface Account {
+export interface IKentKartUser {
 	accountCreateDate: string
 	accountId: string
 	activationStatus: "1" | "0"
@@ -28,4 +28,8 @@ export interface Account {
 		latitude: number
 		longitude: number
 	}
+	access_token:string
+	region:string
+	auth_type:string
+
 }
