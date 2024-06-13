@@ -1,19 +1,13 @@
 import { useContext } from "react";
 import { Text, View } from "react-native";
-import Application from "common/Application";
-import { UserContext } from "common/contexts/UserContext";
+import ApplicationConfig from "common/ApplicationConfig";
 import CustomLoadingIndicator from "components/root/CustomLoadingIndicator";
+import { useKentKartAuthStore } from "common/stores/KentKartAuthStore";
 
 export default function KentKartAuthValidator(props:{children:any,else?:any}) {
-	const {loggedUser,isFetching} = useContext(UserContext)
-	if (isFetching) {
-		return <View>
-			<Text>Validating your login information</Text>
-			<CustomLoadingIndicator/>
-		</View>
-	}
-	if (loggedUser && Application.logged_user) {
+	const {user} = useKentKartAuthStore((state)=>state)
+	if (user) {
 		return props.children
-	}
+		}
 	return props.else || null
 }
