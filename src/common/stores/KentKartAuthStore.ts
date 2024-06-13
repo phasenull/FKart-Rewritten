@@ -1,0 +1,96 @@
+import API from "common/API"
+import ApplicationConfig from "common/ApplicationConfig"
+import AuthTypes from "common/enums/LoginTypes"
+import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
+import Logger from "common/Logger"
+import { createStore, create } from "zustand"
+interface KentKartAuthStore {
+	user: undefined | IKentKartUser
+
+	__initF:()=>void
+	__init:boolean
+	region: string
+	auth_type: string
+	fetchAccessToken: (refresh_token: string) => Promise<[false, string | undefined] | [string]>
+	fetchAccountInfo: () => Promise<[false, string] | [IKentKartUser]>
+	credentials: { access_token?: string; refresh_token?: string }
+	login: (args: { username: string; password: string; auth_type: AuthTypes }) => Promise<[true] | [false, string | undefined]>
+	register: (args: {}) => Promise<void>
+}
+
+export const useKentKartAuthStore = create<KentKartAuthStore>((set, get) => ({
+	user: undefined,
+	region: "004",
+	__init:false,
+
+	auth_type: "04", //undefined,
+	credentials: {
+		access_token: undefined,
+		refresh_token: undefined,
+	},
+	__initF: async () => {
+		if (get().__init) {return}
+		Logger.info("KentKartAuthStore.__initF","INIT")
+		set({__init:true})
+		const db = ApplicationConfig.database
+		// const refresh_token = await db.get("kentkart.refresh_token")
+		const access_token = await db.get("kentkart.access_token")
+		const auth_type = await db.get("kentkart.auth_type")
+		const region = await db.get("kentkart.region")
+		console.log("init token",access_token.slice(10))
+		// Logger.info("KentKartAuthStore.__initF",`refresh_token: ${refresh_token}`)
+		if (!access_token) return
+		set({ credentials: { access_token: access_token } })
+		await get().fetchAccountInfo()
+	},
+	login: async (args) => {
+		const { auth_type, password, username } = args
+		console.log(`Attempting to login ${username} ${password.slice(0, 3)}... ${auth_type}`)
+		const [one_time_code, one_time_code_error] = await API.getOneTimeCode({
+			auth_type,
+			password,
+			username,
+		})
+		// console.log("got refresh token", one_time_code)
+		if (!one_time_code) {
+			Logger.error("KentKartAuthStore.login", one_time_code_error)
+			return [false, one_time_code_error]
+		}
+		await ApplicationConfig.database.set("kentkart.one_time_code", one_time_code)
+		const [access_token, access_token_error] = await (get().fetchAccessToken(one_time_code))
+		console.log("login successfull",access_token)
+		if (!access_token) {
+			return [false, access_token_error]
+		}
+		return [true]
+	},
+	fetchAccessToken: async (refresh_token: string) => {
+		const [access_token, access_token_error] = await API.getAccessToken({
+			refresh_token: refresh_token,
+		})
+		// console.log("got access token", access_token)
+		if (!access_token) {
+			return [false, access_token_error]
+		}
+		await ApplicationConfig.database.set("kentkart.access_token",access_token)
+		set({ credentials: { access_token: access_token, refresh_token: refresh_token } })
+		await get().fetchAccountInfo()
+		return [access_token]
+	},
+	fetchAccountInfo: async () => {
+		console.log("fetching account info")
+		const { credentials, auth_type, region } = get()
+		const { access_token } = credentials
+		if (!access_token) return [false, "access token not found, please log in"]
+		const [data, error] = await API.fetchProfile({ access_token: access_token, auth_type, region })
+		if (!data) {
+			Logger.error("account info fetch error",error)
+			return [false, error]
+		}
+		set({ user: {...data,region:region,auth_type:auth_type,access_token:access_token} })
+		console.log("account info fetch successfull", data)
+		return [data]
+	},
+	register: async (args) => {},
+}))
+useKentKartAuthStore.subscribe((state) => state.credentials)
