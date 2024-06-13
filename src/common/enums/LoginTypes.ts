@@ -1,6 +1,6 @@
-enum LoginTypes {
+enum AuthTypes {
 	"email",
 	"phone"
 }
 
-export default LoginTypes;
+export default AuthTypes;
