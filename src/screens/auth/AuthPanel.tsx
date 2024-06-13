@@ -4,16 +4,16 @@ import { useContext, useState } from "react"
 import { Keyboard, KeyboardAvoidingView, Platform, Switch, Text, TextInput, TouchableOpacity, View } from "react-native"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { TranslationsContext } from "common/contexts/TranslationsContext"
-import { UserContext } from "common/contexts/UserContext"
-import LoginTypes from "common/enums/LoginTypes"
+import AuthTypes from "common/enums/LoginTypes"
 import SecondaryText from "components/root/SecondaryText"
 import SwitchAuthPage from "./SwitchAuthPage"
 import { ThemeContext } from "common/contexts/ThemeContext"
+import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 
 type AuthPanelProps = { updatePage: (index: number) => void; panel_type: number; navigation: NativeStackNavigationProp<any> }
 export default function AuthPanel(props: AuthPanelProps) {
 	const [is_keyboard_open, setIsKeyboardOpen] = useState(false)
-	const [inputType, setInputType] = useState<LoginTypes>(LoginTypes.phone)
+	const [inputType, setInputType] = useState<AuthTypes>(AuthTypes.phone)
 	const [input_fields, setInputFields] = useState<{ confirm_password: string; email: string; password: string; tel: string }>({
 		email: "",
 		password: "",
@@ -27,13 +27,12 @@ export default function AuthPanel(props: AuthPanelProps) {
 		setIsKeyboardOpen(false)
 	})
 
-	const { isFetching, loggedUser, loginUsingEmail, loginUsingPhone, isError, error } = useContext(UserContext)
+	const { user, login } = useKentKartAuthStore((state) => state)
 	const { translations } = useContext(TranslationsContext)
-
+	const [error,setError] = useState<undefined | string>(undefined)
 	const { panel_type, updatePage } = props
-	const {theme} = useContext(ThemeContext)
+	const { theme } = useContext(ThemeContext)
 	return (
-
 		<View style={{ backgroundColor: theme.white }} className="py-4 flex-1 flex-col items-center justify-evenly w-1/2">
 			<KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "padding"} className="mb-4 mt-12 flex-col mx-auto justify-center w-64">
 				<Text style={{ color: theme.secondaryDark }} className="text-4xl text-left font-bold">
@@ -44,15 +43,15 @@ export default function AuthPanel(props: AuthPanelProps) {
 				</Text>
 				{/* username */}
 				<TextInput
-					autoComplete={inputType === LoginTypes.email ? "email" : "tel"}
+					autoComplete={inputType === AuthTypes.email ? "email" : "tel"}
 					style={{ color: theme.secondary }}
 					placeholderTextColor={theme.secondaryDark}
-					inputMode={inputType === LoginTypes.email ? "email" : "tel"}
-					placeholder={inputType === LoginTypes.email ? translations.input_fields.email : translations.input_fields.phone}
+					inputMode={inputType === AuthTypes.email ? "email" : "tel"}
+					placeholder={inputType === AuthTypes.email ? translations.input_fields.email : translations.input_fields.phone}
 					className="mt-8 border-2 w-full h-16 border-slate-200 rounded-[10px] px-8 py-2 shadow-2xl"
-					value={input_fields[inputType === LoginTypes.email ? "email" : "tel"] || ""}
+					value={input_fields[inputType === AuthTypes.email ? "email" : "tel"] || ""}
 					onChangeText={(text) => {
-						setInputFields({ ...input_fields, [inputType === LoginTypes.email ? "email" : "tel"]: text })
+						setInputFields({ ...input_fields, [inputType === AuthTypes.email ? "email" : "tel"]: text })
 					}}
 				/>
 				{/* password */}
@@ -91,14 +90,14 @@ export default function AuthPanel(props: AuthPanelProps) {
 				<View className="flex flex-row items-center align-middle justify-end -mt-2">
 					<Text style={{ color: theme.secondaryDark }}>{translations.input_fields.use_phone}</Text>
 					<Switch
-						value={inputType === LoginTypes.phone}
+						value={inputType === AuthTypes.phone}
 						thumbColor={theme.primaryDark}
 						onValueChange={(value) => {
-							setInputType(value ? LoginTypes.phone : LoginTypes.email)
+							setInputType(value ? AuthTypes.phone : AuthTypes.email)
 						}}
 					/>
 				</View>
-				{isError ? <Text style={{ color: theme.error }}>{error}</Text> : null}
+				{error ? <Text style={{ color: theme.error }}>{error}</Text> : null}
 			</KeyboardAvoidingView>
 			{/* button */}
 			{
@@ -107,21 +106,24 @@ export default function AuthPanel(props: AuthPanelProps) {
 					<TouchableOpacity
 						onPress={async () => {
 							switch (inputType) {
-								case LoginTypes.phone:
+								case AuthTypes.phone:
 									if (panel_type === 0) {
-										console.log("login", inputType, LoginTypes.phone)
-										loginUsingPhone({ password: input_fields.password, username: input_fields.tel })
+										console.log("login", inputType, AuthTypes.phone)
+										const [success,errorstring] = await login({ password: input_fields.password, username: input_fields.tel, auth_type: AuthTypes.phone })
+										if (!success) setError(errorstring || "unknown error")
+
 									}
 									break
-								case LoginTypes.email:
+								case AuthTypes.email:
 									if (panel_type === 0) {
-										console.log("login", inputType, LoginTypes.email)
-										loginUsingEmail({ password: input_fields.password, username: input_fields.email })
+										console.log("login", inputType, AuthTypes.email)
+										const [success,errorstring] = await login({ password: input_fields.password, username: input_fields.email, auth_type: AuthTypes.email })
+										if (!success) setError(errorstring || "unknown error")
 									}
 									break
 							}
 						}}
-						disabled={isFetching}
+						disabled={false}
 						className="right-8 self-end w-max"
 						activeOpacity={0.6}
 					>
@@ -130,7 +132,7 @@ export default function AuthPanel(props: AuthPanelProps) {
 							start={[0, 0.5]}
 							end={[1, 0.5]}
 							style={{
-								opacity: isFetching ? 0.3 : 1,
+								opacity: false ? 0.3 : 1,
 							}}
 							colors={[theme.primary, theme.primaryDark]}
 						>

@@ -1,7 +1,7 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import BasicRouteInformation from "common/interfaces/KentKart/BasicRouteInformation"
 import { RefreshControl, ScrollView, Switch, Text, TouchableOpacity, View } from "react-native"
-import useGetRouteDetails from "common/hooks/kentkart/info/useGetRouteDetails"
+import { useGetRouteDetails } from "common/hooks/kentkart/nonAuthHooks"
 import CustomLoadingIndicator from "components/root/CustomLoadingIndicator"
 import RouteData from "common/interfaces/KentKart/RouteData"
 import { useContext, useEffect, useMemo, useState } from "react"
@@ -9,6 +9,8 @@ import BusData from "common/interfaces/KentKart/BusData"
 import BusContainer from "./BusContainer"
 import ApplicationConfig from "common/ApplicationConfig"
 import { ThemeContext } from "common/contexts/ThemeContext"
+import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
+import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
 
 export default function RouteDetails(props: {
 	route: {
@@ -35,10 +37,12 @@ export default function RouteDetails(props: {
 		)
 	}
 	const {theme} = useContext(ThemeContext)
+	const user = useKentKartAuthStore((state)=>state.user)
 	const { data, error, isLoading, refetch, isRefetching } = useGetRouteDetails({
 		route_code: id_to_fetch,
 		include_time_table: true,
 		direction: direction,
+		user:user as IKentKartUser
 	})
 	useEffect(() => {
 		if (data?.data?.result?.code !== 0) {

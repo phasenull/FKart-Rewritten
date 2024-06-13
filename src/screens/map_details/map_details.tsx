@@ -4,7 +4,7 @@ import BusData from "common/interfaces/KentKart/BusData"
 import RouteData from "common/interfaces/KentKart/RouteData"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import ApplicationConfig from "common/ApplicationConfig"
-import useGetCityData from "common/hooks/kentkart/info/useGetCityData"
+
 import React, { LegacyRef, Ref, useContext, useEffect, useRef, useState } from "react"
 import { ICityInformation } from "common/interfaces/KentKart/CityInformation"
 import BottomSheet, { TouchableOpacity } from "@gorhom/bottom-sheet"
@@ -14,10 +14,13 @@ import { ScrollView } from "react-native-gesture-handler"
 import BusContainer from "screens/route_details/BusContainer"
 import { BottomSheetMethods } from "@gorhom/bottom-sheet/lib/typescript/types"
 import Map from "./Map"
-import useGetRouteDetails from "common/hooks/kentkart/info/useGetRouteDetails"
 import CustomLoadingIndicator from "components/root/CustomLoadingIndicator"
+
 import FollowingBus from "./FollowingBus"
 import { ThemeContext } from "common/contexts/ThemeContext"
+import { useGetCityList, useGetRouteDetails } from "common/hooks/kentkart/nonAuthHooks"
+import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
+import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
 export default function MapData(props: {
 	route: {
 		params: {
@@ -30,7 +33,8 @@ export default function MapData(props: {
 }) {
 	const ref_map_view = useRef<MapView>()
 	const ref_bottom_sheet = useRef<BottomSheet>()
-	const { data: cityData } = useGetCityData()
+	const user = useKentKartAuthStore((state)=>state.user)
+	const { data: cityData } = useGetCityList()
 	const [busListToShow, setBusListToShow] = useState<BusData[]>(props?.route?.params?.bus_list)
 	const [routeDataToShow, setRouteDataToShow] = useState<RouteData>(props?.route?.params?.route_data)
 	const { navigation } = props
@@ -41,7 +45,7 @@ export default function MapData(props: {
 		data: fetchedRouteData,
 		isRefetching: isRouteRefetching,
 		refetch: refetchRouteData,
-	} = useGetRouteDetails({ direction: direction, route_code: routeDataToShow.displayRouteCode, include_time_table: true, interval: 5000 })
+	} = useGetRouteDetails({ direction: direction, route_code: routeDataToShow.displayRouteCode, include_time_table: true, interval: 5000,user:user as IKentKartUser })
 	const [followingBus, setFollowingBus] = useState<BusData | undefined>(props?.route?.params?.initial_bus)
 	useEffect(() => {
 		refetchRouteData()
