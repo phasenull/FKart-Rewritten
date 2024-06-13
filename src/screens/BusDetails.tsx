@@ -1,6 +1,6 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { Button, Clipboard, Image, Linking, RefreshControl, Text, TextInput, ToastAndroid, TouchableOpacity, TouchableWithoutFeedback, Vibration, View } from "react-native"
-import Application from "common/Application"
+import ApplicationConfig from "common/ApplicationConfig"
 import React, { useContext, useEffect, useState } from "react"
 import BusData from "common/interfaces/KentKart/BusData"
 import { useGetBusImages } from "common/hooks/fkart/bus/useGetBusImages"
@@ -31,7 +31,7 @@ export default function BusDetails(props: { route: { params: { bus: BusData } };
 	const [token, setToken] = useState<string>("")
 	useEffect(() => {
 		;(async () => {
-			const token = await Application.database.get("CDN_TOKEN")
+			const token = await ApplicationConfig.database.get("CDN_TOKEN")
 			setToken(token)
 		})()
 	}, [])
@@ -112,7 +112,7 @@ export default function BusDetails(props: { route: { params: { bus: BusData } };
 				<TouchableOpacity
 					className="bg-red-400 w-16 h-16"
 					onPress={async () => {
-						await Application.database.set("CDN_TOKEN", token)
+						await ApplicationConfig.database.set("CDN_TOKEN", token)
 						setToken("TOKEN SET!")
 					}}
 				/>

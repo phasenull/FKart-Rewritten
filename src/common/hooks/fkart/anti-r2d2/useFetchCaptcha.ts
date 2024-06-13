@@ -1,7 +1,7 @@
 import { useQuery } from "react-query"
 import axios, { AxiosResponse } from "axios"
 import Logger from "common/Logger"
-import Application from "common/Application"
+import ApplicationConfig from "common/ApplicationConfig"
 import BaseFKartResponse from "common/interfaces/FKart/BaseFKartResponse"
 import Captcha from "common/interfaces/FKart/Captcha"
 
@@ -13,7 +13,7 @@ async function FetchCaptcha(): Promise<
 	>
 > {
 	Logger.info("REQUEST fetchCaptcha")
-	return axios(`${Application.fkart_endpoints.antir2d2}/challange`, { method: "POST" })
+	return axios(`${ApplicationConfig.fkart_endpoints.antir2d2}/challange`, { method: "POST" })
 }
 
 export default function useFetchCaptcha() {

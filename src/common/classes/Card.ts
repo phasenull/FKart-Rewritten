@@ -1,5 +1,5 @@
 import API from "common/API"
-import Application from "common/Application"
+import ApplicationConfig from "common/ApplicationConfig"
 import CardImages from "common/enums/CardImages"
 import CardTypes from "common/enums/CardTypes"
 import { Favorite } from "common/interfaces/KentKart/Favorite"
@@ -31,7 +31,7 @@ export default abstract class Card {
 		if (!card_alias) {
 			throw new Error("Card alias is undefined " + JSON.stringify(card))
 		}
-		const data_on_db = await Application.database.get("card__" + card_alias)
+		const data_on_db = await ApplicationConfig.database.get("card__" + card_alias)
 		if (data_on_db) {
 			return CardTypes[data_on_db as keyof typeof CardTypes] || CardTypes.undefined
 		}

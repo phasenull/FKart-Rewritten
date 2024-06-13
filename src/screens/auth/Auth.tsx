@@ -8,9 +8,9 @@ import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-na
 import KentKartAuthValidator from "components/validators/KentKartAuthValidator"
 import SecondaryText from "components/root/SecondaryText"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import { UserContext } from "common/contexts/UserContext"
 import AuthPanel from "./AuthPanel"
 import { ThemeContext } from "common/contexts/ThemeContext"
+import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 
 export default function AuthPage(props: { navigation: NativeStackNavigationProp<any> }) {
 	const { navigation } = props
@@ -24,8 +24,8 @@ export default function AuthPage(props: { navigation: NativeStackNavigationProp<
 	useEffect(() => {
 		updatePage(0)
 	}, [])
-	const { loggedUser } = useContext(UserContext)
-	if (loggedUser) {
+	const { user } = useKentKartAuthStore((state)=>state)
+	if (user) {
 		navigation.replace("home")
 		return <View></View>
 	}

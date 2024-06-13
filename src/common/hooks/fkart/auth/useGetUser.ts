@@ -2,7 +2,7 @@ import { useQuery } from "react-query"
 import axios, { AxiosResponse } from "axios"
 import BaseFKartResponse from "common/interfaces/FKart/BaseFKartResponse"
 import Logger from "common/Logger"
-import Application from "common/Application"
+import ApplicationConfig from "common/ApplicationConfig"
 import FKartUser from "common/interfaces/FKart/FKartUser"
 import ICredentials from "common/interfaces/app/Credentials"
 import { ToastAndroid } from "react-native"
@@ -17,9 +17,9 @@ async function getUser(credentials?: ICredentials): Promise<
 	| undefined
 > {
 	Logger.info("REQUEST getUser")
-	return axios(`${Application.fkart_endpoints.auth}/user/get`, {
+	return axios(`${ApplicationConfig.fkart_endpoints.auth}/user/get`, {
 		headers:{
-			"User-Agent":Application.getFormattedVersion()
+			"User-Agent":ApplicationConfig.getFormattedVersion()
 		},
 		method: "POST",
 		data: JSON.stringify({

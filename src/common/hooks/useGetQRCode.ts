@@ -1,5 +1,5 @@
 import { useQuery } from "react-query"
-import Application from "common/Application"
+import ApplicationConfig from "common/ApplicationConfig"
 import axios from "axios"
 import Logger from "common/Logger"
 

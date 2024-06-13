@@ -1,25 +1,24 @@
 import { AxiosResponse } from "axios"
-import Application from "common/Application"
-import User from "common/classes/User"
+import ApplicationConfig from "common/ApplicationConfig"
 import { useQueries, useQuery } from "react-query"
-import { Account } from "common/interfaces/KentKart/Account"
+import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
 import Logger from "common/Logger"
 import { BaseKentKartResponse } from "common/interfaces/KentKart/BaseKentKartResponse"
 import { useContext } from "react"
-import { UserContext } from "common/contexts/UserContext"
+import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 
-async function getProfile(user?: User): Promise<AxiosResponse<BaseKentKartResponse & { accountInfo: Account }>> {
+async function getProfile(token:string): Promise<AxiosResponse<BaseKentKartResponse & { accountInfo: IKentKartUser }>> {
 	Logger.info("REQUEST useGetProfileData")
-	const url = `${Application.endpoints.service}/rl1/api/account?region=${Application.region}&authType=4`
-	const request = Application.makeKentKartRequest(url, {
+	const url = `${ApplicationConfig.endpoints.service}/rl1/api/account?region=${ApplicationConfig.region}&authType=4`
+	const request = ApplicationConfig.makeKentKartRequest(url, {
 		method: "GET",
 		headers: {
-			Authorization: `Bearer ${user?.access_token}`,
+			Authorization: `Bearer ${token}`,
 		},
 	})
 	return request
 }
 export default function useGetProfileData() {
-	const {loggedUser:user} = useContext(UserContext)
-	return useQuery(["useGetProfileData"], () => getProfile(user))
+	const {credentials} = useKentKartAuthStore((state)=>state)
+	return useQuery(["useGetProfileData"], () => getProfile(credentials.access_token as string))
 }

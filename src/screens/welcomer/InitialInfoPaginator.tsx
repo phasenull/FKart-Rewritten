@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useMemo, useState } from "react"
 import { Text, TouchableOpacity, View } from "react-native"
-import Application from "common/Application";
+import ApplicationConfig from "common/ApplicationConfig";
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -19,7 +19,7 @@ export function IIPaginator(props: {navigation:NativeStackNavigationProp<any>, i
 	const [showTranslationSelector,setShowTranslationSelector] = useState(false)
 	const [dontShowAgain, setDontShowAgain] = useState(false)
 	useEffect(()=>{
-		Application.database.set("settings.dont_show_welcomer_screen",dontShowAgain)
+		ApplicationConfig.database.set("settings.dont_show_welcomer_screen",dontShowAgain)
 	},[dontShowAgain])
 	return (
 		<View className="flex-1 justify-between items-center">

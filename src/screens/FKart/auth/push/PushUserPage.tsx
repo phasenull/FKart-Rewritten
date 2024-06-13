@@ -4,7 +4,6 @@ import SimplyTextInput from "components/ui/SimplyTextInput"
 import { useContext } from "react"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import { TranslationsContext } from "common/contexts/TranslationsContext"
-import { UserContext } from "common/contexts/UserContext"
 import { FKartContext } from "common/contexts/FKartContext"
 
 export default function PushUserPage(props: { goBack: () => void }) {

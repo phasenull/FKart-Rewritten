@@ -6,7 +6,7 @@ import {
 	TouchableOpacity,
 	View,
 } from "react-native"
-import Application from "common/Application"
+import ApplicationConfig from "common/ApplicationConfig"
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import Divider from "components/root/Divider"

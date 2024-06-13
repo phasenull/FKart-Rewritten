@@ -3,7 +3,7 @@ import MapView from "react-native-maps"
 import BusData from "common/interfaces/KentKart/BusData"
 import RouteData from "common/interfaces/KentKart/RouteData"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import Application from "common/Application"
+import ApplicationConfig from "common/ApplicationConfig"
 import useGetCityData from "common/hooks/kentkart/info/useGetCityData"
 import React, { LegacyRef, Ref, useContext, useEffect, useRef, useState } from "react"
 import { ICityInformation } from "common/interfaces/KentKart/CityInformation"
@@ -88,7 +88,7 @@ export default function MapData(props: {
 
 	useEffect(() => {
 		if (cityData?.data) {
-			const user_region = Application.region
+			const user_region = ApplicationConfig.region
 			const user_city = cityData.data.city.find((city) => city.id === user_region)
 			setUserCity(user_city)
 		}

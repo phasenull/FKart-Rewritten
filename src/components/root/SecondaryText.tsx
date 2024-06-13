@@ -1,5 +1,5 @@
 import { Text, TextProps } from "react-native"
-import Application from "common/Application"
+import ApplicationConfig from "common/ApplicationConfig"
 import { useContext } from "react"
 import { ThemeContext } from "common/contexts/ThemeContext"
 

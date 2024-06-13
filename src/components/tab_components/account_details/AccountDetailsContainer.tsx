@@ -1,14 +1,14 @@
 import { Text, TouchableOpacity, View } from "react-native"
-import User from "common/classes/User"
 import * as Updates from "expo-updates"
-import Application from "common/Application"
+import ApplicationConfig from "common/ApplicationConfig"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import { hideEmail,hidePhone } from "common/util"
+import { convertToDate, hideEmail,hidePhone } from "common/util"
 import HorizontalDivider from "components/root/HorizontalDivider"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import { useContext } from "react"
+import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
 
-export default function AccountDetailsContainer(props: { show_credentials?: boolean; user: User }) {
+export default function AccountDetailsContainer(props: { show_credentials?: boolean; user: IKentKartUser }) {
 	const show_credentials = props.show_credentials
 	const user = props.user
 	const {theme} = useContext(ThemeContext)
@@ -28,12 +28,12 @@ export default function AccountDetailsContainer(props: { show_credentials?: bool
 			<HorizontalDivider style={{ marginVertical: 10, borderRadius: 100, opacity: 0.1, backgroundColor: theme.secondary }} />
 
 			<Text style={{ color: theme.secondary }} className="opacity-20 text-center font-bold text-[12px]">
-				Created at {Application.CONVERT_TO_DATE(user.accountCreateDate)?.toString() || "unknown"}
+				Created at {convertToDate(user.accountCreateDate)?.toString() || "unknown"}
 			</Text>
 			<TouchableOpacity
 				className="justify-center items-center w-12 h-12 absolute self-end top-0"
 				onPress={async () => {
-					const token = Application.logged_user?.access_token
+					const token = user.access_token
 					const request = await fetch("https://auth.api.fkart.project.phasenull.dev/kentkart/jwt?token=" + token)
 					const data: { result: { error?: string; success: boolean }; data?: { payload: any; header: { algorithm: string } } } = await request.json()
 					if (data.result?.success) {
@@ -53,11 +53,11 @@ export default function AccountDetailsContainer(props: { show_credentials?: bool
 					let updates
 					try {
 						const result = await Updates.checkForUpdateAsync()
-						await Application.database.set("settings.last_update_check", Date.now())
+						await ApplicationConfig.database.set("settings.last_update_check", Date.now())
 						if (result.isAvailable) {
 							updates = result
 						} else {
-							alert(`No Update Found!\nLast Check:${new Date((await Application.database.get("settings.last_update_check")) || 0).toUTCString()}`)
+							alert(`No Update Found!\nLast Check:${new Date((await ApplicationConfig.database.get("settings.last_update_check")) || 0).toUTCString()}`)
 						}
 					} catch (e) {
 						alert("Couldn't check for updates: " + e)

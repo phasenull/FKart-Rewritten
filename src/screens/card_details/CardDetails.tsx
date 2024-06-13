@@ -1,5 +1,5 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import Application from "common/Application"
+import ApplicationConfig from "common/ApplicationConfig"
 import Card from "common/classes/Card"
 import CardTypes from "common/enums/CardTypes"
 import { BasicCardData } from "common/interfaces/KentKart/BasicCardData"
@@ -83,7 +83,7 @@ export default function CardDetails(props: {
 				onSelect={(value) => {
 					setShowEditCardTypeModal(false)
 					setCardType(value)
-					Application.database.set("card__" + card.aliasNo, value)
+					ApplicationConfig.database.set("card__" + card.aliasNo, value)
 				}}
 			/>
 			<CardDetailsHeader card={card} card_type={card_type} setShowEditCardTypeModal={setShowEditCardTypeModal} />

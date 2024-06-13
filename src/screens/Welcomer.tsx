@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { Text, View } from "react-native"
-import Application from "common/Application"
+import ApplicationConfig from "common/ApplicationConfig"
 import CustomLoadingIndicator from "components/root/CustomLoadingIndicator"
 import * as Updates from "expo-updates"
 import Logger from "common/Logger"
@@ -17,10 +17,10 @@ export default function WelcomerPage(props: { navigation:NativeStackNavigationPr
 	const [lastCheck,setLastCheck] = useState<number>(0)
 	const {theme} = useContext(ThemeContext)
 	async function onFetchUpdateAsync() {
-		const last_check = await Application.database.get("settings.last_update_check") || 0
+		const last_check = await ApplicationConfig.database.get("settings.last_update_check") || 0
 		setLastCheck(last_check)
 		Logger.info("Welcomer.tsx",`Last update checked at ${new Date(last_check).toUTCString()} | ${last_check}`)
-		if (last_check && (Date.now() - last_check < Application.expo_updates_check_interval)) {
+		if (last_check && (Date.now() - last_check < ApplicationConfig.expo_updates_check_interval)) {
 			setCheckedUpdates(true)
 			setIsUpdateAvailable(false)
 			return
@@ -32,7 +32,7 @@ export default function WelcomerPage(props: { navigation:NativeStackNavigationPr
 			return
 		}
 		try {
-			await Application.database.set("settings.last_update_check",Date.now())
+			await ApplicationConfig.database.set("settings.last_update_check",Date.now())
 			const update = await Updates.checkForUpdateAsync()
 			// if (update.isAvailable) {
 			// 	alert(`Update available on channel ${Updates.channel}: ${update.}`)

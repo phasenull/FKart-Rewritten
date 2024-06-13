@@ -4,7 +4,7 @@ import { useContext, useEffect } from "react"
 import { BackHandler, Image, Keyboard, Text, TouchableWithoutFeedback, View, useWindowDimensions } from "react-native"
 
 import Animated, { FadeIn, useSharedValue, withSpring } from "react-native-reanimated"
-import Application from "common/Application"
+import ApplicationConfig from "common/ApplicationConfig"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import { TranslationsContext } from "common/contexts/TranslationsContext"
 import SecondaryText from "components/root/SecondaryText"
@@ -57,7 +57,7 @@ export default function FKartAuthTypeSelector(props: { navigation: NativeStackNa
 					<View className="flex-1 items-center justify-center">
 						<Animated.View entering={FadeIn.duration(300)} className="flex-row items-end justify-center">
 							<Text className="text-3xl" style={{ fontWeight: "800", color: theme.secondary }}>
-								{Application.name} {translations.screens.fkart.editor}
+								{ApplicationConfig.name} {translations.screens.fkart.editor}
 							</Text>
 						</Animated.View>
 						<Image

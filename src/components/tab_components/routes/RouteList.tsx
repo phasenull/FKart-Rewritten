@@ -3,7 +3,7 @@ import BasicRouteInformation from "common/interfaces/KentKart/BasicRouteInformat
 import RouteTouchable from "./RouteTouchable"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { useContext, useMemo } from "react"
-import Application from "common/Application"
+import ApplicationConfig from "common/ApplicationConfig"
 import { ThemeContext } from "common/contexts/ThemeContext"
 export default function RouteList(props: {
 	data: { routeList: BasicRouteInformation[] }

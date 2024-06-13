@@ -7,8 +7,7 @@ import TRANSLATIONS_AR from "assets/translations/ar"
 import TRANSLATIONS_AZ from "assets/translations/az"
 import TRANSLATIONS_ES from "assets/translations/es"
 import TRANSLATIONS_PIRATE from "assets/translations/pirate"
-import Application from "common/Application"
-import { LoggerContext } from "./LoggerContext"
+import ApplicationConfig from "common/ApplicationConfig"
 
 export const TranslationsContext = createContext<{
 	lang: Langs
@@ -36,19 +35,18 @@ export function getTranslationsFromLang(lang?: Langs) {
 	}
 }
 export function TranslationsProvider(props: { children: any }) {
-	const { appendLog } = useContext(LoggerContext)
 	const [lang, setLang] = useState<Langs>(Langs.tr)
 	const [translations, setTranslations] = useState<typeof TRANSLATIONS_EN>(getTranslationsFromLang(Langs.tr))
 	useEffect(() => {
 		async function get() {
-			const langSetting = (await Application.database.get("settings.lang")) || Langs.tr
+			const langSetting = (await ApplicationConfig.database.get("settings.lang")) || Langs.tr
 			setLang(langSetting)
 		}
 		get()
 	}, [])
 	useEffect(() => {
 		async function handle() {
-			await Application.database.set("settings.lang", lang)
+			await ApplicationConfig.database.set("settings.lang", lang)
 			// appendLog({title:`Language set to "${translations.languages.locale}"`,level:"info"})
 		}
 		handle()

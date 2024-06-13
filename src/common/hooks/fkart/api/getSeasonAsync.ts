@@ -1,6 +1,6 @@
 import axios from "axios";
-import Application from "common/Application";
+import ApplicationConfig from "common/ApplicationConfig";
 
 export default async function getSeasonAsync() {
-	return axios(`${Application.fkart_endpoints.api}/season/get`)
+	return axios(`${ApplicationConfig.fkart_endpoints.api}/season/get`)
 }

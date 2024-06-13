@@ -1,7 +1,7 @@
 import { Text, View } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import Application from "common/Application"
+import ApplicationConfig from "common/ApplicationConfig"
 import { useContext, useState } from "react"
 import { FavoriteCardInputAliasModal } from "./FavoriteCardInputAliasModal"
 import { useAddFavoriteCard } from "common/hooks/kentkart/card/useRenameCard"

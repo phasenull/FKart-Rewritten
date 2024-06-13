@@ -7,7 +7,7 @@ import RouteData from "common/interfaces/KentKart/RouteData"
 import { useContext, useEffect, useMemo, useState } from "react"
 import BusData from "common/interfaces/KentKart/BusData"
 import BusContainer from "./BusContainer"
-import Application from "common/Application"
+import ApplicationConfig from "common/ApplicationConfig"
 import { ThemeContext } from "common/contexts/ThemeContext"
 
 export default function RouteDetails(props: {

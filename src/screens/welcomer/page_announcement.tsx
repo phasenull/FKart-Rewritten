@@ -1,18 +1,18 @@
 import { FlatList, Image, Text, View } from "react-native"
-import Application from "common/Application"
+import ApplicationConfig from "common/ApplicationConfig"
 import Animated, { FadeIn } from "react-native-reanimated"
 import * as Updates from "expo-updates"
 import { Announcement } from "common/interfaces/app/Announcement"
 import  AnnouncementTouchable  from "./AnnouncementTouchable"
 import { useContext, useMemo } from "react"
 import { TranslationsContext } from "common/contexts/TranslationsContext" 
-import { UserContext } from "common/contexts/UserContext"
 import { ThemeContext } from "common/contexts/ThemeContext"
+import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 export function IIPageAnnouncement(props: { announcements: Announcement[] }) {
 	const {theme} = useContext(ThemeContext)
 	const { announcements } = props
 	const {translations} = useContext(TranslationsContext)
-	const {loggedUser} = useContext(UserContext)
+	const {user} = useKentKartAuthStore((state)=>state)
 	return (
 		<View className="justify-center flex-col flex-1 items-center px-4">
 			<Text
@@ -22,7 +22,7 @@ export function IIPageAnnouncement(props: { announcements: Announcement[] }) {
 					fontSize: 24,
 				}}
 			>
-				{translations.screens.welcomer.unread_announcements({announcement_count:announcements.length,user_name:loggedUser?.name})}
+				{translations.screens.welcomer.unread_announcements({announcement_count:announcements.length,user_name:user?.name})}
 			</Text>
 			<FlatList
 				className="mt-12 w-80 -mb-12"

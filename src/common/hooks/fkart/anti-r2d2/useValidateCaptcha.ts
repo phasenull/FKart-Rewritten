@@ -1,7 +1,7 @@
 import { useQuery } from "react-query"
 import axios, { AxiosResponse } from "axios"
 import Logger from "common/Logger"
-import Application from "common/Application"
+import ApplicationConfig from "common/ApplicationConfig"
 import BaseFKartResponse from "common/interfaces/FKart/BaseFKartResponse"
 import Captcha from "common/interfaces/FKart/Captcha"
 
@@ -14,7 +14,7 @@ async function ValidateCaptcha(captcha: Captcha | undefined): Promise<
 	>
 > {
 	Logger.info("REQUEST validateCaptcha")
-	return axios(`${Application.fkart_endpoints.antir2d2}/validate`, {
+	return axios(`${ApplicationConfig.fkart_endpoints.antir2d2}/validate`, {
 		method: "POST",
 		data: JSON.stringify({
 			captcha_session_id: captcha?.session_id,

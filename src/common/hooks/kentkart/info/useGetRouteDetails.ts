@@ -1,5 +1,5 @@
 import { useQuery } from "react-query"
-import Application from "common/Application"
+import ApplicationConfig from "common/ApplicationConfig"
 import BasicRouteInformation from "common/interfaces/KentKart/BasicRouteInformation"
 import Logger from "common/Logger"
 import { AxiosResponse } from "axios"
@@ -14,9 +14,9 @@ async function getRouteDetails({ route_code, direction, include_time_table = fal
 		}
 	>
 > {
-	const url = `${Application.endpoints.service}/rl1/api/v2.0/route/info`
+	const url = `${ApplicationConfig.endpoints.service}/rl1/api/v2.0/route/info`
 	const params: Record<string, string> = {
-		region: Application.region,
+		region: ApplicationConfig.region,
 		lang: "tr",
 		// authType: "4",
 		direction: direction.toString(),
@@ -26,7 +26,7 @@ async function getRouteDetails({ route_code, direction, include_time_table = fal
 		// 010000: without timetable, only bus points
 	}
 	Logger.info(`REQUEST useGetRouteDetails ${route_code} ${direction} ${include_time_table}`)
-	const request = Application.makeKentKartRequest(url, {
+	const request = ApplicationConfig.makeKentKartRequest(url, {
 		method: "GET",
 		params: params,
 	})

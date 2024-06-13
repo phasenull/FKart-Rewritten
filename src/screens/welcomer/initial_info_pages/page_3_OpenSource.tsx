@@ -1,5 +1,5 @@
 import { Clipboard, Image, Linking, Text, ToastAndroid, Vibration, View } from "react-native"
-import Application from "common/Application"
+import ApplicationConfig from "common/ApplicationConfig"
 import { TouchableOpacity } from "@gorhom/bottom-sheet"
 import Animated, { FadeIn, FadeInDown, FadeInUp, FadeOut } from "react-native-reanimated"
 import { TranslationsContext } from "common/contexts/TranslationsContext"
@@ -44,12 +44,12 @@ export function IIPage3() {
 					paddingHorizontal: 4 * 4,
 				}}
 				onLongPress={() => {
-					Clipboard.setString(Application.source_url)
+					Clipboard.setString(ApplicationConfig.source_url)
 					ToastAndroid.show("Copied to clipboard!", 250)
 					Vibration.vibrate(100)
 				}}
 				onPress={() => {
-					Linking.openURL(Application.source_url)
+					Linking.openURL(ApplicationConfig.source_url)
 				}}
 			>
 				<Text className="text-black text-center absolute self-center" style={{ fontWeight: "900" }}>

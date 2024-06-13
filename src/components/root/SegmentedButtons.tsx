@@ -1,5 +1,5 @@
 import { Text, TouchableOpacity, View } from "react-native"
-import Application from "common/Application"
+import ApplicationConfig from "common/ApplicationConfig"
 import React, { useContext, useEffect, useMemo, useState } from "react"
 import { ThemeContext } from "common/contexts/ThemeContext"
 

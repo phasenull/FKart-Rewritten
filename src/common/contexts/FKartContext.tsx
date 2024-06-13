@@ -1,5 +1,4 @@
 import { AxiosResponse } from "axios"
-import User from "common/classes/User"
 import useFetchCaptcha from "common/hooks/fkart/anti-r2d2/useFetchCaptcha"
 import useValidateCaptcha from "common/hooks/fkart/anti-r2d2/useValidateCaptcha"
 import usePushUser from "common/hooks/fkart/auth/usePushUser"
@@ -9,10 +8,9 @@ import FKartUser from "common/interfaces/FKart/FKartUser"
 import ICredentials from "common/interfaces/app/Credentials"
 import { createContext, useContext, useEffect, useState } from "react"
 import { UseQueryResult, useQuery } from "react-query"
-import { LoggerContext } from "./LoggerContext"
 import useGetUser from "common/hooks/fkart/auth/useGetUser"
 import Logger from "common/Logger"
-import Application from "common/Application"
+import ApplicationConfig from "common/ApplicationConfig"
 import { getAccessUserAsync } from "common/hooks/fkart/auth/accessUserAsync"
 export interface IFKartContext {
 	fkartUser: FKartUser | undefined
@@ -75,7 +73,6 @@ export interface IFKartContext {
 }
 export const FKartContext = createContext<IFKartContext>({} as any)
 export function FKartContextProvider(props: { children: any }) {
-	const { appendLog } = useContext(LoggerContext)
 	const [captchaSession, setCaptchaSession] = useState<(Captcha & { captcha_token?: string }) | undefined>()
 	const [loggedUser, setLoggedUser] = useState<FKartUser | undefined>()
 	const [credentials, setCredentials] = useState<ICredentials | undefined>()
@@ -118,10 +115,10 @@ export function FKartContextProvider(props: { children: any }) {
 	}, [captchaChallangeQuery.data])
 	async function saveUser(refresh_token: string) {
 		console.log("Save user!", refresh_token?.slice(0, 5) + "...")
-		await Application.database.set("fkart.refresh_token", refresh_token)
+		await ApplicationConfig.database.set("fkart.refresh_token", refresh_token)
 	}
 	async function loadUser(p_refreshToken?: string) {
-		p_refreshToken = p_refreshToken || ((await Application.database.get("fkart.refresh_token")) as string)
+		p_refreshToken = p_refreshToken || ((await ApplicationConfig.database.get("fkart.refresh_token")) as string)
 		if (!p_refreshToken) return Logger.error("FKartContext.loadUser", "no refresh token found to auth!")
 		console.log("Loading FKart User!", p_refreshToken.slice(0, 5) + "..." || "undefined")
 		setRefreshToken(p_refreshToken)
@@ -168,7 +165,7 @@ export function FKartContextProvider(props: { children: any }) {
 		loadUser(refreshToken)
 	}, [])
 	useEffect(() => {
-		Logger.info("UserContext", "Detected change in credentials!")
+		Logger.info("FKartContext", "Detected change in credentials!")
 		if (credentials?.twoFA_code && credentials.twoFA_session) {
 			getUser()
 			setCredentials({ ...credentials, twoFA_code: undefined })
@@ -191,7 +188,7 @@ export function FKartContextProvider(props: { children: any }) {
 		setAccessToken(undefined)
 		setCredentials(undefined)
 		setLoggedUser(undefined)
-		await Application.database.removeItem("fkart.refrest_token")
+		await ApplicationConfig.database.removeItem("fkart.refrest_token")
 	}
 	return (
 		<FKartContext.Provider
@@ -219,7 +216,6 @@ export function FKartContextProvider(props: { children: any }) {
 								__code: code,
 							})
 						} else {
-							appendLog({ title: "Cant set code without fetching captcha!", level: "warn" })
 						}
 					},
 					captchaSession: captchaSession,

@@ -2,16 +2,15 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { StatusBar } from "expo-status-bar"
 import React, { useContext, useEffect, useMemo, useState } from "react"
 import { Text, View } from "react-native"
-import Application from "common/Application"
-import User from "common/classes/User"
+import ApplicationConfig from "common/ApplicationConfig"
 import { BottomTabNavigator } from "components/root/BottomTabNavigator"
-import { UserContext } from "common/contexts/UserContext"
-export default function RootScreen(props: { navigation: NativeStackNavigationProp<any>; route: { params?: { user?: User | undefined } } }) {
+import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
+export default function RootScreen(props: { navigation: NativeStackNavigationProp<any>}) {
 	
-	const { error, isError, isFetching, loggedUser: user } = useContext(UserContext)
+	const { user } = useKentKartAuthStore((state)=>state)
 	useEffect(() => {
 		async function get() {
-			if (!Application.__is_init) {
+			if (!ApplicationConfig.__is_init) {
 				setTimeout(() => {
 					get()
 				}, 100)
@@ -20,13 +19,6 @@ export default function RootScreen(props: { navigation: NativeStackNavigationPro
 		}
 		get()
 	}, [])
-	if (isFetching) {
-		return (
-			<View>
-				<Text>fetching</Text>
-			</View>
-		)
-	}
 	// TODO separate these into different files
 
 	return (

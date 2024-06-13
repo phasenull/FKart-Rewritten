@@ -1,5 +1,5 @@
 import { useQuery } from "react-query"
-import Application from "common/Application"
+import ApplicationConfig from "common/ApplicationConfig"
 import { BaseKentKartResponse } from "common/interfaces/KentKart/BaseKentKartResponse"
 import { BasicCardData } from "common/interfaces/KentKart/BasicCardData"
 import { AxiosResponse } from "axios"
@@ -11,8 +11,8 @@ async function getCardData(
 	AxiosResponse<BaseKentKartResponse & {cardlist: BasicCardData<any>[]}>
 > {
 	// Logger.info(`REQUEST useGetCardData ${card_alias}`)
-	const url = `${Application.endpoints.service}/rl1/api/card/balance?region=${Application.region}&lang=tr&authType=4&token=${Application.logged_user?.access_token}&alias=${card_alias}`
-	return Application.makeKentKartRequest(url)
+	const url = `${ApplicationConfig.endpoints.service}/rl1/api/card/balance?region=${ApplicationConfig.region}&lang=tr&authType=4&token=${ApplicationConfig.logged_user?.access_token}&alias=${card_alias}`
+	return ApplicationConfig.makeKentKartRequest(url)
 }
 
 export function useGetCardData(card_alias: string) {

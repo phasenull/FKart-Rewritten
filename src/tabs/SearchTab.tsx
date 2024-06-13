@@ -1,6 +1,6 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import useGetRouteList from "common/hooks/fkart/static/useGetRouteList"
-import Application from "common/Application"
+import ApplicationConfig from "common/ApplicationConfig"
 import {
 	ActivityIndicator,
 	FlatList,
@@ -23,7 +23,7 @@ import RouteSearchBar from "components/tab_components/routes/RouteSearchBar"
 import SecondaryText from "components/root/SecondaryText"
 import { ThemeContext } from "common/contexts/ThemeContext"
 export default function SearchTab(props: { route: any; navigation: NativeStackNavigationProp<any> }) {
-	const { data, isLoading, isError, error, refetch, isRefetching } = useGetRouteList({ region: Application.region })
+	const { data, isLoading, isError, error, refetch, isRefetching } = useGetRouteList({ region: ApplicationConfig.region })
 	const {theme} = useContext(ThemeContext)
 	const { navigation, route } = props
 	const [searchText, setSearchText] = useState("")

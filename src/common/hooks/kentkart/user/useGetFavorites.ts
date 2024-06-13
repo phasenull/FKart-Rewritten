@@ -1,28 +1,25 @@
 import { useQuery } from "react-query"
-import User from "common/classes/User"
-import Application from "common/Application"
+import ApplicationConfig from "common/ApplicationConfig"
 import API from "common/API"
 import { AxiosResponse } from "axios"
 import { Favorites } from "common/interfaces/KentKart/Favorite"
 import { BaseKentKartResponse } from "common/interfaces/KentKart/BaseKentKartResponse"
 import Logger from "common/Logger"
-import { UserContext } from "common/contexts/UserContext"
 import { useContext } from "react"
+import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 
-async function getFavorites(user?:User): Promise<
+async function getFavorites(token?:string): Promise<
 	AxiosResponse<Favorites & BaseKentKartResponse> | undefined
 > {
-	const url = `${Application.endpoints.service}/rl1/api/v4.0/favorite?authType=4&region=${Application.region}`
+	const url = `${ApplicationConfig.endpoints.service}/rl1/api/v4.0/favorite?authType=4&region=${ApplicationConfig.region}`
 
 	Logger.info("REQUEST useGetFavorites")
-	if (!user) {
-		return undefined
-	}
-	return Application.makeKentKartRequest(url)
+	if (!token) return
+	return ApplicationConfig.makeKentKartRequest(url)
 }
 
 export default function useGetFavorites() {
 	
-	const {loggedUser:user} = useContext(UserContext)
-	return useQuery(["getFavorites"], ()=>getFavorites(user),{refetchInterval: 30_000})
+	const {credentials} = useKentKartAuthStore((state)=>state)
+	return useQuery(["getFavorites"], ()=>getFavorites(credentials.access_token),{refetchInterval: 30_000})
 }

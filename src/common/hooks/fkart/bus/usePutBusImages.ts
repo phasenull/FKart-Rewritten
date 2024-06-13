@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios"
-import Application from "common/Application"
+import ApplicationConfig from "common/ApplicationConfig"
 import BusData from "common/interfaces/KentKart/BusData"
 import { useQuery } from "react-query"
 import buffer from "buffer"
@@ -23,13 +23,13 @@ export async function putBusImages(
 	console.log(img_data.slice(0, 100))
 	const img_base64 = buffer.Buffer.from(img_data)
 	const img = img_src + img_base64
-	const authToken = await Application.database.get(
+	const authToken = await ApplicationConfig.database.get(
 		"CDN_TOKEN"
 	)
 
 	Logger.info("REQUEST usePutBusImages", bus)
 	const url =
-		`${Application.fkart_endpoints.bus}/media?busPlateNumber=` + bus.plateNumber
+		`${ApplicationConfig.fkart_endpoints.bus}/media?busPlateNumber=` + bus.plateNumber
 	return axios(url, {
 		method: "PUT",
 		headers: {

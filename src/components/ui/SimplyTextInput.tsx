@@ -1,5 +1,5 @@
 import { TextInput, TextInputProps, View } from "react-native"
-import Application from "common/Application"
+import ApplicationConfig from "common/ApplicationConfig"
 import { useContext, useState } from "react"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import SecondaryText from "components/root/SecondaryText"

@@ -1,9 +1,8 @@
 import { BottomTabBarProps, createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { useContext, useMemo, useState } from "react"
-import Application from "common/Application"
+import ApplicationConfig from "common/ApplicationConfig"
 import { TranslationsContext } from "common/contexts/TranslationsContext"
-import { UserContext } from "common/contexts/UserContext"
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import AccountTab from "tabs/AccountTab"

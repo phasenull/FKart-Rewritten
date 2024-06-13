@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import Application from "common/Application";
+import ApplicationConfig from "common/ApplicationConfig";
 import { AxiosResponse } from "axios";
 import { BaseKentKartResponse } from "common/interfaces/KentKart/BaseKentKartResponse";
 import { ICityInformation } from "common/interfaces/KentKart/CityInformation";
@@ -9,7 +9,7 @@ async function getCityData() : Promise<AxiosResponse<BaseKentKartResponse & {
 	city: ICityInformation[]
 }>> {
 	Logger.info("REQUEST useGetCityData")
-	return Application.makeKentKartRequest(`${Application.endpoints.service}/rl1/api/v2.0/city`)
+	return ApplicationConfig.makeKentKartRequest(`${ApplicationConfig.endpoints.service}/rl1/api/v2.0/city`)
 }
 
 export default function useGetCityData() {

@@ -1,7 +1,7 @@
 import { useContext,  useMemo } from "react"
 import { Image, Text, View } from "react-native"
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated"
-import Application from "common/Application"
+import ApplicationConfig from "common/ApplicationConfig"
 import { BasicCardData } from "common/interfaces/KentKart/BasicCardData"
 import { getQRCode } from "common/hooks/useGetQRCode"
 import { ThemeContext } from "common/contexts/ThemeContext"
@@ -22,7 +22,7 @@ export default function VirtualCardQRCodePanel(props: { card: BasicCardData<"Bas
 			return null
 		}
 		linear.value = 100
-		linear.value = withTiming(0, { duration: Application.sync_interval, easing: Easing.linear })
+		linear.value = withTiming(0, { duration: ApplicationConfig.sync_interval, easing: Easing.linear })
 		return (
 			<View
 				className="flex-col my-4 w-80 overflow-hidden"
