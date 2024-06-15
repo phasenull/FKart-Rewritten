@@ -21,7 +21,7 @@ export default function RouteTouchable(props: { navigation: NativeStackNavigatio
 					<View
 						className="px-2 h-6"
 						style={{
-							backgroundColor: item.routeColor === "006633" ? theme.primary : `#${item.routeColor}`,
+							backgroundColor: item.routeColor === "006633" ? theme.primary : `#${item.routeColor || "fff"}`,
 							borderRadius: 6,
 						}}
 					>

@@ -12,7 +12,8 @@ import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 import KentKartAuthValidator from "components/validators/KentKartAuthValidator"
 import SeasonValidator from "components/validators/SeasonValidator"
 import AuthWall from "components/walls/AuthWall"
-export default function AccountTab(props?: { route: any; navigation: NativeStackNavigationProp<any> | any }) {
+import SimplyButton from "components/ui/SimplyButton"
+export default function AccountTab(props?: { route: any; navigation: NativeStackNavigationProp<any> }) {
 	const { theme } = useContext(ThemeContext)
 	if (!props) {
 		return (
@@ -22,7 +23,7 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 		)
 	}
 	const { navigation } = props
-	const {user} = useKentKartAuthStore((state)=>state)
+	const { user } = useKentKartAuthStore((state) => state)
 	const [cards, setCards] = useState<Favorite<"Card">[] | undefined>(undefined)
 	const [virtualCards, setVirtualCards] = useState<Favorite<"QR">[] | undefined>(undefined)
 	const [is_show_secret, setIsShowSecret] = useState(false)
@@ -35,30 +36,30 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 	}
 	// const { data: favoritesData, refetch: refetchFavorites, isRefetching: isFavoritesRefetching, isLoading: isFavoritesLoading } = favoritesQuery
 	// useEffect(() => {
-		// if (!favoritesData?.data) {
-			// console.log("no fav data", (favoritesQuery.error as any)?.response?.data)
-			// return
-		// }
-		// const favorite_cards_filtered = get_cards_from_fav_list(favoritesData.data.userFavorites)
-		// setCards(favorite_cards_filtered)
-		// setVirtualCards(favoritesData.data.virtualCards)
+	// if (!favoritesData?.data) {
+	// console.log("no fav data", (favoritesQuery.error as any)?.response?.data)
+	// return
+	// }
+	// const favorite_cards_filtered = get_cards_from_fav_list(favoritesData.data.userFavorites)
+	// setCards(favorite_cards_filtered)
+	// setVirtualCards(favoritesData.data.virtualCards)
 	// }, [favoritesData?.data])
 	return (
 		<View style={{ backgroundColor: theme.dark }} className="flex-1 items-center justify-center">
 			{/* login prompt */}
-			<SeasonValidator>
-				<KentKartAuthValidator else={<AuthWall navigation={navigation} />}>
-					<ScrollView
-						// refreshControl={<RefreshControl onRefresh={refetchFavorites} refreshing={isFavoritesLoading} />}
-						horizontal={false}
-						showsVerticalScrollIndicator={true}
-						contentContainerStyle={{
-							paddingBottom: 100,
-							justifyContent: "center",
-							alignItems: "center",
-						}}
-						className="w-full"
-					>
+			<ScrollView
+				// refreshControl={<RefreshControl onRefresh={refetchFavorites} refreshing={isFavoritesLoading} />}
+				horizontal={false}
+				showsVerticalScrollIndicator={true}
+				contentContainerStyle={{
+					paddingBottom: 100,
+					justifyContent: "center",
+					alignItems: "center",
+				}}
+				className="w-full"
+			>
+				<SeasonValidator>
+					<KentKartAuthValidator else={<AuthWall navigation={navigation} />}>
 						<AccountDetailsContainer show_credentials={is_show_secret} user={user} />
 						{/* {isFavoritesLoading ? (
 							<View className="items-center flex-1 justify-center">
@@ -128,9 +129,10 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 					Logout
 					</Text>
 				</TouchableOpacity> */}
-					</ScrollView>
-				</KentKartAuthValidator>
-			</SeasonValidator>
+					</KentKartAuthValidator>
+				</SeasonValidator>
+				<SimplyButton text="Select City" size="medium" onPress={()=>props.navigation.navigate("city_selector")}/>
+			</ScrollView>
 		</View>
 	)
 }

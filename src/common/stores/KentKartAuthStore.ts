@@ -9,24 +9,28 @@ interface KentKartAuthStore {
 
 	__initF:()=>void
 	__init:boolean
-	region: string
+	region: string|undefined
 	auth_type: string
 	fetchAccessToken: (refresh_token: string) => Promise<[false, string | undefined] | [string]>
 	fetchAccountInfo: () => Promise<[false, string] | [IKentKartUser]>
 	credentials: { access_token?: string; refresh_token?: string }
 	login: (args: { username: string; password: string; auth_type: AuthTypes }) => Promise<[true] | [false, string | undefined]>
 	register: (args: {}) => Promise<void>
+	setRegion: (region:string) => void
 }
 
 export const useKentKartAuthStore = create<KentKartAuthStore>((set, get) => ({
 	user: undefined,
-	region: "004",
+	region: undefined,
 	__init:false,
 
 	auth_type: "04", //undefined,
 	credentials: {
 		access_token: undefined,
 		refresh_token: undefined,
+	},
+	setRegion: (region:string) => {
+		set({region:region,user:{...get().user as IKentKartUser,region:region}})
 	},
 	__initF: async () => {
 		if (get().__init) {return}
@@ -82,12 +86,12 @@ export const useKentKartAuthStore = create<KentKartAuthStore>((set, get) => ({
 		const { credentials, auth_type, region } = get()
 		const { access_token } = credentials
 		if (!access_token) return [false, "access token not found, please log in"]
-		const [data, error] = await API.fetchProfile({ access_token: access_token, auth_type, region })
+		const [data, error] = await API.fetchProfile({ access_token: access_token, auth_type:auth_type,region:region as string })
 		if (!data) {
 			Logger.error("account info fetch error",error)
 			return [false, error]
 		}
-		set({ user: {...data,region:region,auth_type:auth_type,access_token:access_token} })
+		set({ user: {...data,region:region as string,auth_type:auth_type,access_token:access_token} })
 		console.log("account info fetch successfull", data)
 		return [data]
 	},

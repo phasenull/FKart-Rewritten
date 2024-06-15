@@ -4,15 +4,34 @@ import Animated, { FadeIn } from "react-native-reanimated"
 import * as Updates from "expo-updates"
 import { Announcement } from "common/interfaces/app/Announcement"
 import  AnnouncementTouchable  from "./AnnouncementTouchable"
-import { useContext, useMemo } from "react"
+import { useContext, useEffect, useMemo, useState } from "react"
 import { TranslationsContext } from "common/contexts/TranslationsContext" 
 import { ThemeContext } from "common/contexts/ThemeContext"
+import { useGetAnnouncements } from "common/hooks/kentkart/nonAuthHooks"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
-export function IIPageAnnouncement(props: { announcements: Announcement[] }) {
+import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
+import { dateFromMessedKentKartDateFormat } from "common/util"
+export function IIPageAnnouncement() {
 	const {theme} = useContext(ThemeContext)
-	const { announcements } = props
 	const {translations} = useContext(TranslationsContext)
 	const {user} = useKentKartAuthStore((state)=>state)
+	const { data } = useGetAnnouncements({user:user as IKentKartUser})
+	const [announcements,setAnnouncements] = useState<[]|Announcement[]>([])
+	useEffect(()=>{
+		setAnnouncements(data?.data?.announceList?.map((data) => ({
+			title: data.title,
+			announcementType: "official",
+			extra: {
+				validFrom: dateFromMessedKentKartDateFormat(data.valid_from),
+				validTo: dateFromMessedKentKartDateFormat(data.valid_to),
+				targetRoutes:["633"]
+			},
+			description: data.description,
+			id: data.id,
+			image: data.image,
+		})) || [])
+	},[data?.data])
+
 	return (
 		<View className="justify-center flex-col flex-1 items-center px-4">
 			<Text

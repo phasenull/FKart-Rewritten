@@ -8,6 +8,7 @@ export default function SecondaryText(props: TextProps) {
 
 	return (
 		<Text
+			{...props}
 			style={[
 				{
 					fontWeight: "800",

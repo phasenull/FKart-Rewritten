@@ -22,8 +22,11 @@ import RouteList from "components/tab_components/routes/RouteList"
 import RouteSearchBar from "components/tab_components/routes/RouteSearchBar" 
 import SecondaryText from "components/reusables/SecondaryText"
 import { ThemeContext } from "common/contexts/ThemeContext"
+import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
+import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
 export default function SearchTab(props: { route: any; navigation: NativeStackNavigationProp<any> }) {
-	const { data, isLoading, isError, error, refetch, isRefetching } = useGetRouteList({ region: ApplicationConfig.region })
+	const user = useKentKartAuthStore((state)=>state.user)
+	const { data, isLoading, isError, error, refetch, isRefetching } = useGetRouteList(user as IKentKartUser)
 	const {theme} = useContext(ThemeContext)
 	const { navigation, route } = props
 	const [searchText, setSearchText] = useState("")
