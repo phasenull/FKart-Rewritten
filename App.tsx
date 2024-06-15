@@ -19,6 +19,7 @@ import FKartAuthPage from "./src/components/walls/FKartAuthWall"
 import FKartWelcomer from "screens/fkart/auth/push/Welcomer"
 import { ThemeProvider } from "./src/common/contexts/ThemeContext"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
+import CitySelector from "screens/city_selector/CitySelector"
 
 const config = {
 	screens: {
@@ -92,6 +93,14 @@ export default function AppEntryComponent() {
 											title: "",
 										}}
 										component={MapData as any}
+									/>
+									<Stack.Screen
+										name="city_selector"
+										options={{
+											headerShown: false,
+											// title: "Select City",
+										}}
+										component={CitySelector as any}
 									/>
 								</Stack.Navigator>
 							</NavigationContainer>
