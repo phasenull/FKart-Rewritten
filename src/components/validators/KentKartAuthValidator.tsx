@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Text, View } from "react-native";
 import ApplicationConfig from "common/ApplicationConfig";
-import CustomLoadingIndicator from "components/root/CustomLoadingIndicator";
+import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator";
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore";
 
 export default function KentKartAuthValidator(props:{children:any,else?:any}) {

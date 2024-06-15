@@ -1,6 +1,6 @@
 import { Modal, Text, TouchableOpacity, View } from "react-native"
 import CardTypes from "common/enums/CardTypes";
-import SegmentedButtons from "components/root/SegmentedButtons";
+import SegmentedButtons from "components/reusables/SegmentedButtons";
 import { useContext } from "react";
 import { ThemeContext } from "common/contexts/ThemeContext";
 

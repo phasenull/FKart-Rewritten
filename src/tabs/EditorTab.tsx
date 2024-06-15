@@ -8,7 +8,7 @@ import { useContext } from "react"
 import { FKartContext } from "common/contexts/FKartContext"
 import SimplyButton from "components/ui/SimplyButton"
 import LogsView from "screens/fkart/editor/tab/LogsView"
-import SecondaryText from "components/root/SecondaryText"
+import SecondaryText from "components/reusables/SecondaryText"
 
 export default function EditorTab(props: { route: any; navigation: NativeStackNavigationProp<any> }) {
 	const { fkartUser, userManager } = useContext(FKartContext)

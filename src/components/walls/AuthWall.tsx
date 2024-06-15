@@ -1,6 +1,6 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { TouchableOpacity, View } from "react-native"
-import SecondaryText from "components/root/SecondaryText"
+import SecondaryText from "components/reusables/SecondaryText"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { useContext } from "react"
 import { TranslationsContext } from "common/contexts/TranslationsContext"

@@ -1,13 +1,13 @@
 import { FKartContext } from "common/contexts/FKartContext"
 import { getLogsAsync } from "common/hooks/fkart/auth/getLogs"
 import ICredentials from "common/interfaces/app/Credentials"
-import CustomLoadingIndicator from "components/root/CustomLoadingIndicator"
+import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
 import { useContext } from "react"
 import { Text, View, ViewProps } from "react-native"
 import { useQuery } from "react-query"
 import LogTouchable from "./LogTouchable"
 import { ThemeContext } from "common/contexts/ThemeContext"
-import SecondaryText from "components/root/SecondaryText"
+import SecondaryText from "components/reusables/SecondaryText"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 
 export default function LogsView(props: ViewProps) {

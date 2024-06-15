@@ -1,5 +1,5 @@
 import { useState } from "react"
-import InputModal from "components/root/InputModal";
+import InputModal from "components/reusables/InputModal";
 import { formatAlias } from "common/util"
 
 export function FavoriteCardInputAliasModal(props: { onDismiss?: () => void; visible: boolean; onSave?: (output: string) => void }) {

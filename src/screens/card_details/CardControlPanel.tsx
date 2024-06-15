@@ -6,7 +6,7 @@ import { useContext, useEffect, useMemo, useState } from "react"
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { useAddFavoriteCard,useRemoveFavoriteCard } from "common/hooks/kentkart/cardHooks"
-import InputModal from "components/root/InputModal"
+import InputModal from "components/reusables/InputModal"
 import Logger from "common/Logger"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"

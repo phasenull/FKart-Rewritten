@@ -1,7 +1,7 @@
 import { ThemeContext } from "common/contexts/ThemeContext"
 import Log from "common/interfaces/FKart/Log"
 import { convertDiffToText } from "common/util"
-import SecondaryText from "components/root/SecondaryText"
+import SecondaryText from "components/reusables/SecondaryText"
 import { useContext } from "react"
 import { Text, TouchableOpacity } from "react-native"
 

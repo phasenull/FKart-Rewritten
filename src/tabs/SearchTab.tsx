@@ -16,11 +16,11 @@ import {
 	View,
 } from "react-native"
 import React, { useContext, useMemo, useState } from "react"
-import CustomLoadingIndicator from "components/root/CustomLoadingIndicator"
+import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
 
 import RouteList from "components/tab_components/routes/RouteList"
 import RouteSearchBar from "components/tab_components/routes/RouteSearchBar" 
-import SecondaryText from "components/root/SecondaryText"
+import SecondaryText from "components/reusables/SecondaryText"
 import { ThemeContext } from "common/contexts/ThemeContext"
 export default function SearchTab(props: { route: any; navigation: NativeStackNavigationProp<any> }) {
 	const { data, isLoading, isError, error, refetch, isRefetching } = useGetRouteList({ region: ApplicationConfig.region })

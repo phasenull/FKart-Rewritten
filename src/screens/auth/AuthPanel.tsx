@@ -5,7 +5,7 @@ import { Keyboard, KeyboardAvoidingView, Platform, Switch, Text, TextInput, Touc
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { TranslationsContext } from "common/contexts/TranslationsContext"
 import AuthTypes from "common/enums/LoginTypes"
-import SecondaryText from "components/root/SecondaryText"
+import SecondaryText from "components/reusables/SecondaryText"
 import SwitchAuthPage from "./SwitchAuthPage"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"

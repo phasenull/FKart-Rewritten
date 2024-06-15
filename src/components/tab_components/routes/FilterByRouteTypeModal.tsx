@@ -1,5 +1,5 @@
 import { Text, TouchableOpacity,View } from "react-native"
-import SegmentedButtons from "components/root/SegmentedButtons";
+import SegmentedButtons from "components/reusables/SegmentedButtons";
 import Animated, { BounceIn, BounceInDown, BounceInLeft, BounceInUp, BounceOut, BounceOutDown, BounceOutRight, StretchInX, ZoomInUp, ZoomOut, ZoomOutDown, ZoomOutUp} from "react-native-reanimated"
 import { useContext } from "react";
 import { ThemeContext } from "common/contexts/ThemeContext";

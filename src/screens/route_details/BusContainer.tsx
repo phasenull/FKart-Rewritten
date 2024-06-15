@@ -9,11 +9,11 @@ import {
 import ApplicationConfig from "common/ApplicationConfig"
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import Divider from "components/root/Divider"
+import Divider from "components/reusables/Divider"
 import React, { useContext } from "react"
 import RouteData from "common/interfaces/KentKart/RouteData"
 import { useGetBusImages } from "common/hooks/fkart/bus/useGetBusImages"
-import CustomLoadingIndicator from "components/root/CustomLoadingIndicator"
+import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
 import { ThemeContext } from "common/contexts/ThemeContext"
 export default function BusContainer(props: {
 	navigation: NativeStackNavigationProp<any>

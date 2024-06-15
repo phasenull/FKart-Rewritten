@@ -3,7 +3,7 @@ import RouteData from "common/interfaces/KentKart/RouteData"
 import BusData from "common/interfaces/KentKart/BusData"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import React, { useContext } from "react"
-import Divider from "components/root/Divider"
+import Divider from "components/reusables/Divider"
 import { ThemeContext } from "common/contexts/ThemeContext"
 
 export function BusCallout(props: { scheduled_data: any; route_data: RouteData; bus: BusData }) {

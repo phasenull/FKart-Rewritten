@@ -1,19 +1,17 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import { RefreshControl, ScrollView, Text, View } from "react-native"
-import Application from "common/Application"
-import User from "common/classes/User"
 import AccountDetailsContainer from "components/tab_components/account_details/AccountDetailsContainer"
-import { useContext, useEffect, useState } from "react"
+import { useContext, useState } from "react"
+import { ScrollView, Text, View } from "react-native"
 
-import CardContainer from "components/tab_components/account_details/CardContainer"
-import CustomLoadingIndicator from "components/root/CustomLoadingIndicator"
 import { Favorite } from "common/interfaces/KentKart/Favorite"
 import { AddCard } from "components/tab_components/account_details/AddCard"
-import { UserContext, UserContextInterface } from "common/contexts/UserContext"
-import KentKartAuthValidator from "components/validators/KentKartAuthValidator"
-import AuthWall from "components/walls/AuthWall"
+import CardContainer from "components/tab_components/account_details/CardContainer"
+
 import { ThemeContext } from "common/contexts/ThemeContext"
+import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
+import KentKartAuthValidator from "components/validators/KentKartAuthValidator"
 import SeasonValidator from "components/validators/SeasonValidator"
+import AuthWall from "components/walls/AuthWall"
 export default function AccountTab(props?: { route: any; navigation: NativeStackNavigationProp<any> | any }) {
 	const { theme } = useContext(ThemeContext)
 	if (!props) {
@@ -24,8 +22,7 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 		)
 	}
 	const { navigation } = props
-
-	const { loggedUser: user, favoritesQuery, profileQuery } = useContext(UserContext) as Omit<UserContextInterface, "loggedUser"> & { loggedUser: User }
+	const {user} = useKentKartAuthStore((state)=>state)
 	const [cards, setCards] = useState<Favorite<"Card">[] | undefined>(undefined)
 	const [virtualCards, setVirtualCards] = useState<Favorite<"QR">[] | undefined>(undefined)
 	const [is_show_secret, setIsShowSecret] = useState(false)
@@ -36,23 +33,23 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 		const favorite_cards_filtered: Favorite<"Card">[] = fav_list?.filter((p_card: Favorite<"Card">) => p_card.type === 2 || p_card.alias)
 		return favorite_cards_filtered
 	}
-	const { data: favoritesData, refetch: refetchFavorites, isRefetching: isFavoritesRefetching, isLoading: isFavoritesLoading } = favoritesQuery
-	useEffect(() => {
-		if (!favoritesData?.data) {
-			console.log("no fav data", (favoritesQuery.error as any)?.response?.data)
-			return
-		}
-		const favorite_cards_filtered = get_cards_from_fav_list(favoritesData.data.userFavorites)
-		setCards(favorite_cards_filtered)
-		setVirtualCards(favoritesData.data.virtualCards)
-	}, [favoritesData?.data])
+	// const { data: favoritesData, refetch: refetchFavorites, isRefetching: isFavoritesRefetching, isLoading: isFavoritesLoading } = favoritesQuery
+	// useEffect(() => {
+		// if (!favoritesData?.data) {
+			// console.log("no fav data", (favoritesQuery.error as any)?.response?.data)
+			// return
+		// }
+		// const favorite_cards_filtered = get_cards_from_fav_list(favoritesData.data.userFavorites)
+		// setCards(favorite_cards_filtered)
+		// setVirtualCards(favoritesData.data.virtualCards)
+	// }, [favoritesData?.data])
 	return (
 		<View style={{ backgroundColor: theme.dark }} className="flex-1 items-center justify-center">
 			{/* login prompt */}
 			<SeasonValidator>
 				<KentKartAuthValidator else={<AuthWall navigation={navigation} />}>
 					<ScrollView
-						refreshControl={<RefreshControl onRefresh={refetchFavorites} refreshing={isFavoritesLoading} />}
+						// refreshControl={<RefreshControl onRefresh={refetchFavorites} refreshing={isFavoritesLoading} />}
 						horizontal={false}
 						showsVerticalScrollIndicator={true}
 						contentContainerStyle={{
@@ -63,7 +60,7 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 						className="w-full"
 					>
 						<AccountDetailsContainer show_credentials={is_show_secret} user={user} />
-						{isFavoritesLoading ? (
+						{/* {isFavoritesLoading ? (
 							<View className="items-center flex-1 justify-center">
 								<CustomLoadingIndicator />
 								<Text
@@ -102,7 +99,7 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 									</Text>
 								</View>
 							)
-						)}
+						)} */}
 
 						{virtualCards?.map((p_card, index) => (
 							<CardContainer style={{ marginTop: 5 * 4 }} favorite_data={p_card} navigation={navigation} key={"virtual_card_" + index} index={index} />

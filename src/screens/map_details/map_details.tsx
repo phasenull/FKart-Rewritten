@@ -14,7 +14,7 @@ import { ScrollView } from "react-native-gesture-handler"
 import BusContainer from "screens/route_details/BusContainer"
 import { BottomSheetMethods } from "@gorhom/bottom-sheet/lib/typescript/types"
 import Map from "./Map"
-import CustomLoadingIndicator from "components/root/CustomLoadingIndicator"
+import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
 
 import FollowingBus from "./FollowingBus"
 import { ThemeContext } from "common/contexts/ThemeContext"

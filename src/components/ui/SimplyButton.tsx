@@ -2,7 +2,7 @@ import { Text, TouchableOpacity, TouchableOpacityProps, TouchableWithoutFeedback
 
 import { useContext, useEffect } from "react"
 import { ThemeContext } from "common/contexts/ThemeContext"
-import CustomLoadingIndicator from "components/root/CustomLoadingIndicator"
+import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
 
 export default function SimplyButton(
 	props: {

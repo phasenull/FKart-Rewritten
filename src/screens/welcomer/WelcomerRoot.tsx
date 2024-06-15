@@ -4,11 +4,15 @@ import { IIPaginator } from "./InitialInfoPaginator"
 import { IIPage2 } from "./initial_info_pages/page_2_CommunityMade"
 import { IIPage3 } from "./initial_info_pages/page_3_OpenSource"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import { useGetAnnouncements } from "common/hooks/kentkart/info/useGetAnnouncements"
+
 import { IIPageAnnouncement } from "./page_announcement"
 import { dateFromMessedKentKartDateFormat } from "common/util"
+import { useGetAnnouncements } from "common/hooks/kentkart/nonAuthHooks"
+import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
+import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
 export function InitialInfo(props: { last_check:number,navigation: NativeStackNavigationProp<any> }) {
-	const { data: announcements } = useGetAnnouncements()
+	const user = useKentKartAuthStore((state)=>state.user)
+	const { data: announcements } = useGetAnnouncements({user:user as IKentKartUser})
 	return (
 		// <View className="flex-col flex-1 items-center justify-center">
 		<IIPaginator

@@ -1,6 +1,6 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import SecondaryText from "components/root/SecondaryText"
+import SecondaryText from "components/reusables/SecondaryText"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import { View } from "react-native"
 import { useContext } from "react"

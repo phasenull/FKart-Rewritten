@@ -3,7 +3,7 @@ import { StatusBar } from "expo-status-bar"
 import React, { useContext, useEffect, useMemo, useState } from "react"
 import { Text, View } from "react-native"
 import ApplicationConfig from "common/ApplicationConfig"
-import { BottomTabNavigator } from "components/root/BottomTabNavigator"
+import { BottomTabNavigator } from "components/reusables/BottomTabNavigator"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 export default function RootScreen(props: { navigation: NativeStackNavigationProp<any>}) {
 	

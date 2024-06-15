@@ -7,7 +7,7 @@ import Animated, { FadeIn, useSharedValue, withSpring } from "react-native-reani
 import ApplicationConfig from "common/ApplicationConfig"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import { TranslationsContext } from "common/contexts/TranslationsContext"
-import SecondaryText from "components/root/SecondaryText"
+import SecondaryText from "components/reusables/SecondaryText"
 import SimplyButton from "components/ui/SimplyButton"
 import PushUserPage from "./push/PushUserPage"
 import GetUserPage from "./get/GetUserPage"
