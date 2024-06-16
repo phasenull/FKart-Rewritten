@@ -8,7 +8,7 @@ import React, { useContext, useEffect, useState } from "react"
 import { RefreshControl, ScrollView, Text, View } from "react-native"
 
 import { ThemeContext } from "common/contexts/ThemeContext"
-import { useGetABTSecretAsync, useGetTransactions } from "common/hooks/kentkart/cardHooks"
+import { useGetABTSecret, useGetTransactions } from "common/hooks/kentkart/cardHooks"
 import { convertDiffToText } from "common/util"
 import CardControlPanel from "./CardControlPanel"
 import CardDetailsHeader from "./CardDetailsHeader"
@@ -34,7 +34,7 @@ export default function CardDetails(props: {
 	const user = useKentKartAuthStore((state)=>state.user)
 	const is_virtual = props?.route.params?.is_virtual
 	const { data: transaction_data } = useGetTransactions({card_alias: card.aliasNo,term: { month: new Date(Date.now()).getMonth(), year: new Date(Date.now()).getFullYear() },user:user as IKentKartUser})
-	const {data:syncData} = useGetABTSecretAsync({card_alias: card?.aliasNo || favorite_data?.favorite,user:user})
+	const {data:syncData} = useGetABTSecret({card_alias: card?.aliasNo || favorite_data?.favorite,user:user})
 	const [cardToken, setCardToken] = useState<undefined | { expireDate: string; token: string; aliasNo: string }>(undefined)
 	const { navigation } = props
 	const [card_type, setCardType] = useState(CardTypes.undefined)

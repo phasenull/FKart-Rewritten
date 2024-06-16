@@ -8,9 +8,10 @@ import { KentKartAnnouncement } from "common/interfaces/KentKart/KentKartAnnounc
 import RouteData from "common/interfaces/KentKart/RouteData"
 import { IProducts } from "common/interfaces/KentKart/Products"
 import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
+import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 
-export function useGetAnnouncements(args:{user:IKentKartUser}) {
-	const region = args.user.region
+export function useGetAnnouncements() {
+	const region = useKentKartAuthStore((state) => state.region) as string
 	return useQuery(
 		["announcements", region],
 		(): Promise<
@@ -44,10 +45,10 @@ export function useGetCityList() {
 	)
 }
 
-export function useGetProducts(args:{user:IKentKartUser}) {
-	const region = args.user.region
+export function useGetProducts() {
+	const region = useKentKartAuthStore((state) => state.region) as string
 	return useQuery(
-		["GetProducts",region],
+		["GetProducts", region],
 		(): Promise<AxiosResponse<BaseKentKartResponse & IProducts>> => {
 			const url = `https://service.kentkart.com/rl1/api/products?region=${region}`
 
@@ -58,10 +59,11 @@ export function useGetProducts(args:{user:IKentKartUser}) {
 	)
 }
 
-export function useGetRouteDetails(args:{ route_code: string; interval?: number; direction: number; include_time_table?: boolean,user:IKentKartUser }) {
-	const {direction,route_code,user,include_time_table,interval} = args
+export function useGetRouteDetails(args: { route_code: string; interval?: number; direction: number; include_time_table?: boolean; user: IKentKartUser }) {
+	const { direction, route_code, include_time_table, interval } = args
+	const region = useKentKartAuthStore((state) => state.region) as string
 	return useQuery(
-		["getRouteDetails", route_code, direction, include_time_table],
+		["getRouteDetails", route_code, direction, include_time_table,region],
 		(): Promise<
 			AxiosResponse<
 				BaseKentKartResponse & {
@@ -71,7 +73,7 @@ export function useGetRouteDetails(args:{ route_code: string; interval?: number;
 		> => {
 			const url = `${ApplicationConfig.endpoints.service}/rl1/api/v2.0/route/info`
 			const params: Record<string, string> = {
-				region: user.region,
+				region: region,
 				lang: "tr",
 				// authType: "4",
 				direction: direction.toString(),

@@ -8,7 +8,7 @@ import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
 import SecondaryText from "components/reusables/SecondaryText"
 import { useContext, useState } from "react"
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native"
-import Animated, { BounceIn, BounceInRight, LightSpeedInRight, LightSpeedOutRight, withSpring } from "react-native-reanimated"
+import Animated, { BounceIn, BounceInRight, FadeIn, FadeInRight, FadeOut, FadeOutRight, LightSpeedInRight, LightSpeedOutRight, withSpring } from "react-native-reanimated"
 import ErrorPage from "screens/ErrorPage"
 const payment_images = {
 	creditCard: "https://cdn-icons-png.flaticon.com/512/4547/4547723.png",
@@ -62,7 +62,8 @@ export default function CitySelector(props:{navigation:NativeStackNavigationProp
 			<SecondaryText style={{ fontSize: 30 }}>select a city</SecondaryText>
 			{selected ? (
 				<Animated.View
-					entering={BounceInRight.duration(500)}
+					entering={FadeInRight.duration(200)}
+					exiting={FadeOutRight.duration(100)}
 					className="flex-row absolute items-center right-0 z-20 bottom-0 mb-6 mr-20 p-4 justify-between space-x-4"
 					style={{ backgroundColor: theme.white, borderTopLeftRadius: 16, borderBottomLeftRadius: 16 }}
 				>
@@ -77,10 +78,12 @@ export default function CitySelector(props:{navigation:NativeStackNavigationProp
 						}}
 						className="-right-16"
 						onPress={() => {
+							console.log("regin selected:",selected)
 							setRegion(selected)
 							if (props.navigation?.canGoBack()) {
-								props.navigation.goBack()
+								return props.navigation.goBack()
 							}
+							return props.navigation.navigate("home")
 						}}
 					>
 						<MaterialCommunityIcons color={theme.white} name="check" size={24} />
@@ -91,7 +94,6 @@ export default function CitySelector(props:{navigation:NativeStackNavigationProp
 				style={{
 					backgroundColor: theme.white,
 					width: "100%",
-					// marginBottom: 40 * 4,
 				}}
 				contentContainerStyle={{
 					rowGap: 0.5 * 4,
@@ -130,12 +132,12 @@ export default function CitySelector(props:{navigation:NativeStackNavigationProp
 								textAlignVertical: "center",
 								paddingLeft: 2 * 4,
 								fontWeight: "400",
-								fontSize: 200,
+								fontSize: 80,
 								color: image_mapping_testing[item.id as keyof typeof image_mapping_testing] ? theme.text.white : theme.text.secondary,
 								textShadowRadius: 9,
 							}}
 						>
-							{item.name} - {item.id}
+							{item.name}
 						</SecondaryText>
 					</TouchableOpacity>
 				)}

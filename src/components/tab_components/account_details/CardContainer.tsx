@@ -18,12 +18,10 @@ import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
 
 export default function CardContainer(props: { favorite_data: Favorite<"Card" | "QR">; index: number; navigation: any; style?: ViewStyle }) {
-	const { favorite_data, index, navigation } = props
-	const user = useKentKartAuthStore((state) => state.user)
-	if (!user) return
-	const { data, isLoading, isRefetching, isError } = useGetCardData({ card_alias: favorite_data.favorite || favorite_data.alias, user: user })
+	const { favorite_data, navigation } = props
+	const { data, isLoading, isRefetching, isError,error } = useGetCardData({ card_alias: favorite_data.favorite || favorite_data.alias })
 	const [card, setCard] = useState<BasicCardData<any> | undefined>(undefined)
-	const { refetch: unFavoriteRefetch } = useRemoveFavoriteCard({ card_or_fav_id: card?.aliasNo as string, user: user })
+	const { refetch: unFavoriteRefetch } = useRemoveFavoriteCard({ card_or_fav_id: card?.aliasNo as string })
 	const { refetch: refetchAccountFavorites } = useGetFavorites()
 	const [cardImage, setCardImage] = useState<CardImages | undefined>(undefined)
 	useEffect(() => {
@@ -46,7 +44,7 @@ export default function CardContainer(props: { favorite_data: Favorite<"Card" | 
 	if (isError) {
 		return (
 			<View>
-				<Text>error</Text>
+				<Text>error {(error as any).message}</Text>
 			</View>
 		)
 	}
