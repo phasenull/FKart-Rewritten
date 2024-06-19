@@ -18,54 +18,51 @@
   paths:
     /city:
       get:
-        summary:
-          returns the list of cities
+        summary: returns the list of cities
         responses:
-
           200:
+            description:
             content:
               application/json:
                 schema:
                   oneOf:
                     - properties:
-                      result:
-                        $ref: "#/components/schemas/ResponseResult"
-                      city:
-                        type: array
-                        items:
-                          $ref: "#/components/schemas/City"
-                    - $ref: "#/components/responses/NotAuthenticated"
+                        result:
+                          $ref: "#/components/schemas/ResponseResult"
+                        city:
+                          type: array
+                          items:
+                            $ref: "#/components/schemas/City"
+                    - properties:
+                        result: 
+                          $ref: "#/components/schemas/NotAuthenticatedResult"
   components:
-    responses:
-      NotAuthenticated:
-        description: Not Authenticated
-        content:
-          application/json:
-            schema:
-              properties:
-                result:
-                  type: object
-                  properties:
-                    cmd:
-                      type: string
-                      example: "/api/city"
-                    code:
-                      type: integer
-                      format: Int64
-                      example: 33
-                    message:
-                      type: string
-                      example: "Size özel servislerden yararlanabilmek için lütfen giriş yapınız"
-                    dateTime:
-                      type: string
-                      example: "20240619135250"
-                    debugTimeDiff:
-                      type: string
-                      example: ""
-                    authType:
-                      $ref: "#/components/schemas/AuthType"
       
     schemas:
+      NotAuthenticatedResult:
+        description: Not Authenticated
+        properties:
+          result:
+            type: object
+            properties:
+              cmd:
+                type: string
+                example: "/api/city"
+              code:
+                type: integer
+                format: Int64
+                example: 33
+              message:
+                type: string
+                example: "Size özel servislerden yararlanabilmek için lütfen giriş yapınız"
+              dateTime:
+                type: string
+                example: "20240619135250"
+              debugTimeDiff:
+                type: string
+                example: ""
+              authType:
+                $ref: "#/components/schemas/AuthType"
       ResponseResult:
         description: Base KentKart Response Result
         properties:
