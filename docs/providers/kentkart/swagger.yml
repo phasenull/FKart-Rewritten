@@ -21,21 +21,20 @@
         summary:
           returns the list of cities
         responses:
-          401:
-            $ref: "#/components/responses/NotAuthenticated"
 
           200:
-            description: successful
             content:
               application/json:
                 schema:
-                  properties:
-                    result:
-                      $ref: "#/components/schemas/ResponseResult"
-                    city:
-                      type: array
-                      items:
-                        $ref: "#/components/schemas/City"
+                  oneOf:
+                    - properties:
+                      result:
+                        $ref: "#/components/schemas/ResponseResult"
+                      city:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/City"
+                    - $ref: "#/components/responses/NotAuthenticated"
   components:
     responses:
       NotAuthenticated:
