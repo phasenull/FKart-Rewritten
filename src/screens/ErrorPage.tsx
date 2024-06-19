@@ -12,15 +12,15 @@ export default function ErrorPage(props: { error: { title?: string; description?
 	const { theme } = useContext(ThemeContext)
 	return (
 		<View className="flex-1 items-center justify-center" style={{ backgroundColor: theme.dark }}>
-			<MaterialIcons name={icon || "warning-amber"} color={theme.secondary} style={{ opacity: 0.3 }} size={48} />
+			<MaterialIcons name={icon || "warning-amber"} color={theme.secondary} style={{ opacity: 0.3 }} size={32*4} />
 			<Text style={{ fontWeight: "800",fontSize:24,color:theme.error }}>{title}</Text>
-			{retry ? <TouchableOpacity onPress={retry} className="flex-col">
-				<MaterialCommunityIcons name="refresh" color={theme.secondary} style={{ opacity: 0.3 }} size={48} />
-				<Text style={{fontSize:16,color:theme.text.secondary,fontWeight:"600"}}>
+			{retry ? <TouchableOpacity onPress={retry} className="flex-col my-6">
+				<MaterialCommunityIcons name="refresh" color={theme.secondary} style={{ opacity: 0.3 }} size={24*4} />
+				<Text style={{fontSize:16,color:theme.text.secondary,fontWeight:"600",bottom:4*4}} className="text-center">
 					Retry
 				</Text>
 			</TouchableOpacity> : null}
-			<Text style={{fontSize:18,color:theme.text.secondary,fontWeight:"600"}}>{description}</Text>
+			<Text style={{fontSize:18,color:theme.text.secondary,fontWeight:"500"}}>Error Details:{"\n"}{description}</Text>
 		</View>
 	)
 }

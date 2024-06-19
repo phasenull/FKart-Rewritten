@@ -1,7 +1,7 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import AccountDetailsContainer from "components/tab_components/account_details/AccountDetailsContainer"
 import { useContext, useEffect, useState } from "react"
-import { ScrollView, Text, View } from "react-native"
+import { RefreshControl, ScrollView, Text, View } from "react-native"
 
 import { Favorite } from "common/interfaces/KentKart/Favorite"
 import { AddCard } from "components/tab_components/account_details/AddCard"
@@ -51,7 +51,7 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 		<View style={{ backgroundColor: theme.dark }} className="flex-1 items-center justify-center">
 			{/* login prompt */}
 			<ScrollView
-				// refreshControl={<RefreshControl onRefresh={refetchFavorites} refreshing={isFavoritesLoading} />}
+				refreshControl={<RefreshControl onRefresh={refetchFavorites} refreshing={isFavoritesRefetching} />}
 				horizontal={false}
 				showsVerticalScrollIndicator={true}
 				contentContainerStyle={{

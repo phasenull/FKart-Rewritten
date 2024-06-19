@@ -18,6 +18,6 @@ export default function useGetFavorites() {
 			Logger.info("REQUEST useGetFavorites")
 			return ApplicationConfig.makeKentKartRequest(url)
 		},
-		{ refetchInterval: 30_000 }
+		{ refetchInterval: 30_000,staleTime:10_000 }
 	)
 }

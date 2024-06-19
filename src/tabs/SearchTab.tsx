@@ -19,15 +19,16 @@ import React, { useContext, useMemo, useState } from "react"
 import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
 
 import RouteList from "components/tab_components/routes/RouteList"
-import RouteSearchBar from "components/tab_components/routes/RouteSearchBar" 
+import RouteSearchBar from "components/tab_components/routes/RouteSearchBar"
 import SecondaryText from "components/reusables/SecondaryText"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
+import ErrorPage from "screens/ErrorPage"
 export default function SearchTab(props: { route: any; navigation: NativeStackNavigationProp<any> }) {
-	const user = useKentKartAuthStore((state)=>state.user)
-	const { data, isLoading, isError, error, refetch, isRefetching } = useGetRouteList(user as IKentKartUser)
-	const {theme} = useContext(ThemeContext)
+	const user = useKentKartAuthStore((state) => state.user)
+	const { data, isLoading, isError, error, refetch, isRefetching } = useGetRouteList()
+	const { theme } = useContext(ThemeContext)
 	const { navigation, route } = props
 	const [searchText, setSearchText] = useState("")
 	const [filterByRouteType, setFilterByRouteType] = useState<{
@@ -49,16 +50,6 @@ export default function SearchTab(props: { route: any; navigation: NativeStackNa
 			</View>
 		)
 	}
-	if (isRefetching || isLoading) {
-		return (
-			<View className="items-center justify-center flex-1">
-				<CustomLoadingIndicator/>
-				<SecondaryText style={{marginTop:12*4,fontSize:32}}>
-					Fetching data...
-				</SecondaryText>
-			</View>
-		)
-	}
 	if (!data?.data) {
 		return (
 			<View className="items-center justify-center flex-1">
@@ -66,8 +57,8 @@ export default function SearchTab(props: { route: any; navigation: NativeStackNa
 			</View>
 		)
 	}
-	if (!data?.data.routeList) {
-		refetch()
+	if (!data?.data.routeList && !(isLoading||isRefetching)) {
+		return <ErrorPage retry={refetch} error={{title:"No Routes!",description:"Server did not respond any routes in provided city, this could be an issue with "}} />
 	}
 	return (
 		<View className="flex-1">
@@ -106,8 +97,16 @@ export default function SearchTab(props: { route: any; navigation: NativeStackNa
 				</View>
 			</View>
 			{isLoading || isRefetching ? (
-				<View className="flex-1 justify-center mb-32">
+				<View className="flex-1 justify-center items-center mb-32">
 					<CustomLoadingIndicator size={48} />
+					<SecondaryText
+						style={{
+							marginTop: 12 * 4,
+							fontSize: 32,
+						}}
+					>
+						Fetching data...
+					</SecondaryText>
 				</View>
 			) : (
 				<RouteList data={data.data} navigation={navigation} onRefresh={refreshData} refreshing={isRefetching} searchText={searchText} route={route} routeType={filterByRouteType.value} />
