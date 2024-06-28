@@ -8,7 +8,7 @@
 		"userInterfaceStyle": "automatic",
 		"icon": "./src/assets/media/images/icon.png",
 		"splash": {
-			"image": "./src/assets/media/images/icon.png",
+			"image": "./src/assets/media/images/icon_no_bg.png",
 			"resizeMode": "contain",
 			"backgroundColor": "#ffffff"
 		},
@@ -21,7 +21,7 @@
 		},
 		"android": {
 			"adaptiveIcon": {
-				"foregroundImage": "./src/assets/media/images/nice_icon.png",
+				"foregroundImage": "./src/assets/media/images/icon_no_bg.png",
 				"backgroundColor": "#ffffff"
 			},
 			"package": "com.phasenull.FKart",
