@@ -1,3 +1,5 @@
+# PHASENULL'S DIARY
+
 abt card = qr card with tickets subs etc (Account Based Ticket).
 qr card = nfc card (not available in some regions)
 
@@ -112,4 +114,4 @@ also /api/route/info
 is not
 /web/pathInfo
 
-the responses are completely differend and explains why my app wasnt working properly for the last couple days lol
+the responses are completely differend and explains why my app wasnt working properly for the last couple days
