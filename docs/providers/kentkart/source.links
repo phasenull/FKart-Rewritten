@@ -160,6 +160,9 @@ https://vts.kentkart.com.tr/api
 https://vts.kentkart.com.tr/auth/handle
 
 
+
+https://service.kentkart.com/rl1/web/pathInfo?region=004&displayRouteCode=33&resultType=11111&refresh=-11
+
 https://account.kentkart.com.tr/login
 https://account.kentkart.com.tr/forget?username=
 

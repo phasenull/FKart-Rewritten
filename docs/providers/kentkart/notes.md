@@ -38,3 +38,78 @@ eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJrZW50a2FydC5jb20iLCJzdWIiOiJBQzE
   "system_id": "004",
   "scopes": []
 }
+
+
+
+
+
+https://service.kentkart.com/rl1/web/pathInfo?region=004&displayRouteCode=33&resultType=11111&refresh=-11
+
+for some reason requests take longer when refresh parameter is set to something unique everytime
+(37ms to 3.37s)
+
+~~i'd say it has something to do with cacheFlag under city but its set to "0"
+maybe its because server sees "0" as true and not 0~~
+
+its kinda acting like a cache system based on a session key
+for some reason server returns "code":3,"message":"Sonuç Bulunamadı" when refresh is set to sa
+
+alright it seems they actually did a cache system for /web/pathInfo and used parameters & values as keys so they could serve multiple requests to the same bus more efficiently
+
+passing just & and ending the url also works
+
+or im just completely wrong
+
+
+{
+	"id": "004",
+	"name": "Kocaeli",
+	"lat": "40.759190",
+	"lon": "29.943218",
+	"initialRegion": {
+		"lat": "40.759190",
+		"lng": "29.943218"
+	},
+	"radius": "10",
+	"timezone": "Europe/Moscow",
+	"visible": 1,
+	"mCharge": "4",
+	"supportEmail": [
+		"bekir.yesil@kentkart.com.tr",
+		"mert.yuceer@kentkart.com.tr",
+		"ozgurozden@kocaeli.bel.tr",
+		"yavuzfirat@kocaeli.bel.tr"
+	],
+	"supportCCEmail": [
+		"mobile@kentkart.com.tr"
+	],
+	"bicycleUpdateService": "https://e-komobil.com/services/api.php?process=kobis",
+	"tRefreshBicycle": 5,
+	"tRefreshCarpark": 5,
+	"paymentTypes": {
+		"creditCard": true,
+		"bkmExpress": false,
+		"masterPass": false,
+		"sadad": false
+	},
+	"testdynamicQrEnable": "1",
+	"testdynamicQrChangeDuration": "10",
+	"disableBusCapacity": true,
+	***"cacheFlag": "0",***
+	"order": 50,
+	"panic": "0",
+	"trip": "1",
+	"nfc": "0",
+	"oCharge": "1"
+}
+
+
+
+
+
+also /api/route/info
+
+is not
+/web/pathInfo
+
+the responses are completely differend and explains why my app wasnt working properly for the last couple days lol
