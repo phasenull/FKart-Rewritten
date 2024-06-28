@@ -39,12 +39,12 @@ export const useKentKartAuthStore = create<KentKartAuthStore>((set, get) => ({
 		const db = ApplicationConfig.database
 		// const refresh_token = await db.get("kentkart.refresh_token")
 		const access_token = await db.get("kentkart.access_token")
-		const auth_type = await db.get("kentkart.auth_type")
+		const auth_type = await db.get("kentkart.auth_type") || "4"
 		const region = await db.get("kentkart.region")
 		console.log("init token",access_token.slice(10))
 		// Logger.info("KentKartAuthStore.__initF",`refresh_token: ${refresh_token}`)
 		if (!access_token) return
-		set({ credentials: { access_token: access_token } })
+		set({ credentials: { access_token: access_token },auth_type:auth_type,region:region })
 		await get().fetchAccountInfo()
 	},
 	login: async (args) => {
@@ -92,7 +92,7 @@ export const useKentKartAuthStore = create<KentKartAuthStore>((set, get) => ({
 			return [false, error]
 		}
 		set({ user: {...data,access_token:access_token} })
-		console.log("account info fetch successfull", data)
+		console.log("account info fetch successfull")
 		return [data]
 	},
 	register: async (args) => {},
