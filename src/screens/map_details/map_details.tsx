@@ -45,7 +45,14 @@ export default function MapData(props: {
 		data: fetchedRouteData,
 		isRefetching: isRouteRefetching,
 		refetch: refetchRouteData,
-	} = useGetRouteDetails({ direction: direction, route_code: routeDataToShow.displayRouteCode, include_time_table: true, interval: 5000,user:user as IKentKartUser })
+	} = useGetRouteDetails({ direction: direction, route_code: routeDataToShow.displayRouteCode, interval: 5000,user:user as IKentKartUser,result_includes:{
+		busStopList:true,
+		busList:true,
+		scheduleList:true,
+		timeTableList:false,
+		pointList:true
+
+	} })
 	const [followingBus, setFollowingBus] = useState<BusData | undefined>(props?.route?.params?.initial_bus)
 	useEffect(() => {
 		refetchRouteData()
@@ -77,8 +84,7 @@ export default function MapData(props: {
 			if (!bus_list || bus_list.length === 0) return
 			if (!followingBus) return
 			const found_bus = path_list[0].busList.find((bus: BusData) => bus.plateNumber === followingBus.plateNumber)
-			if (!found_bus) return
-			console.log("Following bus found")
+			if (!found_bus) return	
 			ref_map_view.current?.animateToRegion({
 				latitude: parseFloat(found_bus.lat) - 0.001,
 				longitude: parseFloat(found_bus.lng),

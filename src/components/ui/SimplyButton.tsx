@@ -42,7 +42,7 @@ export default function SimplyButton(
 					className="px-4 py-2 rounded-lg flex-row"
 				>
 					{processing ? <CustomLoadingIndicator size={14} style={{ marginRight: 2 * 4 }} color={theme.text.white} /> : null}
-					<Text className="text-center" style={{ fontWeight: "800", fontSize: 18, color: theme.text.white }}>
+					<Text className="flex-1 text-center" style={{ fontWeight: "800", fontSize: 18, color: theme.text.white }}>
 						{processing ? processingText : text}
 					</Text>
 				</View>

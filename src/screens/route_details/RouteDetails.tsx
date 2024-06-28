@@ -11,6 +11,8 @@ import ApplicationConfig from "common/ApplicationConfig"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
+import ErrorPage from "screens/ErrorPage"
+import CardJSONData from "screens/card_details/CardJSONData"
 
 export default function RouteDetails(props: {
 	route: {
@@ -36,17 +38,21 @@ export default function RouteDetails(props: {
 			</View>
 		)
 	}
-	const {theme} = useContext(ThemeContext)
-	const user = useKentKartAuthStore((state)=>state.user)
+	const { theme } = useContext(ThemeContext)
+	const user = useKentKartAuthStore((state) => state.user)
 	const { data, error, isLoading, refetch, isRefetching } = useGetRouteDetails({
 		route_code: id_to_fetch,
-		include_time_table: true,
 		direction: direction,
-		user:user as IKentKartUser
+		user: user as IKentKartUser,
+		interval: 60_000,
+		result_includes: {
+			busList: true,
+			scheduleList: true,
+			timeTableList: true,
+		},
 	})
 	useEffect(() => {
 		if (data?.data?.result?.code !== 0) {
-			refetch()
 			return
 		}
 		const response_data = data?.data?.pathList[0]
@@ -73,23 +79,30 @@ export default function RouteDetails(props: {
 			route_data: response_data,
 		})
 	}, [data])
-	if (isLoading || isRefetching) {
+	if (isLoading) {
 		return <CustomLoadingIndicator />
 	}
 	if (error) {
 		return (
-			<View>
-				<Text>Error: {JSON.stringify(error, null, 4)}</Text>
-			</View>
+			<ErrorPage
+				error={{
+					title: "Cant fetch routes",
+					description: JSON.stringify(error, null, 4),
+				}}
+				retry={refetch}
+			/>
 		)
 	}
 
 	if (!data?.data || !data_route) {
 		return (
-			<View>
-				<Text>No data found</Text>
-				<Text>{JSON.stringify(data?.data, null, 4)}</Text>
-			</View>
+			<ErrorPage
+				error={{
+					title: "Nothing to see here!",
+					description: "Server did not respond any valid data",
+				}}
+				retry={refetch}
+			/>
 		)
 	}
 	return (
@@ -128,19 +141,7 @@ export default function RouteDetails(props: {
 					<Text>Open Map View</Text>
 				</TouchableOpacity>
 			</View>
-			<View className="mt-5">
-				<Text>
-					HeadSign: {data_route.headSign} {"\n"}
-					RouteCode: {data_route.displayRouteCode} {"\n"}
-					Direction: {data_route.direction} {"\n"}
-					tripShortName: {data_route.tripShortName} {"\n"}
-					direction_name: {data_route.direction_name || '""'} {"\n"}
-					path_code: {data_route.path_code} {"\n"}
-					stopTimeList:{data_route.stopTimeList} {"\n"} {"\n"} {"\n"}
-					busList: {JSON.stringify(data_route.busList, null, 4)} {"\n"}
-					timeTableList : {JSON.stringify(data_route.timeTableList, null, 4)} {"\n"}
-				</Text>
-			</View>
+			<CardJSONData card={data_route} />
 		</ScrollView>
 	)
 }

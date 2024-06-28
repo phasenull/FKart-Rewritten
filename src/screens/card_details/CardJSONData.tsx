@@ -1,8 +1,8 @@
 import { useContext, useMemo } from "react"
-import { Text } from "react-native"
+import { Text, ViewProps } from "react-native"
 import { ThemeContext } from "common/contexts/ThemeContext";
 
-export default function CardJSONData(props: { card: any; favorite_data: any }) {
+export default function CardJSONData(props: { card: any; favorite_data?: any } & ViewProps) {
 	const { card, favorite_data } = props
 	const {theme} = useContext(ThemeContext)
 
@@ -16,6 +16,7 @@ export default function CardJSONData(props: { card: any; favorite_data: any }) {
 				// elevation: 10,
 				fontWeight:"400",
 				color: theme.secondaryDark,
+				alignSelf:"center",
 			}}
 		>
 			{JSON.stringify({ ...favorite_data, ...card }, null, 4)}
