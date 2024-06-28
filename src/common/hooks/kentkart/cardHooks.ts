@@ -18,7 +18,7 @@ export function useGetCardData(args: { card_alias: string }) {
 			const url = `${ApplicationConfig.endpoints.service}/rl1/api/card/balance?region=${ApplicationConfig.region}&lang=tr&authType=4&token=${user?.access_token}&alias=${card_alias}`
 			return ApplicationConfig.makeKentKartRequest(url)
 		},
-		{ staleTime: 30_000, refetchInterval: 30_000, refetchIntervalInBackground: false }
+		{ staleTime: 30_000, refetchInterval: 60_000, refetchIntervalInBackground: false }
 	)
 }
 

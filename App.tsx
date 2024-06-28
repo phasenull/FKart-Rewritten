@@ -31,7 +31,7 @@ const linking = {
 	config: config,
 }
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({defaultOptions:{queries:{retry:1}}})
 export default function AppEntryComponent() {
 	LogBox.ignoreLogs(["Non-serializable values were found in the navigation state."])
 	LogBox.ignoreLogs(["Require cycle:", "Clipboard has been extracted from react-native"])

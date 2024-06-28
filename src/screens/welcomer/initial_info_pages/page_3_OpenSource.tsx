@@ -31,7 +31,8 @@ export function IIPage3() {
 					color: theme.secondary,
 					fontWeight: "600",
 					fontSize: 16,
-					textAlign: "left",
+					maxWidth:80*4,
+					textAlign: "center",
 				}}
 			>
 				{translations.screens.welcomer.open_source}

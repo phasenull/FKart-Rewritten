@@ -63,7 +63,6 @@ export function useGetRouteDetails(args: {
 	route_code: string
 	interval?: number
 	direction: number
-	include_time_table?: boolean
 	user: IKentKartUser
 	result_includes?: {
 		pointList?: boolean
@@ -74,7 +73,7 @@ export function useGetRouteDetails(args: {
 		scheduleList?: boolean
 	}
 }) {
-	const { direction, route_code, include_time_table, interval } = args
+	const { direction, route_code, interval } = args
 	const resulType = {
 		pointList: (args.result_includes?.pointList && "1") || "0",
 		busList: (args.result_includes?.busList && "1") || "0",
@@ -83,9 +82,10 @@ export function useGetRouteDetails(args: {
 		stopTimeList: (args.result_includes?.stopTimeList && "1") || "0",
 		scheduleList: (args.result_includes?.scheduleList && "1") || "0",
 	}
+	const resultTypeString = Object.values(resulType).join("")
 	const region = useKentKartAuthStore((state) => state.region) as string
 	return useQuery(
-		["getRouteDetails", route_code, direction, include_time_table, region],
+		["getRouteDetails", {displayRouteCode:route_code, direction:direction, region:region}],
 		(): Promise<
 			AxiosResponse<
 				BaseKentKartResponse & {
@@ -97,19 +97,20 @@ export function useGetRouteDetails(args: {
 			const params: Record<string, string> = {
 				region: region,
 				lang: "tr",
-				// authType: "4",
 				direction: direction.toString(),
 				// todo: remove direction and fix references so it wont have to refresh just to switch directions
 				displayRouteCode: route_code,
-				resultType: "111111"//Object.values(resulType).join(""),
+				resultType: resultTypeString,
+				ignore_cache_with:`${Math.random()*10000}-${Math.random()*10000}`,
 			}
-			Logger.info(`REQUEST useGetRouteDetails ${route_code} ${direction} ${include_time_table}`)
+			Logger.info(`REQUEST useGetRouteDetails ${route_code} ${direction}`)
 			const request = ApplicationConfig.makeKentKartRequest(url, {
 				method: "GET",
 				params: params,
 			})
+			// request.then((e)=>{console.log(e.data.pathList[0]?.busList[0])})
 			return request
 		},
-		{ staleTime: 3000, refetchInterval: interval }
+		{ staleTime: 4500, refetchInterval: interval }
 	)
 }
