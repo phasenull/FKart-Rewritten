@@ -101,7 +101,7 @@ export function useGetRouteDetails(args: {
 				direction: direction.toString(),
 				// todo: remove direction and fix references so it wont have to refresh just to switch directions
 				displayRouteCode: route_code,
-				resultType: Object.values(resulType).join(""),
+				resultType: "111111"//Object.values(resulType).join(""),
 			}
 			Logger.info(`REQUEST useGetRouteDetails ${route_code} ${direction} ${include_time_table}`)
 			const request = ApplicationConfig.makeKentKartRequest(url, {
