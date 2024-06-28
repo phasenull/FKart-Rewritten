@@ -29,7 +29,4 @@ export interface IKentKartUser {
 		longitude: number
 	}
 	access_token:string
-	region:string|undefined
-	auth_type:string
-
 }

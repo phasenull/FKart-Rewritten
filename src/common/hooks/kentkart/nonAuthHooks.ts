@@ -59,11 +59,33 @@ export function useGetProducts() {
 	)
 }
 
-export function useGetRouteDetails(args: { route_code: string; interval?: number; direction: number; include_time_table?: boolean; user: IKentKartUser }) {
+export function useGetRouteDetails(args: {
+	route_code: string
+	interval?: number
+	direction: number
+	include_time_table?: boolean
+	user: IKentKartUser
+	result_includes?: {
+		pointList?: boolean
+		busList?: boolean
+		busStopList?: boolean
+		timeTableList?: boolean
+		stopTimeList?: boolean
+		scheduleList?: boolean
+	}
+}) {
 	const { direction, route_code, include_time_table, interval } = args
+	const resulType = {
+		pointList: (args.result_includes?.pointList && "1") || "0",
+		busList: (args.result_includes?.busList && "1") || "0",
+		busStopList: (args.result_includes?.busStopList && "1") || "0",
+		timeTableList: (args.result_includes?.timeTableList && "1") || "0",
+		stopTimeList: (args.result_includes?.stopTimeList && "1") || "0",
+		scheduleList: (args.result_includes?.scheduleList && "1") || "0",
+	}
 	const region = useKentKartAuthStore((state) => state.region) as string
 	return useQuery(
-		["getRouteDetails", route_code, direction, include_time_table,region],
+		["getRouteDetails", route_code, direction, include_time_table, region],
 		(): Promise<
 			AxiosResponse<
 				BaseKentKartResponse & {
@@ -71,16 +93,15 @@ export function useGetRouteDetails(args: { route_code: string; interval?: number
 				}
 			>
 		> => {
-			const url = `${ApplicationConfig.endpoints.service}/rl1/api/v2.0/route/info`
+			const url = `${ApplicationConfig.endpoints.service}/rl1/web/pathInfo`
 			const params: Record<string, string> = {
 				region: region,
 				lang: "tr",
 				// authType: "4",
 				direction: direction.toString(),
+				// todo: remove direction and fix references so it wont have to refresh just to switch directions
 				displayRouteCode: route_code,
-				resultType: include_time_table ? "111111" : "010000",
-				// 111111: with timetable
-				// 010000: without timetable, only bus points
+				resultType: Object.values(resulType).join(""),
 			}
 			Logger.info(`REQUEST useGetRouteDetails ${route_code} ${direction} ${include_time_table}`)
 			const request = ApplicationConfig.makeKentKartRequest(url, {
@@ -89,6 +110,6 @@ export function useGetRouteDetails(args: { route_code: string; interval?: number
 			})
 			return request
 		},
-		{ staleTime: 5000, refetchInterval: interval }
+		{ staleTime: 3000, refetchInterval: interval }
 	)
 }

@@ -30,7 +30,7 @@ export const useKentKartAuthStore = create<KentKartAuthStore>((set, get) => ({
 		refresh_token: undefined,
 	},
 	setRegion: (region:string) => {
-		set({region:region,user:{...get().user as IKentKartUser,region:region}})
+		set({region:region})
 	},
 	__initF: async () => {
 		if (get().__init) {return}
@@ -91,10 +91,10 @@ export const useKentKartAuthStore = create<KentKartAuthStore>((set, get) => ({
 			Logger.error("account info fetch error",error)
 			return [false, error]
 		}
-		set({ user: {...data,region:region as string,auth_type:auth_type,access_token:access_token} })
+		set({ user: {...data,access_token:access_token} })
 		console.log("account info fetch successfull", data)
 		return [data]
 	},
 	register: async (args) => {},
 }))
-useKentKartAuthStore.subscribe((state) => state.credentials)
+// useKentKartAuthStore.subscribe((state) => state.credentials)
