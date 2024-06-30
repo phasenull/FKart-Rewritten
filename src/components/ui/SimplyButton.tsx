@@ -14,11 +14,13 @@ export default function SimplyButton(
 		processing?: boolean
 		processingText?: string
 		processingTimeout?: number
-		color?:string
+		color?: string
+		disabled?: boolean
 	} & TouchableOpacityProps
 ) {
 	const type = props.type || "primary"
 	const text = props.text || "props.text"
+	const disabled = props.disabled
 	const { theme } = useContext(ThemeContext)
 	const bg_color = props.color || (type === "primary" ? theme.primary : theme.secondary)
 	const size = props.size === "medium" ? "medium" : "large"
@@ -36,8 +38,8 @@ export default function SimplyButton(
 			<TouchableOpacity disabled={processing} {...props}>
 				<View
 					style={{
-						backgroundColor: processing ? theme.secondary : bg_color,
-						opacity: processing ? 0.7 : 1,
+						backgroundColor: processing || disabled ? theme.secondary : bg_color,
+						opacity: processing || disabled ? 0.7 : 1,
 					}}
 					className="px-4 py-2 rounded-lg flex-row"
 				>
