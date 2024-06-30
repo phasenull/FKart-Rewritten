@@ -15,9 +15,11 @@ export async function getLogsAsync(accessToken?: string,param?:number): Promise<
 		}
 	>
 > {
-	Logger.info("REQUEST useGetLogs")
 	return axios(`${ApplicationConfig.fkart_endpoints.auth}/user/logs`, {
 		method: "POST",
+		params:{
+			cursor:param
+		},
 		data: JSON.stringify({
 			access_token: accessToken,
 		}),
