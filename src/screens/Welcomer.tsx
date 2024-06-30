@@ -16,6 +16,7 @@ export default function WelcomerPage(props: { navigation:NativeStackNavigationPr
 	const [isUpdateAvailable, setIsUpdateAvailable] = useState<boolean | undefined>(undefined)
 	const [lastCheck,setLastCheck] = useState<number>(0)
 	const {theme} = useContext(ThemeContext)
+
 	async function onFetchUpdateAsync() {
 		const last_check = await ApplicationConfig.database.get("settings.last_update_check") || 0
 		setLastCheck(last_check)

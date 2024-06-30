@@ -20,6 +20,7 @@ import FKartWelcomer from "screens/fkart/auth/push/Welcomer"
 import { ThemeProvider } from "./src/common/contexts/ThemeContext"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 import CitySelector from "screens/city_selector/CitySelector"
+import { useEffect } from "react"
 
 const config = {
 	screens: {
@@ -31,12 +32,15 @@ const linking = {
 	config: config,
 }
 
-const queryClient = new QueryClient({defaultOptions:{queries:{retry:1}}})
+const queryClient = new QueryClient({ defaultOptions: { queries: { retry: 1 } } })
 export default function AppEntryComponent() {
 	LogBox.ignoreLogs(["Non-serializable values were found in the navigation state."])
 	LogBox.ignoreLogs(["Require cycle:", "Clipboard has been extracted from react-native"])
-	const initF = useKentKartAuthStore((state)=>state.__initF)
-	initF()
+	const {__initF,__init} = useKentKartAuthStore((state) => state)
+	useEffect(() => {
+		__initF()
+	}, [])
+	if (!__init) {return}
 	return (
 		<QueryClientProvider client={queryClient}>
 			<GestureHandlerRootView style={{ flex: 1 }}>

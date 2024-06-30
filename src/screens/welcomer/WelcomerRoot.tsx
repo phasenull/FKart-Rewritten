@@ -12,19 +12,19 @@ import CitySelector from "screens/city_selector/CitySelector"
 export function InitialInfo(props: { last_check: number; navigation: NativeStackNavigationProp<any> }) {
 	return (
 		// <View className="flex-col flex-1 items-center justify-center">
-		<CityValidator navigation={props.navigation} redirect={true}>
-			<IIPaginator
-				navigation={props.navigation}
-				// onPageChange={(newIndex, prevIndex) => {
-				// 	setPageIndex(newIndex)
-				// }}
-			>
-				<IIPage1 last_check={props.last_check} key={"app-info"} />
-				<IIPage2 key={"community-made"} />
-				<IIPage3 key={"open-source"} />
+		<IIPaginator
+			navigation={props.navigation}
+			// onPageChange={(newIndex, prevIndex) => {
+			// 	setPageIndex(newIndex)
+			// }}
+		>
+			<IIPage1 last_check={props.last_check} key={"app-info"} />
+			<IIPage2 key={"community-made"} />
+			<IIPage3 key={"open-source"} />
+			<CityValidator navigation={props.navigation} redirect={true}>
 				<IIPageAnnouncement key={"announcements"} />
-			</IIPaginator>
-		</CityValidator>
+			</CityValidator>
+		</IIPaginator>
 		// </View>
 	)
 }
