@@ -14,13 +14,14 @@ import { GestureHandlerRootView } from "react-native-gesture-handler"
 import * as Linking from "expo-linking"
 import WelcomerPage from "screens/Welcomer"
 import { TranslationsProvider } from "./src/common/contexts/TranslationsContext"
-import { FKartContextProvider } from "./src/common/contexts/FKartContext"
 import FKartAuthPage from "./src/components/walls/FKartAuthWall"
 import FKartWelcomer from "screens/fkart/auth/push/Welcomer"
 import { ThemeProvider } from "./src/common/contexts/ThemeContext"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 import CitySelector from "screens/city_selector/CitySelector"
 import { useEffect } from "react"
+import Logger from "common/Logger"
+import { useFKartAuthStore } from "common/stores/FKartAuthStore"
 
 const config = {
 	screens: {
@@ -34,83 +35,86 @@ const linking = {
 
 const queryClient = new QueryClient({ defaultOptions: { queries: { retry: 1 } } })
 export default function AppEntryComponent() {
+	Logger.success("App.tsx", "\n\n\n-=-=-=-=-=-=-=-=-=-=-=-=-\n\n   START OF NEW RENDER")
 	LogBox.ignoreLogs(["Non-serializable values were found in the navigation state."])
 	LogBox.ignoreLogs(["Require cycle:", "Clipboard has been extracted from react-native"])
-	const {__initF,__init} = useKentKartAuthStore((state) => state)
+	const { __initF: __initF_KK, __init: __init_KK } = useKentKartAuthStore((state) => state)
+	const { __initF: __initF_FK, __init: __init_FK } = useFKartAuthStore((state) => state)
 	useEffect(() => {
-		__initF()
+		__initF_KK()
+		__initF_FK()
 	}, [])
-	if (!__init) {return}
+	if (!__init_FK || !__init_KK) {
+		return
+	}
 	return (
 		<QueryClientProvider client={queryClient}>
 			<GestureHandlerRootView style={{ flex: 1 }}>
-				<FKartContextProvider>
-					<ThemeProvider>
-						<TranslationsProvider>
-							<NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
-								<Stack.Navigator
-									initialRouteName="welcomer"
-									screenOptions={{
-										headerShown: false,
-										statusBarHidden: false,
+				<ThemeProvider>
+					<TranslationsProvider>
+						<NavigationContainer linking={linking} fallback={<Text>Loading...</Text>}>
+							<Stack.Navigator
+								initialRouteName="welcomer"
+								screenOptions={{
+									headerShown: false,
+									statusBarHidden: false,
+								}}
+							>
+								<Stack.Screen name="welcomer" component={WelcomerPage as any} />
+								<Stack.Screen name="fkart.auth" component={FKartAuthPage} />
+								<Stack.Screen name="fkart.auth.welcomer" component={FKartWelcomer} />
+								<Stack.Screen name="fkart.auth.signin" component={FKartWelcomer} />
+								<Stack.Screen name="fkart.auth.signup" component={FKartWelcomer} />
+								<Stack.Screen name="home" component={RootScreen} />
+								<Stack.Screen name="auth" component={AuthPage} />
+								<Stack.Screen
+									name="card_details"
+									options={{
+										headerShown: true,
+										headerTitle: "",
+										headerTransparent: true,
+										headerTitleAlign: "center",
+										headerTitleStyle: { color: "white" },
+										headerTintColor: "white",
 									}}
-								>
-									<Stack.Screen name="welcomer" component={WelcomerPage as any} />
-									<Stack.Screen name="fkart.auth" component={FKartAuthPage} />
-									<Stack.Screen name="fkart.auth.welcomer" component={FKartWelcomer} />
-									<Stack.Screen name="fkart.auth.signin" component={FKartWelcomer} />
-									<Stack.Screen name="fkart.auth.signup" component={FKartWelcomer} />
-									<Stack.Screen name="home" component={RootScreen} />
-									<Stack.Screen name="auth" component={AuthPage} />
-									<Stack.Screen
-										name="card_details"
-										options={{
-											headerShown: true,
-											headerTitle: "",
-											headerTransparent: true,
-											headerTitleAlign: "center",
-											headerTitleStyle: { color: "white" },
-											headerTintColor: "white",
-										}}
-										component={CardDetails as any}
-									/>
-									<Stack.Screen
-										name="route_details"
-										options={{
-											headerShown: true,
-											title: "",
-										}}
-										component={RouteDetails as any}
-									/>
-									<Stack.Screen
-										name="bus_details"
-										options={{
-											headerShown: true,
-											title: "",
-										}}
-										component={BusDetails as any}
-									/>
-									<Stack.Screen
-										name="map_data"
-										options={{
-											headerShown: true,
-											title: "",
-										}}
-										component={MapData as any}
-									/>
-									<Stack.Screen
-										name="city_selector"
-										options={{
-											headerShown: false,
-											// title: "Select City",
-										}}
-										component={CitySelector as any}
-									/>
-								</Stack.Navigator>
-							</NavigationContainer>
-						</TranslationsProvider>
-					</ThemeProvider>
-				</FKartContextProvider>
+									component={CardDetails as any}
+								/>
+								<Stack.Screen
+									name="route_details"
+									options={{
+										headerShown: true,
+										title: "",
+									}}
+									component={RouteDetails as any}
+								/>
+								<Stack.Screen
+									name="bus_details"
+									options={{
+										headerShown: true,
+										title: "",
+									}}
+									component={BusDetails as any}
+								/>
+								<Stack.Screen
+									name="map_data"
+									options={{
+										headerShown: true,
+										title: "",
+									}}
+									component={MapData as any}
+								/>
+								<Stack.Screen
+									name="city_selector"
+									options={{
+										headerShown: false,
+										// title: "Select City",
+									}}
+									component={CitySelector as any}
+								/>
+							</Stack.Navigator>
+						</NavigationContainer>
+					</TranslationsProvider>
+				</ThemeProvider>
 			</GestureHandlerRootView>
 		</QueryClientProvider>
 	)
