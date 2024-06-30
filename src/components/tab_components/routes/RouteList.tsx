@@ -1,10 +1,11 @@
 import { FlatList, RefreshControl, Text } from "react-native"
-import BasicRouteInformation from "common/interfaces/KentKart/BasicRouteInformation" 
+import BasicRouteInformation from "common/interfaces/KentKart/BasicRouteInformation"
 import RouteTouchable from "./RouteTouchable"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { useContext, useMemo } from "react"
 import ApplicationConfig from "common/ApplicationConfig"
 import { ThemeContext } from "common/contexts/ThemeContext"
+import { useAnimatedStyle, useSharedValue } from "react-native-reanimated"
 export default function RouteList(props: {
 	data: { routeList: BasicRouteInformation[] }
 	refreshing: boolean
@@ -17,7 +18,7 @@ export default function RouteList(props: {
 	function renderRoute({ index, item }: { index: number; item: BasicRouteInformation }) {
 		return <RouteTouchable item={item} navigation={props.navigation} route={props.route} />
 	}
-	const {theme} = useContext(ThemeContext)
+	const { theme } = useContext(ThemeContext)
 	const { routeType } = props
 	const { data, refreshing, onRefresh, searchText } = props
 
@@ -63,12 +64,14 @@ export default function RouteList(props: {
 						No data found!
 					</Text>
 				)}
+				horizontal={false}
+				decelerationRate={"fast"}
+				
 				style={{
-					backgroundColor:theme.dark,
-
+					backgroundColor: theme.dark,
 				}}
 				contentContainerStyle={{
-					paddingBottom:80
+					paddingBottom: 160,
 				}}
 				// contentContainerStyle={{ paddingTop: 60 }}
 				maxToRenderPerBatch={10}

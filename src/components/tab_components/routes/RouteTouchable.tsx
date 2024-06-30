@@ -1,16 +1,18 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import BasicRouteInformation from "common/interfaces/KentKart/BasicRouteInformation"
 import { Text, TouchableOpacity, View } from "react-native"
-import { useContext, useMemo } from "react"
-import Divider from "components/reusables/Divider" 
+import { useContext, useEffect, useMemo } from "react"
+import Divider from "components/reusables/Divider"
 import { ThemeContext } from "common/contexts/ThemeContext"
 
 export default function RouteTouchable(props: { navigation: NativeStackNavigationProp<any>; route: any; item: BasicRouteInformation }) {
 	const { item } = props
 	const { navigation } = props
-	const {theme} = useContext(ThemeContext)
-	return useMemo(
-		() => (
+
+	const { theme } = useContext(ThemeContext)
+
+	return useMemo(() => {
+		return (
 			<TouchableOpacity
 				onPress={() => {
 					navigation.push("route_details", { data_route: item })
@@ -47,7 +49,6 @@ export default function RouteTouchable(props: { navigation: NativeStackNavigatio
 					{item.name} ({item.routeCode})
 				</Text>
 			</TouchableOpacity>
-		),
-		[item,theme]
-	)
+		)
+	}, [item, theme])
 }
