@@ -20,6 +20,14 @@ export default abstract class Logger {
 		const text = `${getPrefix("INFO", stack)} ${args}`
 		console.log(text)
 	}
+	public static success(stack: string, ...args: any[]) {
+		if (!args || args.length === 0) {
+			args = [stack]
+			stack = "unknown"
+		}
+		const text = `${getPrefix("SUCCESS", stack)} ${args}`
+		console.log(text)
+	}
 }
 function getTime() {
 	const date = new Date()
@@ -32,13 +40,15 @@ function getTime() {
 function getLogColor(log_type: string) {
 	switch (log_type) {
 		case "LOG":
-			return "\x1b[47m"
+			return "\x1b[107m"
 		case "ERROR":
 			return "\x1b[41m"
 		case "WARNING":
 			return "\x1b[43m"
 		case "INFO":
-			return "\x1b[46m"
+			return "\x1b[106m"
+		case "SUCCESS":
+			return "\x1b[102m"
 		default:
 			return "\x1b[0m"
 	}
