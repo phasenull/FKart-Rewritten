@@ -1,7 +1,7 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import AccountDetailsContainer from "components/tab_components/account_details/AccountDetailsContainer"
 import { useContext, useEffect, useState } from "react"
-import { RefreshControl, ScrollView, Text, View } from "react-native"
+import { RefreshControl, ScrollView, Text, TouchableOpacity, View } from "react-native"
 
 import { Favorite } from "common/interfaces/KentKart/Favorite"
 import { AddCard } from "components/tab_components/account_details/AddCard"
@@ -26,7 +26,7 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 		)
 	}
 	const { navigation } = props
-	const { user } = useKentKartAuthStore((state) => state)
+	const { user, logout } = useKentKartAuthStore((state) => state)
 	const [cards, setCards] = useState<Favorite<"Card">[] | undefined>(undefined)
 	const [virtualCards, setVirtualCards] = useState<Favorite<"QR">[] | undefined>(undefined)
 	const [is_show_secret, setIsShowSecret] = useState(false)
@@ -40,7 +40,6 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 	const { data: favoritesData, refetch: refetchFavorites, isRefetching: isFavoritesRefetching, isLoading: isFavoritesLoading, error: favoritesError } = useGetFavorites()
 	useEffect(() => {
 		if (!favoritesData?.data) {
-			console.log("no fav data", (favoritesError as any)?.response?.data)
 			return
 		}
 		const favorite_cards_filtered = get_cards_from_fav_list(favoritesData.data.userFavorites)
@@ -51,18 +50,18 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 		<SeasonValidator>
 			<View style={{ backgroundColor: theme.dark }} className="flex-1 items-center justify-center">
 				{/* login prompt */}
-				<ScrollView
-					refreshControl={<RefreshControl onRefresh={refetchFavorites} refreshing={isFavoritesRefetching} />}
-					horizontal={false}
-					showsVerticalScrollIndicator={true}
-					contentContainerStyle={{
-						paddingBottom: 100,
-						justifyContent: "center",
-						alignItems: "center",
-					}}
-					className="w-full"
-				>
-					<KentKartAuthValidator else={<AuthWall navigation={navigation} />}>
+				<KentKartAuthValidator else={<AuthWall navigation={navigation} />}>
+					<ScrollView
+						refreshControl={<RefreshControl onRefresh={refetchFavorites} refreshing={isFavoritesRefetching} />}
+						horizontal={false}
+						showsVerticalScrollIndicator={true}
+						contentContainerStyle={{
+							paddingBottom: 100,
+							justifyContent: "center",
+							alignItems: "center",
+						}}
+						className="w-full"
+					>
 						<AccountDetailsContainer show_credentials={is_show_secret} user={user} />
 						{isFavoritesLoading ? (
 							<View className="items-center flex-1 justify-center">
@@ -109,32 +108,10 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 							<CardContainer style={{ marginTop: 5 * 4 }} favorite_data={p_card} navigation={navigation} key={"virtual_card_" + index} index={index} />
 						))}
 						<AddCard />
-						{/* <TouchableOpacity
-					className="justify-end"
-					onPress={async () => {
-						await Application.logout()
-						navigation?.navigate("auth")
-					}}
-					style={{
-						backgroundColor: styles.warning,
-						paddingHorizontal: 20,
-						paddingVertical: 10,
-						borderRadius: 10,
-						margin: 10,
-						elevation: 5,
-						shadowOffset: { height: 2, width: 2 },
-					}}
-				>
-				<Text
-				style={{ color: styles.white }}
-				className="font-bold text-lg text-center"
-					>
-					Logout
-					</Text>
-				</TouchableOpacity> */}
-					</KentKartAuthValidator>
-					<SimplyButton text="Select City" size="medium" onPress={() => props.navigation.navigate("city_selector")} />
-				</ScrollView>
+						<SimplyButton onPress={logout} className="mb-2" text="Log Out" color={theme.error} size="medium" />
+						<SimplyButton className="mt-4" text="Select City" size="medium" onPress={() => props.navigation.navigate("city_selector")} />
+					</ScrollView>
+				</KentKartAuthValidator>
 			</View>
 		</SeasonValidator>
 	)
