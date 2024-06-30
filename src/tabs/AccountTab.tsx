@@ -37,31 +37,31 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 		const favorite_cards_filtered: Favorite<"Card">[] = fav_list?.filter((p_card: Favorite<"Card">) => p_card.type === 2 || p_card.alias)
 		return favorite_cards_filtered
 	}
-	const { data: favoritesData, refetch: refetchFavorites, isRefetching: isFavoritesRefetching, isLoading: isFavoritesLoading,error:favoritesError } = useGetFavorites()
+	const { data: favoritesData, refetch: refetchFavorites, isRefetching: isFavoritesRefetching, isLoading: isFavoritesLoading, error: favoritesError } = useGetFavorites()
 	useEffect(() => {
-	if (!favoritesData?.data) {
-	console.log("no fav data", (favoritesError as any)?.response?.data)
-	return
-	}
-	const favorite_cards_filtered = get_cards_from_fav_list(favoritesData.data.userFavorites)
-	setCards(favorite_cards_filtered)
-	setVirtualCards(favoritesData.data.virtualCards)
+		if (!favoritesData?.data) {
+			console.log("no fav data", (favoritesError as any)?.response?.data)
+			return
+		}
+		const favorite_cards_filtered = get_cards_from_fav_list(favoritesData.data.userFavorites)
+		setCards(favorite_cards_filtered)
+		setVirtualCards(favoritesData.data.virtualCards)
 	}, [favoritesData?.data])
 	return (
-		<View style={{ backgroundColor: theme.dark }} className="flex-1 items-center justify-center">
-			{/* login prompt */}
-			<ScrollView
-				refreshControl={<RefreshControl onRefresh={refetchFavorites} refreshing={isFavoritesRefetching} />}
-				horizontal={false}
-				showsVerticalScrollIndicator={true}
-				contentContainerStyle={{
-					paddingBottom: 100,
-					justifyContent: "center",
-					alignItems: "center",
-				}}
-				className="w-full"
-			>
-				<SeasonValidator>
+		<SeasonValidator>
+			<View style={{ backgroundColor: theme.dark }} className="flex-1 items-center justify-center">
+				{/* login prompt */}
+				<ScrollView
+					refreshControl={<RefreshControl onRefresh={refetchFavorites} refreshing={isFavoritesRefetching} />}
+					horizontal={false}
+					showsVerticalScrollIndicator={true}
+					contentContainerStyle={{
+						paddingBottom: 100,
+						justifyContent: "center",
+						alignItems: "center",
+					}}
+					className="w-full"
+				>
 					<KentKartAuthValidator else={<AuthWall navigation={navigation} />}>
 						<AccountDetailsContainer show_credentials={is_show_secret} user={user} />
 						{isFavoritesLoading ? (
@@ -133,9 +133,9 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 					</Text>
 				</TouchableOpacity> */}
 					</KentKartAuthValidator>
-				</SeasonValidator>
-				<SimplyButton text="Select City" size="medium" onPress={()=>props.navigation.navigate("city_selector")}/>
-			</ScrollView>
-		</View>
+					<SimplyButton text="Select City" size="medium" onPress={() => props.navigation.navigate("city_selector")} />
+				</ScrollView>
+			</View>
+		</SeasonValidator>
 	)
 }

@@ -10,9 +10,10 @@ import { useContext, useEffect } from "react"
 import { View } from "react-native"
 import { processColorsInProps } from "react-native-reanimated/lib/typescript/reanimated2/Colors"
 import { UseQueryResult, useQuery } from "react-query"
+import ErrorPage from "screens/ErrorPage"
 
 export default function SeasonValidator(props: { children: any }) {
-	const { data, error, isError, isFetching, isRefetching } = useQuery(["getSeason"], getSeasonAsync, { refetchInterval: 5 * 60 * 1000, staleTime: 5 * 60 * 1000, retry: 2 }) as UseQueryResult<
+	const { data, error,refetch, isError, isFetching, isRefetching } = useQuery(["getSeason"], getSeasonAsync, { refetchInterval: 5 * 60 * 1000, staleTime: 5 * 60 * 1000, retry: 2 }) as UseQueryResult<
 		AxiosResponse<
 			BaseFKartResponse & {
 				season: "summer" | "winter",
@@ -20,21 +21,17 @@ export default function SeasonValidator(props: { children: any }) {
 			}
 		>
 	>
-	const { theme } = useContext(ThemeContext)
 	if (isRefetching || isFetching) {
 		return (
 			<View className="flex-1 items-center justify-center">
 				<CustomLoadingIndicator />
-				<SecondaryText>Checking Season...</SecondaryText>
+				<SecondaryText className="mt-4">Checking Season...</SecondaryText>
 			</View>
 		)
 	}
 	if (!data?.data || isError || error) {
 		return (
-			<View className="flex-1 items-center justify-center">
-				<MaterialCommunityIcons name="snowflake-off" size={24 * 4} />
-				<SecondaryText style={{ color: theme.error }}>Season service is not available, cant proceed</SecondaryText>
-			</View>
+			<ErrorPage error={{title:"Server Error",description:"Couldn't fetch the season, can'nt proceed"}}  retry={refetch} />
 		)
 	}
 	const season = data?.data.season
