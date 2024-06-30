@@ -3,7 +3,7 @@ import ApplicationConfig from "common/ApplicationConfig"
 import AuthTypes from "common/enums/LoginTypes"
 import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
 import Logger from "common/Logger"
-import { createStore, create } from "zustand"
+import { create } from "zustand"
 interface KentKartAuthStore {
 	user: undefined | IKentKartUser
 
@@ -17,6 +17,7 @@ interface KentKartAuthStore {
 	login: (args: { username: string; password: string; auth_type: AuthTypes }) => Promise<[true] | [false, string | undefined]>
 	register: (args: {}) => Promise<void>
 	setRegion: (region:string) => void
+	logout: ()=> void
 }
 
 export const useKentKartAuthStore = create<KentKartAuthStore>((set, get) => ({
@@ -84,19 +85,23 @@ export const useKentKartAuthStore = create<KentKartAuthStore>((set, get) => ({
 		return [access_token]
 	},
 	fetchAccountInfo: async () => {
-		console.log("fetching account info")
+		// console.log("fetching account info")
 		const { credentials, auth_type, region } = get()
 		const { access_token } = credentials
 		if (!access_token) return [false, "access token not found, please log in"]
 		const [data, error] = await API.fetchProfile({ access_token: access_token, auth_type:auth_type,region:region as string })
 		if (!data) {
-			Logger.error("account info fetch error",error)
+			Logger.error("KentKartAuthStore.tsx.fetchAccountInfo",error)
 			return [false, error]
 		}
 		set({ user: {...data,access_token:access_token} })
-		console.log("account info fetch successfull")
+		Logger.info("KentKartAuthStore.tsx.fetchAccountInfo","account info fetch successfull")
 		return [data]
 	},
 	register: async (args) => {},
+	logout:()=>{
+		Logger.info(`Logging out from account ${get().user?.name}`)
+		set({user:undefined,credentials:undefined})
+	}
 }))
 // useKentKartAuthStore.subscribe((state) => state.credentials)

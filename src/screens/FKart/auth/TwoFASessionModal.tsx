@@ -1,24 +1,23 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons"
-import { TouchableOpacity } from "@gorhom/bottom-sheet"
-import { FKartContext } from "common/contexts/FKartContext"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import { TranslationsContext } from "common/contexts/TranslationsContext"
+import { useFKartAuthStore } from "common/stores/FKartAuthStore"
 import SecondaryText from "components/reusables/SecondaryText"
 import SimplyButton from "components/ui/SimplyButton"
 import { useContext, useState } from "react"
 import { Modal, TextInput, View } from "react-native"
-import { TouchableWithoutFeedback } from "react-native-gesture-handler"
 import Animated, { BounceIn, BounceOut } from "react-native-reanimated"
 
-export default function TwoFASessionModal(props: { onDissmiss: () => void; visible?: boolean; onSave: (code: string) => void; error?: string }) {
+export default function TwoFASessionModal(props: {processing:boolean, onDissmiss: () => void; visible?: boolean; onSave: (code: string) => void; error?: unknown; email: string }) {
 	const { theme } = useContext(ThemeContext)
 	const { translations } = useContext(TranslationsContext)
-	if (!props.visible) {
-		return
-	}
+	const twoFA = useFKartAuthStore((state) => state.twoFA)
+	const visible = props.visible || twoFA?.session_id
 	const [selectionIndex, setSelectionIndex] = useState<{ end: number; start: number }>({ end: 0, start: 0 })
 	const [text, setText] = useState<string>("")
-	const {userManager} = useContext(FKartContext)
+	if (!visible) {
+		return
+	}
 	return (
 		<Modal transparent={true} visible={props.visible} style={{ backgroundColor: theme.success }}>
 			<Animated.View
@@ -29,13 +28,9 @@ export default function TwoFASessionModal(props: { onDissmiss: () => void; visib
 			>
 				<SecondaryText style={{ fontSize: 24 }}>2FA Code Required!</SecondaryText>
 				<MaterialCommunityIcons name="lock" color={theme.secondary} size={24 * 4} />
-				
-				<SecondaryText style={{fontSize:18,textAlign:"center",color:theme.success}}>
-					We've sent {userManager.credentials?.username || "error@error"} an email containing your secret code!
-				</SecondaryText>
-				<SecondaryText style={{fontSize:12,opacity:0.3}}>
-					ref-no: {userManager.credentials?.twoFA_session || "error"}
-				</SecondaryText>
+
+				<SecondaryText style={{ fontSize: 18, textAlign: "center", color: theme.success }}>We've sent {props.email || "error@error"} an email containing your secret code!</SecondaryText>
+				<SecondaryText style={{ fontSize: 12, opacity: 0.3 }}>ref-no: {twoFA?.session_id || "error"}</SecondaryText>
 				<View className="flex-row mt-4 px-12 justify-center">
 					<TextInput
 						inputMode="numeric"
@@ -69,11 +64,11 @@ export default function TwoFASessionModal(props: { onDissmiss: () => void; visib
 						))}
 				</View>
 				<SecondaryText style={{ color: theme.error }} className="my-4">
-					{(userManager.__getUserQuery.error as any)?.response?.data.result.error}
+					{props.error as string}
 				</SecondaryText>
 				<View className="self-center gap-x-4 justify-center flex-row">
-					<SimplyButton onPress={() => props.onDissmiss()} text={translations.cancel} color={theme.error} size="medium"></SimplyButton>
-					<SimplyButton onPress={() => props.onSave(text)} processing={userManager.__getUserQuery.isRefetching} text={translations.ok} size="medium"></SimplyButton>
+					<SimplyButton onPress={() => props.onDissmiss()} text={translations.cancel} color={theme.error} size="medium"/>
+					<SimplyButton onPress={() => props.onSave(text)} processing={props.processing} text={translations.ok} size="medium"/>
 				</View>
 			</Animated.View>
 		</Modal>

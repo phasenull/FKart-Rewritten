@@ -1,8 +1,7 @@
-import { useContext } from "react"
-import { FKartContext } from "common/contexts/FKartContext"
+import { useFKartAuthStore } from "common/stores/FKartAuthStore";
 
 export default function FKartAuthValidator(props: { children: any; else?: any }) {
-	const { fkartUser } = useContext(FKartContext)
+	const { user } = useFKartAuthStore()
 	// if (isFetching) {
 	// 	return (
 	// 		<View>
@@ -11,7 +10,7 @@ export default function FKartAuthValidator(props: { children: any; else?: any })
 	// 		</View>
 	// 	)
 	// }
-	if (fkartUser) {
+	if (user) {
 		return props.children
 	}
 	return props.else ? props.else : null

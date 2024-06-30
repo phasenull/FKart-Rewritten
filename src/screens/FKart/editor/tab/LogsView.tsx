@@ -1,6 +1,4 @@
-import { FKartContext } from "common/contexts/FKartContext"
 import { getLogsAsync } from "common/hooks/fkart/auth/getLogs"
-import ICredentials from "common/interfaces/app/Credentials"
 import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
 import { useContext } from "react"
 import { Text, View, ViewProps } from "react-native"
@@ -8,19 +6,27 @@ import { useInfiniteQuery, useQuery } from "react-query"
 import LogTouchable from "./LogTouchable"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import SecondaryText from "components/reusables/SecondaryText"
-import { MaterialCommunityIcons } from "@expo/vector-icons"
 import SimplyButton from "components/ui/SimplyButton"
+import Logger from "common/Logger"
 
 export default function LogsView(props: ViewProps) {
 	// Only use in components that are child of a FKartValidator
-	const { userManager } = useContext(FKartContext)
+	return
 	const { theme } = useContext(ThemeContext)
-	const { isFetching, data, isRefetching, isError, error,fetchNextPage,isFetchingNextPage,hasNextPage } = useInfiniteQuery(["getLogs"], ({ pageParam = 0 }) => getLogsAsync(userManager.accessToken, pageParam), {
-		refetchInterval: 60 * 1000,
-		staleTime: 5 * 1000,
-		retry: false,
-		getNextPageParam: (lastpage, allpages) => lastpage.data.next_cursor,
-	})
+	const { isFetching, data, isRefetching, isError, error, fetchNextPage, isFetchingNextPage, hasNextPage } = useInfiniteQuery(
+		["getLogs"],
+		({ pageParam = 0 }) => {
+			Logger.info("getLogsAsync",`hook ${pageParam || "undefined"}`)
+			return
+		},
+		{
+			refetchInterval: 5 * 1000,
+			retry: false,
+			getNextPageParam: (lastpage, allpages) => {
+				return lastpage.data.next_cursor
+			},
+		}
+	)
 	if (isFetching && !isRefetching) {
 		return <CustomLoadingIndicator size={12 * 4} />
 	}
@@ -52,9 +58,17 @@ export default function LogsView(props: ViewProps) {
 					<CustomLoadingIndicator size={4 * 4} />
 				</View>
 			) : null}
-			<SecondaryText className="self-center mb-2">Logs</SecondaryText>
+			<SecondaryText className="self-center mb-2">Logs ({data?.pages.length})</SecondaryText>
 			{data?.pages.map((page) => page.data.logs.map((logObject) => <LogTouchable key={logObject.id} log={logObject} />))}
-			<SimplyButton style={{width:32*4,alignSelf:"center",marginTop:4*4}} processingText="loading..." processing={isFetchingNextPage} size="medium" text={hasNextPage ? "Load More" : "end of list"} disabled={!hasNextPage} onPress={()=>fetchNextPage()} />
+			<SimplyButton
+				style={{ width: 32 * 4, alignSelf: "center", marginTop: 4 * 4 }}
+				processingText="loading..."
+				processing={isFetchingNextPage}
+				size="medium"
+				text={hasNextPage ? `Load More` : "end of list"}
+				disabled={!hasNextPage}
+				onPress={() => fetchNextPage()}
+			/>
 		</View>
 	)
 }
