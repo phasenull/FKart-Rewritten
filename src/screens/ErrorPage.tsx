@@ -11,7 +11,7 @@ export default function ErrorPage(props: { error: { title?: string; description?
 	const retry = props.retry
 	const { theme } = useContext(ThemeContext)
 	return (
-		<View className="flex-1 items-center justify-center" style={{ backgroundColor: theme.dark }}>
+		<View className="flex-1 self-center items-center justify-center" style={{ backgroundColor: theme.dark }}>
 			<MaterialIcons name={icon || "warning-amber"} color={theme.secondary} style={{ opacity: 0.3 }} size={32*4} />
 			<Text style={{ fontWeight: "800",fontSize:24,color:theme.error }}>{title}</Text>
 			{retry ? <TouchableOpacity onPress={retry} className="flex-col my-6">
