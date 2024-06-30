@@ -42,29 +42,43 @@ export default function SearchTab(props: { route: any; navigation: NativeStackNa
 		console.log("refreshing data")
 		refetch()
 	}
+
+	// ik its a bad design but it works
+	let contain
 	if (isError) {
-		return (
-			<View>
-				<RefreshControl refreshing={isLoading} onRefresh={refreshData} />
-				<Text>Unexpected Error: {JSON.stringify(error) || "unknown error"}</Text>
+		contain = <ErrorPage retry={refetch} error={{ title: "Request Error", description: JSON.stringify(error || "{}") || "Unknown error" }} />
+	} else if (!data?.data.routeList && !(isLoading || isRefetching)) {
+		contain = <ErrorPage retry={refetch} error={{ title: "No Routes!", description: "Server did not respond any routes in provided city, this could be an issue with " }} />
+	} else if (isLoading) {
+		contain = (
+			<View className="flex-1 justify-center items-center mb-32">
+				<CustomLoadingIndicator size={48} />
+				<SecondaryText
+					style={{
+						marginTop: 12 * 4,
+						fontSize: 32,
+					}}
+				>
+					Fetching data...
+				</SecondaryText>
 			</View>
 		)
-	}
-	if (!data?.data) {
-		return (
+	} else if (!data?.data) {
+		contain = (
 			<View className="items-center justify-center flex-1">
 				<SecondaryText>No data found</SecondaryText>
 			</View>
 		)
-	}
-	if (!data?.data.routeList && !(isLoading||isRefetching)) {
-		return <ErrorPage retry={refetch} error={{title:"No Routes!",description:"Server did not respond any routes in provided city, this could be an issue with "}} />
+	} else if (data?.data && data?.data.routeList) {
+		contain = <RouteList data={data.data} navigation={navigation} onRefresh={refreshData} refreshing={isRefetching||isLoading} searchText={searchText} route={route} routeType={filterByRouteType.value}/>
+	} else {
+		contain = <ErrorPage error={{ title: "Unknown Error", description: "Unknown state (no error, no routeList, data found)" }} retry={refetch} />
 	}
 	return (
 		<View className="flex-1">
 			<View style={{ elevation: 20, zIndex: 2, backgroundColor: theme.dark }}>
 				<RouteSearchBar onChangeText={setSearchText} filterByRouteType={filterByRouteType} setFilterByRouteType={setFilterByRouteType} />
-				<View className="mt-3 h-4 gap-x-4 flex-row justify-center mb-3">
+				<View className="mt-3 h-4 space-x-3 flex-row justify-center px-4 mb-3">
 					{[
 						{
 							key: "koy_minibusu",
@@ -96,21 +110,7 @@ export default function SearchTab(props: { route: any; navigation: NativeStackNa
 					})}
 				</View>
 			</View>
-			{isLoading || isRefetching ? (
-				<View className="flex-1 justify-center items-center mb-32">
-					<CustomLoadingIndicator size={48} />
-					<SecondaryText
-						style={{
-							marginTop: 12 * 4,
-							fontSize: 32,
-						}}
-					>
-						Fetching data...
-					</SecondaryText>
-				</View>
-			) : (
-				<RouteList data={data.data} navigation={navigation} onRefresh={refreshData} refreshing={isRefetching} searchText={searchText} route={route} routeType={filterByRouteType.value} />
-			)}
+			{contain}
 		</View>
 	)
 }
