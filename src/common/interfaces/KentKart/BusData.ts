@@ -28,7 +28,7 @@ export default interface BusData extends IPoint {
 	pickMeUp: "1" | "0"
 	plateNumber: string
 	stopId: string
-	timeDiff: never
+	timeDiff: "" | number
 	tripId: string
 	vehicleType: string
 }

@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios"
 import ApplicationConfig from "common/ApplicationConfig"
 import BusData from "common/interfaces/KentKart/BusData"
-import { useQuery } from "react-query"
+import { useMutation, useQuery } from "react-query"
 import buffer from "buffer"
 import Logger from "common/Logger"
 export async function putBusImages(
@@ -45,5 +45,5 @@ export function usePutBusImages(
 	bus: BusData,
 	image: string | undefined
 ) {
-	return useQuery(["putBusImages",bus.plateNumber], () => putBusImages(bus, image))
+	return useMutation(["putBusImages",bus.plateNumber], () => putBusImages(bus, image))
 }

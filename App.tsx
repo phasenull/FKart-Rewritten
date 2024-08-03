@@ -22,6 +22,7 @@ import CitySelector from "screens/city_selector/CitySelector"
 import { useEffect } from "react"
 import Logger from "common/Logger"
 import { useFKartAuthStore } from "common/stores/FKartAuthStore"
+import R8R from "screens/r8r/R8R"
 
 const config = {
 	screens: {
@@ -102,6 +103,14 @@ export default function AppEntryComponent() {
 										title: "",
 									}}
 									component={MapData as any}
+								/>
+								<Stack.Screen
+									name="r8r"
+									options={{
+										headerShown: true,
+										title: "",
+									}}
+									component={R8R as any}
 								/>
 								<Stack.Screen
 									name="city_selector"

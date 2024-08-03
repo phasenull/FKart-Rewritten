@@ -1,6 +1,6 @@
 import { Callout, LatLng, Marker } from "react-native-maps"
 import BusData from "common/interfaces/KentKart/BusData"
-import { Image } from "react-native"
+import { Image, View } from "react-native"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { DYNAMIC_CONTENT_URL } from "common/constants"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
@@ -9,7 +9,7 @@ import RouteData from "common/interfaces/KentKart/RouteData"
 import { BusCallout } from "../callouts/BusCallout"
 import { useContext } from "react"
 import { ThemeContext } from "common/contexts/ThemeContext"
-export function BusMarker(props: { bus: BusData; coordinate: LatLng; easterEggEnabled?: boolean; navigation: NativeStackNavigationProp<any>; route_data?: RouteData }) {
+export function BusMarker(props: { is_rt?: boolean; bus: BusData; coordinate: LatLng; easterEggEnabled?: boolean; navigation: NativeStackNavigationProp<any>; route_data?: RouteData }) {
 	const { route_data, bus, coordinate, easterEggEnabled, navigation } = props
 	const schedule_list = route_data?.timeTableList
 	const scheduled_data = schedule_list?.find((e) => e.tripId === bus.tripId)
@@ -42,7 +42,15 @@ export function BusMarker(props: { bus: BusData; coordinate: LatLng; easterEggEn
 					source={{ uri: `${DYNAMIC_CONTENT_URL}/assets/media/images/random/easter_eggs/pacman/character_0.png`, cache: "force-cache" }}
 					className="h-8 w-8 -rotate-90"
 				/>
-				<Callout removeClippedSubviews={false} style={{ overflow: "visible" }} tooltip={true}>
+				<Callout
+					removeClippedSubviews={false}
+					style={{
+						overflow: "visible",
+						// minWidth: (props.is_rt ? 24 : 30) * 4,
+						// minHeight: (props.is_rt ? 24 : 12) * 4,
+					}}
+					tooltip={true}
+				>
 					<BusCallout bus={bus} route_data={route_data} scheduled_data={scheduled_data} />
 				</Callout>
 			</Marker>
@@ -85,7 +93,7 @@ export function BusMarker(props: { bus: BusData; coordinate: LatLng; easterEggEn
 				size={16}
 			/>
 			<Callout removeClippedSubviews={false} style={{ overflow: "visible" }} tooltip={true}>
-				<BusCallout bus={bus} route_data={route_data} scheduled_data={scheduled_data} />
+				<BusCallout is_rt={props.is_rt} bus={bus} route_data={route_data} scheduled_data={scheduled_data} />
 			</Callout>
 		</Marker>
 	)

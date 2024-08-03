@@ -1,19 +1,17 @@
 export function hideEmail(email: string | undefined) {
 	if (!email) return ""
-	return `${email?.slice(0, 5)}${"*".repeat(
-		email?.split("@")[0].slice(5).length as number
-	)}@${email?.split("@")[1]}`
+	return `${email?.slice(0, 5)}${"*".repeat(email?.split("@")[0].slice(5).length as number)}@${email?.split("@")[1]}`
 }
 export function hidePhone(phone: string | undefined) {
 	if (!phone) return ""
-	return `${"*".repeat(phone?.slice(0,phone.length-2).length as number)}${phone?.slice(-2)}`
+	return `${"*".repeat(phone?.slice(0, phone.length - 2).length as number)}${phone?.slice(-2)}`
 }
 
-export function formatAlias(alias:string | undefined) {
-	const part1 : string = alias?.slice(0,5) as string
-	const part2 : string = alias?.slice(5,10) as string
-	const part3 : string = alias?.slice(10,11) as string
-	return `${part1 + "X".repeat(5-(part1?.length as number))}-${part2 + "X".repeat(5-(part2?.length as number))}-${part3 + "X".repeat(1-(part3?.length as number))}`
+export function formatAlias(alias: string | undefined) {
+	const part1: string = alias?.slice(0, 5) as string
+	const part2: string = alias?.slice(5, 10) as string
+	const part3: string = alias?.slice(10, 11) as string
+	return `${part1 + "X".repeat(5 - (part1?.length as number))}-${part2 + "X".repeat(5 - (part2?.length as number))}-${part3 + "X".repeat(1 - (part3?.length as number))}`
 }
 export function dateCountdown(date: Date) {
 	const diff = dateDiff(date, new Date())
@@ -39,16 +37,15 @@ export function dateToString(date: Date) {
 export function dateDiff(date1: Date, date2: Date) {
 	return date1.getTime() - date2.getTime()
 }
-export function convertDiffToText(diff:number) {
-	if (diff >= 60*60*1000) {
-		return `${Math.round(diff/(60*60*1000))} hours ago`
-	}
-	else if (diff > (60*1000)) {
-		return `${Math.ceil(diff / (60*1000))} mins ago`
+export function convertDiffToText(diff: number) {
+	if (diff >= 60 * 60 * 1000) {
+		return `${Math.round(diff / (60 * 60 * 1000))} hours ago`
+	} else if (diff > 60 * 1000) {
+		return `${Math.ceil(diff / (60 * 1000))} mins ago`
 	}
 	return `now`
 }
-export function dateFromMessedKentKartDateFormat(input:string) {
+export function dateFromMessedKentKartDateFormat(input: string) {
 	if (input.length != 16) return new Date()
 	const date = new Date(Date.parse(input))
 	// const year = parseInt(input.slice(0,4))
@@ -65,3 +62,5 @@ export function dateFromMessedKentKartDateFormat(input:string) {
 	// date.setSeconds(seconds)
 	return date
 }
+
+export type ProperErrorHandling<SUCCESS> = [SUCCESS] | [false,string]

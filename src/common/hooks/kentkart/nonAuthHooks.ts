@@ -1,6 +1,6 @@
 import { useQuery } from "react-query"
 import ApplicationConfig from "common/ApplicationConfig"
-import { AxiosResponse } from "axios"
+import axios, { AxiosResponse } from "axios"
 import { BaseKentKartResponse } from "common/interfaces/KentKart/BaseKentKartResponse"
 import { ICityInformation } from "common/interfaces/KentKart/CityInformation"
 import Logger from "common/Logger"
@@ -9,7 +9,9 @@ import RouteData from "common/interfaces/KentKart/RouteData"
 import { IProducts } from "common/interfaces/KentKart/Products"
 import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
-
+import BaseFKartResponse from "common/interfaces/FKart/BaseFKartResponse"
+import IRTBus from "common/interfaces/KentKart/RTBus"
+import { transit_realtime } from "gtfs-realtime-bindings"
 export function useGetAnnouncements() {
 	const region = useKentKartAuthStore((state) => state.region) as string
 	return useQuery(
@@ -58,7 +60,47 @@ export function useGetProducts() {
 		{ staleTime: Infinity }
 	)
 }
-
+export function useGetRealtime() {
+	const { region, credentials, auth_type } = useKentKartAuthStore()
+	const { access_token } = credentials
+	// JSON wrapper
+	return useQuery({
+		queryFn: async () => {
+			if (!region || !access_token) {
+				return { feed: [] }
+			}
+			const url = `${ApplicationConfig.endpoints.service}/rl1/api/gtfs/realtime?${new URLSearchParams({
+				region: region,
+				token: access_token,
+				authType: auth_type,
+			})}`
+			console.log("fetching")
+			let data
+			const request = await fetch(url)
+			const buffer = await request.arrayBuffer()
+			console.log("fetch end")
+			try {
+				const json = Buffer.from(buffer).toJSON()
+				if (json) console.log("json", json)
+			} catch {
+				console.log("couldn't parse as JSON (success)")
+			}
+			if (buffer.byteLength===15) throw new Error("buffer empty")
+			try {
+				data = transit_realtime.FeedMessage.decode(new Uint8Array(buffer))
+			} catch {
+				console.log("buffer",buffer.byteLength)
+			}
+			console.log("result", data?.entity?.length)
+			// const data = (await request?.json()) as { feed: IRTBus[] } & BaseFKartResponse
+			return { feed: data?.entity || [] }
+		},
+		queryKey: ["realtime"],
+		keepPreviousData: true,
+		// staleTime: 4.99 * 1000,
+		refetchInterval: 5 * 1000,
+	})
+}
 export function useGetRouteDetails(args: {
 	route_code: string
 	interval?: number
@@ -85,7 +127,7 @@ export function useGetRouteDetails(args: {
 	const resultTypeString = Object.values(resulType).join("")
 	const region = useKentKartAuthStore((state) => state.region) as string
 	return useQuery(
-		["getRouteDetails", {displayRouteCode:route_code, direction:direction, region:region}],
+		["getRouteDetails", { displayRouteCode: route_code, direction: direction, region: region }],
 		(): Promise<
 			AxiosResponse<
 				BaseKentKartResponse & {
@@ -101,7 +143,7 @@ export function useGetRouteDetails(args: {
 				// todo: remove direction and fix references so it wont have to refresh just to switch directions
 				displayRouteCode: route_code,
 				resultType: resultTypeString,
-				ignore_cache_with:`${Math.random()*10000}-${Math.random()*10000}`,
+				ignore_cache_with: `${Math.random() * 10000}-${Math.random() * 10000}`,
 			}
 			Logger.info(`REQUEST useGetRouteDetails ${route_code} ${direction}`)
 			const request = ApplicationConfig.makeKentKartRequest(url, {

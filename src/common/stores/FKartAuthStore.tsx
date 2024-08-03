@@ -73,32 +73,6 @@ export const useFKartAuthStore = create<FKartAuthStore>((set, get) => ({
 		const refresh_token = (await db.get("fkart.refresh_token")) as string
 		Logger.info("FKartAuthStore.__initF", `refresh_token: ${refresh_token.slice(0, 10)}`)
 		set({ credentials: { access_token: undefined, refresh_token: refresh_token } })
-
-		const cycle = setInterval(async () => {
-			/*
-			APPARENTLY THIS WAS A TERRIBLE IDEA
-
-			1139/1000 writes to KV
-			1.4k Requests to auth service in the last hour
-
-
-			{
-				"result": {
-					"cmd": "/user/access",
-					"error": "Internal Server Error: Error: KV put() limit exceeded for the day.",
-					"fTime": "6/30/2024, 4:26:15 PM",
-					"status": 500,
-					"success": false,
-					"time": 1719764775689
-				}
-			}
-			
-			oops.
-			 */
-			console.log("fetch access token")
-			await get().fetchAccessToken()
-		}, 5_000)
-		// if (!access_token) return
 	},
 	login: async (args) => {
 		const { password, username, twoFA_code } = args

@@ -1,0 +1,249 @@
+  openapi: 3.0.3
+  info:
+    title: FKart API Docs
+    description: |-
+      Project FKart API docs
+    contact:
+      email: contact@phasenull.dev
+    version: phase-0.1
+  externalDocs:
+    description: phasenull github
+    url: https://github.com/phasenull
+  servers:
+    - url: https://api.fkart.project.phasenull.dev/
+    - url: https://auth.api.fkart.project.phasenull.dev/
+    - url: https://editor.api.fkart.project.phasenull.dev/
+    - url: https:///
+  paths:
+    /city:
+      get:
+        summary: returns the list of cities
+        responses:
+          200:
+            description:
+            content:
+              application/json:
+                schema:
+                  oneOf:
+                    - properties:
+                        result:
+                          $ref: "#/components/schemas/ResponseResult"
+                        city:
+                          type: array
+                          items:
+                            $ref: "#/components/schemas/City"
+                    - properties:
+                        result: 
+                          $ref: "#/components/schemas/NotAuthenticatedResult"
+  components:
+      
+    schemas:
+      NotAuthenticatedResult:
+        description: Not Authenticated
+        properties:
+          result:
+            type: object
+            properties:
+              cmd:
+                type: string
+                example: "/api/city"
+              code:
+                type: integer
+                format: Int64
+                example: 33
+              message:
+                type: string
+                example: "Size özel servislerden yararlanabilmek için lütfen giriş yapınız"
+              dateTime:
+                type: string
+                example: "20240619135250"
+              debugTimeDiff:
+                type: string
+                example: ""
+              authType:
+                $ref: "#/components/schemas/AuthType"
+      ResponseResult:
+        description: Base KentKart Response Result
+        properties:
+          cmd:
+            type: string
+            example: "/api/city"
+          code:
+            $ref: "#/components/schemas/ResponseCode"
+          message:
+            type: string
+            example: "OK"
+          dateTime:
+            type: string
+            example: "20240619135250"
+          debugTimeDiff:
+            type: string
+            example: ""
+          authType:
+            $ref: "#/components/schemas/AuthType"
+      ResponseCode:
+        type: integer
+        format: Int64
+        example: 0
+        enum: [0,33,113]
+      AuthType:
+        type: string
+        description: |
+          Authentication type of user,
+          - 04: PIS (Passenger Information System) User
+          - 03: ?
+            - cant favorite stuff *anymore*
+              - returns code 113 on operations like favorite, account, abt/sync etc.
+            - only can check card balances
+            - was only seen publicly at [card balance checker](https://www.ulasimpark.com.tr/kocaeli-kart)
+          - 02: probably admin account or something
+            - 200~ ms extra delay (probably extra db check)
+            - no proof of its existance except for high delays on requests
+        enum: ["02","03","04"]
+      Booleanish:
+        type: string
+        enum: ["0","1"]
+      Vector2:
+        type: object
+        properties:
+          lat:
+            type: string
+            example: "40.759190"
+          lng:
+            type: string
+            example: "29.943218"
+        xml:
+          name: vector2
+      City:
+        type: object
+        properties:
+          id:
+            type: string
+            example: 004
+          name:
+            type: string
+            example: Kocaeli
+          lat:
+            type: string
+            example: 40.759190
+          lon:
+            type: string
+            example: 29.943218
+          initialRegion:
+            $ref: "#/components/schemas/Vector2"
+          radius:
+            type: string
+            example: "10"
+          timezone:
+            type: string
+            example: "Europe/Moscow"
+          visible:
+            # type: integer
+            # format: Int64
+            enum: [0,1]
+            example: 1
+          mCharge:
+            type: string
+            example: "4"
+          supportEmail:
+            type: array
+            items:
+              type: string
+              format: email
+              example: bekir.yesil@kentkart.com.tr
+          supportCCEmail:
+            type: array
+            items:
+              type: string
+              format: email
+              example: mobile@kentkart.com.tr
+          bicycleUpdateService:
+            type: string
+            example: "https://e-komobil.com/services/api.php?process=kobis"
+          tRefreshBicycle:
+            type: integer
+            format: Int64
+            example: 5
+          tRefreshCarpark:
+            type: integer
+            format: Int64
+            example: 5
+          paymentTypes:
+            type: object
+            properties:
+              creditCard:
+                type: boolean
+                example: true
+              bkmExpress:
+                type: boolean
+                example: false
+              masterPass:
+                type: boolean
+                example: false
+              sadad:
+                description: The SADAD payment system was established by the Saudi Central Bank (SAMA) to be the national electronic bill presentment and payment (EBPP) service provider for the Kingdom of Saudi Arabia (KSA)
+                type: boolean
+                example: false
+          testdynamicQrEnable:
+            $ref: "#/components/schemas/Booleanish"
+          testdynamicQrChangeDuration:
+            $ref: "#/components/schemas/Booleanish"
+          disableBusCapacity:
+            type: boolean
+            example: true
+          cacheFlag:
+            $ref: "#/components/schemas/Booleanish"
+          order:
+            type: integer
+            format: Int64
+            example: 50
+          panic:
+            $ref: "#/components/schemas/Booleanish"
+          trip:
+            $ref: "#/components/schemas/Booleanish"
+          nfc:
+            $ref: "#/components/schemas/Booleanish"
+          oCharge:
+            $ref: "#/components/schemas/Booleanish"
+        xml:
+          name: city
+        example:
+          id: "004"
+          name: "Kocaeli"
+          lat: "40.759190"
+          lon: "29.943218"
+          initialRegion: {
+            lat: "40.759190",
+            lng: "29.943218"
+          }
+          radius: "10"
+          timezone: "Europe/Moscow"
+          visible: 1
+          mCharge: "4"
+          supportEmail: [
+            "bekir.yesil@kentkart.com.tr",
+            "mert.yuceer@kentkart.com.tr",
+            "ozgurozden@kocaeli.bel.tr",
+            "yavuzfirat@kocaeli.bel.tr"
+          ]
+          supportCCEmail: [
+            "mobile@kentkart.com.tr"
+          ]
+          bicycleUpdateService: "https://e-komobil.com/services/api.php?process=kobis"
+          tRefreshBicycle: 5
+          tRefreshCarpark: 5
+          paymentTypes: {
+            creditCard: true,
+            bkmExpress: false,
+            masterPass: false,
+            sadad: false
+          }
+          testdynamicQrEnable: "1"
+          testdynamicQrChangeDuration: "10"
+          disableBusCapacity: true
+          cacheFlag: "1"
+          order: 50
+          panic: "0"
+          trip: "1"
+          nfc: "0"
+          oCharge: "1"
