@@ -58,7 +58,7 @@ export function BusCallout(props: { is_rt?: boolean; scheduled_data: any; route_
 							numberOfLines={3}
 							adjustsFontSizeToFit={true}
 						>
-							{props.route_data.tripShortName.slice(0, 20)}
+							{props.route_data.tripShortName.slice(0, 30)}
 						</Text>
 					</View>
 				) : (

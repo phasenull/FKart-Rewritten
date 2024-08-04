@@ -1,7 +1,7 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { useGetRealtime } from "common/hooks/kentkart/nonAuthHooks"
 import SecondaryText from "components/reusables/SecondaryText"
-import { LegacyRef, useMemo, useRef } from "react"
+import { LegacyRef, useEffect, useMemo, useRef } from "react"
 import { View } from "react-native"
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps"
 import ErrorPage from "screens/ErrorPage"
@@ -10,6 +10,9 @@ import { BusMarker } from "screens/map_details/markers/BusMarker"
 export default function R8R(props: { navigation: NativeStackNavigationProp<any> }) {
 	const map = useRef<MapView>()
 	const { data, isLoading, isError, error } = useGetRealtime()
+	useEffect(()=>{
+		props.navigation.setOptions({title:`${data?.feed.length || 0} buses ${new Date().toISOString().slice(0,19)}`})
+	},[data])
 	return useMemo(() => {
 		if (isLoading) {
 			return (
