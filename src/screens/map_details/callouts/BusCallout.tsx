@@ -8,7 +8,7 @@ import { ThemeContext } from "common/contexts/ThemeContext"
 import SecondaryText from "components/reusables/SecondaryText"
 import { transit_realtime } from "gtfs-realtime-bindings"
 
-export function BusCallout(props: {raw?:transit_realtime.FeedEntity, is_rt?: boolean; scheduled_data: any; route_data: RouteData; bus: BusData }) {
+export function BusCallout(props: { raw?: transit_realtime.FeedEntity; is_rt?: boolean; scheduled_data: any; route_data: RouteData; bus: BusData }) {
 	const { scheduled_data, bus, route_data } = props
 	const departure_time = scheduled_data?.departureTime?.slice(0, 5) || "--:--"
 	const { theme } = useContext(ThemeContext)
@@ -42,7 +42,7 @@ export function BusCallout(props: {raw?:transit_realtime.FeedEntity, is_rt?: boo
 					<View className="flex-col mt-1">
 						<Text
 							style={{
-								color: theme.secondary,
+								color: theme.primaryDark,
 								fontWeight: "800",
 							}}
 							numberOfLines={1}
@@ -61,7 +61,16 @@ export function BusCallout(props: {raw?:transit_realtime.FeedEntity, is_rt?: boo
 						>
 							{props.route_data.tripShortName.slice(0, 30)}
 						</Text>
-						<Text>{Math.floor((props.raw?.vehicle?.position?.speed || 0) * 10)/10}km/h</Text>
+						<Text
+							style={{
+								color: theme.secondary,
+								fontWeight: "500",
+							}}
+							numberOfLines={1}
+							adjustsFontSizeToFit={true}
+						>
+							{Math.floor((props.raw?.vehicle?.position?.speed || 0) * 10) / 10} km/h
+						</Text>
 					</View>
 				) : (
 					<SecondaryText>

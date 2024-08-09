@@ -10,7 +10,15 @@ import { BusCallout } from "../callouts/BusCallout"
 import { useContext, useEffect } from "react"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import { transit_realtime } from "gtfs-realtime-bindings"
-export function BusMarker(props: { is_rt?: boolean;rt_raw?:transit_realtime.FeedEntity; bus: BusData; coordinate: LatLng; easterEggEnabled?: boolean; navigation: NativeStackNavigationProp<any>; route_data?: RouteData }) {
+export function BusMarker(props: {
+	is_rt?: boolean
+	rt_raw?: transit_realtime.FeedEntity
+	bus: BusData
+	coordinate: LatLng
+	easterEggEnabled?: boolean
+	navigation: NativeStackNavigationProp<any>
+	route_data?: RouteData
+}) {
 	const { route_data, bus, coordinate, easterEggEnabled, navigation } = props
 	const schedule_list = route_data?.timeTableList
 	const scheduled_data = schedule_list?.find((e) => e.tripId === bus.tripId)
@@ -45,7 +53,6 @@ export function BusMarker(props: { is_rt?: boolean;rt_raw?:transit_realtime.Feed
 					className="h-8 w-8 -rotate-90"
 				/>
 				<Callout
-			
 					removeClippedSubviews={false}
 					style={{
 						overflow: "visible",
@@ -85,7 +92,7 @@ export function BusMarker(props: { is_rt?: boolean;rt_raw?:transit_realtime.Feed
 			/>
 			<MaterialCommunityIcons
 				style={{
-					backgroundColor: theme.primary,
+					backgroundColor: getColorFromBus(props.rt_raw || props.bus, props.route_data) || theme.primary,
 					elevation: 10,
 					borderRadius: 50,
 					padding: 2,
@@ -100,4 +107,11 @@ export function BusMarker(props: { is_rt?: boolean;rt_raw?:transit_realtime.Feed
 			</Callout>
 		</Marker>
 	)
+}
+function getColorFromBus(bus: any, route_data?: RouteData): string | undefined {
+	if (["41K", "41041"].includes(route_data?.displayRouteCode || "")) return "#33aaff"
+	if (route_data?.tripShortName.includes("GÖREVLİ")) return "#38fb00"
+	if ((bus.plateNumber || bus.vehicle?.vehicle?.licensePlate)?.includes("ATT")) return "#cf00fb"
+	if ((bus.plateNumber || bus.vehicle?.vehicle?.licensePlate)?.startsWith("34 ")) return "#000"
+	if ((route_data?.displayRouteCode)?.includes("KM") || (route_data?.path_code)?.startsWith("51")) return "#fb5100"
 }
