@@ -79,6 +79,7 @@ export function BusCallout(props: { is_rt?: boolean; scheduled_data: any; route_
 				<MaterialCommunityIcons size={20} color={theme.secondary} name="arrow-right-thick" />
 				{props.is_rt ? (
 					<View className="flex-col self-start ml-1">
+						<Text>{Math.floor((Date.now() - parseInt(bus.timeDiff as string) * 1000) / 100) / 10}</Text>
 						{bus.disabledPerson === "1" ? <MaterialCommunityIcons color={theme.primary} size={14} name="human-wheelchair" /> : null}
 						{bus.ac === "1" ? <MaterialCommunityIcons size={14} color={theme.primary} name="air-conditioner" /> : null}
 						{bus.bike === "1" ? <MaterialCommunityIcons size={14} color={theme.primary} name="bike" /> : null}

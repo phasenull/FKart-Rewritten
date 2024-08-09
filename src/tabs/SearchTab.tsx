@@ -83,7 +83,7 @@ export default function SearchTab(props: { route: any; navigation: NativeStackNa
 						{
 							key: "koy_minibusu",
 							color: "#C60D0D",
-							value: "Köy Minibüsü",
+							value: "Kırsal Mahalle",
 						},
 						{
 							key: "ozel_halk_otobusu",

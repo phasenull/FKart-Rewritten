@@ -10,6 +10,7 @@ import { IProducts } from "common/interfaces/KentKart/Products"
 import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 import BaseFKartResponse from "common/interfaces/FKart/BaseFKartResponse"
+import {Buffer} from "buffer"
 import IRTBus from "common/interfaces/KentKart/RTBus"
 import { transit_realtime } from "gtfs-realtime-bindings"
 export function useGetAnnouncements() {
@@ -66,30 +67,28 @@ export function useGetRealtime() {
 	// JSON wrapper
 	return useQuery({
 		queryFn: async () => {
+			Logger.info("REQUEST useGetRealtime")
 			if (!region || !access_token) {
 				return { feed: [] }
 			}
+			console.log("fetch start")
 			const url = `${ApplicationConfig.endpoints.service}/rl1/api/gtfs/realtime?${new URLSearchParams({
 				region: region,
 				token: access_token,
 				authType: auth_type,
 			})}`
-			console.log("fetching")
 			let data
-			const request = await fetch(url)
-			const buffer = await request.arrayBuffer()
+			const request = await axios.get(url,{timeout:5000,responseType:"arraybuffer"})
+			const buffer = await request.data
 			console.log("fetch end")
-			try {
-				const json = Buffer.from(buffer).toJSON()
-				if (json) console.log("json", json)
-			} catch {
-				console.log("couldn't parse as JSON (success)")
+			if (buffer.byteLength === 15) {
+				console.log("!!! buffer empty "+ Buffer.from(buffer).toString())
+				return {feed:[]}
 			}
-			if (buffer.byteLength===15) throw new Error("buffer empty")
 			try {
 				data = transit_realtime.FeedMessage.decode(new Uint8Array(buffer))
 			} catch {
-				console.log("buffer",buffer.byteLength)
+				console.log("buffer", buffer.byteLength)
 			}
 			console.log("result", data?.entity?.length)
 			// const data = (await request?.json()) as { feed: IRTBus[] } & BaseFKartResponse
@@ -97,8 +96,9 @@ export function useGetRealtime() {
 		},
 		queryKey: ["realtime"],
 		keepPreviousData: true,
-		// staleTime: 4.99 * 1000,
-		refetchInterval: 5 * 1000,
+		refetchInterval: 30 * 1000,
+		retry:2,
+		
 	})
 }
 export function useGetRouteDetails(args: {
