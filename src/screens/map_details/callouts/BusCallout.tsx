@@ -6,8 +6,9 @@ import React, { useContext } from "react"
 import Divider from "components/reusables/Divider"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import SecondaryText from "components/reusables/SecondaryText"
+import { transit_realtime } from "gtfs-realtime-bindings"
 
-export function BusCallout(props: { is_rt?: boolean; scheduled_data: any; route_data: RouteData; bus: BusData }) {
+export function BusCallout(props: {raw?:transit_realtime.FeedEntity, is_rt?: boolean; scheduled_data: any; route_data: RouteData; bus: BusData }) {
 	const { scheduled_data, bus, route_data } = props
 	const departure_time = scheduled_data?.departureTime?.slice(0, 5) || "--:--"
 	const { theme } = useContext(ThemeContext)
@@ -60,6 +61,7 @@ export function BusCallout(props: { is_rt?: boolean; scheduled_data: any; route_
 						>
 							{props.route_data.tripShortName.slice(0, 30)}
 						</Text>
+						<Text>{Math.floor((props.raw?.vehicle?.position?.speed || 0) * 10)/10}km/h</Text>
 					</View>
 				) : (
 					<SecondaryText>
@@ -79,7 +81,6 @@ export function BusCallout(props: { is_rt?: boolean; scheduled_data: any; route_
 				<MaterialCommunityIcons size={20} color={theme.secondary} name="arrow-right-thick" />
 				{props.is_rt ? (
 					<View className="flex-col self-start ml-1">
-						<Text>{Math.floor((Date.now() - parseInt(bus.timeDiff as string) * 1000) / 100) / 10}</Text>
 						{bus.disabledPerson === "1" ? <MaterialCommunityIcons color={theme.primary} size={14} name="human-wheelchair" /> : null}
 						{bus.ac === "1" ? <MaterialCommunityIcons size={14} color={theme.primary} name="air-conditioner" /> : null}
 						{bus.bike === "1" ? <MaterialCommunityIcons size={14} color={theme.primary} name="bike" /> : null}

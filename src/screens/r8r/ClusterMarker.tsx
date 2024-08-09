@@ -23,6 +23,7 @@ export function busMarkerFromBus(entity: transit_realtime.FeedEntity, navigation
 	const [bus_id, disabled_person, _3, _4, vehicle_type, _5, _6, pick_me_up] = vehicle.vehicle.id.split("|")
 	return (
 		<BusMarker
+			rt_raw={entity}
 			is_rt={true}
 			route_data={{
 				displayRouteCode: vehicle.trip.routeId,
@@ -62,7 +63,7 @@ export function busMarkerFromBus(entity: transit_realtime.FeedEntity, navigation
 		/>
 	)
 }
-export default function ClusterMarker(props: {disable_clustering?:boolean, items: transit_realtime.FeedEntity[]; pos: LatLng; navigation: NativeStackNavigationProp<any> }) {
+export default function ClusterMarker(props: { disable_clustering?: boolean; items: transit_realtime.FeedEntity[]; pos: LatLng; navigation: NativeStackNavigationProp<any> }) {
 	const [showFull, setShowFull] = useState(false)
 	if (props.items.length <= 3 || props.disable_clustering) {
 		return <React.Fragment>{props.items.map((e) => busMarkerFromBus(e, props.navigation))}</React.Fragment>

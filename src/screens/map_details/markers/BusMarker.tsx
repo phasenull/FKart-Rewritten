@@ -9,7 +9,8 @@ import RouteData from "common/interfaces/KentKart/RouteData"
 import { BusCallout } from "../callouts/BusCallout"
 import { useContext, useEffect } from "react"
 import { ThemeContext } from "common/contexts/ThemeContext"
-export function BusMarker(props: { is_rt?: boolean; bus: BusData; coordinate: LatLng; easterEggEnabled?: boolean; navigation: NativeStackNavigationProp<any>; route_data?: RouteData }) {
+import { transit_realtime } from "gtfs-realtime-bindings"
+export function BusMarker(props: { is_rt?: boolean;rt_raw?:transit_realtime.FeedEntity; bus: BusData; coordinate: LatLng; easterEggEnabled?: boolean; navigation: NativeStackNavigationProp<any>; route_data?: RouteData }) {
 	const { route_data, bus, coordinate, easterEggEnabled, navigation } = props
 	const schedule_list = route_data?.timeTableList
 	const scheduled_data = schedule_list?.find((e) => e.tripId === bus.tripId)
@@ -95,7 +96,7 @@ export function BusMarker(props: { is_rt?: boolean; bus: BusData; coordinate: La
 				size={16}
 			/>
 			<Callout removeClippedSubviews={false} style={{ overflow: "visible" }} tooltip={true}>
-				<BusCallout is_rt={props.is_rt} bus={bus} route_data={route_data} scheduled_data={scheduled_data} />
+				<BusCallout raw={props.rt_raw} is_rt={props.is_rt} bus={bus} route_data={route_data} scheduled_data={scheduled_data} />
 			</Callout>
 		</Marker>
 	)
