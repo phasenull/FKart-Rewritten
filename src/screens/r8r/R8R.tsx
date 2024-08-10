@@ -1,7 +1,7 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { useGetRealtime } from "common/hooks/kentkart/nonAuthHooks"
 import SimplyButton from "components/ui/SimplyButton"
-import React, { LegacyRef, useEffect, useRef } from "react"
+import React, { LegacyRef, useEffect, useMemo, useRef } from "react"
 import { View } from "react-native"
 import { PROVIDER_GOOGLE } from "react-native-maps"
 import MapView from "react-native-map-clustering"
@@ -18,6 +18,13 @@ export default function R8R(props: { navigation: NativeStackNavigationProp<any> 
 	if (isError && !(data && data.feed)) {
 		return <ErrorPage retry={isRefetching ? () => null : refetch} error={{ description: (error as any).message, title: "Couldn't fetch RT" }} />
 	}
+	const renderedMarkers = useMemo(
+		() =>
+			data?.feed?.map((e) => {
+				return busMarkerFromBus(e as any, props.navigation)
+			}),
+		[data]
+	)
 	return (
 		<React.Fragment>
 			<View className="absolute bottom-4 flex flex-row self-center">
@@ -47,9 +54,7 @@ export default function R8R(props: { navigation: NativeStackNavigationProp<any> 
 				provider={PROVIDER_GOOGLE}
 				style={{ flex: 1 }}
 			>
-				{data?.feed?.map((e) => {
-					return busMarkerFromBus(e as any, props.navigation)
-				})}
+				{renderedMarkers}
 			</MapView>
 		</React.Fragment>
 	)
