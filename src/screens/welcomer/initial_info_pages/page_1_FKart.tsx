@@ -5,18 +5,18 @@ import * as Updates from "expo-updates"
 import { useContext } from "react"
 import { TranslationsContext } from "common/contexts/TranslationsContext"
 import { ThemeContext } from "common/contexts/ThemeContext" 
+import appJson from "../../../../app.json"
 export function IIPage1(props:{last_check:number}) {
 	const {theme} = useContext(ThemeContext)
 	const {translations} = useContext(TranslationsContext)
 	return (
 		<View className="justify-center flex-col flex-1 items-center">
-			<Animated.View entering={FadeIn.duration(300)} className="flex-row items-end justify-center">
+			<Animated.View entering={FadeIn.duration(300)} className="flex-col items-end justify-center">
 				<Text className="text-6xl" style={{ fontWeight: "800", color: theme.primary }}>
 					{ApplicationConfig.name}
 				</Text>
 				<Text className="text-md" style={{ fontWeight: "800", color: theme.secondary, opacity: 0.5 }}>
-					{" "}
-					v{ApplicationConfig.version}-{Updates.runtimeVersion}
+					{Updates.runtimeVersion}-{appJson.expo.version || "?"}
 				</Text>
 			</Animated.View>
 			<Image
