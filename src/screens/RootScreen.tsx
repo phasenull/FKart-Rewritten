@@ -6,21 +6,6 @@ import ApplicationConfig from "common/ApplicationConfig"
 import { BottomTabNavigator } from "components/reusables/BottomTabNavigator"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 export default function RootScreen(props: { navigation: NativeStackNavigationProp<any>}) {
-	
-	const { user } = useKentKartAuthStore((state)=>state)
-	useEffect(() => {
-		async function get() {
-			if (!ApplicationConfig.__is_init) {
-				setTimeout(() => {
-					get()
-				}, 100)
-				return
-			}
-		}
-		get()
-	}, [])
-	// TODO separate these into different files
-
 	return (
 		<View className="flex-1">
 			<StatusBar translucent={false} style="dark" />
