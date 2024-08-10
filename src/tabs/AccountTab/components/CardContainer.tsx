@@ -8,7 +8,7 @@ import { useGetCardData, useRemoveFavoriteCard } from "common/hooks/kentkart/car
 import useGetFavorites from "common/hooks/kentkart/user/useGetFavorites"
 import { BasicCardData } from "common/interfaces/KentKart/BasicCardData"
 import { Favorite } from "common/interfaces/KentKart/Favorite"
-import { formatAlias } from "common/util"
+import { dateFromMessedKentKartDateFormat, formatAlias, deltaTime } from "common/util"
 import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
 import { useContext, useEffect, useState } from "react"
 import { Clipboard } from "react-native"
@@ -16,10 +16,11 @@ import { Swipeable } from "react-native-gesture-handler"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
+import Divider from "components/reusables/Divider"
 
 export default function CardContainer(props: { favorite_data: Favorite<"Card" | "QR">; index: number; navigation: any; style?: ViewStyle }) {
 	const { favorite_data, navigation } = props
-	const { data, isLoading, isRefetching, isError,error } = useGetCardData({ card_alias: favorite_data.favorite || favorite_data.alias })
+	const { data, isLoading, isRefetching, isError, error } = useGetCardData({ card_alias: favorite_data.favorite || favorite_data.alias })
 	const [card, setCard] = useState<BasicCardData<any> | undefined>(undefined)
 	const { refetch: unFavoriteRefetch } = useRemoveFavoriteCard({ card_or_fav_id: card?.aliasNo as string })
 	const { refetch: refetchAccountFavorites } = useGetFavorites()
@@ -40,7 +41,6 @@ export default function CardContainer(props: { favorite_data: Favorite<"Card" | 
 	}, [data?.data])
 
 	const { theme } = useContext(ThemeContext)
-
 	if (isError) {
 		return (
 			<View>
@@ -108,7 +108,7 @@ export default function CardContainer(props: { favorite_data: Favorite<"Card" | 
 						Vibration.vibrate(100)
 					}}
 				>
-					<View className="w-28 h-36 top-1 -ml-12 mr-6 items-center justify-center">
+					<View className="w-28 h-36 top-1 -ml-12 mr-1 items-center justify-center">
 						{cardImage ? (
 							<Animated.Image
 								className="h-64 rotate-90"
@@ -126,8 +126,9 @@ export default function CardContainer(props: { favorite_data: Favorite<"Card" | 
 							<Text className="text-white text-center text-xl font-bold">{(card.loads_in_line || card.oChargeList)?.length}</Text>
 						</View>
 					) : null}
-					<View className="flex-1 flex-row items-center justify-between">
-						<View className="flex-col flex-2 w-full">
+					<View className="flex-1 w-full flex-row space-x-2 items-center">
+						<Divider height={25 * 4} />
+						<View className="flex-col">
 							<Text numberOfLines={1} style={{ color: theme.primary }} className="flex-1 text-2xl font-bold w-full bottom-2 text-left">
 								{favorite_data.description || (card?.virtualCard && "QR Kart") || "Adsız Kart"}
 							</Text>
@@ -152,8 +153,61 @@ export default function CardContainer(props: { favorite_data: Favorite<"Card" | 
 								<CustomLoadingIndicator color={theme.secondary} size={20} />
 							)}
 						</View>
-						<View className="flex-1 items-end -mr-3 justify-center opacity-[0.15] ">
-							<MaterialCommunityIcons color={theme.secondary} name="arrow-right-thick" style={{ width: 40 }} size={50} className="flex-1 " />
+						<View className=" items-end flex-1 flex-col space-y-2">
+							{card?.ticketList
+								?.sort((a, b) => {
+									return dateFromMessedKentKartDateFormat(a.expiryDate).getTime() - dateFromMessedKentKartDateFormat(b.expiryDate).getTime()
+								})
+								.slice(0, 3)
+								.map((ticket) => {
+									const expiryDate = dateFromMessedKentKartDateFormat(ticket.expiryDate).getTime()
+									const remainingText = expiryDate - Date.now() < 7 * 24 * 60 * 60 * 1000 ? deltaTime(expiryDate - Date.now(), true) : undefined
+									if (remainingText) {
+										return (
+											<View>
+												<Text
+													numberOfLines={1}
+													className="absolute z-20 -top-3 -right-3 self-end h-full text-center rotate-[10deg]"
+													style={{
+														color: theme.text.secondary,
+														fontWeight: "600",
+													}}
+												>
+													{/* {remainingText.split(" ")[0] + remainingText.split(" ")[1].slice(0, 1)} */}
+													{remainingText === "now" ? "expired!" : remainingText}
+												</Text>
+												<Text
+													className="h-6 w-12 text-center"
+													numberOfLines={1}
+													style={{
+														backgroundColor: theme.error,
+														borderRadius: 6,
+														fontSize: 18,
+														fontWeight: "500",
+														color: theme.white,
+													}}
+												>
+													{ticket.remainingCount}
+												</Text>
+											</View>
+										)
+									}
+									return (
+										<Text
+											className="h-6 w-12 text-center"
+											numberOfLines={1}
+											style={{
+												backgroundColor: theme.primary,
+												borderRadius: 6,
+												fontSize: 18,
+												fontWeight: "500",
+												color: theme.text.white,
+											}}
+										>
+											{ticket.remainingCount}
+										</Text>
+									)
+								})}
 						</View>
 					</View>
 				</TouchableOpacity>
