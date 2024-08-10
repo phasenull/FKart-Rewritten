@@ -12,6 +12,8 @@ import SearchTab from "tabs/SearchTab"
 import { Text, TouchableOpacity, View } from "react-native"
 import SecondaryText from "./SecondaryText"
 import { ITheme, ThemeContext } from "common/contexts/ThemeContext"
+import CityValidator from "components/validators/CityValidator"
+import CitySelector from "screens/city_selector/CitySelector"
 
 function BottomTabButton(props: { state: any; descriptors: any; navigation: NativeStackNavigationProp<any>; route: any; index: number }) {
 	const { descriptors, navigation, state, index, route } = props
@@ -79,7 +81,7 @@ function BottomTab(props: BottomTabBarProps) {
 			style={{
 				borderRadius: 100,
 				elevation: 4,
-				height:18*4,
+				height: 18 * 4,
 				backgroundColor: theme?.secondaryDark,
 			}}
 		>
@@ -120,7 +122,7 @@ export function BottomTabNavigator(props: { navigation: NativeStackNavigationPro
 				options={{
 					tabBarIcon: ({ focused, color, size }) => <MaterialCommunityIcons name="magnify" size={size} color={color} />,
 				}}
-				component={SearchTab}
+				component={WrappedSearch}
 			/>
 
 			<Tab.Screen
@@ -138,5 +140,12 @@ export function BottomTabNavigator(props: { navigation: NativeStackNavigationPro
 				component={AccountTab}
 			/>
 		</Tab.Navigator>
+	)
+}
+function WrappedSearch(props: { navigation: NativeStackNavigationProp<any> }) {
+	return (
+		<CityValidator else={<CitySelector navigation={props.navigation}/>} navigation={props.navigation}>
+			<SearchTab navigation={props.navigation} />
+		</CityValidator>
 	)
 }
