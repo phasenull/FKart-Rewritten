@@ -9,7 +9,13 @@ import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 import { IIPageAnnouncement } from "./page_announcement"
 import CityValidator from "components/validators/CityValidator"
 import CitySelector from "screens/city_selector/CitySelector"
+import { useGetAnnouncements } from "common/hooks/kentkart/nonAuthHooks"
 export function InitialInfo(props: { last_check: number; navigation: NativeStackNavigationProp<any> }) {
+	const { data } = useGetAnnouncements()
+	if (data && data.data && data.data.announceList && data.data.announceList.length === 0) {
+		props.navigation.replace("home")
+		return
+	}
 	return (
 		// <View className="flex-col flex-1 items-center justify-center">
 		<IIPaginator
@@ -21,9 +27,11 @@ export function InitialInfo(props: { last_check: number; navigation: NativeStack
 			<IIPage1 last_check={props.last_check} key={"app-info"} />
 			<IIPage2 key={"community-made"} />
 			<IIPage3 key={"open-source"} />
-			<CityValidator navigation={props.navigation} redirect={true}>
-				<IIPageAnnouncement key={"announcements"} />
-			</CityValidator>
+			{(data?.data?.announceList?.length || 0) > 0 ? (
+				<CityValidator navigation={props.navigation} redirect={true}>
+					<IIPageAnnouncement key={"announcements"} />
+				</CityValidator>
+			) : undefined}
 		</IIPaginator>
 		// </View>
 	)

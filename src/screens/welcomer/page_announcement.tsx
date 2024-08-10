@@ -10,20 +10,19 @@ import { ThemeContext } from "common/contexts/ThemeContext"
 import { useGetAnnouncements } from "common/hooks/kentkart/nonAuthHooks"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
-import { dateFromMessedKentKartDateFormat } from "common/util"
 export function IIPageAnnouncement() {
 	const {theme} = useContext(ThemeContext)
 	const {translations} = useContext(TranslationsContext)
 	const {user} = useKentKartAuthStore((state)=>state)
-	const { data } = useGetAnnouncements({user:user as IKentKartUser})
+	const { data } = useGetAnnouncements()
 	const [announcements,setAnnouncements] = useState<[]|Announcement[]>([])
 	useEffect(()=>{
 		setAnnouncements(data?.data?.announceList?.map((data) => ({
 			title: data.title,
 			announcementType: "official",
 			extra: {
-				validFrom: dateFromMessedKentKartDateFormat(data.valid_from),
-				validTo: dateFromMessedKentKartDateFormat(data.valid_to),
+				validFrom: new Date(data.valid_from),
+				validTo: new Date(data.valid_to),
 				targetRoutes:["633"]
 			},
 			description: data.description,
@@ -31,7 +30,6 @@ export function IIPageAnnouncement() {
 			image: data.image,
 		})) || [])
 	},[data?.data])
-
 	return (
 		<View className="justify-center flex-col flex-1 items-center px-4">
 			<Text

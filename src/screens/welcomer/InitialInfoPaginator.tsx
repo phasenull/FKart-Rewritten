@@ -7,11 +7,12 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { TranslationsContext } from "common/contexts/TranslationsContext";
 import SelectLangModal from "components/reusables/SelectLangModal";
 import { ThemeContext } from "common/contexts/ThemeContext";
+import ErrorPage from "screens/ErrorPage";
 export function IIPaginator(props: {navigation:NativeStackNavigationProp<any>, initialIndex?: number; onPageChange?: (newIndex: number, previousIndex?: number) => void; children: any }) {
 	// console.log("IIPaginator Update",props?.children?.length)
 	const [page, setPage] = useState(props.initialIndex || 0)
 	function movePage(dir: -1 | 1) {
-		const result = Math.max(0, Math.min(page + dir, props.children.length - 1))
+		const result = Math.max(0, Math.min(page + dir, children.length - 1))
 		setPage(result)
 	}
 	const {theme} = useContext(ThemeContext)
@@ -21,6 +22,7 @@ export function IIPaginator(props: {navigation:NativeStackNavigationProp<any>, i
 	useEffect(()=>{
 		ApplicationConfig.database.set("settings.dont_show_welcomer_screen",dontShowAgain)
 	},[dontShowAgain])
+	const children = props.children?.filter((e:any)=>!!e)
 	return (
 		<View className="flex-1 justify-between items-center">
 			<SelectLangModal defaultValue={lang} onDismiss={()=>setShowTranslationSelector(false)} visible={showTranslationSelector} onSelect={setLang} />
@@ -28,13 +30,14 @@ export function IIPaginator(props: {navigation:NativeStackNavigationProp<any>, i
 				<MaterialCommunityIcons name="translate" color={theme.secondary} size={48}/>
 			</TouchableOpacity>
 			<View className="flex-1">
-				{props.children[page] || (
-					<View className={"items-center"}>
-						<Text>error at index {page}</Text>
-					</View>
+				{children[page] || (
+					<ErrorPage error={{
+						title:`Error at page index ${page}`,
+						description:`page is undefined`
+					}} />
 				)}
 			</View>
-			{page == props.children.length - 1 ? (
+			{page == children.length - 1 ? (
 				<TouchableOpacity
 					onPress={() => {
 						setDontShowAgain(!dontShowAgain)
@@ -82,7 +85,7 @@ export function IIPaginator(props: {navigation:NativeStackNavigationProp<any>, i
 						backgroundColor: theme.primary,
 					}}
 					onPress={() => {
-						if (page == props.children.length-1) {
+						if (page == children.length-1) {
 							const navigation = props.navigation
 							if (navigation) {
 								navigation.replace("home")
@@ -100,7 +103,7 @@ export function IIPaginator(props: {navigation:NativeStackNavigationProp<any>, i
 						}}
 						className="text-[36px] text-center"
 					>
-						{page == props.children.length - 1 ? translations.screens.welcomer.lets_start : translations.screens.welcomer.next}
+						{page == children.length - 1 ? translations.screens.welcomer.lets_start : translations.screens.welcomer.next}
 					</Text>
 				</TouchableOpacity>
 			</View>
@@ -110,11 +113,11 @@ export function IIPaginator(props: {navigation:NativeStackNavigationProp<any>, i
 				}}
 				className="flex-row my-2 justify-center gap-x-4"
 			>
-				{[...Array(props.children.length).keys()].map((e, i) => {
+				{[...Array(children.length).keys()].map((e, i) => {
 					const color = i <= page ? theme.primary : theme.secondary
 					return (
 						<View key={i} className="items-end justify-center">
-							{i !== props.children.length - 1 ? (
+							{i !== children.length - 1 ? (
 								<View
 									style={{
 										height: 6,
