@@ -37,29 +37,23 @@ export function dateToString(date: Date) {
 export function dateDiff(date1: Date, date2: Date) {
 	return date1.getTime() - date2.getTime()
 }
-export function convertDiffToText(diff: number) {
-	if (diff >= 60 * 60 * 1000) {
-		return `${Math.round(diff / (60 * 60 * 1000))} hours ago`
+export function deltaTime(diff: number,removeAgo?:boolean) {
+	if (diff >= 24 * 60 * 60 * 1000) {
+		return `${Math.round(diff/(24*60*60*1000))} days${removeAgo?"": " ago"}`
+	}
+	else if (diff >= 60 * 60 * 1000) {
+		return `${Math.round(diff / (60 * 60 * 1000))} hours${removeAgo?"": " ago"}`
 	} else if (diff > 60 * 1000) {
-		return `${Math.ceil(diff / (60 * 1000))} mins ago`
+		return `${Math.ceil(diff / (60 * 1000))} mins${removeAgo?"": " ago"}`
 	}
 	return `now`
 }
 export function dateFromMessedKentKartDateFormat(input: string) {
-	if (input.length != 16) return new Date()
-	const date = new Date(Date.parse(input))
-	// const year = parseInt(input.slice(0,4))
-	// const month = parseInt(input.slice(4,6))
-	// const day = parseInt(input.slice(6,8))
-	// const hour = parseInt(input.slice(8,10))
-	// const minutes = parseInt(input.slice(10,12))
-	// const seconds = parseInt(input.slice(12,14))
-	// date.setFullYear(year)
-	// date.setMonth(month)
-	// date.setDate(day)
-	// date.setHours(hour)
-	// date.setMinutes(minutes)
-	// date.setSeconds(seconds)
+	
+	const [ddmmyyyy,hhmm] = input.split(" ")
+	const [day,month,year] = ddmmyyyy.split("/")
+	const [hour,minute] = hhmm.split(":")
+	const date = new Date(`${year}-${month}-${day}T${hour}:${minute}:00.000+03:00`)
 	return date
 }
 
