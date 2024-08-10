@@ -2,8 +2,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 
 export default function CityValidator(props: { children: any; else?: any; redirect?: boolean; navigation: NativeStackNavigationProp<any> }) {
-	const { region,__init } = useKentKartAuthStore((state) => state)
-	if (!__init) {return}
+	const  region  = useKentKartAuthStore((state) => state.region)
 	if (!region) {
 		if (props.redirect) {
 			console.log("redirect to city_selector")
