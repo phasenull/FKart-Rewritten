@@ -25,11 +25,11 @@ import { ThemeContext } from "common/contexts/ThemeContext"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
 import ErrorPage from "screens/ErrorPage"
-export default function SearchTab(props: { route: any; navigation: NativeStackNavigationProp<any> }) {
+export default function SearchTab(props: { navigation: NativeStackNavigationProp<any> }) {
 	const user = useKentKartAuthStore((state) => state.user)
 	const { data, isLoading, isError, error, refetch, isRefetching } = useGetRouteList()
 	const { theme } = useContext(ThemeContext)
-	const { navigation, route } = props
+	const { navigation } = props
 	const [searchText, setSearchText] = useState("")
 	const [filterByRouteType, setFilterByRouteType] = useState<{
 		key: string
@@ -46,7 +46,7 @@ export default function SearchTab(props: { route: any; navigation: NativeStackNa
 	// ik its a bad design but it works
 	let contain
 	if (isError) {
-		contain = <ErrorPage retry={refetch} error={{ title: "Request Error", description: JSON.stringify(error || "{}") || "Unknown error" }} />
+		contain = <ErrorPage retry={refetch} error={{ title: "Request Error", description: (error as any).response.data?.result?.error || "Unknown error" }} />
 	} else if (!data?.data.routeList && !(isLoading || isRefetching)) {
 		contain = <ErrorPage retry={refetch} error={{ title: "No Routes!", description: "Server did not respond any routes in provided city, this could be an issue with " }} />
 	} else if (isLoading) {
@@ -70,7 +70,7 @@ export default function SearchTab(props: { route: any; navigation: NativeStackNa
 			</View>
 		)
 	} else if (data?.data && data?.data.routeList) {
-		contain = <RouteList data={data.data} navigation={navigation} onRefresh={refreshData} refreshing={isRefetching||isLoading} searchText={searchText} route={route} routeType={filterByRouteType.value}/>
+		contain = <RouteList data={data.data} navigation={navigation} onRefresh={refreshData} refreshing={isRefetching || isLoading} searchText={searchText} routeType={filterByRouteType.value} />
 	} else {
 		contain = <ErrorPage error={{ title: "Unknown Error", description: "Unknown state (no error, no routeList, data found)" }} retry={refetch} />
 	}
