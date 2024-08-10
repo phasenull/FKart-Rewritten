@@ -7,19 +7,20 @@ import AuthWall from "components/walls/AuthWall"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 import SimplyButton from "components/ui/SimplyButton"
+import NavigationContainer from "./sections/NavigationContainer"
+import { ScrollView } from "react-native"
 
 export default function HomeTab(props: { route: any; navigation: NativeStackNavigationProp<any> }) {
 	const { navigation } = props
 	const { theme } = useContext(ThemeContext)
 	const { user, credentials } = useKentKartAuthStore((state) => state)
 	return (
-		<View style={{ backgroundColor: theme.dark }} className="h-full w-full justify-center items-center">
-			<StatusBar hidden={false} />
+		<ScrollView style={{ backgroundColor: theme.dark }} contentContainerStyle={{alignItems:"center"}} >
 			{/* login prompt */}
 			<KentKartAuthValidator else={<AuthWall navigation={navigation} />}>
 				<Text className="mx-auto font-bold opacity-50 text-[24px]">Hello, {`${user?.name} ${user?.surname}`}</Text>
-				<CardJSONData favorite_data={user} card={{ access_token: credentials.access_token?.slice(0, 10) + "...", refresh_token: credentials.refresh_token?.slice(0, 4) + "..." }} />
-				<View className="flex flex-1 flex-row space-x-4">
+				{/* <CardJSONData favorite_data={user} card={{ access_token: credentials.access_token?.slice(0, 10) + "...", refresh_token: credentials.refresh_token?.slice(0, 4) + "..." }} /> */}
+				<View className="flex flex-row space-x-4">
 					<SimplyButton text="logout" disabled size="medium" />
 						
 					<SimplyButton
@@ -33,6 +34,7 @@ export default function HomeTab(props: { route: any; navigation: NativeStackNavi
 					</SimplyButton>
 				</View>
 			</KentKartAuthValidator>
-		</View>
+			<NavigationContainer navigation={props.navigation} />
+		</ScrollView>
 	)
 }
