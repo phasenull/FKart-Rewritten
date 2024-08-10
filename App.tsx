@@ -36,18 +36,16 @@ const linking = {
 
 const queryClient = new QueryClient({ defaultOptions: { queries: { retry: 1 } } })
 export default function AppEntryComponent() {
-	Logger.success("App.tsx", "\n\n\n-=-=-=-=-=-=-=-=-=-=-=-=-\n\n   START OF NEW RENDER")
+	// Logger.success("App.tsx", "\n\n\n-=-=-=-=-=-=-=-=-=-=-=-=-\n\n   START OF NEW RENDER")
+	const fetchAccessToken = useFKartAuthStore((state) => state.fetchAccessToken)
+	useEffect(() => {
+		const secondsTimer = setInterval(() => {
+			fetchAccessToken()
+		}, 3*60*1000)
+		return () => clearInterval(secondsTimer)
+	}, [fetchAccessToken])
 	LogBox.ignoreLogs(["Non-serializable values were found in the navigation state."])
 	LogBox.ignoreLogs(["Require cycle:", "Clipboard has been extracted from react-native"])
-	const { __initF: __initF_KK, __init: __init_KK } = useKentKartAuthStore((state) => state)
-	const { __initF: __initF_FK, __init: __init_FK } = useFKartAuthStore((state) => state)
-	useEffect(() => {
-		__initF_KK()
-		__initF_FK()
-	}, [])
-	if (!__init_FK || !__init_KK) {
-		return
-	}
 	return (
 		<QueryClientProvider client={queryClient}>
 			<GestureHandlerRootView style={{ flex: 1 }}>

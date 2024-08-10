@@ -2,7 +2,7 @@
 	"expo": {
 		"name": "FKart",
 		"slug": "FKart",
-		"version": "24.5.10",
+		"version": "24.8.10",
 		"orientation": "portrait",
 		"scheme": "fkart",
 		"userInterfaceStyle": "automatic",
