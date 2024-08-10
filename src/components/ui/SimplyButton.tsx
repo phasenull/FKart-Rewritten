@@ -40,8 +40,10 @@ export default function SimplyButton(
 					style={{
 						backgroundColor: processing || disabled ? theme.secondary : bg_color,
 						opacity: processing || disabled ? 0.7 : 1,
+						borderRadius:8,
+						...(props.style as any)
 					}}
-					className="px-4 py-2 rounded-lg flex-row"
+					className="px-4 py-2 flex-row"
 				>
 					{processing ? <CustomLoadingIndicator size={14} style={{ marginRight: 2 * 4 }} color={theme.text.white} /> : null}
 					<Text className="mx-auto text-center" style={{ fontWeight: "800", fontSize: 18, color: theme.text.white }}>
