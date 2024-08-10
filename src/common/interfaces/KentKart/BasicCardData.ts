@@ -26,8 +26,23 @@ export interface BasicCardData<T extends "QR" | "Basic"> {
 	notificationLimit: never
 	cardType: T extends "QR" ? "33" : "00"
 	purchaseDate: T extends "QR" ? string : never
-	ticketList: T extends "QR" ? Array<any> : never
+	ticketList: T extends "QR" ? Array<ITicket> : never
 	paxDescription: T extends "QR" ? string : never
 	loads_in_line: Array<Map<string, any>>
 	oChargeList: Array<Map<string, any>>
+}
+
+export interface ITicket {
+	activeStatus: "1" | "0"
+	destinationId: ""
+	expiredDate: string
+	expiredStatus: "1"|"0"
+	expiryDate: string
+	originId: ""
+	productName: ""
+	product_code: "49"
+	purchaseDate: string
+	remainingCount: string
+	ticketNo: string
+	usageCount: "0"
 }
