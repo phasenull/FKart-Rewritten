@@ -5,7 +5,7 @@ import { useContext, useEffect, useMemo } from "react"
 import Divider from "components/reusables/Divider"
 import { ThemeContext } from "common/contexts/ThemeContext"
 
-export default function RouteTouchable(props: { navigation: NativeStackNavigationProp<any>; route: any; item: BasicRouteInformation }) {
+export default function RouteTouchable(props: { navigation: NativeStackNavigationProp<any>;  item: BasicRouteInformation }) {
 	const { item } = props
 	const { navigation } = props
 

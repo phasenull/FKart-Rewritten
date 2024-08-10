@@ -11,12 +11,11 @@ export default function RouteList(props: {
 	refreshing: boolean
 	onRefresh: () => void
 	searchText: string
-	route: any
 	navigation: NativeStackNavigationProp<any>
 	routeType?: string
 }) {
 	function renderRoute({ index, item }: { index: number; item: BasicRouteInformation }) {
-		return <RouteTouchable item={item} navigation={props.navigation} route={props.route} />
+		return <RouteTouchable item={item} navigation={props.navigation} />
 	}
 	const { theme } = useContext(ThemeContext)
 	const { routeType } = props

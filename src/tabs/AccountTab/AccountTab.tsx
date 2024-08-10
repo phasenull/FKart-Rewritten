@@ -1,11 +1,11 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import AccountDetailsContainer from "components/tab_components/account_details/AccountDetailsContainer"
+import AccountDetailsContainer from "./components/AccountDetailsContainer"
 import { useContext, useEffect, useState } from "react"
 import { RefreshControl, ScrollView, Text, TouchableOpacity, View } from "react-native"
 
 import { Favorite } from "common/interfaces/KentKart/Favorite"
-import { AddCard } from "components/tab_components/account_details/AddCard"
-import CardContainer from "components/tab_components/account_details/CardContainer"
+import { AddCard } from "./components/AddCard"
+import CardContainer from "./components/CardContainer"
 
 import { ThemeContext } from "common/contexts/ThemeContext"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
@@ -84,7 +84,7 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 										marginTop: 5 * 4,
 									}}
 									index={index}
-									key={"card_" + index}
+									key={"card_" + (p_card.alias||p_card.favId)}
 									favorite_data={p_card}
 									navigation={navigation}
 								/>

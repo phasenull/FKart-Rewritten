@@ -1,32 +1,34 @@
 import { getLogsAsync } from "common/hooks/fkart/auth/getLogs"
 import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
 import { useContext } from "react"
-import { Text, View, ViewProps } from "react-native"
+import { RefreshControl, Text, View, ViewProps } from "react-native"
 import { useInfiniteQuery, useQuery } from "react-query"
 import LogTouchable from "./LogTouchable"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import SecondaryText from "components/reusables/SecondaryText"
 import SimplyButton from "components/ui/SimplyButton"
 import Logger from "common/Logger"
+import { useFKartAuthStore } from "common/stores/FKartAuthStore"
+import { ScrollView } from "react-native-gesture-handler"
+import { MaterialCommunityIcons } from "@expo/vector-icons"
+import { TouchableOpacity } from "@gorhom/bottom-sheet"
 
 export default function LogsView(props: ViewProps) {
 	// Only use in components that are child of a FKartValidator
-	return
 	const { theme } = useContext(ThemeContext)
-	const { isFetching, data, isRefetching, isError, error, fetchNextPage, isFetchingNextPage, hasNextPage } = useInfiniteQuery(
-		["getLogs"],
-		({ pageParam = 0 }) => {
-			Logger.info("getLogsAsync",`hook ${pageParam || "undefined"}`)
-			return
+	const credentials = useFKartAuthStore((state) => state.credentials)
+	const { isFetching, refetch, data, isRefetching, isError, error, fetchNextPage, isFetchingNextPage, hasNextPage } = useInfiniteQuery(["getLogs"], {
+		retry: false,
+		// staleTime:5*1000,
+		getNextPageParam: (lastpage, allpages) => {
+			return (lastpage as any)?.data?.next_cursor
 		},
-		{
-			refetchInterval: 5 * 1000,
-			retry: false,
-			getNextPageParam: (lastpage, allpages) => {
-				return lastpage.data.next_cursor
-			},
-		}
-	)
+		queryFn: ({ pageParam }) => {
+			Logger.info("getLogsAsync", `hook ${pageParam} ${typeof pageParam}`)
+			if (pageParam === "") return
+			return getLogsAsync(credentials.access_token, pageParam)
+		},
+	})
 	if (isFetching && !isRefetching) {
 		return <CustomLoadingIndicator size={12 * 4} />
 	}
@@ -42,7 +44,6 @@ export default function LogsView(props: ViewProps) {
 			style={[
 				{
 					backgroundColor: theme.white,
-					elevation: 10,
 					borderRadius: 16,
 					paddingHorizontal: 4 * 4,
 					paddingVertical: 2 * 4,
@@ -58,8 +59,13 @@ export default function LogsView(props: ViewProps) {
 					<CustomLoadingIndicator size={4 * 4} />
 				</View>
 			) : null}
-			<SecondaryText className="self-center mb-2">Logs ({data?.pages.length})</SecondaryText>
-			{data?.pages.map((page) => page.data.logs.map((logObject) => <LogTouchable key={logObject.id} log={logObject} />))}
+			<View className="flex-row self-center items-center justify-between w-full mb-2">
+				<SecondaryText>logs ({data?.pages.length})</SecondaryText>
+				<TouchableOpacity onPress={()=>refetch()} style={{ borderRadius: 1000, aspectRatio: 1 }}>
+					<MaterialCommunityIcons color={theme.secondary} size={6*4} name="refresh" />
+				</TouchableOpacity>
+			</View>
+			<ScrollView className="max-h-64">{data?.pages.map((page) => (page as any)?.data?.logs?.map((logObject: any) => <LogTouchable key={logObject.id} log={logObject} />))}</ScrollView>
 			<SimplyButton
 				style={{ width: 32 * 4, alignSelf: "center", marginTop: 4 * 4 }}
 				processingText="loading..."
