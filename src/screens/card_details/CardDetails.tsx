@@ -9,7 +9,7 @@ import { RefreshControl, ScrollView, Text, View } from "react-native"
 
 import { ThemeContext } from "common/contexts/ThemeContext"
 import { useGetABTSecret, useGetTransactions } from "common/hooks/kentkart/cardHooks"
-import { convertDiffToText } from "common/util"
+import { deltaTime } from "common/util"
 import CardControlPanel from "./CardControlPanel"
 import CardDetailsHeader from "./CardDetailsHeader"
 import CardJSONData from "./CardJSONData"
@@ -31,10 +31,15 @@ export default function CardDetails(props: {
 	const [loading, setLoading] = useState(false)
 	const favorite_data = props?.route.params?.favorite_data
 	const card = props?.route.params?.card
-	const user = useKentKartAuthStore((state)=>state.user)
+	const user = useKentKartAuthStore((state) => state.user)
 	const is_virtual = props?.route.params?.is_virtual
-	const { data: transaction_data } = useGetTransactions({card_alias: card.aliasNo,term: { month: new Date(Date.now()).getMonth(), year: new Date(Date.now()).getFullYear() },user:user as IKentKartUser})
-	const {data:syncData} = useGetABTSecret({card_alias: card?.aliasNo || favorite_data?.favorite,user:user})
+	const { data: transaction_data } = useGetTransactions({
+		card_alias: card.aliasNo,
+		term: { month: new Date().getMonth(), year: new Date().getFullYear() },
+	})
+	const { data: syncData } = useGetABTSecret({
+		card_alias: card?.aliasNo || favorite_data?.favorite,
+	})
 	const [cardToken, setCardToken] = useState<undefined | { expireDate: string; token: string; aliasNo: string }>(undefined)
 	const { navigation } = props
 	const [card_type, setCardType] = useState(CardTypes.undefined)
@@ -95,10 +100,12 @@ export default function CardDetails(props: {
 			<VirtualCardQRCodePanel card={card} token={cardToken} />
 			<CardJSONData card={card} favorite_data={favorite_data} />
 			<CardJSONData
-				card={transaction_data?.data.transactionList.map(
-					(e) => `${Date.now() - e.unixtime*1000 < 24 * 60 * 60 * 1_000 ? convertDiffToText(Date.now() - e.unixtime*1000) : new Date(e.unixtime*1000).toLocaleDateString()}        ${e.type === "0" ? "+":"-"} ${e.amount || e.usageAmt}`
+				card={transaction_data?.data?.transactionList?.map(
+					(e) =>
+						`${Date.now() - e.unixtime * 1000 < 24 * 60 * 60 * 1_000 ? deltaTime(Date.now() - e.unixtime * 1000) : new Date(e.unixtime * 1000).toLocaleDateString()}        ${e.type === "0" ? "+" : "-"} ${
+							e.amount || e.usageAmt
+						}`
 				)}
-				favorite_data={{}}
 			/>
 		</ScrollView>
 	)

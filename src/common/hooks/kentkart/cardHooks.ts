@@ -23,7 +23,7 @@ export function useGetCardData(args: { card_alias: string }) {
 }
 
 export function useGetABTSecret(args: { card_alias: string }) {
-	const user = useKentKartAuthStore((state) => state.user) as IKentKartUser
+	const { credentials, region } = useKentKartAuthStore()
 	return useQuery(
 		["syncCode", args.card_alias],
 		(): Promise<
@@ -40,7 +40,7 @@ export function useGetABTSecret(args: { card_alias: string }) {
 		> => {
 			const { card_alias } = args
 			Logger.info("REQUEST useGetSyncCode")
-			const url = `https://service.kentkart.com/rl1/api/abt/sync?alias=${card_alias}&region=${ApplicationConfig.region}&authType=4&token=${user.access_token}`
+			const url = `https://service.kentkart.com/rl1/api/abt/sync?alias=${card_alias}&region=${region}&authType=4&token=${credentials.access_token}`
 			return ApplicationConfig.makeKentKartRequest(url)
 		},
 		{ staleTime: 20 * 1000, refetchInterval: ApplicationConfig.sync_interval, refetchIntervalInBackground: true }
@@ -49,18 +49,19 @@ export function useGetABTSecret(args: { card_alias: string }) {
 
 export function useGetTransactions(args: { card_alias: string; term: { month: number; year: number } }) {
 	const { card_alias, term } = args
-	const user = useKentKartAuthStore((state) => state.user) as IKentKartUser
+	const { credentials, region } = useKentKartAuthStore()
 	return useQuery(
 		["getCardData", card_alias, term],
 		(): Promise<AxiosResponse<BaseKentKartResponse & { transactionList: CardTransaction<any>[] }>> => {
-			Logger.info(`REQUEST useGetCardData ${card_alias}`)
-			const stringified_month = term.month.toString().padStart(2, "0")
+			Logger.info(`REQUEST useGetTransactions ${card_alias}`)
+			const stringified_month = (term.month + 1).toString().padStart(2, "0")
 			const stringified_year = term.year.toString()
 			const final_date = `${stringified_year}${stringified_month}`
-			const url = `${ApplicationConfig.endpoints.service}/rl1/api/card/transaction?region=${ApplicationConfig.region}&lang=tr&authType=4&token=${user?.access_token}&alias=${card_alias}&term=${final_date}`
+			console.log("final_date", final_date)
+			const url = `${ApplicationConfig.endpoints.service}/rl1/api/card/transaction?region=${region}&lang=tr&authType=4&token=${credentials?.access_token}&alias=${card_alias}&term=${final_date}`
 			return ApplicationConfig.makeKentKartRequest(url)
 		},
-		{ staleTime: Infinity }
+		{ refetchIntervalInBackground: false, refetchInterval: 10 * 1000 }
 	)
 }
 
