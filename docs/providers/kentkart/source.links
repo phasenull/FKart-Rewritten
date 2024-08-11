@@ -20,8 +20,6 @@ api/v2.0/auth
 
 api/push/register
 
-
-DOES NOT WORK
 DELETE_ACCOUNT_PDF:'https://service.kentkart.com/rl1/api/deleteAccountText/',
 
 GOOGLE API KEY
@@ -43,10 +41,21 @@ REGISTER_PUSH:'api/push/register'
 
 LOAD_ACCOUNT_INFO:'api/v2.0/auth'
 
-NO IDEA
 USER_PREFERENCES:'api/v2.0/user/preferences'
 
-NO IDEA
+VALIDATE EMAIL
+api/v4.0/account/validate
+
+UPDATE ACCOUNT PUT
+region=
+authType=
+name=
+surname=
+pin=
+{"additional_info":""}
+api/v4.0/account
+
+
 ACCESS_LOGIN_PIN:'access_token_pin'
 
 CARD BALANCE CHECK
@@ -75,9 +84,10 @@ TRANSACTION_REQUEST_BKM:'test/api/transaction/request'
 TRANSACTION_COMPLETE:'api/transaction/complete'
 GET_POS:'api/v2.0/pos'
 
-LIST CREDIT CARDS
+LIST CREDIT CARDS | GET
 ACCOUNT_CCARD:'api/account/ccard'
 
+REMOVE CREDIT CARD | ALSO GET >:/
 REMOVE_CREDIT_CARD:'api/account/merchant'
 
 GET ACCOUNT INFO
@@ -93,10 +103,12 @@ API_FEEDBACK_FIELDS:'api/feedback/fields'
 FEEDBACK
 API_INFO_FEEDBACK:'api/info/feedback'
 API_INFO_FEEDBACK_V4:'api/v4.0/info/feedback'
+
+
 API_ACCOUNT_V4_SEND_DELETION_OTP:'api/account/deleteAccountRequest'
 API_ACCOUNT_V4_VALIDATE_DELETION_OTP:'api/account/deleteAccountComplete'
 
-LIST ROUTES
+LIST ROUTES (does not include every route) | GET
 API_ROUTE_LIST:'api/v2.0/route/list'
 
 
@@ -111,7 +123,7 @@ API_POI:'api/poi/list'
 NEVER HAS DATA
 API_TARIFFS:'api/info/tariff'
 
-THEY USE THIS FOR ANNOUNCEMENTS FOR SOME REASON BUT NEVER ADD DATA EXCEPT "DUYURU" "DUYURU"
+ANNOUNCEMENTS (unused)
 API_ANNOUNCE:'api/info/announce'
 
 RETURNS DOCS LIKE TARIFFS
@@ -120,7 +132,7 @@ API_DOCS:'api/info/docs'
 RETURNS PRODUCTS FOR E-LOADS
 API_PRODUCT:'api/products'
 
-SYNCS ABT CODE
+SYNCS ABT CODE (partial qr token) | GET
 API_SYNC:'api/abt/sync'
 {
 	alias:number
@@ -129,10 +141,10 @@ API_SYNC:'api/abt/sync'
 SYNCS QR CODE - returns 24 Card Number is not registered in the System (not available in region 004)
 API_SYNC:'api/qr/sync'
 
-???
+ANNOUNCEMENTS WITH IMAGES | GET
 API_INFO_ADS:'api/info/ads'
 
-DELETE's something but no idea what, probably QR CODE
+delete ABT | DELETE
 API_ABT_CARD:'api/abt/card'
 
 
@@ -140,7 +152,7 @@ GOOGLE API LINKS
 GOOGLE_PLACES:'https://maps.googleapis.com/maps/api/place/autocomplete/json'
 GOOGLE_PLACES_DETAILS:'https://maps.googleapis.com/maps/api/place/details/json'
 
-TRAM PATH (OUTDATED OF COURSE)
+TRAM PATH
 https://www.ulasimpark.com.tr/img/AkcarayGuzergah.png
 
 
@@ -150,21 +162,14 @@ https://service.kentkart.com/rl1/api/info/masterPass/jquery.min.js
 https://service.kentkart.com/rl1/api/3dPayHost/fail
 https://service.kentkart.com/rl1/api/transaction/complete?region=004&lang=tr&authType=4
 
-TRIP PLANNER (PATH FINDING / nvm it works but note useful in most cases)
+TRIP PLANNER (PATH FINDING)
 https://service.kentkart.com/rl1/api/trip
-
-
-https://vts.kentkart.com.tr/ -> Found. Redirecting to https://account.kentkart.com.tr/dialog/authorize?client_id=b3A4VTS&response_type=code&redirect_uri=https://vts.kentkart.com.tr/auth/handle&dc=
-DC IS UNIX TIME
-https://vts.kentkart.com.tr/api
-https://vts.kentkart.com.tr/auth/handle
 
 
 
 https://service.kentkart.com/rl1/web/pathInfo?region=004&displayRouteCode=33&resultType=11111&refresh=-11
 
-https://account.kentkart.com.tr/login
-https://account.kentkart.com.tr/forget?username=
 
 https://service.kentkart.com/rl1/api/gtfs -> exists; requires auth; returns 404 with authType 4; returs 113 with authType 3
-https://service.kentkart.com/rl1/gtfs -> requires rl1 admin login
+https://service.kentkart.com/rl1/api/gtfs/realtime -> realtime vts, returns vehicle.pb file
+https://service.kentkart.com/rl1/gtfs -> requires "rl1 admin" login
