@@ -15,7 +15,7 @@ web-build/
 *.p12
 *.key
 *.mobileprovision
-
+quick.js
 # RANDOM
 dump.json
 dump2.json
