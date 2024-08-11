@@ -26,11 +26,11 @@ import R8R from "screens/r8r/R8R"
 
 const config = {
 	screens: {
-		route_details: "route_details/:fetch_from_id/:direction?/:bus_id?",
+		route_details: "route_details/:fetch_from_id/:bus_id?",
 	},
 }
 const linking = {
-	prefixes: [Linking.createURL("/"), "https://deep.fkart.project.phasenull.dev"],
+	prefixes: [Linking.createURL("/"), "https://deep.fkart.project.phasenull.dev/"],
 	config: config,
 }
 
@@ -41,7 +41,7 @@ export default function AppEntryComponent() {
 	useEffect(() => {
 		const secondsTimer = setInterval(() => {
 			fetchAccessToken()
-		}, 3*60*1000)
+		}, 3 * 60 * 1000)
 		return () => clearInterval(secondsTimer)
 	}, [fetchAccessToken])
 	LogBox.ignoreLogs(["Non-serializable values were found in the navigation state."])

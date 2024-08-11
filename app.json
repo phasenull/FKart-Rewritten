@@ -2,7 +2,7 @@
 	"expo": {
 		"name": "FKart",
 		"slug": "FKart",
-		"version": "24.8.10",
+		"version": "24.8.11",
 		"orientation": "portrait",
 		"scheme": "fkart",
 		"userInterfaceStyle": "automatic",
@@ -13,27 +13,19 @@
 			"backgroundColor": "#ffffff"
 		},
 		"assetBundlePatterns": ["**/*"],
-		"ios": {
-			"supportsTablet": false,
-			"runtimeVersion": {
-				"policy": "appVersion"
-			}
-		},
+		
 		"android": {
 			"adaptiveIcon": {
 				"foregroundImage": "./src/assets/media/images/icon_no_bg.png",
 				"backgroundColor": "#ffffff"
 			},
 			"package": "com.phasenull.FKart",
-			"runtimeVersion": "24.5.10",
+			"runtimeVersion": "24.8.11",
 			"config": {
 				"googleMaps": {
-					"apiKey":"AIzaSyDEi26R3XBBCxx9enfbo7H-dD4uNwmtIZ0"
+					"apiKey": "AIzaSyDEi26R3XBBCxx9enfbo7H-dD4uNwmtIZ0"
 				}
 			}
-		},
-		"web": {
-			"favicon": "./assets/favicon.png"
 		},
 		"plugins": [
 			"expo-router",
@@ -41,6 +33,20 @@
 				"expo-image-picker",
 				{
 					"photosPermission": "Required to upload bus images."
+				}
+			],
+			[
+				"expo-build-properties",
+				{
+					"android": {
+						"enableProguardInReleaseBuilds": true
+					}
+				}
+			],
+			[
+				"expo-location",
+				{
+					"locationAlwaysAndWhenInUsePermission": "To see your location on maps"
 				}
 			]
 		],

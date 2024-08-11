@@ -153,6 +153,6 @@ export function useGetRouteDetails(args: {
 			// request.then((e)=>{console.log(e.data.pathList[0]?.busList[0])})
 			return request
 		},
-		{ staleTime: 4500, refetchInterval: interval }
+		{ refetchInterval: interval }
 	)
 }

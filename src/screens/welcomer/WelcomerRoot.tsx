@@ -13,8 +13,8 @@ import { useGetAnnouncements } from "common/hooks/kentkart/nonAuthHooks"
 export function InitialInfo(props: { last_check: number; navigation: NativeStackNavigationProp<any> }) {
 	const { data } = useGetAnnouncements()
 	if (data && data.data && data.data.announceList && data.data.announceList.length === 0) {
-		props.navigation.replace("home")
-		return
+		// props.navigation.replace("home")
+		return props.navigation.replace("home")
 	}
 	return (
 		// <View className="flex-col flex-1 items-center justify-center">

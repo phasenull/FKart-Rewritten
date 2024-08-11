@@ -24,10 +24,10 @@ export default function AuthPage(props: { navigation: NativeStackNavigationProp<
 	useEffect(() => {
 		updatePage(0)
 	}, [])
-	const { user } = useKentKartAuthStore((state)=>state)
+	const  user  = useKentKartAuthStore((state)=>state.user)
 	if (user) {
-		navigation.replace("home")
-		return <View></View>
+		navigation.replace("home",{canGoBack:false})
+		return
 	}
 	return (
 		<KentKartAuthValidator
