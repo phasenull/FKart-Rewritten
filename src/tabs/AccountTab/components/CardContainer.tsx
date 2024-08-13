@@ -17,34 +17,28 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
 import Divider from "components/reusables/Divider"
+import { useQuery } from "react-query"
 interface Props {
 	favorite_data: FavoritesV3Card
 	index: number
 	navigation: any
 	style?: ViewStyle
 }
+function useGetCardImage(card:FavoritesV3Card) {
+	return useQuery({
+		queryFn:async ()=>{
+			return await Card.getImageFromCard(card as any)
 
+		},
+		queryKey:["get_card_image",card.aliasNo],
+	})
+}
 export default function CardContainer(props: Props) {
 	const { favorite_data, navigation } = props
-	const { data, isLoading, isRefetching, isError, error } = useGetCardData({ card_alias: favorite_data.aliasNo })
-	const [card, setCard] = useState<BasicCardData<any> | undefined>(undefined)
-	const { refetch: unFavoriteRefetch } = useRemoveFavoriteCard({ card_or_fav_id: card?.aliasNo as string })
+	const { data:freshData, isLoading, isRefetching, isError, error } = useGetCardData({ card_alias: favorite_data.aliasNo })
+	const { refetch: unFavoriteRefetch } = useRemoveFavoriteCard({ card_or_fav_id: "" as string })
 	const { refetch: refetchAccountFavorites } = useGetFavorites()
-	const [cardImage, setCardImage] = useState<CardImages | undefined>(undefined)
-	useEffect(() => {
-		async function get() {
-			const result = await Card.getImageFromCard(card as any)
-			setCardImage(result)
-		}
-		get()
-	}, [card])
-	useEffect(() => {
-		if (data?.data) {
-			if (data.data.cardlist?.length > 0) {
-				setCard(data?.data.cardlist[0])
-			}
-		}
-	}, [data?.data])
+	const {data:cardImageData,isLoading:cardImageisLoading} = useGetCardImage(favorite_data)
 
 	const { theme } = useContext(ThemeContext)
 	if (isError) {
@@ -82,7 +76,7 @@ export default function CardContainer(props: Props) {
 							marginHorizontal: 10,
 						}}
 						onPress={() => {
-							if (card?.aliasNo) {
+							if (favorite_data.aliasNo) {
 								unFavoriteRefetch()
 								refetchAccountFavorites()
 							}
@@ -103,8 +97,8 @@ export default function CardContainer(props: Props) {
 					onPress={() => {
 						navigation.push("card_details", {
 							favorite_data: favorite_data,
-							card: card,
-							is_virtual: card?.virtualCard === "1" || favorite_data.cardType === "33",
+							card: favorite_data,
+							is_virtual: favorite_data?.virtualCard === "1" || favorite_data.cardType === "33",
 						})
 					}}
 					onLongPress={() => {
@@ -115,28 +109,28 @@ export default function CardContainer(props: Props) {
 					}}
 				>
 					<View className="w-28 h-36 top-1 -ml-12 mr-1 items-center justify-center">
-						{cardImage ? (
+						{(!cardImageisLoading && cardImageData) ? (
 							<Animated.Image
 								className="h-64 rotate-90"
 								style={{ width: 4 * 40, objectFit: "contain" }}
 								source={{
-									uri: cardImage,
+									uri: cardImageData,
 								}}
 							/>
 						) : (
 							<CustomLoadingIndicator />
 						)}
 					</View>
-					{card?.loads_in_line || card?.oChargeList ? (
+					{freshData?.data.cardlist[0].loads_in_line || freshData?.data.cardlist[0].oChargeList ? (
 						<View className="absolute w-6 h-6 justify-center -right-1.5 -top-1.5 self-start rounded-full bg-red-400">
-							<Text className="text-white text-center text-xl font-bold">{(card.loads_in_line || card.oChargeList)?.length}</Text>
+							<Text className="text-white text-center text-xl font-bold">{(freshData?.data.cardlist[0].loads_in_line || freshData?.data.cardlist[0].oChargeList)?.length}</Text>
 						</View>
 					) : null}
 					<View className="flex-1 w-full flex-row space-x-2 items-center">
 						<Divider height={25 * 4} />
 						<View className="flex-col">
 							<Text numberOfLines={1} style={{ color: theme.primary }} className="flex-1 text-2xl font-bold w-full bottom-2 text-left">
-								{favorite_data.description || (card?.virtualCard && "QR Kart") || "Adsız Kart"}
+								{favorite_data.description || (freshData?.data.cardlist[0]?.virtualCard && "QR Kart") || "Adsız Kart"}
 							</Text>
 							<Text
 								style={{
@@ -148,10 +142,10 @@ export default function CardContainer(props: Props) {
 							>
 								{formatAlias(favorite_data.aliasNo) || "key_error (favorite)"}
 							</Text>
-							{card ? (
+							{freshData?.data.cardlist[0] ? (
 								<View className="flex-1 flex-row">
 									<Text adjustsFontSizeToFit={true} style={{ color: theme.secondary, fontSize: 34, textAlignVertical: "bottom" }} className="opacity-50 font-bold text-left">
-										{card.balance || "key_error (balance)"} TL
+										{freshData?.data.cardlist[0].balance || "key_error (balance)"} TL
 									</Text>
 									{isLoading || isRefetching ? <CustomLoadingIndicator color={theme.secondary} style={{ marginLeft: 10 }} size={15} /> : null}
 								</View>
@@ -160,7 +154,7 @@ export default function CardContainer(props: Props) {
 							)}
 						</View>
 						<View className=" items-end flex-1 flex-col space-y-2">
-							{card?.ticketList
+							{freshData?.data.cardlist[0]?.ticketList
 								?.sort((a, b) => {
 									return dateFromMessedKentKartDateFormat(a.expiryDate).getTime() - dateFromMessedKentKartDateFormat(b.expiryDate).getTime()
 								})
