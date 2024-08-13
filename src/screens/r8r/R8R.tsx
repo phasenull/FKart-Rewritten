@@ -15,9 +15,6 @@ export default function R8R(props: { navigation: NativeStackNavigationProp<any> 
 		// refetchClusters()
 		props.navigation.setOptions({ title: `${data?.feed.length || 0} buses ${new Date().toISOString().slice(0, 19)}` })
 	}, [data])
-	if (isError && !(data && data.feed)) {
-		return <ErrorPage retry={isRefetching ? () => null : refetch} error={{ description: (error as any).message, title: "Couldn't fetch RT" }} />
-	}
 	const renderedMarkers = useMemo(
 		() =>
 			data?.feed?.map((e) => {
@@ -25,6 +22,9 @@ export default function R8R(props: { navigation: NativeStackNavigationProp<any> 
 			}),
 		[data]
 	)
+	if (isError && !(data && data.feed)) {
+		return <ErrorPage retry={isRefetching ? () => null : refetch} error={{ description: (error as any).message, title: "Couldn't fetch RT" }} />
+	}
 	return (
 		<React.Fragment>
 			<View className="absolute bottom-4 flex flex-row self-center">

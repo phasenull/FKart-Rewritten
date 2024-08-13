@@ -14,7 +14,8 @@ export function InitialInfo(props: { last_check: number; navigation: NativeStack
 	const { data } = useGetAnnouncements()
 	if (data && data.data && data.data.announceList && data.data.announceList.length === 0) {
 		// props.navigation.replace("home")
-		return props.navigation.replace("home")
+		props.navigation.replace("home")
+		return 
 	}
 	return (
 		// <View className="flex-col flex-1 items-center justify-center">
@@ -24,9 +25,13 @@ export function InitialInfo(props: { last_check: number; navigation: NativeStack
 			// 	setPageIndex(newIndex)
 			// }}
 		>
-			<IIPage1 last_check={props.last_check} key={"app-info"} />
-			<IIPage2 key={"community-made"} />
-			<IIPage3 key={"open-source"} />
+			{(!data?.data?.announceList?.length) ? (
+				<React.Fragment>
+					<IIPage1 last_check={props.last_check} key={"app-info"} />
+					<IIPage2 key={"community-made"} />
+					<IIPage3 key={"open-source"} />
+				</React.Fragment>
+			) : undefined}
 			{(data?.data?.announceList?.length || 0) > 0 ? (
 				<CityValidator navigation={props.navigation} redirect={true}>
 					<IIPageAnnouncement key={"announcements"} />

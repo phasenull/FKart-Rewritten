@@ -39,6 +39,7 @@ export default function AppEntryComponent() {
 	// Logger.success("App.tsx", "\n\n\n-=-=-=-=-=-=-=-=-=-=-=-=-\n\n   START OF NEW RENDER")
 	const fetchAccessToken = useFKartAuthStore((state) => state.fetchAccessToken)
 	useEffect(() => {
+		fetchAccessToken()
 		const secondsTimer = setInterval(() => {
 			fetchAccessToken()
 		}, 3 * 60 * 1000)

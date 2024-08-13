@@ -9,10 +9,10 @@ export default function useGetProfileData() {
 	const {user,region} = useKentKartAuthStore((state) => state) as {user:IKentKartUser,region:string}
 	return useQuery(["useGetProfileData"], (): Promise<AxiosResponse<BaseKentKartResponse & { accountInfo: IKentKartUser }>> => {
 		Logger.info("REQUEST useGetProfileData")
-		const url = `${ApplicationConfig.endpoints.service}/rl1/api/account?region=${region}&authType=4&token=${user.access_token}`
+		const url = `${ApplicationConfig.endpoints.service}/rl1/api/account?region=${region}&authType=4&token=${user.access_token}&anticache=${Math.random()}`
 		const request = ApplicationConfig.makeKentKartRequest(url, {
 			method: "GET",
 		})
 		return request
-	})
+	},{staleTime:5*1000})
 }

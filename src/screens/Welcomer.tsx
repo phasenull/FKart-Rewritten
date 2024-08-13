@@ -103,4 +103,5 @@ export default function WelcomerPage(props: { navigation:NativeStackNavigationPr
 	if (show == "initial_info") {
 		return <InitialInfo last_check={lastCheck} navigation={navigation} />
 	}
+	return
 }

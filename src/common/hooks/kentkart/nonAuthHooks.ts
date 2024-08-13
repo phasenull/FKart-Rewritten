@@ -10,7 +10,7 @@ import { IProducts } from "common/interfaces/KentKart/Products"
 import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 import BaseFKartResponse from "common/interfaces/FKart/BaseFKartResponse"
-import {Buffer} from "buffer"
+import { Buffer } from "buffer"
 import IRTBus from "common/interfaces/KentKart/RTBus"
 import { transit_realtime } from "gtfs-realtime-bindings"
 export function useGetAnnouncements() {
@@ -78,12 +78,13 @@ export function useGetRealtime() {
 				authType: auth_type,
 			})}`
 			let data
-			const request = await axios.get(url,{timeout:5000,responseType:"arraybuffer"})
+			const request = await axios.get(url, { timeout: 1500, responseType: "arraybuffer" })
+
 			const buffer = await request.data
 			console.log("fetch end")
 			if (buffer.byteLength === 15) {
-				console.log("!!! buffer empty "+ Buffer.from(buffer).toString())
-				return {feed:[]}
+				console.log("!!! buffer empty " + Buffer.from(buffer).toString())
+				return { feed: [] }
 			}
 			try {
 				data = transit_realtime.FeedMessage.decode(new Uint8Array(buffer))
@@ -97,8 +98,8 @@ export function useGetRealtime() {
 		queryKey: ["realtime"],
 		keepPreviousData: true,
 		refetchInterval: 30 * 1000,
-		retry:2,
-		
+		retry: false,
+		onError: () => console.log("failed to fetch realtime"),
 	})
 }
 export function useGetRouteDetails(args: {

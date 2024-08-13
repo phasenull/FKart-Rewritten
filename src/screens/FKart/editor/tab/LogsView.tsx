@@ -17,7 +17,7 @@ export default function LogsView(props: ViewProps) {
 	// Only use in components that are child of a FKartValidator
 	const { theme } = useContext(ThemeContext)
 	const credentials = useFKartAuthStore((state) => state.credentials)
-	const { isFetching, refetch, data, isRefetching, isError, error, fetchNextPage, isFetchingNextPage, hasNextPage } = useInfiniteQuery(["getLogs"], {
+	const { isFetching, refetch, data, isRefetching, isError, error, fetchNextPage, isFetchingNextPage, hasNextPage } = useInfiniteQuery(["getLogs",credentials.access_token], {
 		retry: false,
 		// staleTime:5*1000,
 		getNextPageParam: (lastpage, allpages) => {
@@ -45,8 +45,8 @@ export default function LogsView(props: ViewProps) {
 				{
 					backgroundColor: theme.white,
 					borderRadius: 16,
-					paddingHorizontal: 4 * 4,
-					paddingVertical: 2 * 4,
+					paddingHorizontal: 2 * 4,
+					// paddingVertical: 2 * 4,
 					width: "80%",
 					maxWidth: 80 * 4,
 					minWidth: 40 * 4,
@@ -67,7 +67,7 @@ export default function LogsView(props: ViewProps) {
 			</View>
 			<ScrollView className="max-h-64">{data?.pages.map((page) => (page as any)?.data?.logs?.map((logObject: any) => <LogTouchable key={logObject.id} log={logObject} />))}</ScrollView>
 			<SimplyButton
-				style={{ width: 32 * 4, alignSelf: "center", marginTop: 4 * 4 }}
+				style={{ width: 32 * 4, alignSelf: "center", marginTop: 1 * 4 }}
 				processingText="loading..."
 				processing={isFetchingNextPage}
 				size="medium"
