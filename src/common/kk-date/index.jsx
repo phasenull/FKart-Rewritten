@@ -56,13 +56,13 @@ class KkDate {
 			} else if (date instanceof Date) {
 				this.date = date;
 				this.date_string = `${this.date.toString()}`;
-			} else if (typeof date == "string" && date.length == 16) {
+			} else if ((typeof date === "string") && date.length === 16) {
 				// convert from DD/MM/YYYY HH:mm
 				const [ddmmyyyy,hhmm] = date.split(" ")
 				const [day,month,year] = ddmmyyyy.split("/")
 				const [hour,minute] = hhmm.split(":")
-				const date = new Date(`${year}-${month}-${day}T${hour}:${minute}:00.000+03:00`)
-				this.date = date
+				const new_date = new Date(`${year}-${month}-${day}T${hour}:${minute}:00.000+03:00`)
+				this.date = new_date
 				this.date_string = this.date.toISOString()
 			} else {
 				if (isValid(date, format_types['HH:mm:ss']) || isValid(date, format_types['HH:mm'])) {
