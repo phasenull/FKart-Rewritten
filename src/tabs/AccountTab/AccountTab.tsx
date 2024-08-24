@@ -10,7 +10,6 @@ import CardContainer from "./components/CardContainer"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 import KentKartAuthValidator from "components/validators/KentKartAuthValidator"
-import SeasonValidator from "components/validators/SeasonValidator"
 import AuthWall from "components/walls/AuthWall"
 import SimplyButton from "components/ui/SimplyButton"
 import { useQuery } from "react-query"
@@ -30,7 +29,6 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 	const [is_show_secret, setIsShowSecret] = useState(false)
 	const { data: favoritesData, refetch: refetchFavorites, isRefetching: isFavoritesRefetching, isLoading: isFavoritesLoading, error: favoritesError } = useGetFavorites()
 	return (
-		<SeasonValidator>
 			<KentKartAuthValidator else={<AuthWall navigation={navigation} />}>
 				<ScrollView
 					refreshControl={<RefreshControl onRefresh={refetchFavorites} refreshing={isFavoritesRefetching} />}
@@ -96,6 +94,5 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 					<SimplyButton className="mt-4" text="Select City" size="medium" onPress={() => props.navigation.navigate("city_selector")} />
 				</ScrollView>
 			</KentKartAuthValidator>
-		</SeasonValidator>
 	)
 }

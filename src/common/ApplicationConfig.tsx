@@ -41,7 +41,6 @@ export default abstract class ApplicationConfig {
 		}
 		const url = new URL(input as string)
 		url.searchParams.append("cache_bypass",`${Math.floor(Math.random()*1000)}`)
-		console.log("URL",url.toString())
 		return axios(url.toString(), {
 			...config,
 			headers: {
