@@ -1,4 +1,4 @@
-import { useQuery } from "react-query"
+import { useMutation, useQuery } from "react-query"
 import ApplicationConfig from "common/ApplicationConfig"
 import axios, { AxiosResponse } from "axios"
 import { BaseKentKartResponse } from "common/interfaces/KentKart/BaseKentKartResponse"
@@ -13,6 +13,8 @@ import BaseFKartResponse from "common/interfaces/FKart/BaseFKartResponse"
 import { Buffer } from "buffer"
 import IRTBus from "common/interfaces/KentKart/RTBus"
 import { transit_realtime } from "gtfs-realtime-bindings"
+import Card from "common/classes/Card"
+import CardTypes from "common/enums/CardTypes"
 export function useGetAnnouncements() {
 	const region = useKentKartAuthStore((state) => state.region) as string
 	return useQuery(
@@ -156,4 +158,21 @@ export function useGetRouteDetails(args: {
 		},
 		{ refetchInterval: interval }
 	)
+}
+export function useSetCardType(){
+	return useMutation({
+		mutationKey:["setCardType"],
+		mutationFn:async (args:{alias_no:string,card_type:CardTypes}) =>{
+			return await ApplicationConfig.database.set(`card__${args.alias_no}`,args.card_type)
+		}
+	})
+}
+export function useGetCardType(alias_no:string) {
+	return useQuery({
+		queryKey:["getCardType",alias_no],
+		queryFn:async ()=>{
+			return Card.getTypeFromAliasNo(alias_no)
+		},
+		staleTime:Infinity
+	})
 }

@@ -13,7 +13,7 @@ export default function useGetFavorites() {
 	const { user,region } = useKentKartAuthStore((state) => state) as {user:IKentKartUser,region:string}
 	return useQuery(
 		["getFavorites"],
-		(): Promise<AxiosResponse<{cardlist:FavoritesV3Card[]} & BaseKentKartResponse> | undefined> => {
+		async (): Promise<AxiosResponse<{cardlist:FavoritesV3Card[]} & BaseKentKartResponse> | undefined> => {
 			const url = `${ApplicationConfig.endpoints.service}/rl1/api/v3.0/favorite?authType=4&region=${region}&token=${user.access_token}`
 			Logger.info("REQUEST useGetFavorites")
 			return ApplicationConfig.makeKentKartRequest(url)

@@ -16,28 +16,20 @@ import { Clipboard } from "react-native"
 import { Swipeable } from "react-native-gesture-handler"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { useQuery } from "react-query"
+import { useGetCardType } from "common/hooks/kentkart/nonAuthHooks"
+import CardImages from "common/enums/CardImages"
 interface Props {
 	favorite_data: FavoritesV3Card
 	index: number
 	navigation: any
 	style?: ViewStyle
 }
-function useGetCardImage(card:FavoritesV3Card) {
-	return useQuery({
-		queryFn:async ()=>{
-			return await Card.getImageFromCard(card as any)
-
-		},
-		queryKey:["get_card_image",card.aliasNo],
-	})
-}
 export default function CardContainer(props: Props) {
 	const { favorite_data, navigation } = props
 	const { data:freshData, isLoading, isRefetching, isError, error } = useGetCardData({ card_alias: favorite_data.aliasNo })
-	const { refetch: unFavoriteRefetch } = useRemoveFavoriteCard({ card_or_fav_id: "" as string })
+	const { mutateAsync: mutateRemove } = useRemoveFavoriteCard()
 	const { refetch: refetchAccountFavorites } = useGetFavorites()
-	const {data:cardImageData,isLoading:cardImageisLoading} = useGetCardImage(favorite_data)
-
+	const {data:dataCardType,isLoading:cardImageisLoading} = useGetCardType(favorite_data.aliasNo)
 	const { theme } = useContext(ThemeContext)
 	if (isError) {
 		console.warn("CardContainer error",(error as any).message)
@@ -60,7 +52,9 @@ export default function CardContainer(props: Props) {
 				containerStyle={{
 					overflow: "visible",
 				}}
+				// activeOffsetX={[0,40]}
 				friction={1}
+				failOffsetX={20}
 				overshootRight={false}
 				renderRightActions={() => (
 					<TouchableOpacity
@@ -76,8 +70,7 @@ export default function CardContainer(props: Props) {
 						}}
 						onPress={() => {
 							if (favorite_data.aliasNo) {
-								unFavoriteRefetch()
-								refetchAccountFavorites()
+								mutateRemove({alias_no:favorite_data.aliasNo}).then(()=>refetchAccountFavorites())
 							}
 						}}
 					>
@@ -108,12 +101,12 @@ export default function CardContainer(props: Props) {
 					}}
 				>
 					<View className="w-28 h-36 top-1 -ml-12 mr-1 items-center justify-center">
-						{(!cardImageisLoading && cardImageData) ? (
+						{(!cardImageisLoading && dataCardType) ? (
 							<Animated.Image
 								className="h-64 rotate-90"
 								style={{ width: 4 * 40, objectFit: "contain" }}
 								source={{
-									uri: cardImageData,
+									uri: CardImages[dataCardType],
 								}}
 							/>
 						) : (
