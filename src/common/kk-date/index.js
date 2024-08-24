@@ -36,6 +36,7 @@ class KkDate {
 	 * @param {string|Date|KkDate} date - date/datetime/time
 	 */
 	constructor(date = null) {
+		console.log("init kkdate with",date)
 		this.date = null;
 		this.date_string = null;
 		if (!date) {
@@ -56,6 +57,14 @@ class KkDate {
 			} else if (date instanceof Date) {
 				this.date = date;
 				this.date_string = `${this.date.toString()}`;
+			} else if (typeof date == "string" && date.length == 16) {
+				// convert from DD/MM/YYYY HH:mm
+				const [ddmmyyyy,hhmm] = input.split(" ")
+				const [day,month,year] = ddmmyyyy.split("/")
+				const [hour,minute] = hhmm.split(":")
+				const date = new Date(`${year}-${month}-${day}T${hour}:${minute}:00.000+03:00`)
+				this.date = date
+				this.date_string = this.date.toISOString()
 			} else {
 				if (isValid(date, format_types['HH:mm:ss']) || isValid(date, format_types['HH:mm'])) {
 					this.date = new Date(`${new Date().toISOString().split('T')[0]} ${date}`);
