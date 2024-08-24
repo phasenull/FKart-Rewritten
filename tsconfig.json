@@ -3,9 +3,9 @@
 	"compilerOptions": {
 		"strict": true,
 		"baseUrl": "src",
-		// "paths": {
-		// 	"@/*": ["src/*"]
-		// }
+		"paths": {
+			"@/*": ["src/*"]
+		}
 	},
-	"include": ["**/*.ts", "**/*.tsx", "src/common/kk-date/KkDate.d.ts"]
+	"include": ["**/*.ts", "**/*.tsx","src/**/*.jsx"]
 }

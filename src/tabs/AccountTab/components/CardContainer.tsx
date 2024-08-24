@@ -3,20 +3,18 @@ import { Text, ToastAndroid, TouchableOpacity, Vibration, View, ViewStyle } from
 import Animated, { FadeInRight } from "react-native-reanimated"
 
 import { ThemeContext } from "common/contexts/ThemeContext"
-import CardImages from "common/enums/CardImages"
 import { useGetCardData, useRemoveFavoriteCard } from "common/hooks/kentkart/cardHooks"
 import useGetFavorites from "common/hooks/kentkart/user/useGetFavorites"
-import { BasicCardData, ITicket } from "common/interfaces/KentKart/BasicCardData"
-import { Favorite, FavoritesV3Card } from "common/interfaces/KentKart/Favorite"
-import { dateFromMessedKentKartDateFormat, formatAlias, deltaTime } from "common/util"
+import { ITicket } from "common/interfaces/KentKart/BasicCardData"
+import { FavoritesV3Card } from "common/interfaces/KentKart/Favorite"
+import KkDate from "common/kk-date"
+import { deltaTime, formatAlias } from "common/util"
 import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
-import { useContext, useEffect, useState } from "react"
+import Divider from "components/reusables/Divider"
+import { useContext } from "react"
 import { Clipboard } from "react-native"
 import { Swipeable } from "react-native-gesture-handler"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
-import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
-import Divider from "components/reusables/Divider"
 import { useQuery } from "react-query"
 interface Props {
 	favorite_data: FavoritesV3Card
@@ -42,9 +40,10 @@ export default function CardContainer(props: Props) {
 
 	const { theme } = useContext(ThemeContext)
 	if (isError) {
+		console.warn("CardContainer error",(error as any).message)
 		return (
 			<View>
-				<Text>error {(error as any).message}</Text>
+				<Text>{(error as any).message}</Text>
 			</View>
 		)
 	}
@@ -156,10 +155,19 @@ export default function CardContainer(props: Props) {
 						<View className=" items-end flex-1 flex-col space-y-2">
 							{freshData?.data.cardlist[0]?.ticketList
 								?.sort((a, b) => {
-									return dateFromMessedKentKartDateFormat(a.expiryDate).getTime() - dateFromMessedKentKartDateFormat(b.expiryDate).getTime()
+									let time_a
+									let time_b
+									try {
+										time_a = new KkDate(a.expiryDate).getTime() as number
+										time_b = new KkDate(b.expiryDate).getTime() as number
+									} catch {
+										time_a = 0
+										time_b = 0
+									}
+									return (time_a-time_b) || 0
 								})
-								.slice(0, 3)
-								.map((ticket) => <RemainingTicketContainer ticket={ticket}/>)}
+								.slice(0, 5)
+								.map((ticket) => <RemainingTicketContainer key={ticket.ticketNo} ticket={ticket}/>)}
 						</View>
 					</View>
 				</TouchableOpacity>
@@ -170,7 +178,13 @@ export default function CardContainer(props: Props) {
 function RemainingTicketContainer(props:{ticket:ITicket}) {
 	const {ticket} = props
 	const {theme} = useContext(ThemeContext)
-	const expiryDate = dateFromMessedKentKartDateFormat(ticket.expiryDate).getTime()
+	let expiryDate
+	try {
+		expiryDate = new KkDate(ticket.expiryDate).getTime() as number
+	} catch (e) {
+		console.warn("Error while parsing ticket expiry date:",ticket.expiryDate,e)
+	}
+	if (!expiryDate) return
 	const remainingText = expiryDate - Date.now() < 7 * 24 * 60 * 60 * 1000 ? deltaTime(expiryDate - Date.now(), true) : undefined
 	if (remainingText) {
 		return (

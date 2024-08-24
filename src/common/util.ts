@@ -48,9 +48,12 @@ export function deltaTime(diff: number,removeAgo?:boolean) {
 	}
 	return `now`
 }
-import KkDate from "common/kk-date"
 export function dateFromMessedKentKartDateFormat(input: string) {
-	return new KkDate(input)
+	const [ddmmyyyy,hhmm] = input.split(" ")
+	const [day,month,year] = ddmmyyyy.split("/")
+	const [hour,minute] = hhmm.split(":")
+	const date = new Date(`${year}-${month}-${day}T${hour}:${minute}:00.000+03:00`)
+	return date
 }
 
 export type ProperErrorHandling<SUCCESS> = [SUCCESS] | [false,string]
