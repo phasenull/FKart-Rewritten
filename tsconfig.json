@@ -7,5 +7,5 @@
 		// 	"@/*": ["src/*"]
 		// }
 	},
-	"include": ["**/*.ts", "**/*.tsx"]
+	"include": ["**/*.ts", "**/*.tsx", "src/common/kk-date/KkDate.d.ts"]
 }
