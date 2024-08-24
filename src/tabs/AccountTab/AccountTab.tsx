@@ -66,7 +66,7 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 									marginTop: 5 * 4,
 								}}
 								index={index}
-								key={"card_" + (p_card.aliasNo)+`${index}`}
+								key={"card_" + (p_card.aliasNo)}
 								favorite_data={p_card}
 								navigation={navigation}
 							/>

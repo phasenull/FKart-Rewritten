@@ -10,12 +10,14 @@ import { IIPageAnnouncement } from "./page_announcement"
 import CityValidator from "components/validators/CityValidator"
 import CitySelector from "screens/city_selector/CitySelector"
 import { useGetAnnouncements } from "common/hooks/kentkart/nonAuthHooks"
+import RootScreen from "screens/RootScreen"
 export function InitialInfo(props: { last_check: number; navigation: NativeStackNavigationProp<any> }) {
-	const { data } = useGetAnnouncements()
-	if (data && data.data && data.data.announceList && data.data.announceList.length === 0) {
-		// props.navigation.replace("home")
-		props.navigation.replace("home")
-		return 
+	const { data, isLoading } = useGetAnnouncements()
+	const doesExist = data?.data?.announceList?.length
+	const isLoaded = !!data
+	if (isLoaded && !doesExist) {
+		return <RootScreen navigation={props.navigation}/>
+
 	}
 	return (
 		// <View className="flex-col flex-1 items-center justify-center">
@@ -25,18 +27,14 @@ export function InitialInfo(props: { last_check: number; navigation: NativeStack
 			// 	setPageIndex(newIndex)
 			// }}
 		>
-			{(!data?.data?.announceList?.length) ? (
-				<React.Fragment>
-					<IIPage1 last_check={props.last_check} key={"app-info"} />
-					<IIPage2 key={"community-made"} />
-					<IIPage3 key={"open-source"} />
-				</React.Fragment>
-			) : undefined}
-			{(data?.data?.announceList?.length || 0) > 0 ? (
+			{doesExist && <IIPage1 last_check={props.last_check} key={"app-info"} />}
+			{doesExist && <IIPage3 key={"open-source"} />}
+			{doesExist && <IIPage2 key={"community-made"} />}
+			{doesExist && (
 				<CityValidator navigation={props.navigation} redirect={true}>
 					<IIPageAnnouncement key={"announcements"} />
 				</CityValidator>
-			) : undefined}
+			)}
 		</IIPaginator>
 		// </View>
 	)

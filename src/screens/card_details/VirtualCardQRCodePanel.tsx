@@ -1,4 +1,4 @@
-import { useContext,  useMemo } from "react"
+import { useContext,  useMemo, useState } from "react"
 import { Image, Text, View } from "react-native"
 import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated"
 import ApplicationConfig from "common/ApplicationConfig"
@@ -11,7 +11,7 @@ export default function VirtualCardQRCodePanel(props: { card: BasicCardData<"Bas
 
 	const { card, token } = props
 	const linear = useSharedValue(100)
-	const image_url = getQRCode(token?.token)
+	const [image_url] = useState(getQRCode(token?.token))
 
 	const animatedChanged = useAnimatedStyle(() => ({
 		width: `${linear.value}%`,

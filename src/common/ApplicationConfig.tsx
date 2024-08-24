@@ -34,12 +34,15 @@ export default abstract class ApplicationConfig {
 	public static makeKentKartRequest(input: string | URL | Request, config?: AxiosRequestConfig | undefined): Promise<AxiosResponse<any, any>> {
 		// get url host
 		// TODO: also wrap it in KatikJS (phase2)
-		const whitelist = [...Object.values(this.endpoints)]
-		const check = whitelist.map((v) => input.toString().includes(v)).includes(true)
+		const whitelist = Object.values(this.endpoints)
+		const check = !!whitelist.find((whitelisted_url)=>input.toString().startsWith(whitelisted_url))
 		if (!check) {
 			throw new Error(`Url ${input} is not whitelisted!`)
 		}
-		return axios(input as string, {
+		const url = new URL(input as string)
+		url.searchParams.append("cache_bypass",`${Math.floor(Math.random()*1000)}`)
+		console.log("URL",url.toString())
+		return axios(url.toString(), {
 			...config,
 			headers: {
 				"User-Agent": ApplicationConfig.getFormattedVersion(),

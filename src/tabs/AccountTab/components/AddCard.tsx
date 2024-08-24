@@ -10,18 +10,15 @@ import { ThemeContext } from "common/contexts/ThemeContext"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 
 export function AddCard() {
-	const [alias,setAlias] = useState("")
 	const {theme} = useContext(ThemeContext)
 	const {refetch:refetchAccountFavorites} = useGetFavorites()
 	const user = useKentKartAuthStore((state)=>state.user)
 	if (!user) return
-	const {refetch:refetchFavorite} = useAddFavoriteCard({card_or_fav_id:alias,name:"My Favorite Card",user:user})
+	const {isLoading,data,error,isError,mutateAsync} = useAddFavoriteCard()
 	const [visible, setVisible] = useState(false)
 	function onSave(alias:string) {
-		setAlias(alias)
 		setVisible(false)
-		refetchFavorite()
-		refetchAccountFavorites({})
+		mutateAsync({alias_no:alias,name:`My Card - ${Math.floor(Math.random()*10)}`}).then(()=>refetchAccountFavorites())
 	}
 	return (
 		<View className="w-full mt-8 h-36 items-center justify-center">
