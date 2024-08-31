@@ -1,4 +1,4 @@
-import { drizzleDB } from "../app/(root)"
+import { drizzleDB } from "../app"
 
 import { sql } from "drizzle-orm"
 import { text, integer, sqliteTable } from "drizzle-orm/sqlite-core"

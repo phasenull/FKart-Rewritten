@@ -15,15 +15,15 @@ import RouteData from "common/interfaces/KentKart/RouteData"
 import { useGetBusImages } from "common/hooks/fkart/bus/useGetBusImages"
 import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
 import { ThemeContext } from "common/contexts/ThemeContext"
+import { router } from "expo-router"
 export default function BusContainer(props: {
-	navigation: NativeStackNavigationProp<any>
 	bus: BusData
 	route_data: RouteData
 	onPress?: () => void
 	onLongPress?: () => void
 }) {
 	const {theme} = useContext(ThemeContext)
-	const { bus, navigation, route_data } = props
+	const { bus,  route_data } = props
 	const schedule_list = route_data?.timeTableList
 	const departure_time = (schedule_list?.find((e) => e.tripId === bus.tripId)?.departureTime)?.slice(0,5) || "--:--"
 	const { data, isLoading, isError } = useGetBusImages(bus)
@@ -44,9 +44,7 @@ export default function BusContainer(props: {
 				shadowOffset: { height: 4, width: 4 },
 			}}
 			onPress={props.onPress ||( () => {
-				navigation.navigate("bus_details", {
-					bus,
-				})
+				router.navigate("bus_details")
 			})}
 			onLongPress={props.onLongPress}
 			className="h-48 w-80 flex-col overflow-hidden"

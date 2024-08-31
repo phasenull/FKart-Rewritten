@@ -21,60 +21,41 @@ import { ThemeContext } from "common/contexts/ThemeContext"
 import { useGetCityList, useGetRouteDetails } from "common/hooks/kentkart/nonAuthHooks"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
-export default function MapData(props: {
-	route: {
-		params: {
-			route_data: RouteData
-			bus_list: BusData[]
-			initial_bus?: BusData
-		}
-	}
-	navigation: NativeStackNavigationProp<any>
-}) {
+import { router, Stack, useLocalSearchParams } from "expo-router"
+export default function MapData() {
+	const { force_route_code, force_direction, force_bus_id,headerTitle } = useLocalSearchParams<{
+		force_direction: string
+		force_bus_id: string
+		force_route_code: string
+		headerTitle:string
+	}>()
 	const ref_map_view = useRef<MapView>()
 	const ref_bottom_sheet = useRef<BottomSheet>()
-	const user = useKentKartAuthStore((state)=>state.user)
+	const user = useKentKartAuthStore((state) => state.user)
 	const { data: cityData } = useGetCityList()
-	const [busListToShow, setBusListToShow] = useState<BusData[]>(props?.route?.params?.bus_list)
-	const [routeDataToShow, setRouteDataToShow] = useState<RouteData>(props?.route?.params?.route_data)
-	const { navigation } = props
+	const [busListToShow, setBusListToShow] = useState<BusData[]>()
+	const [routeDataToShow, setRouteDataToShow] = useState<RouteData>()
 	const [userCity, setUserCity] = useState<ICityInformation | undefined>(undefined)
-	const [direction, setDirection] = useState(routeDataToShow.direction)
-	const {theme} = useContext(ThemeContext)
+	const [direction, setDirection] = useState(parseInt(force_direction) || 0)
+	const { theme } = useContext(ThemeContext)
 	const {
 		data: fetchedRouteData,
 		isRefetching: isRouteRefetching,
 		refetch: refetchRouteData,
-	} = useGetRouteDetails({ direction: direction, route_code: routeDataToShow.displayRouteCode, interval: 5000,user:user as IKentKartUser,result_includes:{
-		busStopList:true,
-		busList:true,
-		scheduleList:true,
-		timeTableList:false,
-		pointList:true
-
-	} })
-	const [followingBus, setFollowingBus] = useState<BusData | undefined>(props?.route?.params?.initial_bus)
-	useEffect(() => {
-		refetchRouteData()
-	}, [direction])
-	useEffect(() => {
-		navigation.setOptions({
-			title: `Route ${props.route.params.route_data.displayRouteCode} - Map View`,
-			headerTitleStyle: {
-				color: theme.secondary,
-				fontWeight: "900",
-			},
-		})
-		const init_bus = props.route.params.initial_bus
-		if (init_bus) {
-			ref_map_view.current?.animateToRegion({
-				latitude: parseFloat(init_bus.lat) - 0.001,
-				longitude: parseFloat(init_bus.lng),
-				latitudeDelta: 0.005,
-				longitudeDelta: 0.005,
-			})
-		}
-	}, [])
+	} = useGetRouteDetails({
+		direction: direction,
+		route_code: force_route_code,
+		interval: 5000,
+		user: user as IKentKartUser,
+		result_includes: {
+			busStopList: true,
+			busList: true,
+			scheduleList: false,
+			timeTableList: true,
+			pointList: true,
+		},
+	})
+	const [followingBus, setFollowingBus] = useState<BusData | undefined>(force_bus_id && {busId:force_bus_id} as any)
 	useEffect(() => {
 		const path_list = fetchedRouteData?.data?.pathList
 		if (path_list && path_list[0]) {
@@ -83,8 +64,8 @@ export default function MapData(props: {
 			setBusListToShow(path_list[0].busList)
 			if (!bus_list || bus_list.length === 0) return
 			if (!followingBus) return
-			const found_bus = path_list[0].busList.find((bus: BusData) => bus.plateNumber === followingBus.plateNumber)
-			if (!found_bus) return	
+			const found_bus = path_list[0].busList.find((bus: BusData) => bus.busId === followingBus.busId)
+			if (!found_bus) return
 			ref_map_view.current?.animateToRegion({
 				latitude: parseFloat(found_bus.lat) - 0.001,
 				longitude: parseFloat(found_bus.lng),
@@ -128,7 +109,17 @@ export default function MapData(props: {
 	}
 	return (
 		<View className="flex-1">
-			<Map easterEggEnabled={easterEggEnabled} busListToShow={busListToShow} navigation={navigation} forwardRef={ref_map_view as LegacyRef<MapView>} routeDataToShow={routeDataToShow} userCity={userCity} />
+			<Stack.Screen
+				options={{
+					headerShown:true,
+					title: headerTitle || `Route ${force_route_code} - Map View`,
+					headerTitleStyle: {
+						color: theme.secondary,
+						fontWeight: "900",
+					},
+				}}
+			/>
+			<Map easterEggEnabled={easterEggEnabled} busListToShow={busListToShow} forwardRef={ref_map_view as LegacyRef<MapView>} routeDataToShow={routeDataToShow} userCity={userCity} />
 			<FollowingBus style={{ position: "absolute", marginTop: 2 * 4 }} bus={followingBus} onStopFollowing={() => setFollowingBus(undefined)} />
 
 			<BottomSheet
@@ -178,7 +169,7 @@ export default function MapData(props: {
 					{busListToShow.map((bus: BusData) => (
 						<BusContainer
 							onLongPress={() => {
-								Clipboard.setString(`https://deep.fkart.project.phasenull.dev/route_details/${routeDataToShow.displayRouteCode}/${direction}/${bus.busId}`)
+								Clipboard.setString(`fkart://map_details?force_route_code=${routeDataToShow.displayRouteCode}&force_direction=${direction}&force_bus_id=${bus.busId}`)
 								ToastAndroid.show("Link kopyalandı!", ToastAndroid.SHORT)
 								Vibration.vibrate(100)
 							}}
@@ -194,7 +185,6 @@ export default function MapData(props: {
 								ref_bottom_sheet.current?.snapToIndex(1)
 							}}
 							route_data={routeDataToShow}
-							navigation={navigation}
 							bus={bus}
 							key={`BusContainer-${bus.plateNumber}`}
 						/>

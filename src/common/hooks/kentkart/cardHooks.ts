@@ -85,7 +85,7 @@ async function FavoriteHelper(args: { card_or_fav_id: string; name?: string; typ
 export function useAddFavoriteCard() {
 	const credentials = useKentKartAuthStore((state) => state.credentials)
 	return useMutation({
-		mutationKey: ["PostFavoriteCard"],
+		mutationKey: ["PostFavoriteCard",credentials.access_token],
 		mutationFn: async (args:{alias_no: string,name:string}) => {
 			return await FavoriteHelper({
 				card_or_fav_id: args.alias_no,

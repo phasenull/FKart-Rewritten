@@ -9,7 +9,7 @@ import { alarms } from "common/schema"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { TouchableOpacity } from "react-native"
 import { eq, sql } from "drizzle-orm"
-import { drizzleDB } from "app"
+import { drizzleDB } from "app/_layout"
 
 function AlarmView(props: { alarm: typeof alarms }) {
 	return (

@@ -10,20 +10,20 @@ import { BusCallout } from "../callouts/BusCallout"
 import { useContext, useEffect } from "react"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import { transit_realtime } from "gtfs-realtime-bindings"
+import { router } from "expo-router"
 export function BusMarker(props: {
 	is_rt?: boolean
 	rt_raw?: transit_realtime.FeedEntity
 	bus: BusData
 	coordinate: LatLng
 	easterEggEnabled?: boolean
-	navigation: NativeStackNavigationProp<any>
 	route_data?: RouteData
 }) {
-	const { route_data, bus, coordinate, easterEggEnabled, navigation } = props
+	const { route_data, bus, coordinate, easterEggEnabled } = props
 	const schedule_list = route_data?.timeTableList
 	const scheduled_data = schedule_list?.find((e) => e.tripId === bus.tripId)
 	const { theme } = useContext(ThemeContext)
-	if (!bus || !coordinate || !navigation || !route_data) {
+	if (!bus || !coordinate || !route_data) {
 		Logger.warning("BusMarker.tsx", "BusMarker", "Bus, coordinate or navigation is null")
 		return
 	}
@@ -41,7 +41,7 @@ export function BusMarker(props: {
 				coordinate={coordinate}
 				title={bus.plateNumber}
 				onCalloutPress={() => {
-					navigation.navigate("bus_details", { bus: bus })
+					router.navigate("bus_details")
 				}}
 				// className="items-center justify-center overflow-visible"
 			>
@@ -80,7 +80,7 @@ export function BusMarker(props: {
 			// calloutOffset={{x:1,y:1}}
 			calloutAnchor={{ x: 0.5, y: 0.5 }}
 			onCalloutPress={() => {
-				navigation.navigate("bus_details", { bus: bus })
+				router.navigate("bus_details")
 			}}
 		>
 			<Image

@@ -8,11 +8,11 @@ import Logger from "common/Logger"
 import { useContext } from "react"
 import { ThemeContext } from "common/contexts/ThemeContext"
 
-export default function StopMarker(props: { busStop: BasicStopInformation; coordinate: LatLng; easterEggEnabled?: boolean; navigation: NativeStackNavigationProp<any> }) {
-	const { busStop, coordinate, easterEggEnabled, navigation } = props
+export default function StopMarker(props: { busStop: BasicStopInformation; coordinate: LatLng; easterEggEnabled?: boolean }) {
+	const { busStop, coordinate, easterEggEnabled } = props
 	const {theme} = useContext(ThemeContext)
 
-	if (!busStop || !coordinate || !navigation) {
+	if (!busStop || !coordinate) {
 		Logger.warning("StopMarker.tsx", "StopMarker", "BusStop, coordinate or navigation is null")
 		return 
 	}

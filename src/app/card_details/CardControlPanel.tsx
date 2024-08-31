@@ -11,36 +11,26 @@ import Logger from "common/Logger"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
+import { router, useLocalSearchParams } from "expo-router"
 export default function CardControlPanel(props: {
 	card: BasicCardData<"Basic" | "QR">
-	favorite_data: FavoritesV3Card
 	is_virtual?: boolean
-	navigation: NativeStackNavigationProp<any>
 	makeRefresh: () => void
 }) {
 	const { theme } = useContext(ThemeContext)
 	const [loading, setLoading] = useState(false)
-	const favorite_data = props?.favorite_data
-	const [card, setCard] = useState(props?.card)
 	const is_virtual = props?.is_virtual
-	const { navigation } = props
-	const [favorite, setFavorite] = useState(favorite_data ? true : false)
-	const [card_description, setCardDescription] = useState<string | undefined>(undefined)
+	const {description, alias} = useLocalSearchParams() as any
+	const [favorite, setFavorite] = useState(!!description)
 	const [show_rename_modal, setShowRenameModal] = useState(false)
 	const user = useKentKartAuthStore((state) => state.user)
 	const { data: dataAdd, isLoading: isLoadingAdd, mutateAsync: mutateAdd } = useAddFavoriteCard()
 	const { data: dataRemove, isLoading: isLoadingRemove, mutate: mutateRemove } = useRemoveFavoriteCard()
 
-	useEffect(() => {
-		navigation.setOptions({
-			headerTitle: favorite_data.description || (is_virtual && "QR Kart") || "unnamed card",
-		})
-	}, [])
-
-	if (!card || !favorite_data) {
+	if (!alias) {
 		return (
 			<View className="flex-1 items-center justify-center">
-				<Text style={{ color: theme.error, fontSize: 24 }}>No card data found</Text>
+				<Text style={{ color: theme.error, fontSize: 24 }}>Card no is not valid!</Text>
 			</View>
 		)
 	}
@@ -51,18 +41,21 @@ export default function CardControlPanel(props: {
 				onDismiss={() => {
 					setShowRenameModal(false)
 				}}
-				defaultValue={card_description || favorite_data.description}
+				defaultValue={description}
 				onSave={(text) => {
 					setShowRenameModal(false)
 					setFavorite(true)
-					if (!text || ["", undefined, card_description].includes(text)) {
+					if (!text || ["", undefined, description].includes(text)) {
+						console.log("abort card rename")
 						return
 					}
-					mutateAdd({ alias_no: card.aliasNo, name: text }).then((e) => {
-						navigation.setOptions({
-							headerTitle: text || (is_virtual && "QR Kart") || "unnamed card",
+					console.log("attempt to change card name to",alias,text)
+					mutateAdd({ alias_no: alias, name: text }).then((e) => {
+						console.log("rename result",e?.data)
+						router.setParams({
+							description: text || (is_virtual && "QR Kart") || "unnamed card",
 						})
-					})
+					}).catch((e)=>Logger.warning("CardControlPanel.tsx/mutateAdd",e))
 				}}
 			/>
 			<Text style={{ color: theme.primaryDark, fontSize: 24, fontWeight: "600" }}>Quick Actions</Text>
@@ -118,7 +111,7 @@ export default function CardControlPanel(props: {
 					disabled={!user}
 					onPress={() => {
 						if (favorite) {
-							mutateRemove({ alias_no: card.aliasNo })
+							mutateRemove({ alias_no: alias })
 						} else {
 							setShowRenameModal(true)
 						}

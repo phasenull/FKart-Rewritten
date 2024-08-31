@@ -156,7 +156,7 @@ export function useGetRouteDetails(args: {
 			// request.then((e)=>{console.log(e.data.pathList[0]?.busList[0])})
 			return request
 		},
-		{ refetchInterval: interval }
+		{ refetchInterval: interval,staleTime:3*1000 }
 	)
 }
 export function useSetCardType() {

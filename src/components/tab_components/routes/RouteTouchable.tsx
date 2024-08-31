@@ -4,10 +4,10 @@ import { Text, TouchableOpacity, View } from "react-native"
 import { useContext, useEffect, useMemo } from "react"
 import Divider from "components/reusables/Divider"
 import { ThemeContext } from "common/contexts/ThemeContext"
+import { router } from "expo-router"
 
-export default function RouteTouchable(props: { navigation: NativeStackNavigationProp<any>;  item: BasicRouteInformation }) {
+export default function RouteTouchable(props: { item: BasicRouteInformation }) {
 	const { item } = props
-	const { navigation } = props
 
 	const { theme } = useContext(ThemeContext)
 
@@ -15,7 +15,7 @@ export default function RouteTouchable(props: { navigation: NativeStackNavigatio
 		return (
 			<TouchableOpacity
 				onPress={() => {
-					navigation.push("route_details", { data_route: item })
+					router.push(`route_details/${item.displayRouteCode}?headerTitle=${item.name}`)
 				}}
 				className="py-1 flex-row pl-1"
 			>

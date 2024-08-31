@@ -10,7 +10,7 @@ import { IIPageAnnouncement } from "./page_announcement"
 import CityValidator from "components/validators/CityValidator"
 import CitySelector from "../city_selector/CitySelector"
 import { useGetAnnouncements } from "common/hooks/kentkart/nonAuthHooks"
-import RootScreen from "app/RootScreen"
+import RootScreen from "../RootScreen"
 import SplashScreen from "../SplashScreen"
 export function InitialInfo(props: { last_check: number; navigation: NativeStackNavigationProp<any> }) {
 	const { data, isLoading } = useGetAnnouncements()

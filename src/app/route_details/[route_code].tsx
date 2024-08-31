@@ -13,35 +13,19 @@ import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
 import ErrorPage from "../ErrorPage"
 import CardJSONData from "../card_details/CardJSONData"
+import { router, Stack, useLocalSearchParams } from "expo-router"
 
-export default function RouteDetails(props: {
-	route: {
-		params?: {
-			data_route?: BasicRouteInformation
-			fetch_from_id?: string
-			direction?: string
-			bus_id?: string
-		}
-		path?: string
-	}
-	navigation: NativeStackNavigationProp<any>
-}) {
-	const { navigation, route } = props
-
-	const [direction, setDirection] = useState(parseInt(route?.params?.direction || "0") || 0)
-	const [data_route, setDataRoute] = useState<RouteData | undefined>(route?.params?.data_route as any as RouteData)
-	const id_to_fetch = data_route?.displayRouteCode || props.route.params?.fetch_from_id
-	if (!id_to_fetch) {
-		return (
-			<View>
-				<Text>Invalid route id</Text>
-			</View>
-		)
-	}
+export default function RouteDetails() {
+	const params = useLocalSearchParams()
+	const force_direction = params.force_direction as string
+	const route_code = params.route_code as string
+	const headerTitle = params.headerTitle as string
+	const bus_id = params.force_bus_id as string
+	const [direction, setDirection] = useState(parseInt(force_direction || "0") || 0)
 	const { theme } = useContext(ThemeContext)
 	const user = useKentKartAuthStore((state) => state.user)
-	const { data, error, isLoading, refetch, isRefetching } = useGetRouteDetails({
-		route_code: id_to_fetch,
+	const { data, error, isLoading, refetch, isRefetching,isError } = useGetRouteDetails({
+		route_code: route_code,
 		direction: direction,
 		user: user as IKentKartUser,
 		interval: 60_000,
@@ -51,34 +35,6 @@ export default function RouteDetails(props: {
 			timeTableList: true,
 		},
 	})
-	useEffect(() => {
-		if (data?.data?.result?.code !== 0) {
-			return
-		}
-		const response_data = data?.data?.pathList[0]
-		if (!response_data) {
-			return
-		}
-		setDataRoute(response_data)
-		if (!navigation) {
-			return
-		}
-		navigation.setOptions({
-			headerTitle: `${id_to_fetch} - ${response_data.headSign}`,
-		})
-		const bus_id = props.route.params?.bus_id
-		if (!bus_id) return
-		const bus = response_data.busList?.find((bus: BusData) => bus.busId === bus_id)
-		if (!bus) {
-			alert("Bus not found (is it still on road?)")
-			navigation.setParams({ bus_id: undefined })
-			return
-		}
-		navigation.navigate("map_data", {
-			initial_bus: bus,
-			route_data: response_data,
-		})
-	}, [data])
 	if (isLoading) {
 		return <CustomLoadingIndicator />
 	}
@@ -94,21 +50,26 @@ export default function RouteDetails(props: {
 		)
 	}
 
-	if (!data?.data || !data_route) {
+	const route_data = data?.data?.pathList?.at(0)
+	if (error||isError || (!route_data)) {
 		return (
 			<ErrorPage
 				error={{
 					title: "Nothing to see here!",
-					description: "Server did not respond any valid data",
+					description: "Tap retry to go back",
 				}}
-				retry={refetch}
+				retry={()=>setDirection((old)=>1-old)}
 			/>
 		)
 	}
 	return (
 		<ScrollView refreshControl={<RefreshControl refreshing={isLoading || isRefetching} onRefresh={refetch} />}>
+			<Stack.Screen options={{
+				headerTitle:`${route_data.displayRouteCode} - ${route_data.headSign}`||headerTitle,
+				headerShown:true
+			}} />
 			<Text>
-				Route Details {data_route.displayRouteCode} {direction}
+				Route Details {route_data?.displayRouteCode} {direction}
 			</Text>
 			<Switch
 				value={direction ? true : false}
@@ -124,24 +85,21 @@ export default function RouteDetails(props: {
 					columnGap: 20,
 				}}
 			>
-				{data_route?.busList?.map((bus: BusData) => (
-					<BusContainer route_data={data_route} navigation={navigation} bus={bus} key={`BusContainer-${bus.plateNumber}`} />
+				{route_data?.busList?.map((bus: BusData) => (
+					<BusContainer route_data={route_data} bus={bus} key={`BusContainer-${bus.plateNumber}`} />
 				))}
 			</ScrollView>
 			<View className="mt-5">
 				<TouchableOpacity
 					onPress={() =>
-						navigation.navigate("map_data", {
-							route_data: data?.data?.pathList[0],
-							bus_list: data_route.busList,
-						})
+						router.navigate(`/map_details?force_route_code=${route_code}`)
 					}
 					style={{ alignSelf: "center", elevation: 2, backgroundColor: theme.primary, borderRadius: 16, paddingVertical: 2 * 4, paddingHorizontal: 4 * 4 }}
 				>
 					<Text>Open Map View</Text>
 				</TouchableOpacity>
 			</View>
-			<CardJSONData card={data_route} />
+			<CardJSONData card={route_data} />
 		</ScrollView>
 	)
 }

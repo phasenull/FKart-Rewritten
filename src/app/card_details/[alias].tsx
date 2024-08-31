@@ -20,39 +20,28 @@ import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
 import { useGetCardType, useSetCardType } from "common/hooks/kentkart/nonAuthHooks"
 import ErrorPage from "../ErrorPage"
 import SecondaryText from "components/reusables/SecondaryText"
-export default function CardDetails(props: {
-	route: {
-		params: {
-			card: BasicCardData<"Basic" | "QR">
-			favorite_data: FavoritesV3Card
-			is_virtual?: boolean
-		}
-	}
-	navigation: NativeStackNavigationProp<any>
-}) {
+import { router, Stack, useLocalSearchParams } from "expo-router"
+export default function CardDetails(props: {}) {
 	const { theme } = useContext(ThemeContext)
-	const favorite_data = props?.route.params?.favorite_data
-	const card = props?.route.params?.card
-	const is_virtual = props?.route.params?.is_virtual
+	const { alias, description } = useLocalSearchParams() as any
 	const {
 		data: transaction_data,
 		refetch: refetchTransactions,
 		isLoading: isLoadingTransactions,
 	} = useGetTransactions({
-		card_alias: card.aliasNo,
+		card_alias: alias,
 		term: { month: new Date().getMonth(), year: new Date().getFullYear() },
 	})
-	const { data: balanceData, refetch: refetchBalance, isLoading: isLoadingBalance } = useGetCardData({ card_alias: card.aliasNo })
+	const { data: balanceData, refetch: refetchBalance, isLoading: isLoadingBalance } = useGetCardData({ card_alias: alias })
 	const {
 		data: syncData,
 		refetch: refetchABT,
 		isLoading: isLoadingABT,
 	} = useGetABTSecret({
-		card_alias: card?.aliasNo,
+		card_alias: alias,
 	})
-	const { data: card_type, refetch: refetchCardType } = useGetCardType(favorite_data.aliasNo)
+	const { data: card_type, refetch: refetchCardType } = useGetCardType(alias)
 	const { mutateAsync: mutateSetCardType } = useSetCardType()
-	const { navigation } = props
 	const [showEditCardTypeModal, setShowEditCardTypeModal] = useState(false)
 	function refetchAll() {
 		refetchABT()
@@ -64,7 +53,7 @@ export default function CardDetails(props: {
 		return <ErrorPage retry={refetchAll} error={{ title: "Error while fetching card data", description: `Server did not return a valid card data` }} />
 	}
 	const isOverallLoading = isLoadingABT || isLoadingBalance || isLoadingTransactions
-	if (!card || !favorite_data || !card_type) {
+	if (!(alias || balanceData || card_type)) {
 		return (
 			<View className="flex-1 items-center justify-center">
 				<Text style={{ color: theme.error, fontSize: 24 }}>No card data found</Text>
@@ -78,20 +67,29 @@ export default function CardDetails(props: {
 			className="flex-col"
 			contentContainerStyle={{ alignItems: "center" }}
 		>
+			<Stack.Screen
+				options={{
+					title: description || `Kart: ${alias}`,
+					headerTitleStyle:{color:theme.text.white},
+					headerTintColor:theme.text.white,
+					headerTransparent: true,
+					headerShown:true
+				}}
+			/>
 			<SelectCardTypeModal
 				visible={showEditCardTypeModal}
 				onDismiss={() => setShowEditCardTypeModal(false)}
-				defaultValue={card_type}
+				defaultValue={card_type as CardTypes}
 				onSelect={(value) => {
 					setShowEditCardTypeModal(false)
-					mutateSetCardType({ alias_no: card.aliasNo, card_type: value }).then(() => refetchCardType())
+					mutateSetCardType({ alias_no: alias, card_type: value }).then(() => refetchCardType())
 				}}
 			/>
-			<CardDetailsHeader card={balanceData?.data.cardlist[0]} card_type={card_type} setShowEditCardTypeModal={setShowEditCardTypeModal} />
-			<CardControlPanel makeRefresh={() => {}} card={card} favorite_data={favorite_data} navigation={navigation} is_virtual={is_virtual} />
+			<CardDetailsHeader card={balanceData?.data.cardlist[0]} card_type={card_type as CardTypes} setShowEditCardTypeModal={setShowEditCardTypeModal} />
+			<CardControlPanel makeRefresh={() => {}} card={alias} is_virtual={alias.startsWith("33")} />
 
 			{/* <VirtualCardQRCodePanel card={card} token={{aliasNo:"hello","token":"hi","expireDate":""}} /> */}
-			<CardJSONData card={{ ...card, ...balanceData?.data.cardlist[0] }} favorite_data={favorite_data} />
+			<CardJSONData card={{ ...balanceData?.data.cardlist[0] }} favorite_data={alias} />
 			<CardJSONData
 				card={transaction_data?.data?.transactionList?.map(
 					(e) =>

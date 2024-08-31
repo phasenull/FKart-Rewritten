@@ -14,11 +14,10 @@ export default function Map(props: {
 	userCity: ICityInformation
 	routeDataToShow: RouteData
 	busListToShow: BusData[]
-	navigation: NativeStackNavigationProp<any>
 	easterEggEnabled?: boolean
 }) {
 	const {theme} = useContext(ThemeContext)
-	const { forwardRef, routeDataToShow, userCity, easterEggEnabled, busListToShow, navigation } = props
+	const { forwardRef, routeDataToShow, userCity, easterEggEnabled, busListToShow } = props
 	return useMemo(() => {
 		// Logger.info("Map.tsx", "Map", "Rendering Map")
 		return (
@@ -48,12 +47,11 @@ export default function Map(props: {
 						key={index.toString()}
 						easterEggEnabled={easterEggEnabled}
 						coordinate={{ latitude: parseFloat(busStop.lat), longitude: parseFloat(busStop.lng) }}
-						navigation={navigation}
 					/>
 				))}
 
 				{busListToShow.map((bus, index) => (
-					<BusMarker route_data={routeDataToShow} bus={bus} key={index.toString()} easterEggEnabled={easterEggEnabled} coordinate={{ latitude: parseFloat(bus.lat), longitude: parseFloat(bus.lng) }} navigation={navigation} />
+					<BusMarker route_data={routeDataToShow} bus={bus} key={index.toString()} easterEggEnabled={easterEggEnabled} coordinate={{ latitude: parseFloat(bus.lat), longitude: parseFloat(bus.lng) }}  />
 				))}
 			</MapView>
 		)

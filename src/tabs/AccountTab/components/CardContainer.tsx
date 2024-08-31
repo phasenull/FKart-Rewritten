@@ -18,22 +18,22 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { useQuery } from "react-query"
 import { useGetCardType } from "common/hooks/kentkart/nonAuthHooks"
 import CardImages from "common/enums/CardImages"
-import ErrorPage from "app/(root)/ErrorPage"
+import ErrorPage from "app/ErrorPage"
+import { router } from "expo-router"
 interface Props {
 	favorite_data: FavoritesV3Card
 	index: number
-	navigation: any
 	style?: ViewStyle
 }
 export default function CardContainer(props: Props) {
-	const { favorite_data, navigation } = props
-	const { data:freshData, isLoading, isRefetching, isError, error } = useGetCardData({ card_alias: favorite_data.aliasNo })
+	const { favorite_data } = props
+	const { data: freshData, isLoading, isRefetching, isError, error } = useGetCardData({ card_alias: favorite_data.aliasNo })
 	const { mutateAsync: mutateRemove } = useRemoveFavoriteCard()
 	const { refetch: refetchAccountFavorites } = useGetFavorites()
-	const {data:dataCardType,isLoading:cardImageisLoading} = useGetCardType(favorite_data?.aliasNo)
+	const { data: dataCardType, isLoading: cardImageisLoading } = useGetCardType(favorite_data?.aliasNo)
 	const { theme } = useContext(ThemeContext)
 	if (isError) {
-		console.warn("CardContainer error",(error as any)?.message)
+		console.warn("CardContainer error", (error as any)?.message)
 		return (
 			<View>
 				<Text>{(error as any)?.message}</Text>
@@ -70,7 +70,7 @@ export default function CardContainer(props: Props) {
 						}}
 						onPress={() => {
 							if (favorite_data.aliasNo) {
-								mutateRemove({alias_no:favorite_data.aliasNo}).then(()=>refetchAccountFavorites())
+								mutateRemove({ alias_no: favorite_data.aliasNo }).then(() => refetchAccountFavorites())
 							}
 						}}
 					>
@@ -87,11 +87,7 @@ export default function CardContainer(props: Props) {
 						shadowOffset: { height: 4, width: 4 },
 					}}
 					onPress={() => {
-						navigation.push("card_details", {
-							favorite_data: favorite_data,
-							card: favorite_data,
-							is_virtual: favorite_data?.virtualCard === "1" || favorite_data.cardType === "33",
-						})
+						router.push(`/card_details/${favorite_data.aliasNo}?description=${favorite_data.description}`)
 					}}
 					onLongPress={() => {
 						Clipboard.setString(favorite_data.aliasNo)
@@ -101,7 +97,7 @@ export default function CardContainer(props: Props) {
 					}}
 				>
 					<View className="w-28 h-36 top-1 -ml-12 mr-1 items-center justify-center">
-						{(!cardImageisLoading && dataCardType) ? (
+						{!cardImageisLoading && dataCardType ? (
 							<Animated.Image
 								className="h-64 rotate-90"
 								style={{ width: 4 * 40, objectFit: "contain" }}
@@ -139,14 +135,15 @@ export default function CardContainer(props: Props) {
 									<Text adjustsFontSizeToFit={true} style={{ color: theme.secondary, fontSize: 34, textAlignVertical: "bottom" }} className="opacity-50 font-bold text-left">
 										{card_data.balance || "key_error (balance)"} TL
 									</Text>
-									{(isLoading || isRefetching) ? <CustomLoadingIndicator color={theme.secondary} style={{ marginLeft: 10 }} size={15} /> : null}
+									{isLoading || isRefetching ? <CustomLoadingIndicator color={theme.secondary} style={{ marginLeft: 10 }} size={15} /> : null}
 								</View>
 							) : (
 								<CustomLoadingIndicator color={theme.secondary} size={20} />
 							)}
 						</View>
 						<View className=" items-end flex-1 flex-col space-y-2">
-							{card_data?.ticketList?.sort((a, b) => {
+							{card_data?.ticketList
+								?.sort((a, b) => {
 									let time_a
 									let time_b
 									try {
@@ -156,10 +153,12 @@ export default function CardContainer(props: Props) {
 										time_a = 0
 										time_b = 0
 									}
-									return (time_a-time_b) || 0
+									return time_a - time_b || 0
 								})
 								.slice(0, 5)
-								.map((ticket) => <RemainingTicketContainer key={ticket.ticketNo} ticket={ticket}/>)}
+								.map((ticket) => (
+									<RemainingTicketContainer key={ticket.ticketNo} ticket={ticket} />
+								))}
 						</View>
 					</View>
 				</TouchableOpacity>
@@ -167,14 +166,14 @@ export default function CardContainer(props: Props) {
 		</Animated.View>
 	)
 }
-function RemainingTicketContainer(props:{ticket:ITicket}) {
-	const {ticket} = props
-	const {theme} = useContext(ThemeContext)
+function RemainingTicketContainer(props: { ticket: ITicket }) {
+	const { ticket } = props
+	const { theme } = useContext(ThemeContext)
 	let expiryDate
 	try {
 		expiryDate = new KkDate(ticket.expiryDate).getTime() as number
 	} catch (e) {
-		console.warn("Error while parsing ticket expiry date:",ticket.expiryDate,e)
+		console.warn("Error while parsing ticket expiry date:", ticket.expiryDate, e)
 	}
 	if (!expiryDate) return
 	const remainingText = expiryDate - Date.now() < 7 * 24 * 60 * 60 * 1000 ? deltaTime(expiryDate - Date.now(), true) : undefined
