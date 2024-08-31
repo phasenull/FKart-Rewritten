@@ -2,7 +2,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { StatusBar, Text, TouchableOpacity, View } from "react-native"
 import { useContext } from "react"
 import KentKartAuthValidator from "components/validators/KentKartAuthValidator"
-import CardJSONData from "screens/card_details/CardJSONData"
+import CardJSONData from "app/(root)/card_details/CardJSONData"
 import AuthWall from "components/walls/AuthWall"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
@@ -18,6 +18,7 @@ export default function HomeTab(props: { route: any; navigation: NativeStackNavi
 	const { theme } = useContext(ThemeContext)
 	const {data,isLoading,refetch,isRefetching} = useGetProfileData()
 	const credentials = useKentKartAuthStore((state)=>state.credentials)
+	const {logout} = useKentKartAuthStore()
 	if (isLoading) {
 		return <CustomLoadingIndicator/>
 	}
@@ -27,7 +28,7 @@ export default function HomeTab(props: { route: any; navigation: NativeStackNavi
 				<Text className="mx-auto font-bold opacity-50 text-[24px]">Hello, {`${data?.data.accountInfo?.name} ${data?.data.accountInfo?.surname}`}</Text>
 				<NavigationContainer navigation={props.navigation} />
 				<View className="flex flex-row space-x-4">
-					<SimplyButton text="logout" disabled size="medium" />
+					<SimplyButton text="logout" size="medium" type="secondary" color={theme.error} onPress={logout} />
 
 					<SimplyButton
 						onPress={() => {
@@ -36,7 +37,7 @@ export default function HomeTab(props: { route: any; navigation: NativeStackNavi
 						type="primary"
 						size="medium"
 						text="R8R"
-					></SimplyButton>
+					/>
 				</View>
 				<CardJSONData favorite_data={{...data?.data.accountInfo,phone:`${data?.data.accountInfo?.phone.slice(0,3)}${"*".repeat((data?.data.accountInfo?.phone.length||10)-3)}`}} card={{ access_token: credentials.access_token?.slice(0, 10) + "...", refresh_token: credentials.refresh_token?.slice(0, 4) + "..." }} />
 			</ScrollView>

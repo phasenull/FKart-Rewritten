@@ -11,8 +11,8 @@ import ApplicationConfig from "common/ApplicationConfig"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
-import ErrorPage from "screens/ErrorPage"
-import CardJSONData from "screens/card_details/CardJSONData"
+import ErrorPage from "../ErrorPage"
+import CardJSONData from "../card_details/CardJSONData"
 
 export default function RouteDetails(props: {
 	route: {

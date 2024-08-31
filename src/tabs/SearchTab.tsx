@@ -24,7 +24,7 @@ import SecondaryText from "components/reusables/SecondaryText"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
-import ErrorPage from "screens/ErrorPage"
+import ErrorPage from "app/(root)/ErrorPage"
 export default function SearchTab(props: { navigation: NativeStackNavigationProp<any> }) {
 	const user = useKentKartAuthStore((state) => state.user)
 	const { data, isLoading, isError, error, refetch, isRefetching } = useGetRouteList()

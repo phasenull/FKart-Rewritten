@@ -5,8 +5,9 @@ import React, { LegacyRef, useEffect, useMemo, useRef } from "react"
 import { View } from "react-native"
 import { PROVIDER_GOOGLE } from "react-native-maps"
 import MapView from "react-native-map-clustering"
-import ErrorPage from "screens/ErrorPage"
+import ErrorPage from "../ErrorPage"
 import { busMarkerFromBus } from "./ClusterMarker"
+import OverlayRoot from "./overlay/OverlayRoot"
 
 export default function R8R(props: { navigation: NativeStackNavigationProp<any> }) {
 	const map = useRef<MapView>()
@@ -27,17 +28,7 @@ export default function R8R(props: { navigation: NativeStackNavigationProp<any> 
 	}
 	return (
 		<React.Fragment>
-			<View className="absolute bottom-4 flex flex-row self-center">
-				<SimplyButton
-					text="refetch"
-					size="medium"
-					style={{
-						zIndex: 4,
-					}}
-					onPress={() => refetch()}
-					disabled={isRefetching || isLoading}
-				/>
-			</View>
+			<OverlayRoot isRefetchLoading={isLoading||isRefetching} refetchFn={refetch} navigation={props.navigation}/>
 
 			<MapView
 				// minZoom={12}

@@ -18,7 +18,8 @@ import VirtualCardQRCodePanel from "./VirtualCardQRCodePanel"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
 import { useGetCardType, useSetCardType } from "common/hooks/kentkart/nonAuthHooks"
-import ErrorPage from "screens/ErrorPage"
+import ErrorPage from "../ErrorPage"
+import SecondaryText from "components/reusables/SecondaryText"
 export default function CardDetails(props: {
 	route: {
 		params: {
@@ -33,16 +34,24 @@ export default function CardDetails(props: {
 	const favorite_data = props?.route.params?.favorite_data
 	const card = props?.route.params?.card
 	const is_virtual = props?.route.params?.is_virtual
-	const { data: transaction_data,refetch:refetchTransactions,isLoading:isLoadingTransactions } = useGetTransactions({
+	const {
+		data: transaction_data,
+		refetch: refetchTransactions,
+		isLoading: isLoadingTransactions,
+	} = useGetTransactions({
 		card_alias: card.aliasNo,
 		term: { month: new Date().getMonth(), year: new Date().getFullYear() },
 	})
-	const {data:balanceData,refetch:refetchBalance,isLoading:isLoadingBalance} = useGetCardData({card_alias:card.aliasNo})
-	const { data: syncData,refetch:refetchABT,isLoading:isLoadingABT } = useGetABTSecret({
+	const { data: balanceData, refetch: refetchBalance, isLoading: isLoadingBalance } = useGetCardData({ card_alias: card.aliasNo })
+	const {
+		data: syncData,
+		refetch: refetchABT,
+		isLoading: isLoadingABT,
+	} = useGetABTSecret({
 		card_alias: card?.aliasNo,
 	})
-	const {data:card_type,refetch:refetchCardType} = useGetCardType(favorite_data.aliasNo)
-	const {mutateAsync:mutateSetCardType} = useSetCardType()
+	const { data: card_type, refetch: refetchCardType } = useGetCardType(favorite_data.aliasNo)
+	const { mutateAsync: mutateSetCardType } = useSetCardType()
 	const { navigation } = props
 	const [showEditCardTypeModal, setShowEditCardTypeModal] = useState(false)
 	function refetchAll() {
@@ -52,9 +61,9 @@ export default function CardDetails(props: {
 		refetchCardType()
 	}
 	if (!balanceData || !balanceData?.data || !balanceData?.data.cardlist || !balanceData?.data.cardlist[0]) {
-		return <ErrorPage retry={refetchAll} error={{title:"Error while fetching card data",description:`Server did not return a valid card data`}} />
+		return <ErrorPage retry={refetchAll} error={{ title: "Error while fetching card data", description: `Server did not return a valid card data` }} />
 	}
-	const isOverallLoading = isLoadingABT||isLoadingBalance||isLoadingTransactions
+	const isOverallLoading = isLoadingABT || isLoadingBalance || isLoadingTransactions
 	if (!card || !favorite_data || !card_type) {
 		return (
 			<View className="flex-1 items-center justify-center">
@@ -75,14 +84,14 @@ export default function CardDetails(props: {
 				defaultValue={card_type}
 				onSelect={(value) => {
 					setShowEditCardTypeModal(false)
-					mutateSetCardType({alias_no:card.aliasNo,card_type:value}).then(()=>refetchCardType())
+					mutateSetCardType({ alias_no: card.aliasNo, card_type: value }).then(() => refetchCardType())
 				}}
 			/>
 			<CardDetailsHeader card={balanceData?.data.cardlist[0]} card_type={card_type} setShowEditCardTypeModal={setShowEditCardTypeModal} />
 			<CardControlPanel makeRefresh={() => {}} card={card} favorite_data={favorite_data} navigation={navigation} is_virtual={is_virtual} />
 
 			{/* <VirtualCardQRCodePanel card={card} token={{aliasNo:"hello","token":"hi","expireDate":""}} /> */}
-			<CardJSONData card={{...card,...balanceData?.data.cardlist[0]}} favorite_data={favorite_data} />
+			<CardJSONData card={{ ...card, ...balanceData?.data.cardlist[0] }} favorite_data={favorite_data} />
 			<CardJSONData
 				card={transaction_data?.data?.transactionList?.map(
 					(e) =>

@@ -9,7 +9,7 @@ import SecondaryText from "components/reusables/SecondaryText"
 import { useContext, useState } from "react"
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native"
 import Animated, { BounceIn, BounceInRight, FadeIn, FadeInRight, FadeOut, FadeOutRight, LightSpeedInRight, LightSpeedOutRight, withSpring } from "react-native-reanimated"
-import ErrorPage from "screens/ErrorPage"
+import ErrorPage from "../ErrorPage"
 const payment_images = {
 	creditCard: "https://cdn-icons-png.flaticon.com/512/4547/4547723.png",
 	bkmExpress: "https://logowik.com/content/uploads/images/620_bkmekspress.jpg",

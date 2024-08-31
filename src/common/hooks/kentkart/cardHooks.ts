@@ -9,13 +9,13 @@ import CardTransaction from "common/interfaces/KentKart/CardTransaction"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 
 export function useGetCardData(args: { card_alias: string }) {
-	const user = useKentKartAuthStore((state) => state.user) as IKentKartUser
+	const credentials = useKentKartAuthStore((state) => state.credentials)
 	return useQuery(
 		["getCardData", args.card_alias],
 		async (): Promise<AxiosResponse<BaseKentKartResponse & { cardlist: BasicCardData<any>[] }>> => {
 			const { card_alias } = args
 			Logger.info(`REQUEST useGetCardData ${card_alias}`)
-			const url = `${ApplicationConfig.endpoints.service}/rl1/api/card/balance?region=${ApplicationConfig.region}&lang=tr&authType=4&token=${user?.access_token}&alias=${card_alias}`
+			const url = `${ApplicationConfig.endpoints.service}/rl1/api/card/balance?region=${ApplicationConfig.region}&lang=tr&authType=4&token=${credentials.access_token}&alias=${card_alias}`
 			return ApplicationConfig.makeKentKartRequest(url)
 		},
 		{ staleTime: 30*1000, refetchInterval: 3*60*1000, refetchIntervalInBackground: false }
@@ -65,8 +65,8 @@ export function useGetTransactions(args: { card_alias: string; term: { month: nu
 	)
 }
 
-async function FavoriteHelper(args: { card_or_fav_id: string; name?: string; type: "add" | "remove"; user: IKentKartUser }) {
-	const { card_or_fav_id, name, type, user } = args
+async function FavoriteHelper(args: { card_or_fav_id: string; name?: string; type: "add" | "remove"; credentials?: {access_token?:string} }) {
+	const { card_or_fav_id, name, type, credentials } = args
 	if (!card_or_fav_id) {
 		return
 	}
@@ -74,7 +74,7 @@ async function FavoriteHelper(args: { card_or_fav_id: string; name?: string; typ
 
 	return await ApplicationConfig.makeKentKartRequest(
 		`${ApplicationConfig.endpoints.service}/rl1/api/v3.0/favorite?region=${ApplicationConfig.region}&authType=4&favorite=${card_or_fav_id}&description=${name || "HATALI AD"}&type=2&token=${
-			user?.access_token
+			credentials?.access_token
 		}`,
 		{
 			method: type === "remove" ? "DELETE" : "POST",
@@ -83,28 +83,28 @@ async function FavoriteHelper(args: { card_or_fav_id: string; name?: string; typ
 }
 
 export function useAddFavoriteCard() {
-	const user = useKentKartAuthStore((state) => state.user) as IKentKartUser
+	const credentials = useKentKartAuthStore((state) => state.credentials)
 	return useMutation({
 		mutationKey: ["PostFavoriteCard"],
 		mutationFn: async (args:{alias_no: string,name:string}) => {
 			return await FavoriteHelper({
 				card_or_fav_id: args.alias_no,
 				type: "add",
-				user: user,
+				credentials: credentials,
 				name: args.name,
 			})
 		},
 	})
 }
 export function useRemoveFavoriteCard() {
-	const user = useKentKartAuthStore((state) => state.user) as IKentKartUser
+	const credentials = useKentKartAuthStore((state) => state.credentials)
 	return useMutation({
 		mutationKey: ["DeleteFavoriteCard"],
 		mutationFn: async (args:{alias_no: string}) => {
 			return await FavoriteHelper({
 				card_or_fav_id: args.alias_no,
 				type: "remove",
-				user: user,
+				credentials: credentials,
 			})
 		},
 	})

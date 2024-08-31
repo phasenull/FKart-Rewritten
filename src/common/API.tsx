@@ -41,18 +41,23 @@ export default abstract class API {
 		if (!one_time_code) return [false, "Access token failed! (one_time_code is empty)"]
 		return [one_time_code]
 	}
-	public static async getAccessToken({ refresh_token }: { refresh_token: string }): Promise<[string] | [false, string]> {
+	public static async getAccessToken(args: { token: string,token_type:"OTP" | "refresh" }): Promise<[{access_token:string,refresh_token?:string}] | [false, string]> {
+		const {token: token_or_code,token_type} = args
+		const isOTP = !(token_type==="refresh")
+		Logger.info("API.ts","getAccessToken via", isOTP ? "OTP" : "refresh token")
+		const data = {
+			loginType: "phone",
+			clientId: "rH7S2",
+			clientSecret: "Om121T12fSv1j66kp9Un5vE9IMkJ3639",
+			code: isOTP ? token_or_code : undefined,
+			refreshToken: (!isOTP) ? token_or_code : undefined,
+			grantType: isOTP ? "authorizationCode" : "refreshToken",
+			redirectUri: "m.kentkart.com",
+		}
 		const request = await ApplicationConfig.makeKentKartRequest(`${ApplicationConfig.endpoints.auth}/rl1/oauth/token`, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
-			data: {
-				loginType: "phone",
-				clientId: "rH7S2", // no idea what this is i hope i dont get hacked (amen)
-				clientSecret: "Om121T12fSv1j66kp9Un5vE9IMkJ3639", // static client secret (Gandalf didnt tell me to keep it secret so i didnt)
-				code: refresh_token,
-				grantType: "authorizationCode",
-				redirectUri: "m.kentkart.com",
-			},
+			data: data,
 		})
 		if (request.status !== 200) {
 			Logger.warning(`Get Token failed! (status code not 200)`)
@@ -62,7 +67,8 @@ export default abstract class API {
 			Logger.warning(`Get Token failed. \n${JSON.stringify(request.data?.result, undefined, 4)}`)
 			return [false, JSON.stringify(request.data?.result, undefined, 4)]
 		}
-		return [request.data.accessToken]
+		console.log("api.r",request.data)
+		return [{access_token:request.data.accessToken,refresh_token:request.data.refreshToken}]
 	}
 	public static async fetchProfile({ access_token, region, auth_type }: { access_token: string; region: string; auth_type: string }): Promise<[IKentKartUser] | [false, string]> {
 		const url = `${ApplicationConfig.endpoints.service}/rl1/api/account?region=${ApplicationConfig.region}&authType=4&token=${access_token}`

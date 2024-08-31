@@ -1,7 +1,7 @@
 import { transit_realtime } from "gtfs-realtime-bindings"
 import { LegacyRef } from "react"
 import MapView from "react-native-maps"
-import createClusters from "screens/r8r/helper/ClusterHelper"
+import createClusters from "./ClusterHelper"
 export default async function getClusteredAsync(
 	data: {
 		feed?: transit_realtime.FeedEntity[]

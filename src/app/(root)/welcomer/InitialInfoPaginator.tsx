@@ -7,7 +7,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { TranslationsContext } from "common/contexts/TranslationsContext";
 import SelectLangModal from "components/reusables/SelectLangModal";
 import { ThemeContext } from "common/contexts/ThemeContext";
-import ErrorPage from "screens/ErrorPage";
+import ErrorPage from "../ErrorPage";
 export function IIPaginator(props: {navigation:NativeStackNavigationProp<any>, initialIndex?: number; onPageChange?: (newIndex: number, previousIndex?: number) => void; children: any }) {
 	// console.log("IIPaginator Update",props?.children?.length)
 	const [page, setPage] = useState(props.initialIndex || 0)

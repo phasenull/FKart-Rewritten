@@ -173,3 +173,8 @@ https://service.kentkart.com/rl1/web/pathInfo?region=004&displayRouteCode=33&res
 https://service.kentkart.com/rl1/api/gtfs -> exists; requires auth; returns 404 with authType 4; returs 113 with authType 3
 https://service.kentkart.com/rl1/api/gtfs/realtime -> realtime vts, returns vehicle.pb file
 https://service.kentkart.com/rl1/gtfs -> requires "rl1 admin" login
+
+
+https://service.kentkart.com/rl1/api/individualWalletFramework/KK/.pdf
+https://service.kentkart.com/rl1/api/plusPrivacyPolicy/KK/.pdf
+https://service.kentkart.com/rl1/api/plusClarificationText/KK/.pdf

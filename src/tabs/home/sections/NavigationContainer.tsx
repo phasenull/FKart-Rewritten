@@ -11,7 +11,7 @@ import { IconProps } from "react-native-vector-icons/Icon"
 function QuickButton(props: { label: string; icon: string,onPress?:()=>void }) {
 	const { theme } = useContext(ThemeContext)
 	return (
-		<TouchableOpacity className="items-center mx-4 w-24 aspect-square">
+		<TouchableOpacity onPress={props.onPress} className="items-center mx-4 w-24 aspect-square">
 			<MaterialCommunityIcons color={theme.primary} size={16 * 4} name={props.icon as any} />
 			<SecondaryText>{props.label}</SecondaryText>
 		</TouchableOpacity>
@@ -22,7 +22,7 @@ export default function NavigationContainer(props: { navigation: NativeStackNavi
 	return (
 		<View className="flex-col mt-12">
 			<View className="flex-row items-center space-x-4">
-				<QuickButton icon="database-edit" label="my data" />
+				<QuickButton icon="alarm" label="alarms" onPress={()=>props.navigation.navigate("alarms")} />
 				<Divider height={60} />
 				<QuickButton icon="badge-account-horizontal" label="editor" />
 				<Divider height={60} />

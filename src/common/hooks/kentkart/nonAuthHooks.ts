@@ -159,20 +159,20 @@ export function useGetRouteDetails(args: {
 		{ refetchInterval: interval }
 	)
 }
-export function useSetCardType(){
+export function useSetCardType() {
 	return useMutation({
-		mutationKey:["setCardType"],
-		mutationFn:async (args:{alias_no:string,card_type:CardTypes}) =>{
-			return await ApplicationConfig.database.set(`card__${args.alias_no}`,args.card_type)
-		}
+		mutationKey: ["setCardType"],
+		mutationFn: async (args: { alias_no: string; card_type: CardTypes }) => {
+			return await ApplicationConfig.database.set(`card__${args.alias_no}`, args.card_type)
+		},
 	})
 }
-export function useGetCardType(alias_no:string) {
+export function useGetCardType(alias_no: string) {
 	return useQuery({
-		queryKey:["getCardType",alias_no],
-		queryFn:async ()=>{
+		queryKey: ["getCardType", alias_no],
+		queryFn: async () => {
 			return Card.getTypeFromAliasNo(alias_no)
 		},
-		staleTime:Infinity
+		staleTime: Infinity,
 	})
 }

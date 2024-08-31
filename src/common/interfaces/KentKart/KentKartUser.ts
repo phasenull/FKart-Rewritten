@@ -28,5 +28,4 @@ export interface IKentKartUser {
 		latitude: number
 		longitude: number
 	}
-	access_token:string
 }

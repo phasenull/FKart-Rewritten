@@ -13,13 +13,13 @@ export function AddCard() {
 	const {theme} = useContext(ThemeContext)
 	const {refetch:refetchAccountFavorites} = useGetFavorites()
 	const user = useKentKartAuthStore((state)=>state.user)
-	if (!user) return
 	const {isLoading,data,error,isError,mutateAsync} = useAddFavoriteCard()
 	const [visible, setVisible] = useState(false)
 	function onSave(alias:string) {
 		setVisible(false)
 		mutateAsync({alias_no:alias,name:`My Card - ${Math.floor(Math.random()*10)}`}).then(()=>refetchAccountFavorites())
 	}
+	if (!user) return
 	return (
 		<View className="w-full mt-8 h-36 items-center justify-center">
 			<FavoriteCardInputAliasModal onSave={onSave} visible={visible} onDismiss={()=>{setVisible(false)}}/>

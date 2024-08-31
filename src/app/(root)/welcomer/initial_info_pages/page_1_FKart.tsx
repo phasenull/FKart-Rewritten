@@ -5,7 +5,7 @@ import * as Updates from "expo-updates"
 import { useContext } from "react"
 import { TranslationsContext } from "common/contexts/TranslationsContext"
 import { ThemeContext } from "common/contexts/ThemeContext" 
-import appJson from "../../../../app.json"
+import appJson from "../../../../../app.json"
 export function IIPage1(props:{last_check:number}) {
 	const {theme} = useContext(ThemeContext)
 	const {translations} = useContext(TranslationsContext)

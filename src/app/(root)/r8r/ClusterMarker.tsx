@@ -4,7 +4,7 @@ import { transit_realtime } from "gtfs-realtime-bindings"
 import React, { useDeferredValue, useState } from "react"
 import { Text, View } from "react-native"
 import { Camera, Circle, LatLng, Marker, Point } from "react-native-maps"
-import { BusMarker } from "screens/map_details/markers/BusMarker"
+import { BusMarker } from "../map_details/markers/BusMarker"
 function avgFromArray(arr: number[]) {
 	let total = 0
 	arr.forEach((element) => {

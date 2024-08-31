@@ -18,6 +18,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { useQuery } from "react-query"
 import { useGetCardType } from "common/hooks/kentkart/nonAuthHooks"
 import CardImages from "common/enums/CardImages"
+import ErrorPage from "app/(root)/ErrorPage"
 interface Props {
 	favorite_data: FavoritesV3Card
 	index: number
@@ -29,30 +30,29 @@ export default function CardContainer(props: Props) {
 	const { data:freshData, isLoading, isRefetching, isError, error } = useGetCardData({ card_alias: favorite_data.aliasNo })
 	const { mutateAsync: mutateRemove } = useRemoveFavoriteCard()
 	const { refetch: refetchAccountFavorites } = useGetFavorites()
-	const {data:dataCardType,isLoading:cardImageisLoading} = useGetCardType(favorite_data.aliasNo)
+	const {data:dataCardType,isLoading:cardImageisLoading} = useGetCardType(favorite_data?.aliasNo)
 	const { theme } = useContext(ThemeContext)
 	if (isError) {
-		console.warn("CardContainer error",(error as any).message)
+		console.warn("CardContainer error",(error as any)?.message)
 		return (
 			<View>
-				<Text>{(error as any).message}</Text>
+				<Text>{(error as any)?.message}</Text>
 			</View>
 		)
 	}
-
+	const card_data = freshData?.data?.cardlist?.at(0)
 	return (
 		<Animated.View
 			entering={FadeInRight}
 			style={{
 				...props.style,
 			}}
-			key={`card-${favorite_data.aliasNo}`}
+			key={`card-${favorite_data?.aliasNo}`}
 		>
 			<Swipeable
 				containerStyle={{
 					overflow: "visible",
 				}}
-				// activeOffsetX={[0,40]}
 				friction={1}
 				failOffsetX={20}
 				overshootRight={false}
@@ -113,16 +113,16 @@ export default function CardContainer(props: Props) {
 							<CustomLoadingIndicator />
 						)}
 					</View>
-					{freshData?.data.cardlist[0].loads_in_line || freshData?.data.cardlist[0].oChargeList ? (
+					{card_data?.loads_in_line || card_data?.oChargeList ? (
 						<View className="absolute w-6 h-6 justify-center -right-1.5 -top-1.5 self-start rounded-full bg-red-400">
-							<Text className="text-white text-center text-xl font-bold">{(freshData?.data.cardlist[0].loads_in_line || freshData?.data.cardlist[0].oChargeList)?.length}</Text>
+							<Text className="text-white text-center text-xl font-bold">{(card_data?.loads_in_line || card_data?.oChargeList)?.length}</Text>
 						</View>
 					) : null}
 					<View className="flex-1 w-full flex-row space-x-2 items-center">
 						<Divider height={25 * 4} />
 						<View className="flex-col">
 							<Text numberOfLines={1} style={{ color: theme.primary }} className="flex-1 text-2xl font-bold w-full bottom-2 text-left">
-								{favorite_data.description || (freshData?.data.cardlist[0]?.virtualCard && "QR Kart") || "Adsız Kart"}
+								{favorite_data.description || (card_data?.virtualCard && "QR Kart") || "Adsız Kart"}
 							</Text>
 							<Text
 								style={{
@@ -132,22 +132,21 @@ export default function CardContainer(props: Props) {
 								}}
 								className="rounded-full mt-3 px-4 bottom-5 relative justify-center font-bold text-[12px] text-center"
 							>
-								{formatAlias(favorite_data.aliasNo) || "key_error (favorite)"}
+								{formatAlias(favorite_data?.aliasNo) || "key_error (favorite)"}
 							</Text>
-							{freshData?.data.cardlist[0] ? (
+							{card_data ? (
 								<View className="flex-1 flex-row">
 									<Text adjustsFontSizeToFit={true} style={{ color: theme.secondary, fontSize: 34, textAlignVertical: "bottom" }} className="opacity-50 font-bold text-left">
-										{freshData?.data.cardlist[0].balance || "key_error (balance)"} TL
+										{card_data.balance || "key_error (balance)"} TL
 									</Text>
-									{isLoading || isRefetching ? <CustomLoadingIndicator color={theme.secondary} style={{ marginLeft: 10 }} size={15} /> : null}
+									{(isLoading || isRefetching) ? <CustomLoadingIndicator color={theme.secondary} style={{ marginLeft: 10 }} size={15} /> : null}
 								</View>
 							) : (
 								<CustomLoadingIndicator color={theme.secondary} size={20} />
 							)}
 						</View>
 						<View className=" items-end flex-1 flex-col space-y-2">
-							{freshData?.data.cardlist[0]?.ticketList
-								?.sort((a, b) => {
+							{card_data?.ticketList?.sort((a, b) => {
 									let time_a
 									let time_b
 									try {
