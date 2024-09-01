@@ -13,7 +13,7 @@ import { Text, TouchableOpacity, View } from "react-native"
 import SecondaryText from "./SecondaryText"
 import { ITheme, ThemeContext } from "common/contexts/ThemeContext"
 import CityValidator from "components/validators/CityValidator"
-import CitySelector from "app/city_selector/CitySelector"
+import CitySelector from "app/(core)/city_selector"
 
 function BottomTabButton(props: { state: any; descriptors: any; navigation: NativeStackNavigationProp<any>; route: any; index: number }) {
 	const { descriptors, navigation, state, index, route } = props

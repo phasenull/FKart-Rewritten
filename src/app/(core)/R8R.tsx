@@ -6,16 +6,13 @@ import { View } from "react-native"
 import { PROVIDER_GOOGLE } from "react-native-maps"
 import MapView from "react-native-map-clustering"
 import ErrorPage from "../ErrorPage"
-import { busMarkerFromBus } from "./ClusterMarker"
-import OverlayRoot from "./overlay/OverlayRoot"
+import { busMarkerFromBus } from "../../components/r8r/ClusterMarker"
+import OverlayRoot from "../../components/r8r/overlay/OverlayRoot"
+import { Stack } from "expo-router"
 
 export default function R8R(props: { navigation: NativeStackNavigationProp<any> }) {
 	const map = useRef<MapView>()
 	const { data, isLoading, isError, error, refetch, isRefetching } = useGetRealtime()
-	useEffect(() => {
-		// refetchClusters()
-		props.navigation.setOptions({ title: `${data?.feed.length || 0} buses ${new Date().toISOString().slice(0, 19)}` })
-	}, [data])
 	const renderedMarkers = useMemo(
 		() =>
 			data?.feed?.map((e) => {
@@ -28,8 +25,10 @@ export default function R8R(props: { navigation: NativeStackNavigationProp<any> 
 	}
 	return (
 		<React.Fragment>
+			<Stack.Screen options={{
+				title: `${data?.feed?.length || 0} buses ${new Date().toISOString().slice(0, 19)}`
+			}}/>
 			<OverlayRoot isRefetchLoading={isLoading||isRefetching} refetchFn={refetch} navigation={props.navigation}/>
-
 			<MapView
 				// minZoom={12}
 				radius={40}

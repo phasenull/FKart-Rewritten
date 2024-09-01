@@ -87,7 +87,7 @@ export default function CardContainer(props: Props) {
 						shadowOffset: { height: 4, width: 4 },
 					}}
 					onPress={() => {
-						router.push(`/card_details/${favorite_data.aliasNo}?description=${favorite_data.description}`)
+						router.push({pathname:`/card_details/[alias]`,params:{alias:favorite_data.aliasNo,description:favorite_data.description}})
 					}}
 					onLongPress={() => {
 						Clipboard.setString(favorite_data.aliasNo)

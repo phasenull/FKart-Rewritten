@@ -88,12 +88,12 @@ export default function SearchTab(props: { navigation: NativeStackNavigationProp
 						{
 							key: "ozel_halk_otobusu",
 							color: theme.primary,
-							value: "Özel Halk Otobüsü",
+							value: "Ö. Halk Otobüsü",
 						},
 						{
 							key: "belediye_otobusu",
 							color: "#1EA9BD",
-							value: "Belediye Otobüsü",
+							value: "UlaşımPark A.Ş.",
 						},
 						{
 							key: "feribot",

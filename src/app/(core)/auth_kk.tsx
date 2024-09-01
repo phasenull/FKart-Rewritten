@@ -8,7 +8,7 @@ import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-na
 import KentKartAuthValidator from "components/validators/KentKartAuthValidator"
 import SecondaryText from "components/reusables/SecondaryText"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import AuthPanel from "./AuthPanel"
+import AuthPanel from "components/auth_kk/AuthPanel"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 

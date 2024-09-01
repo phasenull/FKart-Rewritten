@@ -49,9 +49,7 @@ export default function CardControlPanel(props: {
 						console.log("abort card rename")
 						return
 					}
-					console.log("attempt to change card name to",alias,text)
 					mutateAdd({ alias_no: alias, name: text }).then((e) => {
-						console.log("rename result",e?.data)
 						router.setParams({
 							description: text || (is_virtual && "QR Kart") || "unnamed card",
 						})

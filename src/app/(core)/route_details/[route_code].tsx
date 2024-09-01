@@ -1,18 +1,14 @@
-import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import BasicRouteInformation from "common/interfaces/KentKart/BasicRouteInformation"
 import { RefreshControl, ScrollView, Switch, Text, TouchableOpacity, View } from "react-native"
 import { useGetRouteDetails } from "common/hooks/kentkart/nonAuthHooks"
 import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
-import RouteData from "common/interfaces/KentKart/RouteData"
 import { useContext, useEffect, useMemo, useState } from "react"
 import BusData from "common/interfaces/KentKart/BusData"
-import BusContainer from "./BusContainer"
-import ApplicationConfig from "common/ApplicationConfig"
+import BusContainer from "components/reusables/BusContainer"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
-import ErrorPage from "../ErrorPage"
-import CardJSONData from "../card_details/CardJSONData"
+import ErrorPage from "../../ErrorPage"
+import CardJSONData from "components/card_details/CardJSONData"
 import { router, Stack, useLocalSearchParams } from "expo-router"
 
 export default function RouteDetails() {
@@ -36,7 +32,7 @@ export default function RouteDetails() {
 		},
 	})
 	if (isLoading) {
-		return <CustomLoadingIndicator />
+		return <CustomLoadingIndicator style={{flex:1}} />
 	}
 	if (error) {
 		return (

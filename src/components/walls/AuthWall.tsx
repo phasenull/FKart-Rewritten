@@ -5,10 +5,10 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { useContext } from "react"
 import { TranslationsContext } from "common/contexts/TranslationsContext"
 import { ThemeContext } from "common/contexts/ThemeContext"
+import { router } from "expo-router"
 
-export default function AuthWall(props: { navigation: NativeStackNavigationProp<any> }) {
+export default function AuthWall() {
 	const {theme} = useContext(ThemeContext)
-	const navigator = props.navigation
 	const {translations} = useContext(TranslationsContext)
 	return (
 		<View className="flex-1 items-center justify-center">
@@ -16,10 +16,7 @@ export default function AuthWall(props: { navigation: NativeStackNavigationProp<
 			<SecondaryText >{translations.authwall.we_are_not_able_to_show_this_page_to_you}</SecondaryText>
 			<TouchableOpacity style={{ backgroundColor: theme.primary,borderRadius: 4 * 4,marginTop:16*4 }}
 			onPress={()=>{
-				if (!navigator) {
-					return alert("Navigator is null! You should not be seeing this, please report: contact@phasenull.dev")
-				}
-				navigator.replace("auth")
+				router.replace({pathname:"/auth_kk"})
 			}}
 			>
 				<SecondaryText style={{ color: theme.white, marginHorizontal: 8 * 4, marginVertical: 4 * 4,fontWeight:"900",fontSize:24  }}>{translations.signin}</SecondaryText>

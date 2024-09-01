@@ -2,7 +2,6 @@ import { Clipboard, Text, ToastAndroid, Vibration, View } from "react-native"
 import MapView from "react-native-maps"
 import BusData from "common/interfaces/KentKart/BusData"
 import RouteData from "common/interfaces/KentKart/RouteData"
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import ApplicationConfig from "common/ApplicationConfig"
 
 import React, { LegacyRef, Ref, useContext, useEffect, useRef, useState } from "react"
@@ -11,23 +10,28 @@ import BottomSheet, { TouchableOpacity } from "@gorhom/bottom-sheet"
 import { DYNAMIC_CONTENT_URL } from "common/constants"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { ScrollView } from "react-native-gesture-handler"
-import BusContainer from "../route_details/BusContainer"
+import BusContainer from "../../components/reusables/BusContainer"
 import { BottomSheetMethods } from "@gorhom/bottom-sheet/lib/typescript/types"
-import Map from "./Map"
+import Map from "../../components/map_details/Map"
 import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
 
-import FollowingBus from "./FollowingBus"
+import FollowingBus from "../../components/map_details/FollowingBus"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import { useGetCityList, useGetRouteDetails } from "common/hooks/kentkart/nonAuthHooks"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
 import { router, Stack, useLocalSearchParams } from "expo-router"
+import SecondaryText from "components/reusables/SecondaryText"
+import Divider from "components/reusables/Divider"
+import HorizontalDivider from "components/reusables/HorizontalDivider"
+import Logger from "common/Logger"
+import { MaterialCommunityIcons } from "@expo/vector-icons"
 export default function MapData() {
-	const { force_route_code, force_direction, force_bus_id,headerTitle } = useLocalSearchParams<{
+	const { force_route_code, force_direction, force_bus_id, headerTitle } = useLocalSearchParams<{
 		force_direction: string
 		force_bus_id: string
 		force_route_code: string
-		headerTitle:string
+		headerTitle: string
 	}>()
 	const ref_map_view = useRef<MapView>()
 	const ref_bottom_sheet = useRef<BottomSheet>()
@@ -42,10 +46,12 @@ export default function MapData() {
 		data: fetchedRouteData,
 		isRefetching: isRouteRefetching,
 		refetch: refetchRouteData,
+		isError,
+		error,
 	} = useGetRouteDetails({
 		direction: direction,
 		route_code: force_route_code,
-		interval: 5000,
+		interval: 5000 * 10, //dev
 		user: user as IKentKartUser,
 		result_includes: {
 			busStopList: true,
@@ -55,22 +61,25 @@ export default function MapData() {
 			pointList: true,
 		},
 	})
-	const [followingBus, setFollowingBus] = useState<BusData | undefined>(force_bus_id && {busId:force_bus_id} as any)
+	if (isError) {
+		Logger.warning("map_details.tsx", "route details fetch error", (error as any).data)
+	}
+	const [followingBus, setFollowingBus] = useState<BusData | undefined>(force_bus_id && ({ busId: force_bus_id } as any))
 	useEffect(() => {
 		const path_list = fetchedRouteData?.data?.pathList
 		if (path_list && path_list[0]) {
 			setRouteDataToShow(path_list[0])
 			const bus_list = path_list[0].busList
-			setBusListToShow(path_list[0].busList)
+			setBusListToShow(bus_list)
 			if (!bus_list || bus_list.length === 0) return
 			if (!followingBus) return
-			const found_bus = path_list[0].busList.find((bus: BusData) => bus.busId === followingBus.busId)
+			const found_bus = bus_list?.find((bus: BusData) => bus.busId === followingBus.busId)
 			if (!found_bus) return
 			ref_map_view.current?.animateToRegion({
 				latitude: parseFloat(found_bus.lat) - 0.001,
 				longitude: parseFloat(found_bus.lng),
-				latitudeDelta: 0.005,
-				longitudeDelta: 0.005,
+				latitudeDelta: 0.02,
+				longitudeDelta: 0.02,
 			})
 			setFollowingBus(found_bus)
 		}
@@ -107,12 +116,15 @@ export default function MapData() {
 	if (!routeDataToShow || !busListToShow || !userCity) {
 		return <CustomLoadingIndicator />
 	}
+	function getStopFromStopId(id: string) {
+		return routeDataToShow?.busStopList.find((stop) => stop.stopId == id)
+	}
 	return (
 		<View className="flex-1">
 			<Stack.Screen
 				options={{
-					headerShown:true,
-					title: headerTitle || `Route ${force_route_code} - Map View`,
+					headerShown: true,
+					headerTitle: headerTitle || `Route ${force_route_code} - Map View`,
 					headerTitleStyle: {
 						color: theme.secondary,
 						fontWeight: "900",
@@ -134,7 +146,7 @@ export default function MapData() {
 				<View style={{ marginHorizontal: 4 * 4 }} className="px-2 self-center w-full flex-row justify-between items-center h-12">
 					<Text style={{ fontWeight: "600", maxWidth: "90%", color: theme.secondary }}>{routeDataToShow.headSign}</Text>
 					{isRouteRefetching ? (
-						<CustomLoadingIndicator size={20} style={{ marginHorizontal: 0, marginVertical: 5, marginRight: 12 }} />
+						<CustomLoadingIndicator size={14} style={{ marginHorizontal: 0, marginVertical: 5, marginRight: 12 }} />
 					) : (
 						<TouchableOpacity
 							onPress={() => {
@@ -157,40 +169,78 @@ export default function MapData() {
 					)}
 				</View>
 				<ScrollView
-					style={{
-						maxHeight: 48 * 4,
-					}}
 					horizontal={true}
 					contentContainerStyle={{
 						paddingHorizontal: 20,
 						columnGap: 20,
+						height:120*4
 					}}
 				>
-					{busListToShow.map((bus: BusData) => (
-						<BusContainer
-							onLongPress={() => {
-								Clipboard.setString(`fkart://map_details?force_route_code=${routeDataToShow.displayRouteCode}&force_direction=${direction}&force_bus_id=${bus.busId}`)
-								ToastAndroid.show("Link kopyalandı!", ToastAndroid.SHORT)
-								Vibration.vibrate(100)
-							}}
-							onPress={() => {
-								pressForEasterEgg()
-								ref_map_view.current?.animateToRegion({
-									latitude: parseFloat(bus.lat) - 0.001,
-									longitude: parseFloat(bus.lng),
-									latitudeDelta: 0.005,
-									longitudeDelta: 0.005,
-								})
-								setFollowingBus(bus)
-								ref_bottom_sheet.current?.snapToIndex(1)
-							}}
-							route_data={routeDataToShow}
-							bus={bus}
-							key={`BusContainer-${bus.plateNumber}`}
-						/>
-					))}
+					{busListToShow
+						.sort((bus_a, bus_b) => parseInt(bus_a.seq || "0") - parseInt(bus_b.seq || "0"))
+						.map((bus: BusData) => {
+							const atStop = getStopFromStopId(bus.stopId)
+							return (
+							<BusContainer
+								onLongPress={() => {
+									Clipboard.setString(`fkart://map_details?force_route_code=${routeDataToShow.displayRouteCode}&force_direction=${direction}&force_bus_id=${bus.busId}`)
+									ToastAndroid.show("Link kopyalandı!", ToastAndroid.SHORT)
+									Vibration.vibrate(100)
+								}}
+								onPress={() => {
+									pressForEasterEgg()
+									ref_map_view.current?.animateToRegion({
+										latitude: parseFloat(bus.lat) - 0.001,
+										longitude: parseFloat(bus.lng),
+										latitudeDelta: 0.02,
+										longitudeDelta: 0.02,
+									})
+									setFollowingBus(bus)
+									ref_bottom_sheet.current?.snapToIndex(1)
+								}}
+								route_data={routeDataToShow}
+								bus={bus}
+								key={`BusContainer-${bus.plateNumber}`}
+							>
+								<View className="w-full flex-col">
+									<HorizontalDivider
+										style={{
+											height: 0.5 * 4,
+											backgroundColor: theme.secondary,
+											opacity: 0.2,
+										}}
+									/>
+									<View
+										className="flex-col items-center w-12"
+										style={{
+											left: `${Math.floor((parseInt(atStop?.seq || "0") / routeDataToShow.busStopList.length) * 100)}%`,
+										}}
+									>
+										<MaterialCommunityIcons className="w-6" name="bus-side" size={6 * 4} color={theme.primaryDark} />
+										<SecondaryText
+											style={{
+												fontSize: 3 * 4,
+												top:-1*4,
+												textAlign:"center"
+											}}
+										>
+											{`${Math.floor((parseInt(atStop?.seq || "0") / routeDataToShow.busStopList.length) * 100)}%`}
+											{`\n`}{new Date(parseInt(atStop?.departure_offset || "0")*1000).getMinutes()}
+											{`/`}{new Date(parseInt(routeDataToShow.busStopList.at(routeDataToShow.busStopList.length-1)?.arrival_offset || "0")*1000).getMinutes()}m
+										</SecondaryText>
+									</View>
+									<HorizontalDivider
+										style={{
+											top:-5*4,
+											height: 0.5 * 4,
+											backgroundColor: theme.secondary,
+											opacity: 0.2,
+										}}
+									/>
+								</View>
+							</BusContainer>
+						)})}
 				</ScrollView>
-				<Text className="self-center absolute bottom-0">Hello</Text>
 			</BottomSheet>
 		</View>
 	)

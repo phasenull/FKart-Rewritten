@@ -1,11 +1,6 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import BusData from "common/interfaces/KentKart/BusData"
-import {
-	Image,
-	Text,
-	TouchableOpacity,
-	View,
-} from "react-native"
+import { Image, Text, TouchableOpacity, View } from "react-native"
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import Divider from "components/reusables/Divider"
@@ -15,22 +10,14 @@ import { useGetBusImages } from "common/hooks/fkart/bus/useGetBusImages"
 import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import { router } from "expo-router"
-export default function BusContainer(props: {
-	bus: BusData
-	route_data: RouteData
-	onPress?: () => void
-	onLongPress?: () => void
-	children?:any
-}) {
-	const {theme} = useContext(ThemeContext)
-	const { bus,  route_data } = props
+export default function BusContainer(props: { bus: BusData; route_data: RouteData; onPress?: () => void; onLongPress?: () => void; children?: any }) {
+	const { theme } = useContext(ThemeContext)
+	const { bus, route_data } = props
 	const schedule_list = route_data?.timeTableList
-	const departure_time = (schedule_list?.find((e) => e.tripId === bus.tripId)?.departureTime)?.slice(0,5) || "--:--"
+	const departure_time = schedule_list?.find((e) => e.tripId === bus.tripId)?.departureTime?.slice(0, 5) || "--:--"
 	const { data, isLoading, isError } = useGetBusImages(bus)
 	function isEmpty() {
-		return ![bus.ac, bus.bike, bus.disabledPerson].find(
-			(e) => e === "1"
-		)
+		return ![bus.ac, bus.bike, bus.disabledPerson].find((e) => e === "1")
 	}
 	function getStopFromId(id: string) {
 		return route_data.busStopList.find((e) => e.stopId === id)
@@ -41,107 +28,67 @@ export default function BusContainer(props: {
 				backgroundColor: theme.white,
 				borderRadius: 16,
 				shadowOffset: { height: 4, width: 4 },
-				minHeight:48*4,
+				minHeight: 48 * 4,
 			}}
-			onPress={props.onPress ||( () => {
-				router.navigate({pathname:"/bus_details",params:{bus64:btoa(escape(JSON.stringify(bus)))}})
-			})}
+			onPress={
+				props.onPress ||
+				(() => {
+					router.navigate({ pathname: "/bus_details", params: { bus64: btoa(escape(JSON.stringify(bus))) } })
+				})
+			}
 			onLongPress={props.onLongPress}
-			className="w-80 flex-col overflow-hidden"
+			className="w-48 overflow-visible h-max"
 		>
 			{/* MARK: title */}
-			<View className="flex-row h-6 items-center justify-center rounded-t-[16px]">
+			<View className="flex-row h-6 items-center justify-center bg-transparent">
 				<Text
 					className="text-center font-bold mr-2"
 					style={{
 						color: theme.secondary,
 					}}
 				>
-					{bus.pickMeUp === "1" ? (
-						<MaterialCommunityIcons
-							name="bus-stop-covered"
-							color={theme.error}
-							size={20}
-						/>
-					) : null}
-					<MaterialCommunityIcons
-						size={16}
-						name={bus.vehicleType === "4" ? "ferry" : "bus"}
-					/>
+					{bus.pickMeUp === "1" ? <MaterialCommunityIcons name="bus-stop-covered" color={theme.error} size={20} /> : null}
+					<MaterialCommunityIcons size={16} name={bus.vehicleType === "4" ? "ferry" : "bus"} />
 					{bus.plateNumber} {departure_time}
 				</Text>
-				{isEmpty() ? null : (
+				{!isEmpty() && (
 					<React.Fragment>
 						<Divider height={"70%"} />
 						<View className="flex-row ml-2">
-							{bus.disabledPerson === "1" ? (
-								<MaterialCommunityIcons
-									color={theme.primary}
-									size={16}
-									name="human-wheelchair"
-								/>
-							) : null}
-							{bus.ac === "1" ? (
-								<MaterialCommunityIcons
-									size={16}
-									color={theme.primary}
-									name="air-conditioner"
-								/>
-							) : null}
-							{bus.bike === "1" ? (
-								<MaterialCommunityIcons
-									size={16}
-									color={theme.primary}
-									name="bike"
-								/>
-							) : null}
+							{bus.disabledPerson === "1" ?? <MaterialCommunityIcons color={theme.primary} size={16} name="human-wheelchair" />}
+							{bus.ac === "1" ?? <MaterialCommunityIcons size={16} color={theme.primary} name="air-conditioner" />}
+							{bus.bike === "1" ?? <MaterialCommunityIcons size={16} color={theme.primary} name="bike" />}
 						</View>
 					</React.Fragment>
 				)}
 			</View>
 			{/* MARK: Image */}
-			<View className="w-full flex-1 items-center justify-center">
-				{isLoading ? (
-					<CustomLoadingIndicator color={theme.white} style={{ height: "100%" }} />
-				) : data?.data.data[0] ? (
-					<React.Fragment>
-						<Image
-							className="overflow-hidden"
-							style={{
-								height:"100%",
-								width:"100%",
-								objectFit:"contain"
-							}}
-							source={{
-								uri:
-									data?.data.data[0]?.url
-							}}
-						/>
-						<Text className="text-white absolute bottom-0 font-bold">
-							By {data?.data.data[0]?.uploader || "phasenull"} at{" "}
-							{data?.data.data[0]?.uploadedAt.slice(0, 10) ||
-								"????-??-??"}
-						</Text>
-					</React.Fragment>
-				) : (
-					<Text className="h-full bg-red-400 text-center font-bold text-xl text-white px-4" style={{
-						minHeight:36*4
-					}}>
-						No Image Found
+			{isLoading ? (
+				<CustomLoadingIndicator color={theme.white} style={{ height: "100%" }} />
+			) : data?.data?.data[0] ? (
+				<View>
+					<Image
+						className="overflow-hidden"
+						style={{
+							height: 36 * 4,
+							width: "100%",
+							objectFit: "contain",
+						}}
+						source={{
+							uri: data?.data.data[0]?.url,
+						}}
+					/>
+					<Text className="text-white self-center absolute bottom-0 font-bold">
+						By {data?.data.data[0]?.uploader || "phasenull"} at {data?.data.data[0]?.uploadedAt.slice(0, 10) || "????-??-??"}
 					</Text>
-				)}
-			</View>
+				</View>
+			) : (
+				<Text className="h-36 bg-red-400 text-center font-bold text-xl text-white px-4">No Image Found</Text>
+			)}
 			{/* MARK: Bus Stop */}
-			<Text
-				style={{ color: theme.secondary }}
-				className="text-center self-center items-center justify-center font-bold"
-			>
-				<MaterialCommunityIcons
-					name="map-marker"
-					color={theme.primary}
-					size={20}
-				/>{" "}
-				{bus.stopId}{" "}
+			<Text style={{ color: theme.secondary }} className="self-center text-center font-bold">
+				<MaterialCommunityIcons name="map-marker" color={theme.primary} size={20} />
+				{bus.stopId}
 				{getStopFromId(bus.stopId)?.stopName || "Hareket Halinde"}
 			</Text>
 			{props.children}

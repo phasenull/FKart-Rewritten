@@ -1,5 +1,5 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import { Button, Clipboard, Image, Linking, RefreshControl, Text, TextInput, ToastAndroid, TouchableOpacity, TouchableWithoutFeedback, Vibration, View } from "react-native"
+import { BackHandler, Button, Clipboard, Image, Linking, RefreshControl, Text, TextInput, ToastAndroid, TouchableOpacity, TouchableWithoutFeedback, Vibration, View } from "react-native"
 import ApplicationConfig from "common/ApplicationConfig"
 import React, { useContext, useEffect, useState } from "react"
 import BusData from "common/interfaces/KentKart/BusData"
@@ -10,25 +10,15 @@ import * as ImagePicker from "expo-image-picker"
 import { putBusImages } from "common/hooks/fkart/bus/usePutBusImages"
 import Animated from "react-native-reanimated"
 import { ThemeContext } from "common/contexts/ThemeContext"
-export default function BusDetails(props: { route: { params: { bus: BusData } }; navigation: NativeStackNavigationProp<any> }) {
+import { Stack, useLocalSearchParams } from "expo-router"
+export default function BusDetails() {
 	const { theme } = useContext(ThemeContext)
-
-	const [loading, setLoading] = useState(false)
-	const { navigation } = props
-	const { bus } = props.route.params
+	const { bus64 } = useLocalSearchParams<{ bus64: string }>()
+	const bus = JSON.parse(unescape(atob(bus64))) as BusData
 	const { data, isError, isLoading, isRefetching, error, refetch } = useGetBusImages(bus)
 	const [uploadPercentage, setUploadPercentage] = useState<undefined | number>(undefined)
-	useEffect(() => {
-		navigation.setOptions({
-			headerTitle: `${props.route?.params?.bus?.plateNumber || "unnamed bus"}`,
-			headerTintColor: theme.secondary,
-			headerTitleAlign: "left",
-			headerTitleStyle: {
-				fontWeight: "bold",
-			},
-		})
-	}, [])
 	const [token, setToken] = useState<string>("")
+	// %refactor react-query
 	useEffect(() => {
 		;(async () => {
 			const token = await ApplicationConfig.database.get("CDN_TOKEN")
@@ -36,7 +26,7 @@ export default function BusDetails(props: { route: { params: { bus: BusData } };
 		})()
 	}, [])
 	const [image, setImage] = useState<string | undefined>(undefined)
-
+	// %refactor react-query
 	const pickImage = async () => {
 		// No permissions request is necessary for launching the image library
 		let result = await ImagePicker.launchImageLibraryAsync({
@@ -86,7 +76,7 @@ export default function BusDetails(props: { route: { params: { bus: BusData } };
 		}
 	}
 
-	if (!props?.route?.params?.bus) {
+	if (!bus) {
 		return (
 			<View className="flex-1 items-center justify-center">
 				<Text style={{ color: theme.error, fontSize: 24 }}>No data found</Text>
@@ -100,7 +90,7 @@ export default function BusDetails(props: { route: { params: { bus: BusData } };
 		return (
 			<Animated.ScrollView
 				// tofix
-				refreshControl={<RefreshControl refreshing={loading} onRefresh={() => refetch()} />}
+				refreshControl={<RefreshControl refreshing={isLoading} onRefresh={() => refetch()} />}
 				className="flex-col"
 				contentContainerStyle={{
 					alignItems: "center",
@@ -122,13 +112,24 @@ export default function BusDetails(props: { route: { params: { bus: BusData } };
 	return (
 		<Animated.ScrollView
 			// tofix
-			refreshControl={<RefreshControl refreshing={loading} onRefresh={refetch} />}
+			refreshControl={<RefreshControl refreshing={isLoading} onRefresh={refetch} />}
 			className="flex-col gap-y-5"
 			contentContainerStyle={{
 				alignItems: "center",
 				padding: 20,
 			}}
 		>
+			<Stack.Screen
+				options={{
+					headerTitleStyle: {
+						color: theme.secondary,
+						fontWeight: "900",
+					},
+					headerShown:true,
+					headerTintColor:theme.secondary,
+					headerTitle: `${bus.plateNumber}` || "bus.plateNumber is undefined",
+				}}
+			/>
 			<View
 				style={{
 					backgroundColor: theme.white,

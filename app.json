@@ -34,6 +34,7 @@
 				"expo-build-properties",
 				{
 					"android": {
+						"useLegacyPackaging":true,
 						"enableProguardInReleaseBuilds": true
 					}
 				}

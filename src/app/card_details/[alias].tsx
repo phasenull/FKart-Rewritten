@@ -10,20 +10,20 @@ import { RefreshControl, ScrollView, Text, View } from "react-native"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import { useGetABTSecret, useGetCardData, useGetTransactions } from "common/hooks/kentkart/cardHooks"
 import { deltaTime } from "common/util"
-import CardControlPanel from "./CardControlPanel"
-import CardDetailsHeader from "./CardDetailsHeader"
-import CardJSONData from "./CardJSONData"
-import SelectCardTypeModal from "./SelectCardTypeModal"
-import VirtualCardQRCodePanel from "./VirtualCardQRCodePanel"
+import CardControlPanel from "components/card_details/CardControlPanel"
+import CardDetailsHeader from "components/card_details/CardDetailsHeader"
+import CardJSONData from "components/card_details/CardJSONData"
+import SelectCardTypeModal from "components/card_details/SelectCardTypeModal"
+import VirtualCardQRCodePanel from "components/card_details/VirtualCardQRCodePanel"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
 import { useGetCardType, useSetCardType } from "common/hooks/kentkart/nonAuthHooks"
 import ErrorPage from "../ErrorPage"
 import SecondaryText from "components/reusables/SecondaryText"
 import { router, Stack, useLocalSearchParams } from "expo-router"
-export default function CardDetails(props: {}) {
+export default function CardDetails() {
 	const { theme } = useContext(ThemeContext)
-	const { alias, description } = useLocalSearchParams() as any
+	const { alias, description } = useLocalSearchParams<{ alias: string; description?: string }>()
 	const {
 		data: transaction_data,
 		refetch: refetchTransactions,
@@ -70,10 +70,10 @@ export default function CardDetails(props: {}) {
 			<Stack.Screen
 				options={{
 					title: description || `Kart: ${alias}`,
-					headerTitleStyle:{color:theme.text.white},
-					headerTintColor:theme.text.white,
+					headerTitleStyle: { color: theme.text.white },
+					headerTintColor: theme.text.white,
 					headerTransparent: true,
-					headerShown:true
+					headerShown: true,
 				}}
 			/>
 			<SelectCardTypeModal
@@ -86,10 +86,10 @@ export default function CardDetails(props: {}) {
 				}}
 			/>
 			<CardDetailsHeader card={balanceData?.data.cardlist[0]} card_type={card_type as CardTypes} setShowEditCardTypeModal={setShowEditCardTypeModal} />
-			<CardControlPanel makeRefresh={() => {}} card={alias} is_virtual={alias.startsWith("33")} />
+			<CardControlPanel makeRefresh={() => {}} card={{aliasNo:alias} as any} is_virtual={alias.startsWith("33")} />
 
 			{/* <VirtualCardQRCodePanel card={card} token={{aliasNo:"hello","token":"hi","expireDate":""}} /> */}
-			<CardJSONData card={{ ...balanceData?.data.cardlist[0] }} favorite_data={alias} />
+			<CardJSONData card={{ ...balanceData?.data.cardlist[0] }} />
 			<CardJSONData
 				card={transaction_data?.data?.transactionList?.map(
 					(e) =>
