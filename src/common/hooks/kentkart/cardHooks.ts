@@ -48,7 +48,6 @@ export function useGetABTSecret(args: { card_alias: string }) {
 }
 
 export function useGetTransactions(args: { card_alias: string; term: { month: number; year: number } }) {
-	console.log("usegettransactions called")
 	const { card_alias, term } = args
 	const { credentials, region } = useKentKartAuthStore()
 	return useQuery(
