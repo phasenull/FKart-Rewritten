@@ -124,7 +124,7 @@ export function useGetRouteDetails(args: {
 		busList: (args.result_includes?.busList && "1") || "0",
 		busStopList: (args.result_includes?.busStopList && "1") || "0",
 		timeTableList: (args.result_includes?.timeTableList && "1") || "0",
-		stopTimeList: (args.result_includes?.stopTimeList && "1") || "0",
+		stopTimeList: "1",//(args.result_includes?.stopTimeList && "1") || "0",
 		scheduleList: (args.result_includes?.scheduleList && "1") || "0",
 	}
 	const resultTypeString = Object.values(resulType).join("")

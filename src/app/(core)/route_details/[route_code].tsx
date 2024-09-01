@@ -30,6 +30,7 @@ export default function RouteDetails() {
 			scheduleList: true,
 			timeTableList: true,
 			busStopList:true,
+			
 		},
 	})
 	if (isLoading) {
@@ -96,7 +97,7 @@ export default function RouteDetails() {
 					<Text>Open Map View</Text>
 				</TouchableOpacity>
 			</View>
-			<CardJSONData card={route_data} />
+			<CardJSONData card={{...route_data,busStopList:[],pointList:[]}} />
 		</ScrollView>
 	)
 }
