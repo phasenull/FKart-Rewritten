@@ -1,7 +1,7 @@
-import { LatLng, Marker } from "react-native-maps"
+import { Callout, LatLng, Marker } from "react-native-maps"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import BasicStopInformation from "common/interfaces/KentKart/BasicStopInformation"
-import { Image } from "react-native"
+import { Image, Text, View } from "react-native"
 import { DYNAMIC_CONTENT_URL } from "common/constants"
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import Logger from "common/Logger"
@@ -10,11 +10,11 @@ import { ThemeContext } from "common/contexts/ThemeContext"
 
 export default function StopMarker(props: { busStop: BasicStopInformation; coordinate: LatLng; easterEggEnabled?: boolean }) {
 	const { busStop, coordinate, easterEggEnabled } = props
-	const {theme} = useContext(ThemeContext)
+	const { theme } = useContext(ThemeContext)
 
 	if (!busStop || !coordinate) {
 		Logger.warning("StopMarker.tsx", "StopMarker", "BusStop, coordinate or navigation is null")
-		return 
+		return
 	}
 	if (easterEggEnabled) {
 		return (
@@ -30,26 +30,22 @@ export default function StopMarker(props: { busStop: BasicStopInformation; coord
 		)
 	}
 	return (
-		<Marker tracksViewChanges={false} anchor={{ x: 0.5, y: 0.5 }} style={{ alignItems: "center" }} coordinate={coordinate} title={busStop.stopName}>
+		<Marker key={busStop.stopId}  tracksViewChanges={false} style={{ alignItems: "center" }} coordinate={coordinate} title={`+${new Date(parseInt(busStop.arrival_offset || "0") * 1000).getMinutes()}m ${busStop.stopName}`}>
+			<View className="h-8 w-8 justify-center items-center">
 			<MaterialCommunityIcons name="bus-stop" size={22} color={theme.secondary} />
+
+			</View>
 			{/* <Callout
-		// tooltip={true}
-		className=" w-48"
-		// style={{
-		// 	backgroundColor: theme.white,
-		// 	borderRadius: 8,
-		// 	paddingHorizontal: 1 * 4,
-		// }}
-	>
-		<Text
-			className="w-48"
-			style={{ color: theme.secondary, fontWeight: "800", fontSize: 15, textAlign: "center" }}
-			// numberOfLines={1}
-			// adjustsFontSizeToFit={true}
-		>
-			{busStop.stopName}
-		</Text>
-	</Callout> */}
+				// tooltip={true}
+				// className="min-w-48"
+				style={{
+					backgroundColor: theme.white,
+					borderRadius: 8,
+					paddingHorizontal: 1 * 4,
+					width: 16 * 4 + (busStop.stopName || "").length * 4,
+				}}
+			> */}
+			{/* </Callout> */}
 		</Marker>
 	)
 }

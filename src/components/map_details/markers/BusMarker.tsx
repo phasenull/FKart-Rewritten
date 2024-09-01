@@ -41,7 +41,7 @@ export function BusMarker(props: {
 				coordinate={coordinate}
 				title={bus.plateNumber}
 				onCalloutPress={() => {
-					router.navigate("bus_details")
+					router.navigate({pathname:"/bus_details",params:{bus64:btoa(escape(JSON.stringify(bus)))}})
 				}}
 				// className="items-center justify-center overflow-visible"
 			>
@@ -80,7 +80,8 @@ export function BusMarker(props: {
 			// calloutOffset={{x:1,y:1}}
 			calloutAnchor={{ x: 0.5, y: 0.5 }}
 			onCalloutPress={() => {
-				router.navigate("bus_details")
+				router.navigate({pathname:"/bus_details",params:{bus64:btoa(escape(JSON.stringify(bus)))}})
+
 			}}
 		>
 			<Image

@@ -29,6 +29,7 @@ export default function RouteDetails() {
 			busList: true,
 			scheduleList: true,
 			timeTableList: true,
+			busStopList:true,
 		},
 	})
 	if (isLoading) {

@@ -37,7 +37,7 @@ export default function BusContainer(props: { bus: BusData; route_data: RouteDat
 				})
 			}
 			onLongPress={props.onLongPress}
-			className="w-48 overflow-visible h-max"
+			className="w-48 overflow-hidden h-max"
 		>
 			{/* MARK: title */}
 			<View className="flex-row h-6 items-center justify-center bg-transparent">
@@ -72,7 +72,7 @@ export default function BusContainer(props: { bus: BusData; route_data: RouteDat
 						style={{
 							height: 36 * 4,
 							width: "100%",
-							objectFit: "contain",
+							objectFit: "cover",
 						}}
 						source={{
 							uri: data?.data.data[0]?.url,
@@ -83,12 +83,15 @@ export default function BusContainer(props: { bus: BusData; route_data: RouteDat
 					</Text>
 				</View>
 			) : (
-				<Text className="h-36 bg-red-400 text-center font-bold text-xl text-white px-4">No Image Found</Text>
+				<Text className="h-36 bg-red-400 text-center font-bold text-white px-4" style={{
+					textAlignVertical:"center",
+					paddingVertical:4*4,
+				}}>No Image Found</Text>
 			)}
 			{/* MARK: Bus Stop */}
-			<Text style={{ color: theme.secondary }} className="self-center text-center font-bold">
+			<Text style={{ color: theme.secondary }} adjustsFontSizeToFit={true} numberOfLines={2} className="self-center text-center font-bold">
 				<MaterialCommunityIcons name="map-marker" color={theme.primary} size={20} />
-				{bus.stopId}
+				{bus.stopId+" "}
 				{getStopFromId(bus.stopId)?.stopName || "Hareket Halinde"}
 			</Text>
 			{props.children}
