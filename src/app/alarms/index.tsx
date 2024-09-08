@@ -1,15 +1,14 @@
-import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import SecondaryText from "components/reusables/SecondaryText"
 import { useLiveQuery } from "drizzle-orm/expo-sqlite"
 import { useContext } from "react"
 import { ScrollView, View } from "react-native"
 
-import { alarms } from "common/schema"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
-import { TouchableOpacity } from "react-native"
-import { eq, sql } from "drizzle-orm"
 import { drizzleDB } from "app/_layout"
+import { alarms } from "common/schema"
+import { Stack } from "expo-router"
+import { TouchableOpacity } from "react-native"
 
 function AlarmView(props: { alarm: typeof alarms }) {
 	return (
@@ -57,11 +56,9 @@ function AlarmList(props: { alarms: any[] }) {
 		>
 			<TouchableOpacity
 				onPress={() => {
-					drizzleDB.delete(alarms).then((e)=>{
-						console.log("delete result",e)
-						drizzleDB
-						.insert(alarms)
-						.values({
+					drizzleDB.delete(alarms).then((e) => {
+						console.log("delete result", e)
+						drizzleDB.insert(alarms).values({
 							label: "generated",
 							type: "creation",
 							routes: [
@@ -69,7 +66,8 @@ function AlarmList(props: { alarms: any[] }) {
 								{ type: "route", id: "41033" },
 								{ type: "trip", id: "2407798", route_code: "41033", time: "13:30:00" },
 							],
-						})})
+						})
+					})
 				}}
 				className="items-center"
 			>
@@ -82,14 +80,20 @@ function AlarmList(props: { alarms: any[] }) {
 		</ScrollView>
 	)
 }
-export default function ScreenAlarms(props: { navigation: NativeStackNavigationProp<any> }) {
+export default function ScreenAlarms() {
 	const { theme } = useContext(ThemeContext)
 	const { data: data_alarms } = useLiveQuery(drizzleDB.select().from(alarms))
 	console.log(data_alarms)
-	props.navigation.setOptions({
-		headerShown: true,
-		headerTintColor: theme.secondary,
-		headerTitle: () => <SecondaryText>My Alarms</SecondaryText>,
-	})
-	return <AlarmList alarms={data_alarms} />
+	return (
+		<>
+			<Stack.Screen
+				options={{
+					headerShown: true,
+					headerTintColor: theme.secondary,
+					headerTitle: () => <SecondaryText>My Alarms</SecondaryText>,
+				}}
+			/>
+			<AlarmList alarms={data_alarms} />
+		</>
+	)
 }

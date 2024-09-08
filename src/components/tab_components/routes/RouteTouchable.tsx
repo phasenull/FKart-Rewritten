@@ -1,10 +1,9 @@
-import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import BasicRouteInformation from "common/interfaces/KentKart/BasicRouteInformation"
-import { Text, TouchableOpacity, View } from "react-native"
-import { useContext, useEffect, useMemo } from "react"
-import Divider from "components/reusables/Divider"
 import { ThemeContext } from "common/contexts/ThemeContext"
+import BasicRouteInformation from "common/interfaces/KentKart/BasicRouteInformation"
+import Divider from "components/reusables/Divider"
 import { router } from "expo-router"
+import { useContext, useMemo } from "react"
+import { Text, TouchableOpacity, View } from "react-native"
 
 export default function RouteTouchable(props: { item: BasicRouteInformation }) {
 	const { item } = props
@@ -15,7 +14,7 @@ export default function RouteTouchable(props: { item: BasicRouteInformation }) {
 		return (
 			<TouchableOpacity
 				onPress={() => {
-					router.push(`route_details/${item.displayRouteCode}?headerTitle=${item.name}`)
+					router.push({pathname:`/route_details/[route_code]`,params:{headerTitle:item.name,route_code: item.displayRouteCode}})
 				}}
 				className="py-1 flex-row pl-1"
 			>

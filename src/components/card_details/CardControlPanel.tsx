@@ -1,17 +1,14 @@
-import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import { Favorite, FavoritesV3Card } from "common/interfaces/KentKart/Favorite"
 import { BasicCardData } from "common/interfaces/KentKart/BasicCardData"
+import { useContext, useState } from "react"
 import { Text, TouchableOpacity, View } from "react-native"
-import { useContext, useEffect, useMemo, useState } from "react"
 
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import { useAddFavoriteCard, useRemoveFavoriteCard } from "common/hooks/kentkart/cardHooks"
-import InputModal from "components/reusables/InputModal"
 import Logger from "common/Logger"
 import { ThemeContext } from "common/contexts/ThemeContext"
+import { useAddFavoriteCard, useRemoveFavoriteCard } from "common/hooks/kentkart/cardHooks"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
-import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
+import InputModal from "components/reusables/InputModal"
 import { router, useLocalSearchParams } from "expo-router"
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 export default function CardControlPanel(props: {
 	card: BasicCardData<"Basic" | "QR">
 	is_virtual?: boolean

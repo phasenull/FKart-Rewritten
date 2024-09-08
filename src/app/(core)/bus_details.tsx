@@ -1,16 +1,15 @@
-import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import { BackHandler, Button, Clipboard, Image, Linking, RefreshControl, Text, TextInput, ToastAndroid, TouchableOpacity, TouchableWithoutFeedback, Vibration, View } from "react-native"
 import ApplicationConfig from "common/ApplicationConfig"
-import React, { useContext, useEffect, useState } from "react"
-import BusData from "common/interfaces/KentKart/BusData"
 import { useGetBusImages } from "common/hooks/fkart/bus/useGetBusImages"
+import BusData from "common/interfaces/KentKart/BusData"
 import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
 import * as ImagePicker from "expo-image-picker"
+import React, { useContext, useEffect, useState } from "react"
+import { Button, Clipboard, Image, Linking, RefreshControl, Text, TextInput, ToastAndroid, TouchableOpacity, Vibration, View } from "react-native"
 
-import { putBusImages } from "common/hooks/fkart/bus/usePutBusImages"
-import Animated from "react-native-reanimated"
 import { ThemeContext } from "common/contexts/ThemeContext"
+import { putBusImages } from "common/hooks/fkart/bus/usePutBusImages"
 import { Stack, useLocalSearchParams } from "expo-router"
+import Animated from "react-native-reanimated"
 export default function BusDetails() {
 	const { theme } = useContext(ThemeContext)
 	const { bus64 } = useLocalSearchParams<{ bus64: string }>()

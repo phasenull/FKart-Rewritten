@@ -1,20 +1,19 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import { StatusBar, Text, TouchableOpacity, View } from "react-native"
-import { useContext } from "react"
-import KentKartAuthValidator from "components/validators/KentKartAuthValidator"
-import CardJSONData from "components/card_details/CardJSONData"
-import AuthWall from "components/walls/AuthWall"
 import { ThemeContext } from "common/contexts/ThemeContext"
-import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
-import SimplyButton from "components/ui/SimplyButton"
-import NavigationContainer from "./sections/NavigationContainer"
-import { ScrollView } from "react-native"
 import useGetProfileData from "common/hooks/kentkart/user/useGetProfileData"
+import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
+import CardJSONData from "components/card_details/CardJSONData"
 import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
+import SimplyButton from "components/ui/SimplyButton"
+import KentKartAuthValidator from "components/validators/KentKartAuthValidator"
+import AuthWall from "components/walls/AuthWall"
+import { router } from "expo-router"
+import { useContext } from "react"
+import { ScrollView, Text, View } from "react-native"
 import { RefreshControl } from "react-native-gesture-handler"
+import NavigationContainer from "./sections/NavigationContainer"
 
-export default function HomeTab(props: { route: any; navigation: NativeStackNavigationProp<any> }) {
-	const { navigation } = props
+export default function HomeTab(props: { route: any; }) {
 	const { theme } = useContext(ThemeContext)
 	const {data,isLoading,refetch,isRefetching} = useGetProfileData()
 	const credentials = useKentKartAuthStore((state)=>state.credentials)
@@ -23,16 +22,16 @@ export default function HomeTab(props: { route: any; navigation: NativeStackNavi
 		return <CustomLoadingIndicator/>
 	}
 	return (
-		<KentKartAuthValidator else={<AuthWall navigation={navigation} />}>
+		<KentKartAuthValidator else={<AuthWall  />}>
 			<ScrollView refreshControl={<RefreshControl onRefresh={refetch} refreshing={isLoading||isRefetching} />} style={{ backgroundColor: theme.dark }} contentContainerStyle={{ alignItems: "center",paddingVertical:20*4 }}>
 				<Text className="mx-auto font-bold opacity-50 text-[24px]">Hello, {`${data?.data.accountInfo?.name} ${data?.data.accountInfo?.surname}`}</Text>
-				<NavigationContainer navigation={props.navigation} />
+				<NavigationContainer />
 				<View className="flex flex-row space-x-4">
 					<SimplyButton text="logout" size="medium" type="secondary" color={theme.error} onPress={logout} />
 
 					<SimplyButton
 						onPress={() => {
-							navigation.push("r8r")
+							router.navigate("/R8R")
 						}}
 						type="primary"
 						size="medium"

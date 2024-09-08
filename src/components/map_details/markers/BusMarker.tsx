@@ -1,16 +1,15 @@
-import { Callout, LatLng, Marker } from "react-native-maps"
-import BusData from "common/interfaces/KentKart/BusData"
-import { Image, View } from "react-native"
-import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import { DYNAMIC_CONTENT_URL } from "common/constants"
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import Logger from "common/Logger"
-import RouteData from "common/interfaces/KentKart/RouteData"
-import { BusCallout } from "../callouts/BusCallout"
-import { useContext, useEffect } from "react"
+import { DYNAMIC_CONTENT_URL } from "common/constants"
 import { ThemeContext } from "common/contexts/ThemeContext"
-import { transit_realtime } from "gtfs-realtime-bindings"
+import BusData from "common/interfaces/KentKart/BusData"
+import RouteData from "common/interfaces/KentKart/RouteData"
 import { router } from "expo-router"
+import { transit_realtime } from "gtfs-realtime-bindings"
+import { useContext } from "react"
+import { Image } from "react-native"
+import { Callout, LatLng, Marker } from "react-native-maps"
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
+import { BusCallout } from "../callouts/BusCallout"
 export function BusMarker(props: {
 	is_rt?: boolean
 	rt_raw?: transit_realtime.FeedEntity
@@ -24,7 +23,7 @@ export function BusMarker(props: {
 	const scheduled_data = schedule_list?.find((e) => e.tripId === bus.tripId)
 	const { theme } = useContext(ThemeContext)
 	if (!bus || !coordinate || !route_data) {
-		Logger.warning("BusMarker.tsx", "BusMarker", "Bus, coordinate or navigation is null")
+		Logger.warning("BusMarker.tsx", "BusMarker", "Bus or coordinate is null")
 		return
 	}
 	if (easterEggEnabled) {

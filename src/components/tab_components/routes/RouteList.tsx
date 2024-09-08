@@ -1,21 +1,17 @@
-import { FlatList, RefreshControl, Text } from "react-native"
-import BasicRouteInformation from "common/interfaces/KentKart/BasicRouteInformation"
-import RouteTouchable from "./RouteTouchable"
-import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import { useContext, useMemo } from "react"
-import ApplicationConfig from "common/ApplicationConfig"
 import { ThemeContext } from "common/contexts/ThemeContext"
-import { useAnimatedStyle, useSharedValue } from "react-native-reanimated"
+import BasicRouteInformation from "common/interfaces/KentKart/BasicRouteInformation"
+import { useContext, useMemo } from "react"
+import { FlatList, RefreshControl, Text } from "react-native"
+import RouteTouchable from "./RouteTouchable"
 export default function RouteList(props: {
 	data: { routeList: BasicRouteInformation[] }
 	refreshing: boolean
 	onRefresh: () => void
 	searchText: string
-	navigation: NativeStackNavigationProp<any>
 	routeType?: string
 }) {
 	function renderRoute({ index, item }: { index: number; item: BasicRouteInformation }) {
-		return <RouteTouchable item={item} navigation={props.navigation} />
+		return <RouteTouchable item={item}  />
 	}
 	const { theme } = useContext(ThemeContext)
 	const { routeType } = props

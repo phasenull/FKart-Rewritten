@@ -21,7 +21,6 @@ export default abstract class Database {
 			Logger.error("Database.set", e)
 		}
 	}
-
 	public static async removeItem(key: string) {
 		try {
 			await AsyncStorage.removeItem(key)

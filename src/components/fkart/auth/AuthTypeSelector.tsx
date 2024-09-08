@@ -1,20 +1,18 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons"
-import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { useContext, useEffect } from "react"
 import { BackHandler, Image, Keyboard, Text, TouchableWithoutFeedback, View, useWindowDimensions } from "react-native"
 
-import Animated, { FadeIn, useSharedValue, withSpring } from "react-native-reanimated"
 import ApplicationConfig from "common/ApplicationConfig"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import { TranslationsContext } from "common/contexts/TranslationsContext"
-import SecondaryText from "components/reusables/SecondaryText"
 import SimplyButton from "components/ui/SimplyButton"
-import PushUserPage from "./push/PushUserPage"
-import GetUserPage from "./get/GetUserPage"
+import { useNavigation } from "expo-router"
 import { TouchableOpacity } from "react-native"
+import Animated, { FadeIn, useSharedValue, withSpring } from "react-native-reanimated"
+import GetUserPage from "./get/GetUserPage"
+import PushUserPage from "./push/PushUserPage"
 
-export default function FKartAuthTypeSelector(props: { navigation: NativeStackNavigationProp<any> }) {
-	const { navigation } = props
+export default function FKartAuthTypeSelector() {
 	const { translations } = useContext(TranslationsContext)
 	const page_height = useWindowDimensions().height
 	const translateY = useSharedValue(0)
@@ -22,6 +20,7 @@ export default function FKartAuthTypeSelector(props: { navigation: NativeStackNa
 	function updatePage(index: number) {
 		translateY.value = withSpring(page_height * (0 - index) - page_height, { duration: 500, dampingRatio: 0.75 })
 	}
+	const navigation = useNavigation()
 	useEffect(() => {
 		updatePage(0)
 		const backHandler = BackHandler.addEventListener("hardwareBackPress", () => {
@@ -47,7 +46,7 @@ export default function FKartAuthTypeSelector(props: { navigation: NativeStackNa
 				<View className="flex-1">
 					<TouchableOpacity
 						className="absolute top-4 right-4 self-end rounded-full"
-						onPress={() => navigation.navigate("fkart.auth.welcomer")}
+						onPress={() => alert(`navigation.navigate("fkart.auth.welcomer")`)}
 						style={{
 							backgroundColor: theme.white,
 						}}

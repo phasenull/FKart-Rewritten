@@ -7,7 +7,7 @@ QnA
 .expo/
 dist/
 web-build/
-
+*.hidden
 # Native
 *.orig.*
 *.jks

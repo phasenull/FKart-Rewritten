@@ -1,31 +1,28 @@
-import { Clipboard, Text, ToastAndroid, Vibration, View } from "react-native"
-import MapView from "react-native-maps"
+import ApplicationConfig from "common/ApplicationConfig"
 import BusData from "common/interfaces/KentKart/BusData"
 import RouteData from "common/interfaces/KentKart/RouteData"
-import ApplicationConfig from "common/ApplicationConfig"
+import { Clipboard, Text, ToastAndroid, Vibration, View } from "react-native"
+import MapView from "react-native-maps"
 
-import React, { LegacyRef, Ref, useContext, useEffect, useRef, useState } from "react"
-import { ICityInformation } from "common/interfaces/KentKart/CityInformation"
 import BottomSheet, { TouchableOpacity } from "@gorhom/bottom-sheet"
-import { DYNAMIC_CONTENT_URL } from "common/constants"
-import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import { ScrollView } from "react-native-gesture-handler"
-import BusContainer from "../../components/reusables/BusContainer"
 import { BottomSheetMethods } from "@gorhom/bottom-sheet/lib/typescript/types"
-import Map from "../../components/map_details/Map"
+import { ICityInformation } from "common/interfaces/KentKart/CityInformation"
 import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
+import React, { LegacyRef, Ref, useContext, useEffect, useRef, useState } from "react"
+import { ScrollView } from "react-native-gesture-handler"
+import Map from "../../components/map_details/Map"
+import BusContainer from "../../components/reusables/BusContainer"
 
-import FollowingBus from "../../components/map_details/FollowingBus"
+import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import { useGetCityList, useGetRouteDetails } from "common/hooks/kentkart/nonAuthHooks"
-import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
-import { router, Stack, useLocalSearchParams } from "expo-router"
-import SecondaryText from "components/reusables/SecondaryText"
-import Divider from "components/reusables/Divider"
-import HorizontalDivider from "components/reusables/HorizontalDivider"
 import Logger from "common/Logger"
-import { MaterialCommunityIcons } from "@expo/vector-icons"
+import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
+import HorizontalDivider from "components/reusables/HorizontalDivider"
+import SecondaryText from "components/reusables/SecondaryText"
+import { Stack, useLocalSearchParams } from "expo-router"
+import FollowingBus from "../../components/map_details/FollowingBus"
 export default function MapData() {
 	const { force_route_code, force_direction, force_bus_id, headerTitle } = useLocalSearchParams<{
 		force_direction: string
@@ -51,7 +48,7 @@ export default function MapData() {
 	} = useGetRouteDetails({
 		direction: direction,
 		route_code: force_route_code,
-		interval: 5000 * 10, //dev
+		interval: 5* 1_000, //dev
 		user: user as IKentKartUser,
 		result_includes: {
 			busStopList: true,

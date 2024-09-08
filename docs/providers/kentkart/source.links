@@ -4,10 +4,7 @@
 "https://service.kentkart.com/rl1/";
 "https://service.kentkart.com/test/";
 
-DOES NOT WORK
 https://service.kentkart.com/rl1/api/deleteAccountText
-
-DOES NOT WORK
 https://service.kentkart.com/rl1/api/clarificationText/'+k.constants.SETTINGS_USER_REGION+'/'+v.globals.getLanguage()+'.pdf'
 
 
@@ -16,6 +13,16 @@ API_CITY:'api/v2.0/city'
 
 AUTH
 api/v2.0/auth
+GET /api/find/address
+POST api/leg/detail
+region:,
+                            lang: ,
+                            authType: ,
+                            version: ,
+                            arriveBy: "false",
+                            lat: ,
+                            lng: ,
+                            lngEnd:
 
 
 api/push/register
@@ -107,7 +114,7 @@ API_INFO_FEEDBACK_V4:'api/v4.0/info/feedback'
 
 API_ACCOUNT_V4_SEND_DELETION_OTP:'api/account/deleteAccountRequest'
 API_ACCOUNT_V4_VALIDATE_DELETION_OTP:'api/account/deleteAccountComplete'
-
+/api/faq?type=AFC
 LIST ROUTES (does not include every route) | GET
 API_ROUTE_LIST:'api/v2.0/route/list'
 

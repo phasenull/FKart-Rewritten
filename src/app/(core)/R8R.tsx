@@ -1,22 +1,19 @@
-import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { useGetRealtime } from "common/hooks/kentkart/nonAuthHooks"
-import SimplyButton from "components/ui/SimplyButton"
-import React, { LegacyRef, useEffect, useMemo, useRef } from "react"
-import { View } from "react-native"
-import { PROVIDER_GOOGLE } from "react-native-maps"
+import { Stack } from "expo-router"
+import React, { LegacyRef, useMemo, useRef } from "react"
 import MapView from "react-native-map-clustering"
-import ErrorPage from "../ErrorPage"
+import { PROVIDER_GOOGLE } from "react-native-maps"
 import { busMarkerFromBus } from "../../components/r8r/ClusterMarker"
 import OverlayRoot from "../../components/r8r/overlay/OverlayRoot"
-import { Stack } from "expo-router"
+import ErrorPage from "../ErrorPage"
 
-export default function R8R(props: { navigation: NativeStackNavigationProp<any> }) {
+export default function R8R() {
 	const map = useRef<MapView>()
 	const { data, isLoading, isError, error, refetch, isRefetching } = useGetRealtime()
 	const renderedMarkers = useMemo(
 		() =>
 			data?.feed?.map((e) => {
-				return busMarkerFromBus(e as any, props.navigation)
+				return busMarkerFromBus(e as any)
 			}),
 		[data]
 	)
@@ -26,9 +23,10 @@ export default function R8R(props: { navigation: NativeStackNavigationProp<any> 
 	return (
 		<React.Fragment>
 			<Stack.Screen options={{
+				headerShown:true,
 				title: `${data?.feed?.length || 0} buses ${new Date().toISOString().slice(0, 19)}`
 			}}/>
-			<OverlayRoot isRefetchLoading={isLoading||isRefetching} refetchFn={refetch} navigation={props.navigation}/>
+			<OverlayRoot isRefetchLoading={isLoading||isRefetching} refetchFn={refetch} />
 			<MapView
 				// minZoom={12}
 				radius={40}

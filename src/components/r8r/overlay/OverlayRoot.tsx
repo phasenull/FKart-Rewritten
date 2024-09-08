@@ -1,24 +1,21 @@
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import SimplyButton from "components/ui/SimplyButton";
-import { View } from "react-native";
+import SimplyButton from "components/ui/SimplyButton"
+import { View } from "react-native"
 
-export default function OverlayRoot(props:{
-	isRefetchLoading:boolean,
-	refetchFn:()=>void,
-	navigation:NativeStackNavigationProp<any>
-}) {
-	return <View className="flex-1 z-10">
-		
-		<View className="absolute bottom-4 flex flex-row self-center">
+export default function OverlayRoot(props: { isRefetchLoading: boolean; refetchFn: () => void }) {
+	return (
+		<>
+			{/* buttons */}
+			<View className="z-50 absolute bottom-12 self-center ">
 				<SimplyButton
 					text="refetch"
 					size="medium"
 					style={{
-						zIndex: 4,
+						width:24*4,
 					}}
 					onPress={props.refetchFn}
 					disabled={props.isRefetchLoading}
 				/>
 			</View>
-	</View>
+		</>
+	)
 }

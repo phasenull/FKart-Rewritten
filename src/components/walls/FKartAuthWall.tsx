@@ -1,10 +1,8 @@
-import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 
 import FKartAuthTypeSelector from "components/fkart/auth/AuthTypeSelector"
 
-export default function FKartAuthWall(props: { navigation: NativeStackNavigationProp<any> }) {
-	const { navigation } = props
+export default function FKartAuthWall() {
 	return (
-		<FKartAuthTypeSelector navigation={navigation} />
+		<FKartAuthTypeSelector />
 	)
 }

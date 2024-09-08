@@ -1,15 +1,14 @@
-import { useContext, useEffect, useState } from "react"
-import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import { Text, View } from "react-native"
 import ApplicationConfig from "common/ApplicationConfig"
+import { ThemeContext } from "common/contexts/ThemeContext"
+import Logger from "common/Logger"
 import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
 import * as Updates from "expo-updates"
-import Logger from "common/Logger"
-import { InitialInfo } from "./welcomer/WelcomerRoot"
-import { ThemeContext } from "common/contexts/ThemeContext"
+import { useContext, useEffect, useState } from "react"
+import { Text, View } from "react-native"
+import { InitialInfo } from "./(core)/welcomer"
+import SplashScreen from "./SplashScreen"
 
-export default function WelcomerPage(props: { navigation:NativeStackNavigationProp<any> }) {
-	const navigation = props.navigation as NativeStackNavigationProp<any>
+export default function WelcomerPage() {
 	const [checkedUpdates, setCheckedUpdates] = useState(false)
 	const [isUpdating,setIsUpdating] = useState(false)
 	const [availableUpdate,setAvailableUpdate] = useState<Updates.UpdateCheckResult | undefined>(undefined)
@@ -63,21 +62,7 @@ export default function WelcomerPage(props: { navigation:NativeStackNavigationPr
 	const [show, setShow] = useState<"initial_info" | "auth_page">("initial_info")
 	if (!checkedUpdates) {
 		return (
-			<View className="flex-1 gap-y-10 flex-col items-center justify-center" style={{ backgroundColor: theme.dark }}>
-				<View>
-					<CustomLoadingIndicator size={48} />
-				</View>
-				<Text
-					// className="bg-red-400"
-					style={{
-						color: theme.secondary,
-						fontWeight: "800",
-						fontSize: 24,
-					}}
-				>
-					Checking Updates in {Updates.channel}
-				</Text>
-			</View>
+			<SplashScreen logs={["checking updates"]} />
 		)
 	}
 	if (isUpdateAvailable) {
@@ -101,7 +86,7 @@ export default function WelcomerPage(props: { navigation:NativeStackNavigationPr
 		)
 	}
 	if (show == "initial_info") {
-		return <InitialInfo last_check={lastCheck} navigation={navigation} />
+		return <InitialInfo last_check={lastCheck} />
 	}
 	return
 }

@@ -1,17 +1,16 @@
-import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import { RefreshControl, ScrollView, Text, View } from "react-native"
-import FKartAuthValidator from "components/validators/FKartAuthValidator"
-import FKartAuthWall from "components/walls/FKartAuthWall"
+import { useFKartAuthStore } from "common/stores/FKartAuthStore"
 import CardJSONData from "components/card_details/CardJSONData"
-import SimplyButton from "components/ui/SimplyButton"
 import LogsView from "components/fkart/editor/tab/LogsView"
 import SecondaryText from "components/reusables/SecondaryText"
-import { useFKartAuthStore } from "common/stores/FKartAuthStore"
+import SimplyButton from "components/ui/SimplyButton"
+import FKartAuthValidator from "components/validators/FKartAuthValidator"
+import FKartAuthWall from "components/walls/FKartAuthWall"
+import { ScrollView } from "react-native"
 
-export default function EditorTab(props: { route: any; navigation: NativeStackNavigationProp<any> }) {
+export default function EditorTab(props: { route: any;  }) {
 	const { user,logout } = useFKartAuthStore()
 	return (
-		<FKartAuthValidator else={<FKartAuthWall navigation={props.navigation} />}>
+		<FKartAuthValidator else={<FKartAuthWall />}>
 			<ScrollView
 				contentContainerStyle={{
 					alignItems: "center",

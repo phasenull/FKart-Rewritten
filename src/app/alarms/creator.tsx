@@ -1,4 +1,3 @@
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { View } from "react-native";
 
 /* 
@@ -14,7 +13,7 @@ when route
 	goes_live
 */
 
-export default function ScreenAlarmCreator(props:{navigation:NativeStackNavigationProp<any>}) {
+export default function ScreenAlarmCreator() {
 	return <View>
 		
 	</View>

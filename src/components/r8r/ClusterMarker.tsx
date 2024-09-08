@@ -1,9 +1,8 @@
-import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import SecondaryText from "components/reusables/SecondaryText"
 import { transit_realtime } from "gtfs-realtime-bindings"
-import React, { useDeferredValue, useState } from "react"
-import { Text, View } from "react-native"
-import { Camera, Circle, LatLng, Marker, Point } from "react-native-maps"
+import React, { useState } from "react"
+import { View } from "react-native"
+import { LatLng, Marker } from "react-native-maps"
 import { BusMarker } from "../map_details/markers/BusMarker"
 function avgFromArray(arr: number[]) {
 	let total = 0
@@ -17,7 +16,7 @@ function getAvgPositionFromArray(data: transit_realtime.FeedEntity[]): LatLng {
 	const lat = data.map((e) => e.vehicle?.position?.latitude as number)
 	return { latitude: avgFromArray(lat), longitude: avgFromArray(long) }
 }
-export function busMarkerFromBus(entity: transit_realtime.FeedEntity, navigation: NativeStackNavigationProp<any>) {
+export function busMarkerFromBus(entity: transit_realtime.FeedEntity) {
 	const id = entity.id
 	const vehicle = entity.vehicle as any
 	const [bus_id, disabled_person, _3, _4, vehicle_type, _5, _6, pick_me_up] = vehicle.vehicle.id.split("|")
@@ -59,14 +58,13 @@ export function busMarkerFromBus(entity: transit_realtime.FeedEntity, navigation
 			}}
 			key={vehicle.vehicle.licensePlate || id}
 			coordinate={{ latitude: vehicle.position.latitude, longitude: vehicle.position.longitude }}
-			navigation={navigation}
 		/>
 	)
 }
-export default function ClusterMarker(props: { disable_clustering?: boolean; items: transit_realtime.FeedEntity[]; pos: LatLng; navigation: NativeStackNavigationProp<any> }) {
+export default function ClusterMarker(props: { disable_clustering?: boolean; items: transit_realtime.FeedEntity[]; pos: LatLng}) {
 	const [showFull, setShowFull] = useState(false)
 	if (props.items.length <= 3 || props.disable_clustering) {
-		return <React.Fragment>{props.items.map((e) => busMarkerFromBus(e, props.navigation))}</React.Fragment>
+		return <React.Fragment>{props.items.map((e) => busMarkerFromBus(e))}</React.Fragment>
 	}
 	return (
 		<Marker

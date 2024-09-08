@@ -1,13 +1,11 @@
-import { LegacyRef, useContext, useMemo } from "react"
-import MapView, { PROVIDER_GOOGLE, Polyline } from "react-native-maps"
+import { ThemeContext } from "common/contexts/ThemeContext"
+import BusData from "common/interfaces/KentKart/BusData"
 import { ICityInformation } from "common/interfaces/KentKart/CityInformation"
 import RouteData from "common/interfaces/KentKart/RouteData"
-import BusData from "common/interfaces/KentKart/BusData" 
-import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import Logger from "common/Logger"
+import { LegacyRef, useContext, useMemo } from "react"
+import MapView, { PROVIDER_GOOGLE, Polyline } from "react-native-maps"
+import { BusMarker } from "./markers/BusMarker"
 import StopMarker from "./markers/StopMarker"
-import {BusMarker} from "./markers/BusMarker"
-import { ThemeContext } from "common/contexts/ThemeContext"
 const styled_map = require("./MapStyle.json")
 export default function Map(props: {
 	forwardRef: LegacyRef<MapView> | undefined

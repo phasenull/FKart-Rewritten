@@ -1,8 +1,8 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons"
-import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import Divider from "components/reusables/Divider"
 import SecondaryText from "components/reusables/SecondaryText"
+import { router } from "expo-router"
 import { useContext } from "react"
 import { TouchableOpacity } from "react-native"
 import { View } from "react-native"
@@ -18,11 +18,11 @@ function QuickButton(props: { label: string; icon: string,onPress?:()=>void }) {
 	)
 }
 
-export default function NavigationContainer(props: { navigation: NativeStackNavigationProp<any> }) {
+export default function NavigationContainer() {
 	return (
 		<View className="flex-col mt-12">
 			<View className="flex-row items-center space-x-4">
-				<QuickButton icon="alarm" label="alarms" onPress={()=>props.navigation.navigate("alarms")} />
+				<QuickButton icon="alarm" label="alarms" onPress={()=>router.navigate("/alarms")} />
 				<Divider height={60} />
 				<QuickButton icon="badge-account-horizontal" label="editor" />
 				<Divider height={60} />

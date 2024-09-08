@@ -1,12 +1,12 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons"
-import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import SecondaryText from "components/reusables/SecondaryText"
-import { TouchableOpacity } from "react-native-gesture-handler"
-import { View } from "react-native"
-import { useContext } from "react"
 import { ThemeContext } from "common/contexts/ThemeContext"
+import SecondaryText from "components/reusables/SecondaryText"
+import { router } from "expo-router"
+import { useContext } from "react"
+import { View } from "react-native"
+import { TouchableOpacity } from "react-native-gesture-handler"
 
-export default function (props: { navigation: NativeStackNavigationProp<any> }) {
+export default function () {
 	const {theme} = useContext(ThemeContext)
 	return (
 		<View className="items-center justify-center flex-1">
@@ -22,12 +22,7 @@ export default function (props: { navigation: NativeStackNavigationProp<any> }) 
 					backgroundColor: theme.primary,
 				}}
 				onPress={() => {
-					const navigation = props.navigation
-					if (navigation) {
-						navigation.replace("home")
-					} else {
-						alert("navigation is null")
-					}
+					router.replace("/RootScreen")
 				}}
 			>
 				<SecondaryText style={{ color: theme.white, fontSize: 32 }}>Go home</SecondaryText>

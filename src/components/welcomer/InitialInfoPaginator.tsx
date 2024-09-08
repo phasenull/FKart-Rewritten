@@ -1,14 +1,14 @@
-import React, { useContext, useEffect, useMemo, useState } from "react"
-import { Text, TouchableOpacity, View } from "react-native"
 import ApplicationConfig from "common/ApplicationConfig";
+import React, { useContext, useEffect, useState } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
 
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { ThemeContext } from "common/contexts/ThemeContext";
 import { TranslationsContext } from "common/contexts/TranslationsContext";
 import SelectLangModal from "components/reusables/SelectLangModal";
-import { ThemeContext } from "common/contexts/ThemeContext";
-import ErrorPage from "../ErrorPage";
-export function IIPaginator(props: {navigation:NativeStackNavigationProp<any>, initialIndex?: number; onPageChange?: (newIndex: number, previousIndex?: number) => void; children: any }) {
+import { router } from "expo-router";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import ErrorPage from "../../app/ErrorPage";
+export function IIPaginator(props: {initialIndex?: number; onPageChange?: (newIndex: number, previousIndex?: number) => void; children: any }) {
 	// console.log("IIPaginator Update",props?.children?.length)
 	const [page, setPage] = useState(props.initialIndex || 0)
 	function movePage(dir: -1 | 1) {
@@ -26,7 +26,7 @@ export function IIPaginator(props: {navigation:NativeStackNavigationProp<any>, i
 	return (
 		<View className="flex-1 justify-between items-center">
 			<SelectLangModal defaultValue={lang} onDismiss={()=>setShowTranslationSelector(false)} visible={showTranslationSelector} onSelect={setLang} />
-			<TouchableOpacity style={{backgroundColor:theme.white,borderRadius:16}} className="p-4 absolute self-center mt-4" onPress={()=>setShowTranslationSelector(true)}>
+			<TouchableOpacity style={{backgroundColor:theme.white,borderRadius:16}} className="p-4 absolute self-center mt-12" onPress={()=>setShowTranslationSelector(true)}>
 				<MaterialCommunityIcons name="translate" color={theme.secondary} size={48}/>
 			</TouchableOpacity>
 			<View className="flex-1">
@@ -86,12 +86,7 @@ export function IIPaginator(props: {navigation:NativeStackNavigationProp<any>, i
 					}}
 					onPress={() => {
 						if (page == children.length-1) {
-							const navigation = props.navigation
-							if (navigation) {
-								navigation.replace("home")
-							} else {
-								alert("navigation is null")
-							}
+							router.replace({pathname:"/RootScreen"})
 						}
 						movePage(1)
 					}}

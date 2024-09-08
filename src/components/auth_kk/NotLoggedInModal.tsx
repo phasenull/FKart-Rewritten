@@ -1,9 +1,9 @@
-import { useContext, useState } from "react"
-import { Modal, Text, TouchableOpacity, View } from "react-native"
-import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { ThemeContext } from "common/contexts/ThemeContext";
+import { router } from "expo-router";
+import { useContext, useState } from "react";
+import { Modal, Text, TouchableOpacity, View } from "react-native";
 
-export default function NotLoggedInModal(props: { param_visible: boolean; onRequestClose: () => void; navigation: NativeStackNavigationProp<any> }) {
+export default function NotLoggedInModal(props: { param_visible: boolean; onRequestClose: () => void; }) {
 	const { param_visible } = props
 	const [visible, setVisible] = useState(param_visible)
 	const {theme} = useContext(ThemeContext)
@@ -28,7 +28,7 @@ export default function NotLoggedInModal(props: { param_visible: boolean; onRequ
 						}}
 						className="px-4 py-2"
 						onPress={() => {
-							props?.navigation?.push("auth")
+							router.push("/auth_kk")
 						}}
 					>
 						<Text className="text-md w-16 text-center">Sign In</Text>

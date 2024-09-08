@@ -1,21 +1,19 @@
-import { NativeStackNavigationProp } from "@react-navigation/native-stack"
+import { useContext, useState } from "react"
+import { RefreshControl, ScrollView, Text, View } from "react-native"
 import AccountDetailsContainer from "./components/AccountDetailsContainer"
-import { useContext, useEffect, useState } from "react"
-import { RefreshControl, ScrollView, Text, TouchableOpacity, View } from "react-native"
 
-import { Favorite } from "common/interfaces/KentKart/Favorite"
 import { AddCard } from "./components/AddCard"
 import CardContainer from "./components/CardContainer"
 
 import { ThemeContext } from "common/contexts/ThemeContext"
+import useGetFavorites from "common/hooks/kentkart/user/useGetFavorites"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
+import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
+import SimplyButton from "components/ui/SimplyButton"
 import KentKartAuthValidator from "components/validators/KentKartAuthValidator"
 import AuthWall from "components/walls/AuthWall"
-import SimplyButton from "components/ui/SimplyButton"
-import { useQuery } from "react-query"
-import useGetFavorites from "common/hooks/kentkart/user/useGetFavorites"
-import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
-export default function AccountTab(props?: { route: any; navigation: NativeStackNavigationProp<any> }) {
+import { router } from "expo-router"
+export default function AccountTab(props?: { route: any}) {
 	const { theme } = useContext(ThemeContext)
 	if (!props) {
 		return (
@@ -24,12 +22,11 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 			</View>
 		)
 	}
-	const { navigation } = props
 	const { user, logout } = useKentKartAuthStore((state) => state)
 	const [is_show_secret, setIsShowSecret] = useState(false)
 	const { data: favoritesData, refetch: refetchFavorites, isRefetching: isFavoritesRefetching, isLoading: isFavoritesLoading, error: favoritesError } = useGetFavorites()
 	return (
-			<KentKartAuthValidator else={<AuthWall navigation={navigation} />}>
+			<KentKartAuthValidator else={<AuthWall />}>
 				<ScrollView
 					refreshControl={<RefreshControl onRefresh={refetchFavorites} refreshing={isFavoritesRefetching} />}
 					horizontal={false}
@@ -66,7 +63,6 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 								index={index}
 								key={"card_" + (p_card.aliasNo)}
 								favorite_data={p_card}
-								navigation={navigation}
 							/>
 						)) || (
 							<View className="items-center flex-1 justify-center">
@@ -87,11 +83,11 @@ export default function AccountTab(props?: { route: any; navigation: NativeStack
 					{/* {favoritesData?.data.virtualCards?.map((p_card, index) => {
 						console.log("virtual card",p_card)
 						return (
-						<CardContainer style={{ marginTop: 5 * 4 }} favorite_data={p_card} navigation={navigation} key={"virtual_card_" + (p_card.favorite + p_card.alias)} index={index} />
+						<CardContainer style={{ marginTop: 5 * 4 }} favorite_data={p_card} key={"virtual_card_" + (p_card.favorite + p_card.alias)} index={index} />
 					)})} */}
 					<AddCard />
 					<SimplyButton onPress={logout} className="mb-2" text="Log Out" color={theme.error} size="medium" />
-					<SimplyButton className="mt-4" text="Select City" size="medium" onPress={() => props.navigation.navigate("city_selector")} />
+					<SimplyButton className="mt-4" text="Select City" size="medium" onPress={() => router.navigate("/city_selector")} />
 				</ScrollView>
 			</KentKartAuthValidator>
 	)

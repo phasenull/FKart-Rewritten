@@ -1,15 +1,14 @@
-import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import BusData from "common/interfaces/KentKart/BusData"
 import { Image, Text, TouchableOpacity, View } from "react-native"
 
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import Divider from "components/reusables/Divider"
-import React, { useContext } from "react"
-import RouteData from "common/interfaces/KentKart/RouteData"
-import { useGetBusImages } from "common/hooks/fkart/bus/useGetBusImages"
-import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
 import { ThemeContext } from "common/contexts/ThemeContext"
+import { useGetBusImages } from "common/hooks/fkart/bus/useGetBusImages"
+import RouteData from "common/interfaces/KentKart/RouteData"
+import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
+import Divider from "components/reusables/Divider"
 import { router } from "expo-router"
+import React, { useContext } from "react"
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 export default function BusContainer(props: { bus: BusData; route_data: RouteData; onPress?: () => void; onLongPress?: () => void; children?: any }) {
 	const { theme } = useContext(ThemeContext)
 	const { bus, route_data } = props

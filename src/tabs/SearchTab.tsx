@@ -1,35 +1,21 @@
-import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import useGetRouteList from "common/hooks/fkart/static/useGetRouteList"
-import ApplicationConfig from "common/ApplicationConfig"
-import {
-	ActivityIndicator,
-	FlatList,
-	Keyboard,
-	Modal,
-	RefreshControl,
-	Text,
-	TextInput,
-	TouchableHighlight,
-	TouchableOpacity,
-	TouchableWithoutFeedback,
-	TouchableWithoutFeedbackComponent,
-	View,
-} from "react-native"
-import React, { useContext, useMemo, useState } from "react"
 import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
+import React, { useContext, useState } from "react"
+import {
+	Text,
+	View
+} from "react-native"
 
-import RouteList from "components/tab_components/routes/RouteList"
-import RouteSearchBar from "components/tab_components/routes/RouteSearchBar"
-import SecondaryText from "components/reusables/SecondaryText"
+import ErrorPage from "app/ErrorPage"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
-import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
-import ErrorPage from "app/ErrorPage"
-export default function SearchTab(props: { navigation: NativeStackNavigationProp<any> }) {
+import SecondaryText from "components/reusables/SecondaryText"
+import RouteList from "components/tab_components/routes/RouteList"
+import RouteSearchBar from "components/tab_components/routes/RouteSearchBar"
+export default function SearchTab() {
 	const user = useKentKartAuthStore((state) => state.user)
 	const { data, isLoading, isError, error, refetch, isRefetching } = useGetRouteList()
 	const { theme } = useContext(ThemeContext)
-	const { navigation } = props
 	const [searchText, setSearchText] = useState("")
 	const [filterByRouteType, setFilterByRouteType] = useState<{
 		key: string
@@ -70,7 +56,7 @@ export default function SearchTab(props: { navigation: NativeStackNavigationProp
 			</View>
 		)
 	} else if (data?.data && data?.data.routeList) {
-		contain = <RouteList data={data.data} navigation={navigation} onRefresh={refreshData} refreshing={isRefetching || isLoading} searchText={searchText} routeType={filterByRouteType.value} />
+		contain = <RouteList data={data.data} onRefresh={refreshData} refreshing={isRefetching || isLoading} searchText={searchText} routeType={filterByRouteType.value} />
 	} else {
 		contain = <ErrorPage error={{ title: "Unknown Error", description: "Unknown state (no error, no routeList, data found)" }} retry={refetch} />
 	}

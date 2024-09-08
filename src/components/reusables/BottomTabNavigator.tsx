@@ -1,28 +1,29 @@
 import { BottomTabBarProps, createBottomTabNavigator } from "@react-navigation/bottom-tabs"
-import { NativeStackNavigationProp } from "@react-navigation/native-stack"
-import { useContext, useMemo, useState } from "react"
-import ApplicationConfig from "common/ApplicationConfig"
 import { TranslationsContext } from "common/contexts/TranslationsContext"
+import { useContext, useMemo } from "react"
 
+import CitySelector from "app/(core)/city_selector"
+import { ITheme, ThemeContext } from "common/contexts/ThemeContext"
+import CityValidator from "components/validators/CityValidator"
+import { useNavigation } from "expo-router"
+import { TouchableOpacity, View } from "react-native"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import AccountTab from "tabs/AccountTab/AccountTab"
 import EditorTab from "tabs/EditorTab"
 import HomeTab from "tabs/home/HomeTab"
 import SearchTab from "tabs/SearchTab"
-import { Text, TouchableOpacity, View } from "react-native"
 import SecondaryText from "./SecondaryText"
-import { ITheme, ThemeContext } from "common/contexts/ThemeContext"
-import CityValidator from "components/validators/CityValidator"
-import CitySelector from "app/(core)/city_selector"
 
-function BottomTabButton(props: { state: any; descriptors: any; navigation: NativeStackNavigationProp<any>; route: any; index: number }) {
-	const { descriptors, navigation, state, index, route } = props
+function BottomTabButton(props: { state: any; descriptors: any; route: any; index: number }) {
+	const { descriptors,  state, index, route } = props
 	const { options } = descriptors
 	const label = options.tabBarLabel || options.title || route.name
 	const isFocused = state.index === index
+	const navigation = useNavigation()
 	const onPress = () => {
 		if (!isFocused) {
-			navigation.navigate(route.name, route.params)
+			///@ts-ignore
+			navigation.navigate(route.name as any, route.params as any)
 		}
 	}
 	const { theme } = useContext(ThemeContext)
@@ -73,7 +74,7 @@ function BottomTabButton(props: { state: any; descriptors: any; navigation: Nati
 	)
 }
 function BottomTab(props: BottomTabBarProps) {
-	const { descriptors, navigation, state, insets } = props as BottomTabBarProps & { navigation: NativeStackNavigationProp<any> }
+	const { descriptors, state, insets } = props as BottomTabBarProps
 	const theme = Object.values(descriptors)[0].options.tabBarStyle as ITheme
 	return (
 		<View
@@ -86,12 +87,12 @@ function BottomTab(props: BottomTabBarProps) {
 			}}
 		>
 			{state.routes.map((route: any, index: number) => {
-				return <BottomTabButton key={route.key} descriptors={descriptors[route.key]} index={index} navigation={navigation} route={route} state={state} />
+				return <BottomTabButton key={route.key} descriptors={descriptors[route.key]} index={index} route={route} state={state} />
 			})}
 		</View>
 	)
 }
-export function BottomTabNavigator(props: { navigation: NativeStackNavigationProp<any> }) {
+export function BottomTabNavigator() {
 	const { translations } = useContext(TranslationsContext)
 
 	const { theme } = useContext(ThemeContext)
@@ -142,10 +143,10 @@ export function BottomTabNavigator(props: { navigation: NativeStackNavigationPro
 		</Tab.Navigator>
 	)
 }
-function WrappedSearch(props: { navigation: NativeStackNavigationProp<any> }) {
+function WrappedSearch() {
 	return (
-		<CityValidator else={<CitySelector navigation={props.navigation}/>} navigation={props.navigation}>
-			<SearchTab navigation={props.navigation} />
+		<CityValidator else={<CitySelector/>}>
+			<SearchTab />
 		</CityValidator>
 	)
 }

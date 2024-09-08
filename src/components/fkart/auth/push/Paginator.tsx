@@ -1,26 +1,26 @@
 import React, { useContext, useState } from "react"
 import { Text, TouchableOpacity, View } from "react-native"
 
+import { ThemeContext } from "common/contexts/ThemeContext"
+import { TranslationsContext } from "common/contexts/TranslationsContext"
+import SelectLangModal from "components/reusables/SelectLangModal"
+import { router } from "expo-router"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { TranslationsContext } from "common/contexts/TranslationsContext";
-import SelectLangModal from "components/reusables/SelectLangModal";
-import { ThemeContext } from "common/contexts/ThemeContext";
-export function Paginator(props: {navigation:NativeStackNavigationProp<any>, initialIndex?: number; onPageChange?: (newIndex: number, previousIndex?: number) => void; children: any }) {
+export function Paginator(props: { initialIndex?: number; onPageChange?: (newIndex: number, previousIndex?: number) => void; children: any }) {
 	// console.log("IIPaginator Update",props?.children?.length)
 	const [page, setPage] = useState(props.initialIndex || 0)
 	function movePage(dir: -1 | 1) {
 		const result = Math.max(0, Math.min(page + dir, props.children.length - 1))
 		setPage(result)
 	}
-	const {theme} = useContext(ThemeContext)
-	const {translations,setLang,lang} = useContext(TranslationsContext)
-	const [showTranslationSelector,setShowTranslationSelector] = useState(false)
+	const { theme } = useContext(ThemeContext)
+	const { translations, setLang, lang } = useContext(TranslationsContext)
+	const [showTranslationSelector, setShowTranslationSelector] = useState(false)
 	return (
 		<View className="flex-1 justify-between items-center">
-			<SelectLangModal defaultValue={lang} onDismiss={()=>setShowTranslationSelector(false)} visible={showTranslationSelector} onSelect={setLang} />
-			<TouchableOpacity style={{backgroundColor:theme.white,borderRadius:16}} className="p-4 absolute self-center mt-4" onPress={()=>setShowTranslationSelector(true)}>
-				<MaterialCommunityIcons name="translate" color={theme.secondary} size={48}/>
+			<SelectLangModal defaultValue={lang} onDismiss={() => setShowTranslationSelector(false)} visible={showTranslationSelector} onSelect={setLang} />
+			<TouchableOpacity style={{ backgroundColor: theme.white, borderRadius: 16 }} className="p-4 absolute self-center mt-4" onPress={() => setShowTranslationSelector(true)}>
+				<MaterialCommunityIcons name="translate" color={theme.secondary} size={48} />
 			</TouchableOpacity>
 			<View className="flex-1">
 				{props.children[page] || (
@@ -30,29 +30,31 @@ export function Paginator(props: {navigation:NativeStackNavigationProp<any>, ini
 				)}
 			</View>
 			<View className="flex-row w-80 mt-4 justify-center mb-4 gap-x-2">
-				{page == 0 ? null : <TouchableOpacity
-					style={{
-						borderRadius: 16,
-						paddingHorizontal: 16,
-						paddingVertical: 12,
-						marginRight: 4,
-						backgroundColor: theme.white,
-					}}
-					onPress={() => {
-						movePage(-1)
-					}}
-				>
-					<Text
+				{page == 0 ? null : (
+					<TouchableOpacity
 						style={{
-							color: theme.secondary,
-							opacity: 0.3,
-							fontWeight: "600",
+							borderRadius: 16,
+							paddingHorizontal: 16,
+							paddingVertical: 12,
+							marginRight: 4,
+							backgroundColor: theme.white,
 						}}
-						className="text-[36px] text-center"
+						onPress={() => {
+							movePage(-1)
+						}}
 					>
-						{"<"}
-					</Text>
-				</TouchableOpacity>}
+						<Text
+							style={{
+								color: theme.secondary,
+								opacity: 0.3,
+								fontWeight: "600",
+							}}
+							className="text-[36px] text-center"
+						>
+							{"<"}
+						</Text>
+					</TouchableOpacity>
+				)}
 				<TouchableOpacity
 					activeOpacity={0.5}
 					style={{
@@ -62,13 +64,8 @@ export function Paginator(props: {navigation:NativeStackNavigationProp<any>, ini
 						backgroundColor: theme.primary,
 					}}
 					onPress={() => {
-						if (page == props.children.length-1) {
-							const navigation = props.navigation
-							if (navigation) {
-								navigation.navigate("home")
-							} else {
-								alert("navigation is null")
-							}
+						if (page == props.children.length - 1) {
+							router.navigate("/RootScreen")
 						}
 						movePage(1)
 					}}
@@ -113,8 +110,7 @@ export function Paginator(props: {navigation:NativeStackNavigationProp<any>, ini
 									borderRadius: 100,
 									zIndex: 3,
 								}}
-							>
-							</View>
+							></View>
 						</View>
 					)
 				})}

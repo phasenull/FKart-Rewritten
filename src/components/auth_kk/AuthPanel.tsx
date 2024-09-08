@@ -1,16 +1,16 @@
-import { NativeStackNavigationProp } from "@react-navigation/native-stack"
+import { ThemeContext } from "common/contexts/ThemeContext"
+import { TranslationsContext } from "common/contexts/TranslationsContext"
+import AuthTypes from "common/enums/LoginTypes"
+import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
+import SecondaryText from "components/reusables/SecondaryText"
 import { LinearGradient } from "expo-linear-gradient"
+import { router } from "expo-router"
 import { useContext, useState } from "react"
 import { Keyboard, KeyboardAvoidingView, Platform, Switch, Text, TextInput, TouchableOpacity, View } from "react-native"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-import { TranslationsContext } from "common/contexts/TranslationsContext"
-import AuthTypes from "common/enums/LoginTypes"
-import SecondaryText from "components/reusables/SecondaryText"
 import SwitchAuthPage from "./SwitchAuthPage"
-import { ThemeContext } from "common/contexts/ThemeContext"
-import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 
-type AuthPanelProps = { updatePage: (index: number) => void; panel_type: number; navigation: NativeStackNavigationProp<any> }
+type AuthPanelProps = { updatePage: (index: number) => void; panel_type: number; }
 export default function AuthPanel(props: AuthPanelProps) {
 	const [is_keyboard_open, setIsKeyboardOpen] = useState(false)
 	const [inputType, setInputType] = useState<AuthTypes>(AuthTypes.phone)
@@ -148,7 +148,7 @@ export default function AuthPanel(props: AuthPanelProps) {
 			<TouchableOpacity
 				className="py-4 opacity-30 items-center"
 				onPress={() => {
-					props.navigation?.navigate("home", { canGoBack: false })
+					router.replace({pathname:"/RootScreen"})
 				}}
 			>
 				<MaterialCommunityIcons size={48} name="incognito" />

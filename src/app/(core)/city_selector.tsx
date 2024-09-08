@@ -1,14 +1,14 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons"
-import { NativeStackNavigationProp } from "@react-navigation/native-stack"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import { useGetCityList } from "common/hooks/kentkart/nonAuthHooks"
 import { BaseKentKartResponse } from "common/interfaces/KentKart/BaseKentKartResponse"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
 import SecondaryText from "components/reusables/SecondaryText"
+import { router } from "expo-router"
 import { useContext, useState } from "react"
-import { FlatList, Image, Text, TouchableOpacity, View } from "react-native"
-import Animated, { BounceIn, BounceInRight, FadeIn, FadeInRight, FadeOut, FadeOutRight, LightSpeedInRight, LightSpeedOutRight, withSpring } from "react-native-reanimated"
+import { FlatList, Image, TouchableOpacity, View } from "react-native"
+import Animated, { FadeInRight, FadeOutRight } from "react-native-reanimated"
 import ErrorPage from "../ErrorPage"
 const payment_images = {
 	creditCard: "https://cdn-icons-png.flaticon.com/512/4547/4547723.png",
@@ -44,7 +44,7 @@ const image_mapping_testing = {
 	"011":
 		"https://img.aydinlik.com.tr/rcman/Cw1280h720q95gc/storage/files/images/2023/04/27/yozgatta-gezilecek-yerler-listesi-ile-ilk-milli-parktan-essiz-roma-hamamina-yolculuk-yozgatta-gezilecek-yerler-yozgat-gezilecek-yerler-yozgat-gezilecek-jB4M.jpg",
 }
-export default function CitySelector(props:{navigation:NativeStackNavigationProp<any>}) {
+export default function CitySelector() {
 	const { data: city_list, isError, error, isLoading, refetch, isRefetching, isRefetchError } = useGetCityList()
 	const { theme } = useContext(ThemeContext)
 	const [selected, setSelected] = useState<string | undefined>()
@@ -80,10 +80,10 @@ export default function CitySelector(props:{navigation:NativeStackNavigationProp
 						onPress={() => {
 							console.log("regin selected:",selected)
 							setRegion(selected)
-							if (props.navigation?.canGoBack()) {
-								return props.navigation.goBack()
+							if (router.canGoBack()) {
+								return router.back()
 							}
-							return props.navigation.navigate("home")
+							return router.navigate("/RootScreen")
 						}}
 					>
 						<MaterialCommunityIcons color={theme.white} name="check" size={24} />
