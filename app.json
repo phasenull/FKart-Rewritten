@@ -2,25 +2,25 @@
 	"expo": {
 		"name": "FKart",
 		"slug": "FKart",
-		"version": "24.8.11",
+		"version": "24.9.8",
 		"orientation": "portrait",
 		"scheme": "fkart",
 		"userInterfaceStyle": "automatic",
-		"icon": "./src/assets/media/images/icon.png",
+		"icon": "./src/assets/media/images/icon_full_white.png",
 		"splash": {
-			"image": "./src/assets/media/images/icon_no_bg.png",
+			"image": "./src/assets/media/images/icon_full_white.png",
 			"resizeMode": "contain",
 			"backgroundColor": "#ffffff"
 		},
 		"assetBundlePatterns": ["**/*"],
 		"android": {
 			"adaptiveIcon": {
-				"foregroundImage": "./src/assets/media/images/icon_no_bg.png",
+				"foregroundImage": "./src/assets/media/images/icon_full_white.png",
 				"backgroundColor": "#ffffff"
 			},
 			"package": "com.phasenull.FKart",
 			"runtimeVersion": "24.8.11",
-			"permissions": ["android.permission.RECORD_AUDIO", "android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"]
+			"permissions": ["android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"]
 		},
 		"plugins": [
 			"expo-router",
