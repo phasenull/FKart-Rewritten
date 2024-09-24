@@ -112,5 +112,4 @@ export const useKentKartAuthStore = create<KentKartAuthStore>()(
 		}
 	)
 )
-useKentKartAuthStore.getState().fetchAccessToken()
 // useKentKartAuthStore.subscribe((state) => state.credentials)

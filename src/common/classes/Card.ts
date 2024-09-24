@@ -46,6 +46,7 @@ export default abstract class Card {
 			return CardImages.undefined
 		}
 		const type = await Card.getTypeFromCard(card)
+		if (type === CardTypes.QR) return CardImages["QR"]
 		return CardImages[type]
 	}
 }

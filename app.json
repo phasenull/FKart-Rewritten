@@ -8,18 +8,25 @@
 		"userInterfaceStyle": "automatic",
 		"icon": "./src/assets/media/images/icon_full_white.png",
 		"splash": {
-			"image": "./src/assets/media/images/icon_full_white.png",
+			"image": "./src/assets/media/images/icon_no_bg.png",
 			"resizeMode": "contain",
 			"backgroundColor": "#ffffff"
 		},
 		"assetBundlePatterns": ["**/*"],
 		"android": {
+			"enableProguardInReleaseBuilds":true,
+			"useLegacyPackaging":true,
 			"adaptiveIcon": {
 				"foregroundImage": "./src/assets/media/images/icon_full_white.png",
 				"backgroundColor": "#ffffff"
 			},
-			"package": "com.phasenull.FKart",
-			"runtimeVersion": "24.8.11",
+			"package": "dev.phasenull.FKart",
+			"runtimeVersion": "24.9.8",
+			"config": {
+				"googleMaps": {
+					"apiKey": "AIzaSyDEi26R3XBBCxx9enfbo7H-dD4uNwmtIZ0"
+				}
+			},
 			"permissions": ["android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"]
 		},
 		"plugins": [

@@ -69,7 +69,7 @@ export function BusCallout(props: { raw?: transit_realtime.FeedEntity; is_rt?: b
 							numberOfLines={1}
 							adjustsFontSizeToFit={true}
 						>
-							{Math.floor((props.raw?.vehicle?.position?.speed || 0) * 10) / 10} km/h
+							{Math.floor(((props.raw?.vehicle?.position?.speed || 0) * 3.6) * 10) / 10} km/h
 						</Text>
 					</View>
 				) : (

@@ -12,6 +12,7 @@ import CardJSONData from "components/card_details/CardJSONData"
 import SelectCardTypeModal from "components/card_details/SelectCardTypeModal"
 import { Stack, useLocalSearchParams } from "expo-router"
 import ErrorPage from "../ErrorPage"
+import TransactionTouchable from "components/card_details/TransactionTouchable"
 export default function CardDetails() {
 	const { theme } = useContext(ThemeContext)
 	const { alias, description } = useLocalSearchParams<{ alias: string; description?: string }>()
@@ -81,14 +82,7 @@ export default function CardDetails() {
 
 			{/* <VirtualCardQRCodePanel card={card} token={{aliasNo:"hello","token":"hi","expireDate":""}} /> */}
 			<CardJSONData card={{ ...balanceData?.data.cardlist[0] }} />
-			<CardJSONData
-				card={transaction_data?.data?.transactionList?.map(
-					(e) =>
-						`${Date.now() - e.unixtime * 1000 < 24 * 60 * 60 * 1_000 ? deltaTime(Date.now() - e.unixtime * 1000) : new Date(e.unixtime * 1000).toLocaleDateString()}        ${e.type === "0" ? "+" : "-"} ${
-							e.amount || e.usageAmt
-						}`
-				)}
-			/>
+			{transaction_data?.data?.transactionList?.map((transaction,i)=><TransactionTouchable transaction={transaction} key={`${i}`}/>)}
 		</ScrollView>
 	)
 }

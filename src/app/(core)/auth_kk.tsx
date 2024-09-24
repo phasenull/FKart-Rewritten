@@ -24,7 +24,9 @@ export default function AuthPage() {
 		updatePage(0)
 	}, [])
 	const  user  = useKentKartAuthStore((state)=>state.user)
-	if (user) {
+	const  credentials  = useKentKartAuthStore((state)=>state.credentials)
+	if (credentials.access_token) {
+		// console.log("Already logged in (?)")
 		return <Redirect href={{pathname:"/RootScreen"}}/>
 	}
 	return (

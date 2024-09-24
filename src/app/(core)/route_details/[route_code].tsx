@@ -90,7 +90,7 @@ export default function RouteDetails() {
 			<View className="mt-5">
 				<TouchableOpacity
 					onPress={() =>
-						router.navigate(`/map_details?force_route_code=${route_code}`)
+						router.navigate(`/map_details?force_route_code=${route_code}&force_direction=${direction}`)
 					}
 					style={{ alignSelf: "center", elevation: 2, backgroundColor: theme.primary, borderRadius: 16, paddingVertical: 2 * 4, paddingHorizontal: 4 * 4 }}
 				>

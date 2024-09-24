@@ -13,6 +13,7 @@ import { TranslationsProvider } from "../common/contexts/TranslationsContext"
 import SecondaryText from "components/reusables/SecondaryText"
 import Logger from "common/Logger"
 import * as Notifications from "expo-notifications"
+import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 const sqlite = openDatabaseSync("fkart_sqlite.db")
 export const drizzleDB = drizzle(sqlite)
 Notifications.setNotificationHandler({
@@ -27,8 +28,11 @@ const queryClient = new QueryClient({ defaultOptions: { queries: { retry: 1 } } 
 export default function AppEntryComponent() {
 	// Logger.success("App.tsx", "\n\n\n-=-=-=-=-=-=-=-=-=-=-=-=-\n\n   START OF NEW RENDER")
 	const fetchAccessToken = useFKartAuthStore((state) => state.fetchAccessToken)
+	const fetchKKAccessToken = useKentKartAuthStore((state)=>state.fetchAccessToken)
 	useEffect(() => {
-		fetchAccessToken()
+
+		fetchAccessToken().then(([token,error])=>console.log("fetched F token",token,error))
+		fetchKKAccessToken().then(([token,error])=>console.log("fetched KK token",token,error))
 		const secondsTimer = setInterval(() => {
 			fetchAccessToken()
 		}, 3 * 60 * 1000)

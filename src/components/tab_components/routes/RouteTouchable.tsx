@@ -10,44 +10,42 @@ export default function RouteTouchable(props: { item: BasicRouteInformation }) {
 
 	const { theme } = useContext(ThemeContext)
 
-	return useMemo(() => {
-		return (
-			<TouchableOpacity
-				onPress={() => {
-					router.push({pathname:`/route_details/[route_code]`,params:{headerTitle:item.name,route_code: item.displayRouteCode}})
-				}}
-				className="py-1 flex-row pl-1"
-			>
-				<View className="flex-[0.22] my-auto items-center ">
-					<View
-						className="px-2 h-6"
-						style={{
-							backgroundColor: item.routeColor === "006633" ? theme.primary : `#${item.routeColor || "fff"}`,
-							borderRadius: 6,
-						}}
-					>
-						<Text
-							className="text-center my-auto"
-							style={{
-								color: item.routeColor === "006633" ? theme.secondary : `#${item.routeTextColor}`,
-								fontWeight: "900",
-							}}
-						>
-							{item.displayRouteCode}
-						</Text>
-					</View>
-				</View>
-				<Divider className="ml-0.5 mr-0.5 self-center" />
-				<Text
-					className="my-auto ml-1 mr-4 flex-1"
+	return (
+		<TouchableOpacity
+			onPress={() => {
+				router.push({ pathname: `/route_details/[route_code]`, params: { headerTitle: item.name, route_code: item.displayRouteCode } })
+			}}
+			className="py-1 flex-row pl-1"
+		>
+			<View className="flex-[0.22] my-auto items-center ">
+				<View
+					className="px-2 h-6"
 					style={{
-						color: theme.secondary,
-						fontWeight: "500",
+						backgroundColor: item.routeColor === "006633" ? theme.primary : `#${item.routeColor || "fff"}`,
+						borderRadius: 6,
 					}}
 				>
-					{item.name} ({item.routeCode})
-				</Text>
-			</TouchableOpacity>
-		)
-	}, [item, theme])
+					<Text
+						className="text-center my-auto"
+						style={{
+							color: item.routeColor === "006633" ? theme.secondary : `#${item.routeTextColor}`,
+							fontWeight: "900",
+						}}
+					>
+						{item.displayRouteCode}
+					</Text>
+				</View>
+			</View>
+			<Divider className="ml-0.5 mr-0.5 self-center" />
+			<Text
+				className="my-auto ml-1 mr-4 flex-1"
+				style={{
+					color: theme.secondary,
+					fontWeight: "500",
+				}}
+			>
+				{item.name} ({item.routeCode})
+			</Text>
+		</TouchableOpacity>
+	)
 }
