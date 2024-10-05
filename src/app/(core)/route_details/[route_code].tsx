@@ -20,7 +20,7 @@ export default function RouteDetails() {
 	const [direction, setDirection] = useState(parseInt(force_direction || "0") || 0)
 	const { theme } = useContext(ThemeContext)
 	const user = useKentKartAuthStore((state) => state.user)
-	const { data, error, isLoading, refetch, isRefetching,isError } = useGetRouteDetails({
+	const { data, error, isLoading, refetch, isRefetching, isError } = useGetRouteDetails({
 		route_code: route_code,
 		direction: direction,
 		user: user as IKentKartUser,
@@ -29,12 +29,11 @@ export default function RouteDetails() {
 			busList: true,
 			scheduleList: true,
 			timeTableList: true,
-			busStopList:true,
-			
+			busStopList: true,
 		},
 	})
-	if (isLoading) {
-		return <CustomLoadingIndicator style={{flex:1}} />
+	if (isLoading || isRefetching) {
+		return <CustomLoadingIndicator style={{ flex: 1 }} />
 	}
 	if (error) {
 		return (
@@ -49,23 +48,30 @@ export default function RouteDetails() {
 	}
 
 	const route_data = data?.data?.pathList?.at(0)
-	if (error||isError || (!route_data)) {
+	if (error || isError || !route_data) {
 		return (
 			<ErrorPage
 				error={{
 					title: "Nothing to see here!",
 					description: "Tap retry to go back",
 				}}
-				retry={()=>setDirection((old)=>1-old)}
+				retry={() => refetch()}
+				other={{
+					func: () => setDirection((old) => 1 - old),
+					icon: "swap-horizontal-bold",
+					description: `Switch Direction (${direction})`,
+				}}
 			/>
 		)
 	}
 	return (
 		<ScrollView refreshControl={<RefreshControl refreshing={isLoading || isRefetching} onRefresh={refetch} />}>
-			<Stack.Screen options={{
-				headerTitle:`${route_data.displayRouteCode} - ${route_data.headSign}`||headerTitle,
-				headerShown:true
-			}} />
+			<Stack.Screen
+				options={{
+					headerTitle: `${route_data.displayRouteCode} - ${route_data.headSign}` || headerTitle,
+					headerShown: true,
+				}}
+			/>
 			<Text>
 				Route Details {route_data?.displayRouteCode} {direction}
 			</Text>
@@ -89,15 +95,13 @@ export default function RouteDetails() {
 			</ScrollView>
 			<View className="mt-5">
 				<TouchableOpacity
-					onPress={() =>
-						router.navigate(`/map_details?force_route_code=${route_code}&force_direction=${direction}`)
-					}
+					onPress={() => router.navigate(`/map_details?force_route_code=${route_code}&force_direction=${direction}`)}
 					style={{ alignSelf: "center", elevation: 2, backgroundColor: theme.primary, borderRadius: 16, paddingVertical: 2 * 4, paddingHorizontal: 4 * 4 }}
 				>
 					<Text>Open Map View</Text>
 				</TouchableOpacity>
 			</View>
-			<CardJSONData card={{...route_data,busStopList:[],pointList:[]}} />
+			<CardJSONData card={{ ...route_data, busStopList: [], pointList: [] }} />
 		</ScrollView>
 	)
 }

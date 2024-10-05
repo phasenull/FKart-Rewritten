@@ -80,7 +80,7 @@ export function useGetRealtime() {
 				authType: auth_type,
 			})}`
 			let data
-			const request = await axios.get(url, { timeout: 1500, responseType: "arraybuffer" })
+			const request = await axios.get(url, { timeout: 3500, responseType: "arraybuffer" })
 
 			const buffer = await request.data
 			console.log("fetch end")
@@ -99,8 +99,8 @@ export function useGetRealtime() {
 		},
 		queryKey: ["realtime"],
 		keepPreviousData: true,
-		refetchInterval: 30 * 1000,
-		retry: false,
+		refetchInterval: 5 * 1000,
+		retry: 2,
 		onError: () => console.log("failed to fetch realtime"),
 	})
 }

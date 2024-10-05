@@ -9,7 +9,7 @@ import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 
 async function getRouteList({ region }: { region: string }): Promise<AxiosResponse<BaseKentKartResponse & { routeList: BasicRouteInformation[] }>> {
 	Logger.info("REQUEST useGetRouteList")
-	return axios(`${ApplicationConfig.fkart_endpoints.static}/kentkart/routes?region=${region}`)
+	return axios(`${ApplicationConfig.endpoints.service}/rl1/api/v2.0/route/list?region=${region}`)
 }
 
 export default function useGetRouteList() {

@@ -51,9 +51,7 @@ export default function SearchTab() {
 		)
 	} else if (!data?.data) {
 		contain = (
-			<View className="items-center justify-center flex-1">
-				<SecondaryText>No data found</SecondaryText>
-			</View>
+			<ErrorPage retry={refetch} error ={{title:"No data found"}}/>
 		)
 	} else if (data?.data && data?.data.routeList) {
 		contain = <RouteList data={data.data} onRefresh={refreshData} refreshing={isRefetching || isLoading} searchText={searchText} routeType={filterByRouteType.value} />

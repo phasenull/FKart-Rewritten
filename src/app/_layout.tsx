@@ -24,7 +24,7 @@ Notifications.setNotificationHandler({
 		priority: Notifications.AndroidNotificationPriority.HIGH,
 	}),
 })
-const queryClient = new QueryClient({ defaultOptions: { queries: { retry: 1 } } })
+const queryClient = new QueryClient({ defaultOptions: { queries: { retry: 2 } } })
 export default function AppEntryComponent() {
 	// Logger.success("App.tsx", "\n\n\n-=-=-=-=-=-=-=-=-=-=-=-=-\n\n   START OF NEW RENDER")
 	const fetchAccessToken = useFKartAuthStore((state) => state.fetchAccessToken)
