@@ -29,10 +29,28 @@ export default function StopMarker(props: { busStop: BasicStopInformation; coord
 		)
 	}
 	return (
-		<Marker key={busStop.stopId}  tracksViewChanges={false} style={{ alignItems: "center" }} coordinate={coordinate} title={`+${new Date(parseInt(busStop.arrival_offset || "0") * 1000).getMinutes()}m ${busStop.stopName}`}>
+		<Marker
+			onCalloutPress={() =>
+				alert(
+					JSON.stringify(
+						{
+							...busStop,
+							pickupType: busStop.pickupType === "1" ? "❌ no pickups" : "✅ pickups available",
+							dropoffType: busStop.dropoffType === "1" ? "❌ no drops" : "✅ dropoffs available",
+						},
+						undefined,
+						4
+					)
+				)
+			}
+			key={busStop.stopId}
+			tracksViewChanges={false}
+			style={{ alignItems: "center" }}
+			coordinate={coordinate}
+			title={`+${new Date(parseInt(busStop.arrival_offset || "0") * 1000).getMinutes()}m ${busStop.stopName}`}
+		>
 			<View className="h-8 w-8 justify-center items-center">
-			<MaterialCommunityIcons name="bus-stop" size={22} color={theme.secondary} />
-
+				<MaterialCommunityIcons name="bus-stop" size={22} color={theme.secondary} />
 			</View>
 			{/* <Callout
 				// tooltip={true}

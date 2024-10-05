@@ -82,7 +82,7 @@ API_CARD_PUSHSET:'api/card/pushSet'
 ALSO FAVORITES BUT V4, LESS INFO
 API_FAVORITE_V4:'api/v4.0/favorite'
 
-NO IDEA | GET
+NFC CARD | GET
 API_NFC_CARD:'api/v3.0/nfc/card'
 
 LOAD BALANCE | GET
