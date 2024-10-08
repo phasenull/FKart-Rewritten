@@ -1,0 +1,173 @@
+KentKart Mobile Api 0.0.1
+
+ERROR_??: "FAVORITE_MAX_ERROR" User reached maximum favorite size
+ERROR_3: "HTTP_ERROR" Cannot read from data service
+ERROR_3: "NOT_FOUND_ERROR" Cannot read proper info.
+ERROR_24: "CARD_NOT_FOUND" card info parsing error.
+ERROR_30: "NOT_ACTIVE" NFC is not active in this city
+ERROR_34: "MANDATORY_ERROR" Mandatory field missing
+ERROR_37: "AUTH2_ERROR" cannot get user info from token.
+ERROR_38: "IDENTITY_ERROR" Invalid TCKN
+ERROR_40: "SOAP_ERROR" Cannot read from soap source
+ERROR_41: "DUPLICATE_ACCOUNT_ERROR" Account already exists error
+ERROR_42: "CREATE_ACCOUNT_ERROR" Cannot create account
+ERROR_48: "RESPONSE_PARSE_ERROR" card info parsing error.
+ERROR_666: "SQL_ERROR" Cannot read from database
+
+
+LANGUAGE FILE
+
+ERROR_1: Invalid Region
+ERROR_2: Invalid Command
+ERROR_3: Result Not Found
+ERROR_23: Invalid Card Number
+ERROR_24: Card Number is not registered in the System
+ERROR_24: card info parsing error.
+ERROR_31: Daily usage limit is exceeded. Please sign up.
+ERROR_32: You have reached the maximum number of favorites!
+ERROR_33: Please login to take advantage of special services
+ERROR_25: Your account does not have an active credit card. Please add credit card before.
+ERROR_26: Order could not be processed
+ERROR_27: Unsuccessful withdrawal of amount
+ERROR_28: Your card is not suitable for use in this action.
+ERROR_29: Online Charge service is not active in this city.
+ERROR_4: System Error! Please contact to customer support
+ERROR_30: NFC Card service is not active in this city.
+ERROR_22: Wrong OTP code
+ERROR_34: Please enter your information correctly
+ERROR_35: Can not withdraw money from your credit card connected to the NFC card. Please check your card.
+ERROR_36: You can not charge your NFC card by this method!
+ERROR_37: Please login to take advantage of special services
+ERROR_38: Invalid id card number.
+ERROR_40: System Error! Please contact to customer support
+ERROR_41: Account already exists.
+ERROR_42: Error in account create.
+ERROR_43: Error in account update.
+ERROR_47: Error reading user favorites.
+ERROR_48: Result Not Found
+ERROR_49: Error in account confirm.
+ERROR_50: Wrong pin code.
+ERROR_51: You have reached the daily maximum number of updates.
+ERROR_52: Insufficient credit limit.
+ERROR_408: Request timeout. Please try again.
+ERROR_666: System Error! Please contact to customer support
+ERROR_53: Bank rejected request.
+ERROR_54: OTP not sent.
+ERROR_55: Online recharge request failed.
+ERROR_56: Credit card registration failed.
+ERROR_58: Card already been related.
+ERROR_57: Account not found. Please open account.
+ERROR_59: Poll not found.
+ERROR_60: Please choose one of options provided.
+ERROR_61: 31 Mayıs 2015 tarihi itibariyle doğduğumuz şehre veda etmiş bulunmaktayız. Anlayışınız için teşekkür ederiz.
+ERROR_-1: This service is private!
+ERROR_67: Forever Card service is not active in this city.
+ERROR_62: Uygulamamızın yeni sürümü çıkmıştır. Lütfen yeni sürümü indiriniz yada http://m.kentkart.com adresinden işlemlerinizi yapabilirsiniz.
+ERROR_63: Uygulamamızın yeni sürümü çıkmıştır. Lütfen yeni sürümü indiriniz yada http://online.antalyakart.com.tr adresinden işlemlerinizi yapabilirsiniz.
+ERROR_64: Paylal is no longer is a accepted payment service. This service no longer supported in Turkey.
+ERROR_65: TC kimlik numaranız onaylanamadı!
+ERROR_66: 18 yaşından küçükler bu hizmeti kullanamaz!
+ERROR_68: Sistemimizde bakım yapılmaktadır. Lütfen bir süre sonra tekrar deneyiniz!
+ERROR_104: Daily usage limit exceed.
+ERROR_69: Request could not completed. Please try again, later.
+ERROR_351: Your card has been closed for use. You can contact the Card Center for details.
+ERROR_352: Your card balance has been transferred to another card. You can contact the Card Center for details.
+ERROR_110: You can not purchase a new NFC card because you have one.
+ERROR_356: The GTFS file is now being prepared. Please try again later. Thanks for patience.
+ERROR_357: The GTFS file has started to be prepared. This will take about 10 minutes. Please try again in 10 minutes.
+ERROR_144: Since your NFC card is active on another phone, you cannot use it on this phone.
+ERROR_701: Timeout occurred while connecting, please try again later.
+ERROR_702: Currently, the transaction you want cannot be done. Please try again later.
+ERROR_703: Currently, the transaction you want cannot be done. Please try again later.
+ERROR_164: Please choose valid recharge amount.
+ERROR_165: Please update mobile application to could be use this service.
+ERROR_158: An error occurred during your operation. Please contact to customer support.
+ERROR_167: An error occurred during your operation. Please try again.
+ERROR_168: HES code and identity/passport no mismatch!
+ERROR_169: This card has beed defined before! You can reach us from the contact information on the home page.
+ERROR_170: An error occurred during your operation. Please try again.
+ERROR_171: An error occurred during your operation. Please try again.
+ERROR_173: Incorrect data entry!
+ERROR_182: HES code and identity/passport no mismatch!
+ERROR_174: Your card has been temporarily suspended!
+ERROR_175: Unsupported operation
+ERROR_176: Your card has been temporarily suspended!
+ERROR_177: Invalid card! Please define your HES code to your card!
+ERROR_178: Please define your HES code!
+ERROR_179: Undefined servis error!
+ERROR_180: Service error!
+ERROR_181: Save error!
+ERROR_183: Undefined card! (-103)
+ERROR_189: HES code must be valid for at least {{expireDate}} days.
+ERROR_191: This card has beed defined before! You can reach us from the contact information on the home page.
+ERROR_163: You allready have a pending recharge.
+ERROR_142: Your card is not suitable for online charging.
+ERROR_116: You have already purchased this QR card.
+ERROR_117: An error has occured during your ticket purchase. Please try again.
+ERROR_118: An error has occured during your ticket purchase. Please try again.
+ERROR_119: An error has occured during your ticket purchase. Please try again.
+ERROR_120: An error has occured during your ticket purchase. Please try again.
+ERROR_121: An error has occured during your ticket purchase. Please try again.
+ERROR_122: An error has occured during your ticket purchase. Please try again.
+ERROR_124: An error has occured during your ticket purchase. Please try again.
+ERROR_125: An error has occured during your ticket purchase. Please try again.
+ERROR_126: An error has occured during your ticket purchase. Please try again.
+ERROR_127: To continue your installation, you need to update the application. Please try again after updating the application.
+ERROR_186: An error has occured during your ticket purchase. Please try again.
+ERROR_187: An error has occured during your ticket purchase. Please try again.
+ERROR_123: Your card or ticket has expired.
+ERROR_128: Product not allowed for this operation.
+ERROR_129: The card has been purchased however an error occured duirng recharge. Please try again.
+ERROR_131: You cannot delete your card / ticket because the expiration date has not passed.
+ERROR_133: The amount you want to load is below the specified lower limit. Please enter a higher amount.
+ERROR_134: The amount you want to load is above the specified upper limit. Please enter a lower amount.
+ERROR_135: The card information entered maybe wrong or your card does not support 3D secure payments. Please check the entered information and use a 3D Secure enabled card.
+ERROR_136: An error has occurred during your ticket purchase. Please contact the Call Center so your fee can be returned.
+ERROR_139: The verification code or alias you entered is incorrect. Please login with the correct information and try again.
+ERROR_138: You can not save this card because it was previously registered.
+ERROR_147: You currently have an operation in progress. Please try again later.
+ERROR_193: The Ministry Service can not be reached. Please try again later.
+ERROR_194: Currently maintenance work is carried out. Thank you for your patience.
+ERROR_197: TC No is not suitable!
+ERROR_225: An error occurred during your operation. Please try again.
+ERROR_226: You have already customized this card with your credentials!
+ERROR_227: Your credentials are not suitable for personalization. Please contact the card center!
+ERROR_228: This card was previously customized by another user!
+ERROR_229: Your credentials are not suitable for personalization. Please contact the card center!
+ABT_ACCOUNT_INQUIRY_CHANGE_IDENTIY_MESSAGE: You already have a customized card. If you customize the new card, you will lose the customization privileges on your old card!
+ERROR_230: An error occurred during your operation. Please try again.
+ERROR_231: An error occurred during your operation. Please try again.
+ERROR_232: An error occurred during your operation. Please try again.
+ERROR_233: Customized card information not found.
+ERROR_234: Your pending transaction has been successfully completed.
+ERROR_235: You have an incomplete card transaction. Please contact the card center!
+ERROR_236: An error occurred during your operation. Please try again.
+ERROR_238: An error occurred during your operation. Please try again.
+ERROR_237: Entrance code is missing or wrong.
+ERROR_244: This card is not customized.
+ERROR_115: Configuration information is incompletely defined!
+ERROR_240: An error occurred during your operation. Please try again.
+ERROR_241: An error occurred during your operation. Please try again.
+ERROR_358: An error occurred during your operation. Please try again.
+ERROR_242: An error occurred during your operation. Please try again.
+ERROR_243: Your application process could not be completed. Please try again later.
+ERROR_245: This card is not customized.
+ERROR_246: Bekleyen işleminiz başarıyla tamamlanmıştır. Kartınızda özelleştirme yetkisine sahip olmak için kişiselleştirme başvurusuna devam etmeniz gerekmektedir.
+ERROR_247: You have another customized card!
+ERROR_153: If you would like to use this specification you should update the mobile application.
+ERROR_248: You have already customized your card. In order to have customization authorization on your card, you must continue with the personalization application.
+ERROR_249: İNDİRİMLİ yada SERBEST hakkınız bulunmamaktadır. TC KİMLİK NUMARANIZ {{creditCardNo}} no lu KARTINIZ ile TAM KREDİ KARTI olarak başarıyla eşleştirilmiştir.
+ERROR_250: Başvuru adımında seçtiğiniz Kart Tipi için kişiselleştirme hakkınız bulunmamaktadır. 
+ERROR_143: An error occurred during your operation. Please try again.
+ERROR_196: You exceed the upper limit of the balance set with the amount you want to load on your card. Please select a lower filling quantity.
+ERROR_109: You exceed the upper limit of the balance set with the amount you want to load on your card. Please select a lower filling quantity.
+ERROR_251: You do not have the right to a special card.
+ERROR_253: Please personalize your QR card to receive your chosen ticket.
+ERROR_252: You do not have a valid QR card to buy the ticket you have chosen!
+ERROR_259: Personalization is not yet active in your region.
+ERROR_264: We cannot process your transaction right now. Try again later.
+ERROR_267: You entered your current password incorrectly.
+ERROR_268: There is another card registered with your phone number.
+ERROR_269: You've previously customized another card with your credentials!
+ERROR_270: Your card is password blocked. Please contact the call center.
+ERROR_271: Your account is already customized.
