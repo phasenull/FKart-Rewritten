@@ -48,11 +48,11 @@ export default abstract class API {
 		const data = {
 			loginType: "phone",
 			clientId: "rH7S2",
-			clientSecret: "Om121T12fSv1j66kp9Un5vE9IMkJ3639",
+			clientSecret: "Om121T12fSv1j66kp9Un5vE9IMkJ3639", // (server is the client itself)
 			code: isOTP ? token_or_code : undefined,
 			refreshToken: (!isOTP) ? token_or_code : undefined,
 			grantType: isOTP ? "authorizationCode" : "refreshToken",
-			redirectUri: "m.kentkart.com",
+			redirectUri: "m.kentkart.com", // for client rH7S2
 		}
 		const request = await ApplicationConfig.makeKentKartRequest(`${ApplicationConfig.endpoints.auth}/rl1/oauth/token`, {
 			method: "POST",
