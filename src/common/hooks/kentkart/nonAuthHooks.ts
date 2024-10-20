@@ -74,10 +74,11 @@ export function useGetRealtime() {
 				return { feed: [] }
 			}
 			console.log("fetch start")
-			const url = `${ApplicationConfig.endpoints.service}/rl1/api/gtfs/realtime?${new URLSearchParams({
+			const url = `${ApplicationConfig.endpoints.service}/api/gtfs/realtime?${new URLSearchParams({
 				region: region,
-				token: access_token,
-				authType: auth_type,
+				antiCache: `${Math.random()}`
+				// token: access_token,
+				// authType: auth_type,
 			})}`
 			let data
 			const request = await axios.get(url, { timeout: 3500, responseType: "arraybuffer" })
@@ -99,7 +100,7 @@ export function useGetRealtime() {
 		},
 		queryKey: ["realtime"],
 		keepPreviousData: true,
-		refetchInterval: 5 * 1000,
+		refetchInterval: 10 * 1000,
 		retry: 2,
 		onError: () => console.log("failed to fetch realtime"),
 	})
