@@ -8,7 +8,7 @@ FKart is a project that focuses on building a better public transit app & archiv
 - [X] Media uploading - for public use, requires fkart auth, not available to public atm
 - [ ] Data correction - Data corrections for routes & buses (ac, bike support etc.)
 - [X] R8R (Realtime Vehicle-Tracking-System) - track ***all*** buses realtime across the city
-- [X] RT-VTS Archive - see more @ [new vts observer](https://github.com/phasenull/kentkart-vts-observer) [bucket explorer for legacy vts observer (private source code)](https://data.fkart.project.phasenull.dev/buckets/vts)
+- [X] RT-VTS Archive - see more @ [new vts observer](https://github.com/phasenull/kentkart-vts-observer) or [bucket explorer for legacy vts observer (private source code)](https://data.fkart.project.phasenull.dev/buckets/vts)
 - [X] Passenger-Information-System - basic features like realtime bus locations, route details, card balances etc.
 - [X] Accountless Session Settings - App settings that can be saved to fkart db without authentication
 - [ ] Custom "WAY"s - kinda like stops but filters routes so you only see whats necessary & is not limited to arriving routes nor directions
