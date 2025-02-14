@@ -14,9 +14,8 @@ ERROR_42: "CREATE_ACCOUNT_ERROR" Cannot create account
 ERROR_48: "RESPONSE_PARSE_ERROR" card info parsing error.
 ERROR_666: "SQL_ERROR" Cannot read from database
 
-
-LANGUAGE FILE
-
+KentKart Mobile Api
+ERROR_1002: The specified account is not exist
 ERROR_1: Invalid Region
 ERROR_2: Invalid Command
 ERROR_3: Result Not Found
