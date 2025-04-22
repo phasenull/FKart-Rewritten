@@ -1,3 +1,4 @@
+
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import ApplicationConfig from "common/ApplicationConfig"
 import BaseFKartResponse from "common/interfaces/FKart/BaseFKartResponse"
@@ -44,11 +45,11 @@ export const useFKartAuthStore = create<FKartAuthStore>()(
 				})
 				let response:
 					| (BaseFKartResponse & {
-							session?: {
-								user: FKartUser
-								access_token: string
-							}
-					  })
+						session?: {
+							user: FKartUser
+							access_token: string
+						}
+					})
 					| undefined
 
 				try {
@@ -91,9 +92,9 @@ export const useFKartAuthStore = create<FKartAuthStore>()(
 				})
 				let response:
 					| (BaseFKartResponse & {
-							session?: { user: FKartUser; refresh_token: string; is_2fa_enabled: boolean }
-							twoFA_session_id?: string
-					  })
+						session?: { user: FKartUser; refresh_token: string; is_2fa_enabled: boolean }
+						twoFA_session_id?: string
+					})
 					| undefined
 
 				try {
@@ -135,6 +136,7 @@ export const useFKartAuthStore = create<FKartAuthStore>()(
 			logout: async () => {
 				const { user, credentials, twoFA } = get()
 				Logger.info(`Logging out from account ${user?.email}`)
+				set({ user: undefined, credentials: undefined })
 				const url = `${ApplicationConfig.fkart_endpoints.auth}/user/logout`
 				const request = await fetch(url, {
 					method: "POST",
@@ -148,12 +150,15 @@ export const useFKartAuthStore = create<FKartAuthStore>()(
 				} catch {
 					response = undefined
 				}
-				if (!response) return [false, "Server returned invalid data!"]
+				if (!response) {
+					console.log("CANT LOGOUT!")
+					return [false, "Server returned invalid data!"]
+				}
 				if (!response?.result.success) {
+					console.log("CANT LOGOUT!!")
 					return [false, response?.result.error]
 				}
 				console.log(response)
-				set({ user: undefined, credentials: undefined })
 				return [true]
 			},
 		}),

@@ -12,7 +12,7 @@ FKart is a project that focuses on building a better public transit app & archiv
 - [X] Passenger-Information-System - basic features like realtime bus locations, route details, card balances etc.
 - [X] Accountless Session Settings - App settings that can be saved to fkart db without authentication
 - [ ] Custom "WAY"s - kinda like stops but filters routes so you only see whats necessary & is not limited to arriving routes nor directions
-- [ ] ~~Driver Blacklist~~ - atm no ids are being returned by the server for the active driver
+- [ ] Driver Blacklist - ~~atm no ids are being returned by the server for the active driver~~ They don't return driver ids in the responses cus they can't. They have so little info about active drivers that it can barely be considered "data" RIP DRIVER BLACKLISTING 🙏🙏🙏
 - [ ] Stop & "Add-Value Machine" images
 - [ ] Hand-written guides - Guide from point A to B, includes images and step-by-step descriptions
 - [ ] Route-Playback - recorded videos for routes
