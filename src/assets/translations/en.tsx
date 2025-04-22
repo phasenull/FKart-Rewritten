@@ -1,13 +1,13 @@
 const TRANSLATIONS_EN = {
 	languages: {
 		locale: "English",
-	},or:"or",
-	select_language:"Select language",
+	}, or: "or",
+	select_language: "Select language",
 	signin: "Sign In",
 	signup: "Sign Up",
 	incognito_mode: "incognito mode",
-	cancel:"cancel",
-	ok:"OK",
+	cancel: "cancel",
+	ok: "OK",
 	input_fields: {
 		phone: "phone number",
 		email: "e-Mail",
@@ -20,12 +20,12 @@ const TRANSLATIONS_EN = {
 	},
 	screens: {
 		fkart: {
-			editor:"Editor",
+			editor: "Editor",
 			auth: {
-				welcomer : {
-					what_is_an_editor_title:"But, what is an Editor?",
+				welcomer: {
+					what_is_an_editor_title: "But, what is an Editor?",
 					what_is_an_editor_desc: "EN Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam ullamcorper tristique nibh, et porta sapien iaculis ac. Etiam eleifend, augue eu luctus porttitor, eros mi vehicula tellus, congue lobortis ex ligula sit amet augue.",
-					what_do_i_need_to_be_an_editor_title:"I wanna be an Editor too!",
+					what_do_i_need_to_be_an_editor_title: "I wanna be an Editor too!",
 					what_do_i_need_to_be_an_editor_desc: "EN Fusce aliquam, ante eu maximus tincidunt, urna elit maximus enim, quis fringilla lacus sem in diam. Donec tempor volutpat ultrices. Duis sit amet accumsan urna. Praesent placerat, ex a suscipit tristique.",
 				}
 			}
@@ -72,15 +72,19 @@ const TRANSLATIONS_EN = {
 	tabs: {
 		editor: {
 			name: "Editor",
+			key: "Editor",
 		},
 		search: {
 			name: "Search",
+			key: "Search",
 		},
 		home: {
 			name: "Home",
+			key: "Home",
 		},
 		settings: {
 			name: "Settings",
+			key: "Settings",
 		},
 	},
 }

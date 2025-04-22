@@ -16,12 +16,13 @@ function getAvgPositionFromArray(data: transit_realtime.FeedEntity[]): LatLng {
 	const lat = data.map((e) => e.vehicle?.position?.latitude as number)
 	return { latitude: avgFromArray(lat), longitude: avgFromArray(long) }
 }
-export function busMarkerFromBus(entity: transit_realtime.FeedEntity) {
+export function busMarkerFromBus(entity: transit_realtime.FeedEntity,onPress?:()=>void) {
 	const id = entity.id
 	const vehicle = entity.vehicle as any
 	const [bus_id, disabled_person, _3, _4, vehicle_type, _5, _6, pick_me_up] = vehicle.vehicle.id.split("|")
 	return (
 		<BusMarker
+			onPress={onPress}
 			rt_raw={entity}
 			is_rt={true}
 			route_data={{

@@ -5,21 +5,21 @@ import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
 import * as Updates from "expo-updates"
 import { useContext, useEffect, useState } from "react"
 import { Text, View } from "react-native"
-import { InitialInfo } from "./(core)/welcomer"
+import InitialInfo from "./(core)/welcomer"
 import SplashScreen from "./SplashScreen"
 
 export default function WelcomerPage() {
 	const [checkedUpdates, setCheckedUpdates] = useState(false)
-	const [isUpdating,setIsUpdating] = useState(false)
-	const [availableUpdate,setAvailableUpdate] = useState<Updates.UpdateCheckResult | undefined>(undefined)
+	const [isUpdating, setIsUpdating] = useState(false)
+	const [availableUpdate, setAvailableUpdate] = useState<Updates.UpdateCheckResult | undefined>(undefined)
 	const [isUpdateAvailable, setIsUpdateAvailable] = useState<boolean | undefined>(undefined)
-	const [lastCheck,setLastCheck] = useState<number>(0)
-	const {theme} = useContext(ThemeContext)
+	const [lastCheck, setLastCheck] = useState<number>(0)
+	const { theme } = useContext(ThemeContext)
 
 	async function onFetchUpdateAsync() {
 		const last_check = await ApplicationConfig.database.get("settings.last_update_check") || 0
 		setLastCheck(last_check)
-		Logger.info("Welcomer.tsx",`Last update checked at ${new Date(last_check).toUTCString()} | ${last_check}`)
+		Logger.info("Welcomer.tsx", `Last update checked at ${new Date(last_check).toUTCString()} | ${last_check}`)
 		if (last_check && (Date.now() - last_check < ApplicationConfig.expo_updates_check_interval)) {
 			setCheckedUpdates(true)
 			setIsUpdateAvailable(false)
@@ -32,7 +32,7 @@ export default function WelcomerPage() {
 			return
 		}
 		try {
-			await ApplicationConfig.database.set("settings.last_update_check",Date.now())
+			await ApplicationConfig.database.set("settings.last_update_check", Date.now())
 			const update = await Updates.checkForUpdateAsync()
 			// if (update.isAvailable) {
 			// 	alert(`Update available on channel ${Updates.channel}: ${update.}`)
@@ -40,7 +40,7 @@ export default function WelcomerPage() {
 			setCheckedUpdates(true)
 			setIsUpdateAvailable(update.isAvailable)
 			setAvailableUpdate(update)
-		} catch (error : any) {
+		} catch (error: any) {
 			if (!(error.message as string).startsWith("checkForUpdateAsync")) {
 				alert(`Error fetching latest Expo update: ${error}`)
 			}
@@ -50,10 +50,10 @@ export default function WelcomerPage() {
 		}
 	}
 	async function update() {
-		if (isUpdating) {return}
+		if (isUpdating) { return }
 		setIsUpdating(true)
 		await Updates.fetchUpdateAsync();
-        await Updates.reloadAsync();
+		await Updates.reloadAsync();
 		alert(`App has been updated!`)
 	}
 	useEffect(() => {

@@ -9,7 +9,7 @@ import CityValidator from "components/validators/CityValidator"
 import { IIPageAnnouncement } from "components/welcomer/page_announcement"
 import { Redirect } from "expo-router"
 import SplashScreen from "../SplashScreen"
-export function InitialInfo(props: { last_check: number; }) {
+export default function InitialInfo(props: { last_check: number; }) {
 	const { data, isLoading } = useGetAnnouncements()
 	const doesExist = data?.data?.announceList?.length
 	const isLoaded = !!data

@@ -1,19 +1,23 @@
 import { useGetRealtime } from "common/hooks/kentkart/nonAuthHooks"
 import { Stack } from "expo-router"
-import React, { LegacyRef, useMemo, useRef } from "react"
+import React, { LegacyRef, useMemo, useRef, useState } from "react"
 import MapView from "react-native-map-clustering"
 import { PROVIDER_GOOGLE } from "react-native-maps"
 import { busMarkerFromBus } from "../../components/r8r/ClusterMarker"
 import OverlayRoot from "../../components/r8r/overlay/OverlayRoot"
 import ErrorPage from "../ErrorPage"
+import { transit_realtime } from "gtfs-realtime-bindings"
 
 export default function R8R() {
 	const map = useRef<MapView>()
 	const { data, isLoading, isError, error, refetch, isRefetching } = useGetRealtime()
+	const [focused,setFocused] = useState<transit_realtime.IFeedEntity>()
 	const renderedMarkers = useMemo(
 		() =>
 			data?.feed?.map((e) => {
-				return busMarkerFromBus(e as any)
+				return busMarkerFromBus(e as any,()=>{
+					setFocused(e)
+				})
 			}),
 		[data]
 	)

@@ -5,7 +5,7 @@ import { useContext, useMemo } from "react"
 import CitySelector from "app/(core)/city_selector"
 import { ITheme, ThemeContext } from "common/contexts/ThemeContext"
 import CityValidator from "components/validators/CityValidator"
-import { useNavigation } from "expo-router"
+import { Tabs, useNavigation } from "expo-router"
 import { TouchableOpacity, View } from "react-native"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import AccountTab from "tabs/AccountTab/AccountTab"
@@ -15,7 +15,7 @@ import SearchTab from "tabs/SearchTab"
 import SecondaryText from "./SecondaryText"
 
 function BottomTabButton(props: { state: any; descriptors: any; route: any; index: number }) {
-	const { descriptors,  state, index, route } = props
+	const { descriptors, state, index, route } = props
 	const { options } = descriptors
 	const label = options.tabBarLabel || options.title || route.name
 	const isFocused = state.index === index
@@ -64,7 +64,7 @@ function BottomTabButton(props: { state: any; descriptors: any; route: any; inde
 					<SecondaryText
 						style={{ color: theme.text.secondary, fontSize: 16, fontWeight: "800" }}
 						numberOfLines={1}
-						// className="bg-red-400"
+					// className="bg-red-400"
 					>
 						{label}
 					</SecondaryText>
@@ -92,17 +92,15 @@ function BottomTab(props: BottomTabBarProps) {
 		</View>
 	)
 }
+
 export function BottomTabNavigator() {
 	const { translations } = useContext(TranslationsContext)
-
 	const { theme } = useContext(ThemeContext)
-	const Tab = useMemo(() => {
-		return createBottomTabNavigator()
-	}, [])
+
 	return (
-		<Tab.Navigator
+		<Tabs
 			backBehavior="initialRoute"
-			initialRouteName={translations.tabs.settings.name}
+			// initialRouteName={translations.tabs.settings.name}
 			tabBar={BottomTab}
 			screenOptions={{
 				tabBarStyle: theme as any,
@@ -110,42 +108,40 @@ export function BottomTabNavigator() {
 			}}
 		>
 			{true ? (
-				<Tab.Screen
+				<Tabs.Screen
+				
 					name={translations.tabs.editor.name}
 					options={{
 						tabBarIcon: ({ focused, color, size }) => <MaterialCommunityIcons name="pencil" size={size} color={color} />,
 					}}
-					component={EditorTab}
+
 				/>
 			) : null}
-			<Tab.Screen
+			<Tabs.Screen
 				name={translations.tabs.search.name}
 				options={{
 					tabBarIcon: ({ focused, color, size }) => <MaterialCommunityIcons name="magnify" size={size} color={color} />,
 				}}
-				component={WrappedSearch}
 			/>
 
-			<Tab.Screen
+			<Tabs.Screen
 				name={translations.tabs.home.name}
 				options={{
 					tabBarIcon: ({ focused, color, size }) => <MaterialCommunityIcons name="home" size={size} color={color} />,
 				}}
-				component={HomeTab}
 			/>
-			<Tab.Screen
+			<Tabs.Screen
 				options={{
 					tabBarIcon: ({ focused, color, size }) => <MaterialCommunityIcons name="cog" size={size} color={color} />,
 				}}
 				name={translations.tabs.settings.name}
-				component={AccountTab}
 			/>
-		</Tab.Navigator>
+		</Tabs>
 	)
 }
 function WrappedSearch() {
 	return (
-		<CityValidator else={<CitySelector/>}>
+		<CityValidator else={<CitySelector />}>
 			<SearchTab />
 		</CityValidator>
 	)

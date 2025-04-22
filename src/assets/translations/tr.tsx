@@ -73,15 +73,19 @@ const TRANSLATIONS_TR: typeof TRANSLATIONS_EN = {
 	tabs: {
 		editor: {
 			name: "Editör",
+			key: "Editor",
 		},
 		search: {
 			name: "Ara",
+			key: "Search",
 		},
 		home: {
 			name: "Ana Sayfa",
+			key: "Home",
 		},
 		settings: {
 			name: "Ayarlar",
+			key: "Settings",
 		},
 	},
 }

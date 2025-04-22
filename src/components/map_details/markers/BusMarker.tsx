@@ -17,6 +17,7 @@ export function BusMarker(props: {
 	coordinate: LatLng
 	easterEggEnabled?: boolean
 	route_data?: RouteData
+	onPress?:()=>void
 }) {
 	const { route_data, bus, coordinate, easterEggEnabled } = props
 	const schedule_list = route_data?.timeTableList
@@ -29,6 +30,7 @@ export function BusMarker(props: {
 	if (easterEggEnabled) {
 		return (
 			<Marker
+				onPress={props.onPress}
 				tracksViewChanges={false}
 				anchor={{ x: 0.5, y: 0.7 }}
 				style={{ alignItems: "center", overflow: "visible" }}

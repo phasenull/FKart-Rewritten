@@ -2,7 +2,7 @@ import { useFKartAuthStore } from "common/stores/FKartAuthStore"
 import { drizzle } from "drizzle-orm/expo-sqlite"
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator"
 import { router, Stack, usePathname } from "expo-router"
-import { openDatabaseSync } from "expo-sqlite/next"
+import { openDatabaseSync } from "expo-sqlite"
 import { useEffect } from "react"
 import { LogBox, Text, View } from "react-native"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
@@ -10,7 +10,6 @@ import { QueryClient, QueryClientProvider } from "react-query"
 import migrations from "../../drizzle/migrations"
 import { ThemeProvider } from "../common/contexts/ThemeContext"
 import { TranslationsProvider } from "../common/contexts/TranslationsContext"
-import SecondaryText from "components/reusables/SecondaryText"
 import Logger from "common/Logger"
 import * as Notifications from "expo-notifications"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
@@ -63,7 +62,9 @@ export default function AppEntryComponent() {
 			<GestureHandlerRootView style={{ flex: 1 }}>
 				<ThemeProvider>
 					<TranslationsProvider>
-						<Stack screenOptions={{ headerShown: false }}></Stack>
+						<Stack screenOptions={{ headerShown: false }}>
+							<Stack.Screen name="RootScreen" />
+						</Stack>
 					</TranslationsProvider>
 				</ThemeProvider>
 			</GestureHandlerRootView>

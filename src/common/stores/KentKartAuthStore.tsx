@@ -102,8 +102,10 @@ export const useKentKartAuthStore = create<KentKartAuthStore>()(
 			},
 			register: async (args) => {},
 			logout: () => {
-				Logger.info(`Logging out from account ${get().user?.name}`)
-				set({ user: undefined, credentials: {} })
+				Logger.info("KentKartAuthStore.tsx.logout",`Logging out from account ${get().user?.name}`)
+				set({ user: undefined, credentials: {access_token:undefined,refresh_token:undefined} })
+
+
 			},
 		}),
 		{
