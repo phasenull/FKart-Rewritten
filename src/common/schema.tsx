@@ -1,27 +1,39 @@
 import { drizzleDB } from "app/_layout"
 
 import { sql } from "drizzle-orm"
-import { text, integer, sqliteTable } from "drizzle-orm/sqlite-core"
+import { text, integer, sqliteTable, int, index } from "drizzle-orm/sqlite-core"
 export type MixedTripyRoutyDisplayishThing = {
 	type: "display",
-	id:string
+	id: string
 } | {
 	type: "route",
-	id:string
+	id: string
 } | {
 	type: "trip",
-	id:string,
-	route_code:string,
-	time:string,
+	id: string,
+	route_code: string,
+	time: string,
 }
 export const alarms = sqliteTable("alarms", {
 	id: integer("id").primaryKey({ autoIncrement: true }),
 	label: text("label").notNull(),
 	data: text("data", { mode: "json" }).$type<{
-		range:number,
-		type:"range"|"minutes"|"stops",
+		range: number,
+		type: "range" | "minutes" | "stops",
 	}>(),
 	type: text("type").$type<"reach" | "creation">().notNull().default("creation"),
 	routes: text("routes", { mode: "json" }).notNull().default([]).$type<MixedTripyRoutyDisplayishThing[]>(),
 	stops: text("stops", { mode: "json" }).$type<string[]>(),
 })
+
+
+export const app_cache = sqliteTable("app_cache", {
+	key: text("key").primaryKey().unique().notNull(),
+	value: text("value", { mode: "json" }),
+	created_at: int("created_at", { mode: "timestamp_ms" }).defaultNow(),
+	updated_at: int("created_at", { mode: "timestamp_ms" }),
+	ttl: int("ttl"),
+}, (table) => ({
+	name_idx: index("index_app_cache_key").on(table.key)
+})
+)

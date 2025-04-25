@@ -81,7 +81,7 @@ export default function CardDetails() {
 			<CardControlPanel makeRefresh={() => {}} card={{aliasNo:alias} as any} is_virtual={alias.startsWith("33")} />
 
 			{/* <VirtualCardQRCodePanel card={card} token={{aliasNo:"hello","token":"hi","expireDate":""}} /> */}
-			<CardJSONData card={{ ...balanceData?.data.cardlist[0] }} />
+			<CardJSONData card={{ ...balanceData?.data.cardlist[0],_card_type:card_type||null }} />
 			{transaction_data?.data?.transactionList?.map((transaction,i)=><TransactionTouchable transaction={transaction} key={`${i}`}/>)}
 		</ScrollView>
 	)

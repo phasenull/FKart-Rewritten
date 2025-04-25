@@ -10,18 +10,19 @@ import { IIPageAnnouncement } from "components/welcomer/page_announcement"
 import { Redirect } from "expo-router"
 import SplashScreen from "../SplashScreen"
 export function InitialInfo(props: { last_check: number; }) {
-	const { data, isLoading } = useGetAnnouncements()
-	const doesExist = data?.data?.announceList?.length
-	const isLoaded = !!data
+	return <Redirect href={{pathname: "/RootScreen"}}/>
+	// const { data, isLoading } = useGetAnnouncements()
+	// const doesExist = data?.data?.announceList?.length
+	// const isLoaded = !!data
 	const logs: string[] = []
-	if (!isLoaded || isLoading) logs.push("fetching announcements")
-	if (isLoaded) logs.push("announcements fetched")
-	if (!isLoaded) {
-		return <SplashScreen logs={logs} />
-	}
-	if (isLoaded && !doesExist) {
-		return <Redirect href={{ pathname: "/RootScreen" }} />
-	}
+	// if (!isLoaded || isLoading) logs.push("fetching announcements")
+	// if (isLoaded) logs.push("announcements fetched")
+	// if (!isLoaded) {
+		// return <SplashScreen logs={logs} />
+	// }
+	// if (isLoaded && !doesExist) {
+		// return <Redirect href={{ pathname: "/RootScreen" }} />
+	// }
 	return (
 			<IIPaginator
 				// onPageChange={(newIndex, prevIndex) => {

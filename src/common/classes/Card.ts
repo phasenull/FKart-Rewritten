@@ -22,6 +22,7 @@ export default abstract class Card {
 		return CardImages[type]
 	}
 	public static async getTypeFromAliasNo(alias_no:string) {
+		if (alias_no.startsWith("33")||alias_no.startsWith("93")) return CardTypes.QR
 		return await Card.getTypeFromCard({aliasNo:alias_no} as any)
 	}
 	public static async getTypeFromCard<T extends BasicCardData<"Basic" | "QR"> & Favorite<"Card" | "QR">>(card: T): Promise<CardTypes> {

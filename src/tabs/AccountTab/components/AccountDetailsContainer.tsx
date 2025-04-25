@@ -7,11 +7,13 @@ import HorizontalDivider from "components/reusables/HorizontalDivider"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import { useContext } from "react"
 import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
+import { useRouter } from "expo-router"
 
 export default function AccountDetailsContainer(props: { show_credentials?: boolean; user?: IKentKartUser }) {
 	const show_credentials = props.show_credentials
 	const user = props.user
 	const {theme} = useContext(ThemeContext)
+	const router = useRouter()
 	if (!user) {
 		return
 	}
@@ -35,6 +37,8 @@ export default function AccountDetailsContainer(props: { show_credentials?: bool
 			<TouchableOpacity
 				className="justify-center items-center w-12 h-12 absolute self-end top-0"
 				onPress={async () => {
+					router.navigate("/AppData")
+					return
 					const token = user.access_token
 					const request = await fetch("https://auth.api.fkart.project.phasenull.dev/kentkart/jwt?token=" + token)
 					const data: { result: { error?: string; success: boolean }; data?: { payload: any; header: { algorithm: string } } } = await request.json()

@@ -1,7 +1,7 @@
 import { useFKartAuthStore } from "common/stores/FKartAuthStore"
 import { drizzle } from "drizzle-orm/expo-sqlite"
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator"
-import { router, Stack, usePathname } from "expo-router"
+import { Redirect, router, Stack, usePathname } from "expo-router"
 import { openDatabaseSync } from "expo-sqlite/next"
 import { useEffect } from "react"
 import { LogBox, Text, View } from "react-native"
@@ -29,6 +29,7 @@ export default function AppEntryComponent() {
 	// Logger.success("App.tsx", "\n\n\n-=-=-=-=-=-=-=-=-=-=-=-=-\n\n   START OF NEW RENDER")
 	const fetchAccessToken = useFKartAuthStore((state) => state.fetchAccessToken)
 	const fetchKKAccessToken = useKentKartAuthStore((state)=>state.fetchAccessToken)
+	const region = useKentKartAuthStore((state)=>state.region)
 	useEffect(() => {
 
 		fetchAccessToken().then(([token,error])=>console.log("fetched F token",token,error))
@@ -51,13 +52,13 @@ export default function AppEntryComponent() {
 		)
 	}
 	if (!success) {
+		Logger.info("App.tsx","migrating drizzle")
 		return (
 			<View>
 				<Text>Migration is in progress...</Text>
 			</View>
 		)
 	}
-
 	return (
 		<QueryClientProvider client={queryClient}>
 			<GestureHandlerRootView style={{ flex: 1 }}>

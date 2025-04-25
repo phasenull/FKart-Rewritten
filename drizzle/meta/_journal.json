@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "6",
-      "when": 1725098558378,
-      "tag": "0000_cold_omega_red",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "6",
-      "when": 1725128148937,
-      "tag": "0001_fat_toad",
+      "when": 1745349616616,
+      "tag": "0000_fluffy_wilson_fisk",
       "breakpoints": true
     }
   ]

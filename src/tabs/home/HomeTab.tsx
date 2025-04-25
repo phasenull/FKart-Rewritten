@@ -28,7 +28,14 @@ export default function HomeTab(props: { route: any; }) {
 				<NavigationContainer />
 				<View className="flex flex-row space-x-4">
 					<SimplyButton text="logout" size="medium" type="secondary" color={theme.error} onPress={logout} />
-
+					<SimplyButton
+						onPress={() => {
+							router.navigate("/snipe")
+						}}
+						type="primary"
+						size="medium"
+						text="snipe"
+					/>
 					<SimplyButton
 						onPress={() => {
 							router.navigate("/R8R")
