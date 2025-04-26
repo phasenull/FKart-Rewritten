@@ -25,7 +25,14 @@ export const alarms = sqliteTable("alarms", {
 	routes: text("routes", { mode: "json" }).notNull().default([]).$type<MixedTripyRoutyDisplayishThing[]>(),
 	stops: text("stops", { mode: "json" }).$type<string[]>(),
 })
+export const favorites = sqliteTable("favorites", {
 
+	id: integer("id").primaryKey({ autoIncrement: true }),
+	type: text("type").$type<"route" | "bus">(),
+	description: text("description"),
+	extras: text("extras", { mode: "json" }),
+	created_at: int("created_at", { mode: "timestamp_ms" }).defaultNow()
+})
 
 export const app_cache = sqliteTable("app_cache", {
 	key: text("key").primaryKey().unique().notNull(),

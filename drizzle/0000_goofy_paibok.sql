@@ -14,5 +14,13 @@ CREATE TABLE `app_cache` (
 	`ttl` integer
 );
 --> statement-breakpoint
+CREATE TABLE `favorites` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`type` text,
+	`description` text,
+	`extras` text,
+	`created_at` integer DEFAULT (cast((julianday('now') - 2440587.5)*86400000 as integer))
+);
+--> statement-breakpoint
 CREATE UNIQUE INDEX `app_cache_key_unique` ON `app_cache` (`key`);--> statement-breakpoint
 CREATE INDEX `index_app_cache_key` ON `app_cache` (`key`);
