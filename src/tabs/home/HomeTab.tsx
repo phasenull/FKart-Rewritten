@@ -53,7 +53,7 @@ export default function HomeTab(props: { route: any; }) {
 						}}
 						type="primary"
 						size="medium"
-						text="Groupped Map"
+						text="Group View"
 					/>
 				</View>
 				<CardJSONData favorite_data={{ ...data?.data.accountInfo, phone: `${data?.data.accountInfo?.phone.slice(0, 3)}${"*".repeat((data?.data.accountInfo?.phone.length || 10) - 3)}` }} card={{ access_token: credentials.access_token?.slice(0, 10) + "...", refresh_token: credentials.refresh_token?.slice(0, 4) + "..." }} />

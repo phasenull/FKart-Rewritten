@@ -77,7 +77,16 @@ export default function GrouppedMap() {
 
 	return (
 		<React.Fragment>
-			<Stack.Screen options={{ headerShown: true }} />
+			<Stack.Screen
+				options={{
+					headerShown: true,
+					headerTitle: `Group View`,
+					headerTitleStyle: {
+						color: theme.secondary,
+						fontWeight: "900",
+					},
+				}}
+			/>
 			{/* <OverlayRoot isRefetchLoading={isLoading || isRefetching} refetchFn={refetch} /> */}
 			<View className="self-center row-span-2 flex flex-row space-x-4 w-[90%] absolute ml-2 mt-2 py-1 px-2 z-50" style={{
 				borderColor: theme.secondary,
