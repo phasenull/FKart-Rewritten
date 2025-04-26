@@ -22,13 +22,13 @@ import { useMutation, useQuery } from "react-query";
 export default function AppData() {
 	const { theme } = useContext(ThemeContext)
 	const { data, refetch, isRefetching, isLoading } = useQuery(["db_query_app_cache"], () => (drizzleDB.select().from(app_cache).all()))
-	const {fill_key} = useLocalSearchParams()
+	const { fill_key } = useLocalSearchParams()
 	// a very poor way to handle forms
-	const [form,setForm] = useState<{key:string,value:string}>({key:fill_key as string,value:"true"})
-	const {mutate } = useMutation({
-		mutationKey: "force-set-db", mutationFn: async (props:{key:string,value:any}) => {
-			const {key,value} = props
-			await ApplicationConfig.database.set(key,value)
+	const [form, setForm] = useState<{ key: string, value: string }>({ key: fill_key as string, value: "true" })
+	const { mutate } = useMutation({
+		mutationKey: "force-set-db", mutationFn: async (props: { key: string, value: any }) => {
+			const { key, value } = props
+			await ApplicationConfig.database.set(key, value)
 		}
 	})
 	if (isRefetching || isLoading) {
@@ -36,7 +36,8 @@ export default function AppData() {
 	}
 	if (!data) return <ErrorPage error={{ title: "NO DATA" }} />
 	return (
-		<View className="flex-1 items-center">
+		<ScrollView contentContainerStyle={{alignItems:"center"}} className="flex-1">
+			<Stack.Screen options={{ headerShown: true }} />
 			<View className="py-5 mt-5 px-10 w-80 rounded-[16px] justify-center" style={{ backgroundColor: theme.white, shadowOffset: { height: 4, width: 4 } }}>
 				<SecondaryText>Total Items Cached: {data.length}</SecondaryText>
 				<SimplyButton type="secondary" color={theme.error} size="medium" text="clean" onPress={async () => {
@@ -62,32 +63,29 @@ export default function AppData() {
 			</View>
 			<View className="py-5 mt-5 px-10 w-80 rounded-[16px] justify-center" style={{ backgroundColor: theme.white, shadowOffset: { height: 4, width: 4 } }}>
 				<SecondaryText>Force Set AppDB</SecondaryText>
-				<SimplyTextInput defaultValue={form.key} placeholder="key" onChangeText={(text)=>setForm({...form,key:text})}>
+				<SimplyTextInput defaultValue={form.key} placeholder="key" onChangeText={(text) => setForm({ ...form, key: text })}>
 
 				</SimplyTextInput>
-				<SimplyTextInput  defaultValue={form.value} placeholder="(JSON)" onChangeText={(text)=>setForm({...form,value:text})}>
-					
+				<SimplyTextInput defaultValue={form.value} placeholder="(JSON)" onChangeText={(text) => setForm({ ...form, value: text })}>
+
 				</SimplyTextInput>
 				<SimplyButton type="secondary" color={theme.success} size="medium" text="set" onPress={async () => {
-					await ApplicationConfig.database.set(form.key,form.value||{})
-					Logger.log("AppData.tsx","Set key",form.key,"to value",form.value)
+					await ApplicationConfig.database.set(form.key, form.value || {})
+					Logger.log("AppData.tsx", "Set key", form.key, "to value", form.value)
 				}}>
 				</SimplyButton>
-				
 			</View>
-			<FlatList
-				contentContainerStyle={{
-					// height:80*4
-				}}
-				className="py-5 max-h-96 mt-5 px-3 w-80 rounded-[16px]" style={{ backgroundColor: theme.white, shadowOffset: { height: 4, width: 4 } }}
-				refreshControl={<RefreshControl onRefresh={refetch} refreshing={isRefetching} />} data={data} renderItem={dataTouchable} >
-			</FlatList>
-		</View >
+			{data.map((e)=><DataTouchable item={e}/>)}
+		</ScrollView >
 	)
 }
+function SettingContainer(props: {}) {
+	return <View>
 
-function dataTouchable(data: { item: typeof app_cache.$inferSelect }) {
-	const { item } = data
+	</View>
+}
+function DataTouchable(props: { item: typeof app_cache.$inferSelect }) {
+	const { item } = props
 	return <TouchableOpacity className="flex-row justify-between" onPress={() => alert(
 		JSON.stringify(
 			item, undefined, 4))}>

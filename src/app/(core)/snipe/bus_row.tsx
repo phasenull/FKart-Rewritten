@@ -9,6 +9,7 @@ import { useQuery } from "react-query"
 export default function BusRow(props: {bus_data:any}) {
 	const { bus_data } = props
 	const { theme } = useContext(ThemeContext)
+	if (!bus_data ||!bus_data.vehicles) return
 	// const { data, isLoading } = useGetLatestBusInfo(bus_data.vehicles.id.toString())
 	return <TouchableOpacity onPress={()=>alert(JSON.stringify(bus_data,undefined,4))} className="flex-row" key={bus_data.vehicles?.id}>
 		<SecondaryText className="flex flex-[0.6] bg-red-400" numberOfLines={1}>

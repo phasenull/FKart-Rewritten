@@ -10,6 +10,12 @@ import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
 import ErrorPage from "../../ErrorPage"
 import CardJSONData from "components/card_details/CardJSONData"
 import { router, Stack, useLocalSearchParams } from "expo-router"
+import { useQuery } from "react-query"
+import { drizzleDB } from "app/_layout"
+import { favorites } from "common/schema"
+import { and, eq } from "drizzle-orm"
+import { MaterialCommunityIcons } from "@expo/vector-icons"
+import { rgbaColor } from "react-native-reanimated/lib/typescript/reanimated2/Colors"
 
 export default function RouteDetails() {
 	const params = useLocalSearchParams()
@@ -20,6 +26,17 @@ export default function RouteDetails() {
 	const [direction, setDirection] = useState(parseInt(force_direction || "0") || 0)
 	const { theme } = useContext(ThemeContext)
 	const user = useKentKartAuthStore((state) => state.user)
+	const { data: favorite_data, refetch: refetch_favorites } = useQuery(["drizzle.get_favorite"], {
+		queryFn: async () => {
+			const result = await drizzleDB.select()
+				.from(favorites)
+				.where(and(
+					eq(favorites.type, "route"),
+					eq(favorites.object_id, route_code)
+				)).limit(1)
+			return result.at(0)
+		}
+	})
 	const { data, error, isLoading, refetch, isRefetching, isError } = useGetRouteDetails({
 		route_code: route_code,
 		direction: direction,
@@ -75,12 +92,36 @@ export default function RouteDetails() {
 			<Text>
 				Route Details {route_data?.displayRouteCode} {direction}
 			</Text>
-			<Switch
-				value={direction ? true : false}
-				onValueChange={() => {
-					setDirection(1 - direction)
-				}}
-			/>
+			<View className="flex-row self-end">
+				{
+					favorite_data ?
+						<TouchableOpacity onPress={async () => {
+							await drizzleDB.delete(favorites).where(eq(favorites.id, favorite_data.id))
+
+							refetch_favorites()
+						}}>
+							<MaterialCommunityIcons name="star-remove" color={favorite_data?.extras?.color as string || "red"} size={12 * 4} />
+						</TouchableOpacity>
+						: <TouchableOpacity onPress={
+							async () => {
+								await drizzleDB.insert(favorites).values({
+									object_id: route_code,
+									type: "route",
+									extras: { color: `rgb(${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)})` }
+								})
+								refetch_favorites()
+							}}>
+							<MaterialCommunityIcons name="star-outline" color={theme.primary} size={12 * 4} />
+						</TouchableOpacity>
+				}
+
+				<Switch
+					value={direction ? true : false}
+					onValueChange={() => {
+						setDirection(1 - direction)
+					}}
+				/>
+			</View>
 			{/* <Text>BasicRouteInformation: {JSON.stringify(data_route, null, 4)}</Text> */}
 			<ScrollView
 				horizontal={true}

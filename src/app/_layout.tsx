@@ -14,6 +14,7 @@ import SecondaryText from "components/reusables/SecondaryText"
 import Logger from "common/Logger"
 import * as Notifications from "expo-notifications"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
+import ErrorPage from "./ErrorPage"
 const sqlite = openDatabaseSync("fkart_sqlite.db")
 export const drizzleDB = drizzle(sqlite)
 Notifications.setNotificationHandler({
@@ -28,12 +29,12 @@ const queryClient = new QueryClient({ defaultOptions: { queries: { retry: 2 } } 
 export default function AppEntryComponent() {
 	// Logger.success("App.tsx", "\n\n\n-=-=-=-=-=-=-=-=-=-=-=-=-\n\n   START OF NEW RENDER")
 	const fetchAccessToken = useFKartAuthStore((state) => state.fetchAccessToken)
-	const fetchKKAccessToken = useKentKartAuthStore((state)=>state.fetchAccessToken)
-	const region = useKentKartAuthStore((state)=>state.region)
+	const fetchKKAccessToken = useKentKartAuthStore((state) => state.fetchAccessToken)
+	const region = useKentKartAuthStore((state) => state.region)
 	useEffect(() => {
 
-		fetchAccessToken().then(([token,error])=>console.log("fetched F token",token,error))
-		fetchKKAccessToken().then(([token,error])=>console.log("fetched KK token",token,error))
+		fetchAccessToken().then(([token, error]) => console.log("fetched F token", token, error))
+		fetchKKAccessToken().then(([token, error]) => console.log("fetched KK token", token, error))
 		const secondsTimer = setInterval(() => {
 			fetchAccessToken()
 		}, 3 * 60 * 1000)
@@ -44,15 +45,16 @@ export default function AppEntryComponent() {
 
 	const { success, error } = useMigrations(drizzleDB, migrations)
 	if (error) {
-		Logger.error("App.tsx", error.message)
-		return (
-			<View className="flex-1">
-				<Text className="bg-cyan-400 text-center self-center text-red-400">Migration error: {error.message}</Text>
-			</View>
-		)
+		Logger.error("App.tsx", error?.message)
+		return 
+		// (
+			// <ErrorPage
+				// other={{ description: "\n\nSee full\nmessage", func: () => alert(error?.message || "no message"), icon: "info" }}
+				// error={{ description: "An error occured while trying to migrate drizzle databases!", title: "Local Database Error" }} />
+		// )
 	}
 	if (!success) {
-		Logger.info("App.tsx","migrating drizzle")
+		Logger.info("App.tsx", "migrating drizzle")
 		return (
 			<View>
 				<Text>Migration is in progress...</Text>

@@ -36,7 +36,7 @@ export default function ErrorPage(props: {
 				<TouchableOpacity onPress={other.func} className="my-6">
 					<MaterialCommunityIcons name={other.icon as any} color={theme.secondary} style={{ opacity: 0.3 }} size={24 * 4} />
 					<Text style={{ fontSize: 16, color: theme.text.secondary, fontWeight: "600", bottom: 4 * 4 }} className="text-center">
-						{other.description}
+						{other?.description}
 					</Text>
 				</TouchableOpacity>
 			) : null}

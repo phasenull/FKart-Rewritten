@@ -26,11 +26,11 @@ export const alarms = sqliteTable("alarms", {
 	stops: text("stops", { mode: "json" }).$type<string[]>(),
 })
 export const favorites = sqliteTable("favorites", {
-
-	id: integer("id").primaryKey({ autoIncrement: true }),
+	id: integer("id").primaryKey({ autoIncrement: true }).notNull(),
+	object_id: text("object_id"),
 	type: text("type").$type<"route" | "bus">(),
 	description: text("description"),
-	extras: text("extras", { mode: "json" }),
+	extras: text("extras", { mode: "json" }).$type<any>(),
 	created_at: int("created_at", { mode: "timestamp_ms" }).defaultNow()
 })
 

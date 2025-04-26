@@ -13,13 +13,13 @@ import { router } from "expo-router";
 
 export default function Picker() {
 	const [searchString, setSearchString] = useState<string | undefined>()
-	const { data: bus_list, isLoading,refetch, isFetchingNextPage, fetchNextPage, hasNextPage } = useSearchBus(searchString || "41 ")
+	const { data: bus_list, isLoading, refetch, isFetchingNextPage, fetchNextPage, hasNextPage } = useSearchBus(searchString || "41 ")
 	const { theme } = useContext(ThemeContext)
-	if (!(isFetchingNextPage||isLoading)&&(!bus_list || !bus_list.pages.length)) return <ErrorPage other={{
-		description:"\nChange server url\n(http://host:port)",
-		icon:"server",
-		func:()=>{
-			router.navigate({pathname:"/(dev)/AppData",params:{ fill_key: "kk_vts_api" }})
+	if (!(isFetchingNextPage || isLoading) && (!bus_list || !bus_list.pages.length)) return <ErrorPage other={{
+		description: "\nChange server url\n(http://host:port)",
+		icon: "server",
+		func: () => {
+			router.navigate({ pathname: "/(dev)/AppData", params: { fill_key: "kk_vts_api" } })
 		}
 	}} retry={refetch} error={
 		{
@@ -31,12 +31,12 @@ export default function Picker() {
 		</SimplyTextInput>
 		{isLoading && <CustomLoadingIndicator color={theme.secondary} size={16 * 4} />}
 		<FlatList
-		className="h-[80%]"
-		onEndReached={()=>{
-			if (bus_list?.pages?.length >= 5) return
-			if (isFetchingNextPage || !(bus_list?.pages?.at(bus_list?.pages?.length - 1)?.data?.length >= 5)) return
-			fetchNextPage()
-		}}
+			className="h-[80%]"
+			onEndReached={() => {
+				if ((bus_list?.pages?.length||0) >= 5) return
+				if (isFetchingNextPage || !(bus_list?.pages?.at(bus_list?.pages?.length - 1)?.data?.length >= 5)) return
+				fetchNextPage()
+			}}
 			maxToRenderPerBatch={10}
 			data={bus_list?.pages?.map((e: any) => e.data).flat()} renderItem={({ item, index }) => <BusRow bus_data={
 				item} />
