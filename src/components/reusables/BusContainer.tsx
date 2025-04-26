@@ -9,7 +9,14 @@ import Divider from "components/reusables/Divider"
 import { router } from "expo-router"
 import React, { useContext } from "react"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
-export default function BusContainer(props: { bus: BusData; route_data: RouteData; onPress?: () => void; onLongPress?: () => void; children?: any }) {
+export default function BusContainer(props: {
+	override_header?:{
+		color:string,
+		route_code:string,
+		data:any
+	}
+	bus: BusData; route_data: RouteData; onPress?: () => void; onLongPress?: () => void; children?: any
+}) {
 	const { theme } = useContext(ThemeContext)
 	const { bus, route_data } = props
 	const schedule_list = route_data?.timeTableList
@@ -19,7 +26,7 @@ export default function BusContainer(props: { bus: BusData; route_data: RouteDat
 		return ![bus.ac, bus.bike, bus.disabledPerson].find((e) => e === "1")
 	}
 	function getStopFromId(id: string) {
-		return route_data.busStopList.find((e) => e.stopId === id)
+		return route_data?.busStopList?.find((e) => e.stopId === id)
 	}
 	return (
 		<TouchableOpacity
@@ -47,8 +54,9 @@ export default function BusContainer(props: { bus: BusData; route_data: RouteDat
 					}}
 				>
 					{bus.pickMeUp === "1" ? <MaterialCommunityIcons name="bus-stop-covered" color={theme.error} size={20} /> : null}
+					{props.override_header? (<View className="w-3 h-3" style={{ backgroundColor: props.override_header.color||"transparent" }} />):undefined}
 					<MaterialCommunityIcons size={16} name={bus.vehicleType === "4" ? "ferry" : "bus"} />
-					{bus.plateNumber} {departure_time}
+					{props.override_header? (`${props.override_header.data.vehicle?.trip?.routeId?.split("|")?.at(0)}`):undefined} {bus.plateNumber} {departure_time}
 				</Text>
 				{!isEmpty() && (
 					<React.Fragment>
@@ -83,14 +91,14 @@ export default function BusContainer(props: { bus: BusData; route_data: RouteDat
 				</View>
 			) : (
 				<Text className="h-36 bg-red-400 text-center font-bold text-white px-4" style={{
-					textAlignVertical:"center",
-					paddingVertical:4*4,
+					textAlignVertical: "center",
+					paddingVertical: 4 * 4,
 				}}>No Image Found</Text>
 			)}
 			{/* MARK: Bus Stop */}
 			<Text style={{ color: theme.secondary }} adjustsFontSizeToFit={true} numberOfLines={2} className="self-center text-center font-bold">
 				<MaterialCommunityIcons name="map-marker" color={theme.primary} size={20} />
-				{bus.stopId+" "}
+				{bus.stopId + " "}
 				{getStopFromId(bus.stopId)?.stopName || "Hareket Halinde"}
 			</Text>
 			{props.children}

@@ -10,15 +10,17 @@ import { Image } from "react-native"
 import { Callout, LatLng, Marker } from "react-native-maps"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { BusCallout } from "../callouts/BusCallout"
+import ApplicationConfig from "common/ApplicationConfig"
 export function BusMarker(props: {
 	is_rt?: boolean
 	rt_raw?: transit_realtime.FeedEntity
 	bus: BusData
 	coordinate: LatLng
 	easterEggEnabled?: boolean
-	route_data?: RouteData
+	route_data?: RouteData,
+	force_color?: string
 }) {
-	const { route_data, bus, coordinate, easterEggEnabled } = props
+	const { route_data, bus, coordinate, easterEggEnabled,force_color } = props
 	const schedule_list = route_data?.timeTableList
 	const scheduled_data = schedule_list?.find((e) => e.tripId === bus.tripId)
 	const { theme } = useContext(ThemeContext)
@@ -40,9 +42,9 @@ export function BusMarker(props: {
 				coordinate={coordinate}
 				title={bus.plateNumber}
 				onCalloutPress={() => {
-					router.navigate({pathname:"/bus_details",params:{bus64:btoa(escape(JSON.stringify(bus)))}})
+					router.navigate({ pathname: "/bus_details", params: { bus64: btoa(escape(JSON.stringify(bus))) } })
 				}}
-				// className="items-center justify-center overflow-visible"
+			// className="items-center justify-center overflow-visible"
 			>
 				<Image
 					style={{
@@ -79,7 +81,7 @@ export function BusMarker(props: {
 			// calloutOffset={{x:1,y:1}}
 			calloutAnchor={{ x: 0.5, y: 0.5 }}
 			onCalloutPress={() => {
-				router.navigate({pathname:"/bus_details",params:{bus64:btoa(escape(JSON.stringify(bus)))}})
+				router.navigate({ pathname: "/bus_details", params: { bus64: btoa(escape(JSON.stringify(bus))) } })
 
 			}}
 		>
@@ -92,7 +94,7 @@ export function BusMarker(props: {
 			/>
 			<MaterialCommunityIcons
 				style={{
-					backgroundColor: getColorFromBus(props.rt_raw || props.bus, props.route_data) || theme.primary,
+					backgroundColor: force_color||getColorFromBus(props.rt_raw || props.bus, props.route_data) || theme.primary,
 					elevation: 10,
 					borderRadius: 50,
 					padding: 2,
@@ -108,9 +110,9 @@ export function BusMarker(props: {
 		</Marker>
 	)
 }
-function getColorFromBus(bus: any, route_data?: RouteData): string | undefined {
+function getColorFromBus(bus: any, route_data?: RouteData) {
 	if (["41K", "41041"].includes(route_data?.displayRouteCode || "")) return "#33aaff"
-	if (route_data?.tripShortName.includes("GÖREVLİ")) return "#38fb00"
+	if (route_data?.tripShortName.includes("GÖREVLİ") || route_data?.tripShortName.includes("SERVİS DIŞI")) return "#38fb00"
 	if ((bus.plateNumber || bus.vehicle?.vehicle?.licensePlate)?.includes("ATT")) return "#cf00fb"
 	if ((bus.plateNumber || bus.vehicle?.vehicle?.licensePlate)?.startsWith("34 ")) return "#000"
 	if ((route_data?.displayRouteCode)?.includes("KM") || (route_data?.path_code)?.startsWith("51")) return "#fb5100"

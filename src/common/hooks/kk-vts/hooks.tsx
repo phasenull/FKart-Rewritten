@@ -32,6 +32,24 @@ export function useGetVTSKeys() {
 	})
 }
 
+export function useGetVehicleEvents(vehicle_id: string) {
+	return useQuery(["search-bus",vehicle_id], {
+		queryFn: async (c) => {
+			const page = await c.pageParam
+			vehicle_id = (vehicle_id.replaceAll(".", "").replaceAll("/", ""))
+			const API = await ApplicationConfig.database.get("kk_vts_api")
+			const url = `${API}/api/events/search?key=bus&value=${vehicle_id}`
+			if (!API) router.navigate({ pathname: "/AppData", params: { fill_key: "kk_vts_api" } })
+			const response = await fetch(url)
+			const json = await response.json()
+			return json
+		},
+		cacheTime: 10*60*1000,
+		staleTime: 30*1000,
+
+	})
+}
+
 export function useSearchBus(search_string: string) {
 	return useInfiniteQuery(["search-bus",search_string], {
 		queryFn: async (c) => {

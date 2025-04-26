@@ -49,7 +49,7 @@ export function BusCallout(props: { raw?: transit_realtime.FeedEntity; is_rt?: b
 							adjustsFontSizeToFit={true}
 						>
 							<MaterialCommunityIcons name="map-marker-path" size={16} />
-							{props.route_data.path_code}
+							{props.route_data.path_code.split("|")[2]}
 						</Text>
 						<Text
 							style={{

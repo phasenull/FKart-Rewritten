@@ -22,7 +22,7 @@ export default function NavigationContainer() {
 	return (
 		<View className="flex-col mt-12">
 			<View className="flex-row items-center space-x-4">
-				<QuickButton icon="alarm" label="alarms" onPress={()=>router.navigate("/alarms")} />
+				{/* <QuickButton icon="alarm" label="alarms" onPress={()=>router.navigate("/alarms")} /> */}
 				<Divider height={60} />
 				<QuickButton icon="badge-account-horizontal" label="editor" />
 				<Divider height={60} />

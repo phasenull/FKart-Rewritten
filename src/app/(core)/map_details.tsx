@@ -21,8 +21,10 @@ import Logger from "common/Logger"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 import HorizontalDivider from "components/reusables/HorizontalDivider"
 import SecondaryText from "components/reusables/SecondaryText"
-import { Stack, useLocalSearchParams } from "expo-router"
+import { router, Stack, useLocalSearchParams } from "expo-router"
 import FollowingBus from "../../components/map_details/FollowingBus"
+import { useQueries } from "react-query"
+import { groupBy } from "common/util"
 export default function MapData() {
 	const { force_route_code, force_direction, force_bus_id, headerTitle } = useLocalSearchParams<{
 		force_direction: string
@@ -48,7 +50,7 @@ export default function MapData() {
 	} = useGetRouteDetails({
 		direction: direction,
 		route_code: force_route_code,
-		interval: 5* 1_000, //dev
+		interval: 5 * 1_000, //dev
 		user: user as IKentKartUser,
 		result_includes: {
 			busStopList: true,
@@ -109,6 +111,32 @@ export default function MapData() {
 			}
 		}
 	}
+	const results = useQueries(
+		routeDataToShow?.busList.map((e) => ({
+			queryKey: ["search-bus", e.busId.split("|")[0]],
+			queryFn: async () => {
+				const vehicle_id = (e.busId.split("|")[0].replaceAll(".", "").replaceAll("/", ""))
+				const API = await ApplicationConfig.database.get("kk_vts_api")
+				const url = `${API}/api/events/search?key=bus&value=${vehicle_id}`
+				if (!API) router.navigate({ pathname: "/AppData", params: { fill_key: "kk_vts_api" } })
+				const response = await fetch(url)
+				const json = await response.json()
+				console.log("getVehicleEvents", e.busId.split("|")[0], json?.data?.length)
+				return {
+					vehicle_id: vehicle_id, events: json?.data as {
+						"created_at": string,
+						"license_plate": string,
+						"vehicle_id": number,
+						"trip_id": number,
+						"route_code": number,
+						"direction": 0 | 1,
+						"event_label": string
+					}[]
+				}
+			},
+			cacheTime: 10 * 60 * 1000,
+			staleTime: 1 * 60 * 1000,
+		})) || [])
 	const [easterEggEnabled, setEasterEggEnabled] = useState(false)
 	if (!routeDataToShow || !busListToShow || !userCity) {
 		return <CustomLoadingIndicator />
@@ -170,73 +198,82 @@ export default function MapData() {
 					contentContainerStyle={{
 						paddingHorizontal: 20,
 						columnGap: 20,
-						height:120*4
+						// height:"95%"
+					}}
+					style={{
+						// width:60*4,
+						flex: 1
+
 					}}
 				>
 					{busListToShow
 						.sort((bus_a, bus_b) => parseInt(bus_a.seq || "0") - parseInt(bus_b.seq || "0"))
 						.map((bus: BusData) => {
 							const atStop = getStopFromStopId(bus.stopId)
+							const bus_id = bus.busId.split("|")[0]
+							// const atStop = getStopFromStopId(bus.stopId)
+							const event_datas = results.find(
+								(e) => e.data?.vehicle_id === bus_id
+							)?.data?.events.slice(0, 45) || []
 							return (
-							<BusContainer
-								onLongPress={() => {
-									Clipboard.setString(`fkart://map_details?force_route_code=${routeDataToShow.displayRouteCode}&force_direction=${direction}&force_bus_id=${bus.busId}`)
-									ToastAndroid.show("Link kopyalandı!", ToastAndroid.SHORT)
-									Vibration.vibrate(100)
-								}}
-								onPress={() => {
-									pressForEasterEgg()
-									ref_map_view.current?.animateToRegion({
-										latitude: parseFloat(bus.lat) - 0.001,
-										longitude: parseFloat(bus.lng),
-										latitudeDelta: 0.02,
-										longitudeDelta: 0.02,
-									})
-									setFollowingBus(bus)
-									ref_bottom_sheet.current?.snapToIndex(1)
-								}}
-								route_data={routeDataToShow}
-								bus={bus}
-								key={`BusContainer-${bus.plateNumber}`}
-							>
-								<View className="w-full flex-col">
-									<HorizontalDivider
-										style={{
-											height: 0.5 * 4,
-											backgroundColor: theme.secondary,
-											opacity: 0.2,
-										}}
-									/>
-									<View
-										className="flex-col items-center w-12"
-										style={{
-											left: `${Math.floor((parseInt(atStop?.seq || "0") / routeDataToShow.busStopList.length) * 100)}%`,
-										}}
-									>
-										<MaterialCommunityIcons className="w-6" name="bus-side" size={6 * 4} color={theme.primaryDark} />
-										<SecondaryText
-											style={{
-												fontSize: 3 * 4,
-												top:-1*4,
-												textAlign:"center"
-											}}
-										>
-											{`${Math.floor((parseInt(atStop?.seq || "0") / routeDataToShow.busStopList.length) * 100)}%`}
-											{`\n`}{new Date(parseInt(atStop?.departure_offset || "0")*1000).getMinutes()}
-											{`/`}{new Date(parseInt(routeDataToShow.busStopList.at(routeDataToShow.busStopList.length-1)?.arrival_offset || "0")*1000).getMinutes()}m
-										</SecondaryText>
-									</View>
-									<HorizontalDivider
-										style={{
-											top:-5*4,
-											height: 0.5 * 4,
-											backgroundColor: theme.secondary,
-											opacity: 0.2,
-										}}
-									/>
-								</View>
-							</BusContainer>
-						)})}
+								<BusContainer
+									onLongPress={() => {
+										Clipboard.setString(`fkart://map_details?force_route_code=${routeDataToShow.displayRouteCode}&force_direction=${direction}&force_bus_id=${bus.busId}`)
+										ToastAndroid.show("Link kopyalandı!", ToastAndroid.SHORT)
+										Vibration.vibrate(100)
+									}}
+									onPress={() => {
+										pressForEasterEgg()
+										ref_map_view.current?.animateToRegion({
+											latitude: parseFloat(bus.lat) - 0.001,
+											longitude: parseFloat(bus.lng),
+											latitudeDelta: 0.02,
+											longitudeDelta: 0.02,
+										})
+										setFollowingBus(bus)
+										ref_bottom_sheet.current?.snapToIndex(1)
+									}}
+									route_data={routeDataToShow}
+									bus={bus}
+									key={`BusContainer-${bus.plateNumber}`}
+								>
+									{Object.entries(groupBy(
+										event_datas, (e) => e?.created_at?.slice(0, 10) as string
+										// !!!IDK WHAT WENT WRONG WITH THE TYPING BUT DO NOT REMOVE THE []
+									)).map(([key, value]) => {
+										// console.log(`${value?.length} items for key ${key}`)
+										let is_active: typeof value[0] | undefined = undefined
+										if (value.at(0)?.event_label === "vehicle_created") {
+											is_active = value.at(0) as any
+											value.shift()
+										}
+										const paired = groupBy(
+											value, (e, i) =>(i-i % 2).toString()
+										)
+										// console.log(Object.keys(paired).length)
+										return <View className="flex-col pl-2">
+											<SecondaryText style={{ color: theme.primaryDark }}>
+												{key}
+											</SecondaryText>
+											<SecondaryText numberOfLines={Object.keys(paired).length + (is_active ? 1 : 0)} className="ml-2 text-sm">
+												{is_active && (`${is_active.route_code} ${is_active.direction?"<-":"->"} | `+new Date(is_active?.created_at)?.toLocaleTimeString().slice(0, 5)
+													+ " -> NOW \n")
+												}
+												{
+													Object.entries(paired).map(
+														([k, [destroyed, created]]) =>
+															`${created?.route_code} ${created?.direction?"<-":"->"} | ` +
+															new Date(created?.created_at).toLocaleTimeString().slice(0, 5) + " -> " + new Date(destroyed?.created_at).toLocaleTimeString().slice(0, 5)
+													).join("\n")
+
+												}
+											</SecondaryText>
+
+										</View>
+									})}
+								</BusContainer>
+							)
+						})}
 				</ScrollView>
 			</BottomSheet>
 		</View>

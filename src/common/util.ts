@@ -37,23 +37,33 @@ export function dateToString(date: Date) {
 export function dateDiff(date1: Date, date2: Date) {
 	return date1.getTime() - date2.getTime()
 }
-export function deltaTime(diff: number,removeAgo?:boolean) {
+export function deltaTime(diff: number, removeAgo?: boolean) {
 	if (diff >= 24 * 60 * 60 * 1000) {
-		return `${Math.round(diff/(24*60*60*1000))} days${removeAgo?"": " ago"}`
+		return `${Math.round(diff / (24 * 60 * 60 * 1000))} days${removeAgo ? "" : " ago"}`
 	}
 	else if (diff >= 60 * 60 * 1000) {
-		return `${Math.round(diff / (60 * 60 * 1000))} hours${removeAgo?"": " ago"}`
+		return `${Math.round(diff / (60 * 60 * 1000))} hours${removeAgo ? "" : " ago"}`
 	} else if (diff > 60 * 1000) {
-		return `${Math.ceil(diff / (60 * 1000))} mins${removeAgo?"": " ago"}`
+		return `${Math.ceil(diff / (60 * 1000))} mins${removeAgo ? "" : " ago"}`
 	}
 	return `now`
 }
 export function dateFromMessedKentKartDateFormat(input: string) {
-	const [ddmmyyyy,hhmm] = input.split(" ")
-	const [day,month,year] = ddmmyyyy.split("/")
-	const [hour,minute] = hhmm.split(":")
+	const [ddmmyyyy, hhmm] = input.split(" ")
+	const [day, month, year] = ddmmyyyy.split("/")
+	const [hour, minute] = hhmm.split(":")
 	const date = new Date(`${year}-${month}-${day}T${hour}:${minute}:00.000+03:00`)
 	return date
 }
-
-export type ProperErrorHandling<SUCCESS> = [SUCCESS] | [false,string]
+export function groupBy<T>(array: T[], keyOrFn: (e: T, i: number) => string) {
+	const results: Record<string, T[]> = {}
+	array.forEach((e, i) => {
+		const key: keyof typeof results = keyOrFn(e, i)
+		if (!results[key]) {
+			results[key] = []
+		}
+		results[key].push(e)
+	})
+	return results
+}
+export type ProperErrorHandling<SUCCESS> = [SUCCESS] | [false, string]

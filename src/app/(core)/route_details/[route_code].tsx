@@ -11,11 +11,8 @@ import ErrorPage from "../../ErrorPage"
 import CardJSONData from "components/card_details/CardJSONData"
 import { router, Stack, useLocalSearchParams } from "expo-router"
 import { useQuery } from "react-query"
-import { drizzleDB } from "app/_layout"
-import { favorites } from "common/schema"
-import { and, eq } from "drizzle-orm"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
-import { rgbaColor } from "react-native-reanimated/lib/typescript/reanimated2/Colors"
+import ApplicationConfig from "common/ApplicationConfig"
 
 export default function RouteDetails() {
 	const params = useLocalSearchParams()
@@ -26,17 +23,6 @@ export default function RouteDetails() {
 	const [direction, setDirection] = useState(parseInt(force_direction || "0") || 0)
 	const { theme } = useContext(ThemeContext)
 	const user = useKentKartAuthStore((state) => state.user)
-	const { data: favorite_data, refetch: refetch_favorites } = useQuery(["drizzle.get_favorite"], {
-		queryFn: async () => {
-			const result = await drizzleDB.select()
-				.from(favorites)
-				.where(and(
-					eq(favorites.type, "route"),
-					eq(favorites.object_id, route_code)
-				)).limit(1)
-			return result.at(0)
-		}
-	})
 	const { data, error, isLoading, refetch, isRefetching, isError } = useGetRouteDetails({
 		route_code: route_code,
 		direction: direction,
@@ -48,6 +34,14 @@ export default function RouteDetails() {
 			timeTableList: true,
 			busStopList: true,
 		},
+	})
+	const route_id = data?.data?.pathList?.at(0)?.path_code?.slice(0, 5)
+	const { data: favorite_data, refetch: refetch_favorites } = useQuery(["get_favorites"], {
+		queryFn: async () => {
+			const results: any[] = await ApplicationConfig.database.get("favs.routes") || []
+			return results.find((e) => (e.type === "route" && e.object_id === route_id))
+		},
+		enabled:!!route_id
 	})
 	if (isLoading || isRefetching) {
 		return <CustomLoadingIndicator style={{ flex: 1 }} />
@@ -81,6 +75,7 @@ export default function RouteDetails() {
 			/>
 		)
 	}
+	// console.log("fav.data",routeId,favorite_data)
 	return (
 		<ScrollView refreshControl={<RefreshControl refreshing={isLoading || isRefetching} onRefresh={refetch} />}>
 			<Stack.Screen
@@ -96,19 +91,23 @@ export default function RouteDetails() {
 				{
 					favorite_data ?
 						<TouchableOpacity onPress={async () => {
-							await drizzleDB.delete(favorites).where(eq(favorites.id, favorite_data.id))
-
+							let old: any[] = await ApplicationConfig.database.get("favs.routes")
+							const index = old.findIndex((e) => (e.object_id === favorite_data.object_id && e.type === favorite_data.type))
+							old.splice(index, 1)
+							await ApplicationConfig.database.set("favs.routes", old)
 							refetch_favorites()
 						}}>
 							<MaterialCommunityIcons name="star-remove" color={favorite_data?.extras?.color as string || "red"} size={12 * 4} />
 						</TouchableOpacity>
 						: <TouchableOpacity onPress={
 							async () => {
-								await drizzleDB.insert(favorites).values({
-									object_id: route_code,
+								const new_data = {
+									object_id: route_id,
 									type: "route",
 									extras: { color: `rgb(${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)})` }
-								})
+								}
+								const old_data = await ApplicationConfig.database.get("favs.routes") || []
+								await ApplicationConfig.database.set("favs.routes", old_data.concat(new_data))
 								refetch_favorites()
 							}}>
 							<MaterialCommunityIcons name="star-outline" color={theme.primary} size={12 * 4} />

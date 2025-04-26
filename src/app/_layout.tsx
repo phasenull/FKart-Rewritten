@@ -1,13 +1,10 @@
 import { useFKartAuthStore } from "common/stores/FKartAuthStore"
-import { drizzle } from "drizzle-orm/expo-sqlite"
-import { useMigrations } from "drizzle-orm/expo-sqlite/migrator"
 import { Redirect, router, Stack, usePathname } from "expo-router"
 import { openDatabaseSync } from "expo-sqlite/next"
 import { useEffect } from "react"
 import { LogBox, Text, View } from "react-native"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { QueryClient, QueryClientProvider } from "react-query"
-import migrations from "../../drizzle/migrations"
 import { ThemeProvider } from "../common/contexts/ThemeContext"
 import { TranslationsProvider } from "../common/contexts/TranslationsContext"
 import SecondaryText from "components/reusables/SecondaryText"
@@ -16,7 +13,6 @@ import * as Notifications from "expo-notifications"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 import ErrorPage from "./ErrorPage"
 const sqlite = openDatabaseSync("fkart_sqlite.db")
-export const drizzleDB = drizzle(sqlite)
 Notifications.setNotificationHandler({
 	handleNotification: async () => ({
 		shouldShowAlert: true,
@@ -43,24 +39,7 @@ export default function AppEntryComponent() {
 	LogBox.ignoreLogs(["Non-serializable values were found in the navigation state."])
 	LogBox.ignoreLogs(["Require cycle:", "Clipboard has been extracted from react-native"])
 
-	const { success, error } = useMigrations(drizzleDB, migrations)
-	if (error) {
-		Logger.error("App.tsx", error?.message)
-		return 
-		// (
-			// <ErrorPage
-				// other={{ description: "\n\nSee full\nmessage", func: () => alert(error?.message || "no message"), icon: "info" }}
-				// error={{ description: "An error occured while trying to migrate drizzle databases!", title: "Local Database Error" }} />
-		// )
-	}
-	if (!success) {
-		Logger.info("App.tsx", "migrating drizzle")
-		return (
-			<View>
-				<Text>Migration is in progress...</Text>
-			</View>
-		)
-	}
+	
 	return (
 		<QueryClientProvider client={queryClient}>
 			<GestureHandlerRootView style={{ flex: 1 }}>
