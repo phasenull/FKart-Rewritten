@@ -1,5 +1,4 @@
 ![image](https://github.com/user-attachments/assets/5d763f18-ddd9-48af-8989-344292643a67)
-a
 # FKart - Smarter-er Public Transit in Kocaeli
 ![](https://komarev.com/ghpvc/?username=fkart-repo&label=Repo%20Visits)
 ### FKart - Open-source public transit archive by people, for people
