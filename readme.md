@@ -4,7 +4,6 @@
 ### FKart - Open-source public transit archive by people, for people
 FKart is a project that focuses on building a better public transit app & archiving data mainly for Kocaeli (also supports [other 23 cities](https://service.kentkart.com/rl1/api/city))
 
-
 ### some highlighted features
 - [X] Bus images - See & upload bus images matching their license plates, not available to public atm
 - [X] Media uploading - for public use, requires fkart auth, not available to public atm
