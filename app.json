@@ -1,76 +1,83 @@
 {
-	"expo": {
-		"name": "FKart",
-		"slug": "FKart",
-		"version": "24.9.8",
-		"orientation": "portrait",
-		"scheme": "fkart",
-		"userInterfaceStyle": "automatic",
-		"icon": "./src/assets/media/images/icon_full_white.png",
-		"splash": {
-			"image": "./src/assets/media/images/icon_no_bg.png",
-			"resizeMode": "contain",
-			"backgroundColor": "#ffffff"
-		},
-		"assetBundlePatterns": ["**/*"],
-		"android": {
-			"enableProguardInReleaseBuilds":true,
-			"useLegacyPackaging":true,
-			"adaptiveIcon": {
-				"foregroundImage": "./src/assets/media/images/icon_full_white.png",
-				"backgroundColor": "#ffffff"
-			},
-			"package": "dev.phasenull.FKart",
-			"runtimeVersion": "24.9.8",
-			"config": {
-				"googleMaps": {
-					"apiKey": "AIzaSyDEi26R3XBBCxx9enfbo7H-dD4uNwmtIZ0"
-				}
-			},
-			"permissions": ["android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"]
-		},
-		"plugins": [
-			"expo-router",
-			[
-				"expo-image-picker",
-				{
-					"photosPermission": "Required to upload bus images."
-				}
-			],
-			[
-				"expo-build-properties",
-				{
-					"android": {
-						"useLegacyPackaging":true,
-						"enableProguardInReleaseBuilds": true
-					}
-				}
-			],
-			[
-				"expo-location",
-				{
-					"locationAlwaysAndWhenInUsePermission": "To see your location on maps"
-				}
-			]
-		],
-		"extra": {
-			"router": {
-				"origin": false
-			},
-			"eas": {
-				"projectId": "33376c1e-302f-42f0-88ec-b0fccb210c19"
-			}
-		},
-		"updates": {
-			"url": "https://u.expo.dev/33376c1e-302f-42f0-88ec-b0fccb210c19"
-		},
-		"ios": {
-			"runtimeVersion": {
-				"policy": "appVersion"
-			}
-		},
-		"experiments": {
-		  "typedRoutes": true
-		}
-	}
+  "expo": {
+    "name": "FKart",
+    "slug": "FKart",
+    "version": "24.9.8",
+    "orientation": "portrait",
+    "scheme": "fkart",
+    "userInterfaceStyle": "automatic",
+    "icon": "./src/assets/media/images/icon_full_white.png",
+    "splash": {
+      "image": "./src/assets/media/images/icon_no_bg.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "android": {
+      "enableProguardInReleaseBuilds": true,
+      "useLegacyPackaging": true,
+      "adaptiveIcon": {
+        "foregroundImage": "./src/assets/media/images/icon_full_white.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "dev.phasenull.FKart",
+      "runtimeVersion": "24.9.8",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyDEi26R3XBBCxx9enfbo7H-dD4uNwmtIZ0"
+        }
+      },
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.RECORD_AUDIO"
+      ]
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Required to upload bus images."
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "useLegacyPackaging": true,
+            "enableProguardInReleaseBuilds": true
+          }
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "To see your location on maps"
+        }
+      ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "33376c1e-302f-42f0-88ec-b0fccb210c19"
+      }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/33376c1e-302f-42f0-88ec-b0fccb210c19"
+    },
+    "ios": {
+      "runtimeVersion": {
+        "policy": "appVersion"
+      },
+      "bundleIdentifier": "dev.phasenull.FKart"
+    },
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
 }
