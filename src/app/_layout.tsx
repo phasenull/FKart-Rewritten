@@ -1,6 +1,6 @@
 import { useFKartAuthStore } from "common/stores/FKartAuthStore"
 import { Redirect, router, Stack, usePathname } from "expo-router"
-import { openDatabaseSync } from "expo-sqlite/next"
+import { openDatabaseSync } from "expo-sqlite"
 import { useEffect } from "react"
 import { LogBox, Text, View } from "react-native"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
@@ -15,10 +15,13 @@ import ErrorPage from "./ErrorPage"
 const sqlite = openDatabaseSync("fkart_sqlite.db")
 Notifications.setNotificationHandler({
 	handleNotification: async () => ({
+
 		shouldShowAlert: true,
 		shouldPlaySound: true,
 		shouldSetBadge: false,
 		priority: Notifications.AndroidNotificationPriority.HIGH,
+		shouldShowBanner:false,
+		shouldShowList:false
 	}),
 })
 const queryClient = new QueryClient({ defaultOptions: { queries: { retry: 2 } } })

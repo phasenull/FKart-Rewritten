@@ -4,7 +4,7 @@ import ApplicationConfig from "common/ApplicationConfig"
 import BaseFKartResponse from "common/interfaces/FKart/BaseFKartResponse"
 import FKartUser from "common/interfaces/FKart/FKartUser"
 import Logger from "common/Logger"
-import { create } from "zustand"
+import { createWithEqualityFn } from "zustand/traditional"
 import { persist, createJSONStorage, StateStorage } from "zustand/middleware"
 interface FKartAuthStore {
 	user: FKartUser | undefined
@@ -29,7 +29,7 @@ const storage: StateStorage = {
 	},
 }
 
-export const useFKartAuthStore = create<FKartAuthStore>()(
+export const useFKartAuthStore = createWithEqualityFn<FKartAuthStore>()(
 	persist(
 		(set, get) => ({
 			fetchAccessToken: async () => {

@@ -9,7 +9,7 @@ import CityValidator from "components/validators/CityValidator"
 import { IIPageAnnouncement } from "components/welcomer/page_announcement"
 import { Redirect } from "expo-router"
 import SplashScreen from "../SplashScreen"
-export function InitialInfo(props: { last_check: number; }) {
+export default function InitialInfo(props: { last_check: number; }) {
 	return <Redirect href={{pathname: "/RootScreen"}}/>
 	// const { data, isLoading } = useGetAnnouncements()
 	// const doesExist = data?.data?.announceList?.length
@@ -23,20 +23,20 @@ export function InitialInfo(props: { last_check: number; }) {
 	// if (isLoaded && !doesExist) {
 		// return <Redirect href={{ pathname: "/RootScreen" }} />
 	// }
-	return (
-			<IIPaginator
-				// onPageChange={(newIndex, prevIndex) => {
-				// 	setPageIndex(newIndex)
-				// }}
-			>
-				{doesExist && <IIPage1 last_check={props.last_check} key={"app-info"} />}
-				{doesExist && <IIPage3 key={"open-source"} />}
-				{doesExist && <IIPage2 key={"community-made"} />}
-				{doesExist && (
-					<CityValidator redirect={true}>
-						<IIPageAnnouncement key={"announcements"} />
-					</CityValidator>
-				)}
-			</IIPaginator>
-	)
+	// return (
+	// 		<IIPaginator
+	// 			// onPageChange={(newIndex, prevIndex) => {
+	// 			// 	setPageIndex(newIndex)
+	// 			// }}
+	// 		>
+	// 			{doesExist && <IIPage1 last_check={props.last_check} key={"app-info"} />}
+	// 			{doesExist && <IIPage3 key={"open-source"} />}
+	// 			{doesExist && <IIPage2 key={"community-made"} />}
+	// 			{doesExist && (
+	// 				<CityValidator redirect={true}>
+	// 					<IIPageAnnouncement key={"announcements"} />
+	// 				</CityValidator>
+	// 			)}
+	// 		</IIPaginator>
+	// )
 }

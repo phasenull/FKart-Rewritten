@@ -5,7 +5,7 @@ import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
 import * as Updates from "expo-updates"
 import { useContext, useEffect, useState } from "react"
 import { Text, View } from "react-native"
-import { InitialInfo } from "./(core)/welcomer"
+import  InitialInfo  from "./(core)/welcomer"
 import SplashScreen from "./SplashScreen"
 
 export default function WelcomerPage() {
