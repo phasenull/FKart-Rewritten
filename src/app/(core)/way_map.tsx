@@ -12,7 +12,7 @@ import { BusMarker } from "components/map_details/markers/BusMarker"
 import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
 import { router, Stack, useLocalSearchParams } from "expo-router"
 import React, { LegacyRef, Ref, useContext, useEffect, useMemo, useRef, useState } from "react"
-import { Text, TouchableOpacity, View } from "react-native"
+import { Dimensions, PixelRatio, Platform, Text, TouchableOpacity, View } from "react-native"
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from "react-native-maps"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { useQueries, useQueryClient } from "react-query"
@@ -81,11 +81,15 @@ export default function WayMap() {
 				const stop_a = path.busStopList?.find((e) => e.stopId === segment.from.id)
 				const stop_b = path.busStopList?.find((e) => e.stopId === segment.to.id)
 				if (!stop_a || !stop_b || !points.length) continue
+				// first path point within ~60 m of the stop; a global nearest point can land on a later loop
+				// that passes the stop again and drag the fit far past it
 				const nearest = (lat: number, lng: number, from_index: number) => {
+					const close = (0.0006) ** 2
 					let best = from_index
 					let best_d = Infinity
 					for (let j = from_index; j < points.length; j++) {
 						const d = (points[j].latitude - lat) ** 2 + (points[j].longitude - lng) ** 2
+						if (d <= close) return j
 						if (d < best_d) {
 							best_d = d
 							best = j
@@ -100,7 +104,13 @@ export default function WayMap() {
 		})
 		for (const stop of waypoints) if (stop.lat !== undefined && stop.lng !== undefined) coords.push({ latitude: stop.lat, longitude: stop.lng })
 		if (!coords.length) return
-		ref_map.current?.fitToCoordinates(coords, { edgePadding: { top: insets.top + 110, right: 60, bottom: 380, left: 60 }, animated: true })
+		// keep the ridden area between the top bar and the sheet (snapped at 42%); Android wants pixels, iOS points
+		const scale = Platform.OS === "android" ? PixelRatio.get() : 1
+		const sheet = Dimensions.get("window").height * 0.42
+		ref_map.current?.fitToCoordinates(coords, {
+			edgePadding: { top: (insets.top + 80) * scale, right: 28 * scale, bottom: (sheet + 24) * scale, left: 28 * scale },
+			animated: true,
+		})
 	}
 
 	useEffect(() => {
