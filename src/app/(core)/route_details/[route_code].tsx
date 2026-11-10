@@ -59,6 +59,18 @@ export default function RouteDetails() {
 	}
 
 	const route_data = data?.data?.pathList?.at(0)
+	const api_result = (data?.data as any)?.result
+	if (!route_data && api_result && api_result.code !== 0) {
+		return (
+			<ErrorPage
+				error={{
+					title: "KentKart rejected the request",
+					description: `${api_result.message || "Unknown error"} (code ${api_result.code})${user ? "" : "\nTry logging in to your KentKart account"}`,
+				}}
+				retry={() => refetch()}
+			/>
+		)
+	}
 	if (error || isError || !route_data) {
 		return (
 			<ErrorPage

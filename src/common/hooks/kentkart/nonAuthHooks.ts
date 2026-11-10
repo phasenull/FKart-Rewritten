@@ -130,8 +130,10 @@ export function useGetRouteDetails(args: {
 	}
 	const resultTypeString = Object.values(resulType).join("")
 	const region = useKentKartAuthStore((state) => state.region) as string
+	// KentKart started rejecting anonymous /web/pathInfo calls (result code 34), send the user's token when we have one
+	const access_token = useKentKartAuthStore((state) => state.credentials?.access_token)
 	return useQuery(
-		["getRouteDetails", { displayRouteCode: route_code, direction: direction, region: region }],
+		["getRouteDetails", { displayRouteCode: route_code, direction: direction, region: region, authed: !!access_token }],
 		(): Promise<
 			AxiosResponse<
 				BaseKentKartResponse & {
@@ -143,6 +145,8 @@ export function useGetRouteDetails(args: {
 			const params: Record<string, string> = {
 				region: region,
 				lang: "tr",
+				authType: "4",
+				...(access_token ? { token: access_token } : {}),
 				direction: direction.toString(),
 				// todo: remove direction and fix references so it wont have to refresh just to switch directions
 				displayRouteCode: route_code,
