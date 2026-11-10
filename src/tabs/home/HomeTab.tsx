@@ -15,7 +15,11 @@ import KentKartAuthValidator from "components/validators/KentKartAuthValidator"
 import AuthWall from "components/walls/AuthWall"
 import { router } from "expo-router"
 import { useContext, useState } from "react"
-import { RefreshControl, ScrollView, Text, TouchableOpacity, View } from "react-native"
+import { Modal, Pressable, RefreshControl, ScrollView, Text, TouchableOpacity, View } from "react-native"
+import ApplicationConfig from "common/ApplicationConfig"
+import { FavoritesV3Card } from "common/interfaces/KentKart/Favorite"
+import { formatAlias } from "common/util"
+import { useQuery, useQueryClient } from "react-query"
 
 type Filter = "all" | "ways" | "card" | "news"
 
@@ -76,19 +80,49 @@ function CardActivity(props: { alias: string }) {
 	)
 }
 
-function BalanceChip(props: { alias: string }) {
+const HOME_CARD_KEY = "home.card_alias"
+
+/** balance chip at the top right; tapping it opens the card picker */
+function BalanceChip(props: { alias: string; onPress: () => void }) {
 	const { theme } = useContext(ThemeContext)
 	const { data } = useGetCardData({ card_alias: props.alias })
 	const balance = data?.data?.cardlist?.at(0)?.balance
-	if (!balance) return null
 	return (
 		<TouchableOpacity
-			onPress={() => router.navigate({ pathname: "/card_details/[alias]", params: { alias: props.alias } })}
+			onPress={props.onPress}
+			accessibilityLabel="Choose which card shows here"
 			style={{ flexDirection: "row", alignItems: "center", gap: 6, backgroundColor: theme.white, borderRadius: 16, paddingHorizontal: 12, paddingVertical: 8, elevation: 2 }}
 		>
 			<MaterialCommunityIcons name="card-bulleted-outline" size={20} color={theme.primaryDark} />
-			<Text style={{ color: theme.secondary, fontWeight: "800", fontSize: 14 }}>{balance} TL</Text>
+			<Text style={{ color: theme.secondary, fontWeight: "800", fontSize: 14 }}>{balance ? `${balance} TL` : "…"}</Text>
+			<MaterialCommunityIcons name="chevron-down" size={18} color={theme.secondary} />
 		</TouchableOpacity>
+	)
+}
+
+function CardPickRow(props: { card: FavoritesV3Card; selected: boolean; onPick: () => void; onOpen: () => void }) {
+	const { theme } = useContext(ThemeContext)
+	const { data } = useGetCardData({ card_alias: props.card.aliasNo })
+	const fresh = data?.data?.cardlist?.at(0)
+	return (
+		<View style={{ flexDirection: "row", alignItems: "center", borderRadius: 14, backgroundColor: props.selected ? "#FFF8D1" : theme.white, borderWidth: 2, borderColor: props.selected ? theme.primary : "transparent" }}>
+			<TouchableOpacity onPress={props.onPick} style={{ flex: 1, flexDirection: "row", alignItems: "center", gap: 12, paddingHorizontal: 14, paddingVertical: 12 }}>
+				<MaterialCommunityIcons name={props.selected ? "radiobox-marked" : "radiobox-blank"} size={22} color={theme.secondary} />
+				<View style={{ flex: 1 }}>
+					<Text numberOfLines={1} style={{ color: theme.secondary, fontWeight: "800", fontSize: 15 }}>
+						{props.card.description || (fresh?.virtualCard === "1" ? "QR Kart" : "Adsız Kart")}
+					</Text>
+					<Text numberOfLines={1} style={{ color: theme.secondary, opacity: 0.6, fontWeight: "700", fontSize: 12 }}>
+						{formatAlias(props.card.aliasNo)}
+						{fresh?.paxDescription ? ` · ${fresh.paxDescription}` : ""}
+					</Text>
+				</View>
+				<Text style={{ color: theme.secondary, fontWeight: "800", fontSize: 15 }}>{fresh?.balance ? `${fresh.balance} TL` : ""}</Text>
+			</TouchableOpacity>
+			<TouchableOpacity onPress={props.onOpen} accessibilityLabel="Open card details" style={{ width: 48, height: 56, alignItems: "center", justifyContent: "center" }}>
+				<MaterialCommunityIcons name="chevron-right" size={24} color={theme.secondary} />
+			</TouchableOpacity>
+		</View>
 	)
 }
 
@@ -101,7 +135,17 @@ export default function HomeTab(props: { route: any }) {
 	const { data: ways, refetch: refetchWays } = useWays()
 	const { data: announcements, refetch: refetchAnnouncements } = useGetAnnouncements()
 	const credentials = useKentKartAuthStore((state) => state.credentials)
-	const first_card = favorites?.data?.cardlist?.at(0)?.aliasNo
+	const queryClient = useQueryClient()
+	const [pickerOpen, setPickerOpen] = useState(false)
+	// which card shows at the top right (and in card activity); saved on the phone
+	const { data: savedCard } = useQuery([HOME_CARD_KEY], async () => ((await ApplicationConfig.database.get(HOME_CARD_KEY)) as string) || null, { staleTime: Infinity })
+	const cards = (favorites?.data?.cardlist || []) as FavoritesV3Card[]
+	const first_card = cards.find((e) => e.aliasNo === savedCard)?.aliasNo || cards.at(0)?.aliasNo
+	async function pickCard(alias: string) {
+		await ApplicationConfig.database.set(HOME_CARD_KEY, alias)
+		queryClient.setQueryData([HOME_CARD_KEY], alias)
+		setPickerOpen(false)
+	}
 	const news = announcements?.data?.announceList || []
 	if (isLoading) {
 		return <CustomLoadingIndicator />
@@ -138,7 +182,7 @@ export default function HomeTab(props: { route: any }) {
 							{profile?.data?.accountInfo?.name || ""}
 						</Text>
 					</View>
-					{first_card ? <BalanceChip alias={first_card} /> : null}
+					{first_card ? <BalanceChip alias={first_card} onPress={() => setPickerOpen(true)} /> : null}
 				</View>
 
 				<View className="flex-row" style={{ gap: 8 }}>
@@ -225,6 +269,28 @@ export default function HomeTab(props: { route: any }) {
 					</View>
 				) : null}
 			</ScrollView>
+			<Modal visible={pickerOpen} transparent={true} animationType="slide" onRequestClose={() => setPickerOpen(false)}>
+				<Pressable onPress={() => setPickerOpen(false)} style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.35)", justifyContent: "flex-end" }}>
+					<Pressable style={{ backgroundColor: theme.dark, borderTopLeftRadius: 24, borderTopRightRadius: 24, padding: 16, paddingBottom: 28, gap: 10, maxHeight: "80%" }}>
+						<View style={{ alignSelf: "center", width: 40, height: 5, borderRadius: 3, backgroundColor: "#c4c9d2", marginBottom: 4 }} />
+						<Text style={{ color: theme.secondary, fontWeight: "800", fontSize: 17 }}>Card shown on Home</Text>
+						<ScrollView contentContainerStyle={{ gap: 8 }}>
+							{cards.map((card) => (
+								<CardPickRow
+									key={card.aliasNo}
+									card={card}
+									selected={card.aliasNo === first_card}
+									onPick={() => pickCard(card.aliasNo)}
+									onOpen={() => {
+										setPickerOpen(false)
+										router.navigate({ pathname: "/card_details/[alias]", params: { alias: card.aliasNo } })
+									}}
+								/>
+							))}
+						</ScrollView>
+					</Pressable>
+				</Pressable>
+			</Modal>
 		</KentKartAuthValidator>
 	)
 }

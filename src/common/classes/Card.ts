@@ -42,6 +42,30 @@ export default abstract class Card {
 		return CardTypes.undefined
 	}
 
+	/**
+	 * card type from the balance response's paxDescription ("TAM", "ÖĞRENCİ", …), case-insensitive.
+	 * Turkish letters are lowered by hand: Hermes has no Turkish locale rules, and plain toLowerCase
+	 * turns "İ" into "i" + a combining dot, so "ÖĞRENCİ" would never match "öğrenci".
+	 * Verified: TAM, ÖĞRENCİ. Guessed, not seen yet: BASIN, 65, 60.
+	 */
+	public static typeFromPax(pax?: string): CardTypes | undefined {
+		if (!pax) return undefined
+		const text = pax.replace(/İ/g, "i").replace(/I/g, "ı").toLowerCase().replace(/\u0307/g, "").trim()
+		// "ogrenc" also covers ASCII spellings like "OGRENCI" (its I lowers to ı)
+		if (text.includes("öğrenc") || text.includes("ogrenc")) return CardTypes.student
+		if (text.includes("basın") || text.includes("basin")) return CardTypes.press
+		if (text.includes("65")) return CardTypes.age65
+		if (text.includes("60")) return CardTypes.age60
+		if (/(^|[^a-zçğıöşü])tam([^a-zçğıöşü]|$)/.test(text)) return CardTypes.full
+		return undefined
+	}
+	/** the type picked by hand in the card's type picker, if any ("undefined" counts as none) */
+	public static async getManualType(alias_no: string): Promise<CardTypes | undefined> {
+		const value = await ApplicationConfig.database.get("card__" + alias_no)
+		const type = value ? CardTypes[value as keyof typeof CardTypes] : undefined
+		return type && type !== CardTypes.undefined ? type : undefined
+	}
+
 	public static async getImageFromCard<T extends BasicCardData<"Basic" | "QR"> & Favorite<"Card" | "QR">>(card: T): Promise<CardImages> {
 		if (!card) {
 			return CardImages.undefined

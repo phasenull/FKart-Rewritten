@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "react-query"
+import { useMutation, useQuery, useQueryClient } from "react-query"
 import ApplicationConfig from "common/ApplicationConfig"
 import axios, { AxiosResponse } from "axios"
 import { BaseKentKartResponse } from "common/interfaces/KentKart/BaseKentKartResponse"
@@ -263,18 +263,27 @@ export function useGetRouteDetails(args: {
 	)
 }
 export function useSetCardType() {
+	const queryClient = useQueryClient()
 	return useMutation({
+		// every card image of this card (list, details) re-reads its type
+		onSuccess: (_, args) => queryClient.invalidateQueries(["getCardType", args.alias_no]),
 		mutationKey: ["setCardType"],
 		mutationFn: async (args: { alias_no: string; card_type: CardTypes }) => {
 			return await ApplicationConfig.database.set(`card__${args.alias_no}`, args.card_type)
 		},
 	})
 }
-export function useGetCardType(alias_no: string) {
+/**
+ * card type for images: a type picked by hand wins, else it comes from the card's paxDescription
+ * (pass it from the balance response), else "undefined"
+ */
+export function useGetCardType(alias_no: string, pax_description?: string) {
 	return useQuery({
-		queryKey: ["getCardType", alias_no],
+		queryKey: ["getCardType", alias_no, pax_description || ""],
 		queryFn: async () => {
-			return Card.getTypeFromAliasNo(alias_no)
+			const type = await Card.getTypeFromAliasNo(alias_no)
+			if (type === CardTypes.QR) return type
+			return (await Card.getManualType(alias_no)) || Card.typeFromPax(pax_description) || CardTypes.undefined
 		},
 		staleTime: Infinity,
 	})
