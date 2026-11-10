@@ -11,10 +11,12 @@ import SecondaryText from "components/reusables/SecondaryText"
 import { router, Stack } from "expo-router"
 import { transit_realtime } from "gtfs-realtime-bindings"
 import React, { LegacyRef, Ref, useContext, useMemo, useRef, useState } from "react"
-import { Text, TouchableOpacity, View } from "react-native"
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps"
+import { Image, Text, TouchableOpacity, View } from "react-native"
+import MapView, { PROVIDER_GOOGLE } from "react-native-maps"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { useQuery } from "react-query"
+import { busMarkerFromBus } from "components/r8r/ClusterMarker"
+import { useGetBusImages } from "common/hooks/fkart/bus/useGetBusImages"
 
 type Entity = transit_realtime.IFeedEntity
 interface VtsEvent {
@@ -122,8 +124,6 @@ export default function GrouppedMap() {
 				.sort((a, b) => route_codes.indexOf(routeOf(a)) - route_codes.indexOf(routeOf(b)) || (directionOf(a) ?? 0) - (directionOf(b) ?? 0) || plateOf(a).localeCompare(plateOf(b))),
 		[all, hidden, route_codes]
 	)
-	const selectedEntity = visible.find((e) => idOf(e) === selected)
-	const { data: trips, isLoading: tripsLoading } = useBusTrips(selectedEntity ? idOf(selectedEntity) : undefined)
 
 	function label(code: string) {
 		return names?.display?.[code] || code
@@ -173,33 +173,13 @@ export default function GrouppedMap() {
 				{visible.map((e) => {
 					const code = routeOf(e)
 					const is_selected = idOf(e) === selected
-					return (
-						<Marker
-							key={`${idOf(e)}-${is_selected}`}
-							tracksViewChanges={false}
-							zIndex={is_selected ? 20 : 10}
-							anchor={{ x: 0.5, y: 0.5 }}
-							coordinate={{ latitude: e.vehicle?.position?.latitude as number, longitude: e.vehicle?.position?.longitude as number }}
-							onPress={() => select(e)}
-						>
-							<View
-								style={{
-									flexDirection: "row",
-									alignItems: "center",
-									gap: 2,
-									backgroundColor: colors[code],
-									borderColor: is_selected ? theme.secondary : theme.white,
-									borderWidth: is_selected ? 3 : 2,
-									borderRadius: 14,
-									paddingHorizontal: 6,
-									height: is_selected ? 32 : 26,
-								}}
-							>
-								<MaterialCommunityIcons name="bus" size={14} color={theme.white} />
-								<Text style={{ color: theme.white, fontWeight: "800", fontSize: 12 }}>{label(code)}</Text>
-							</View>
-						</Marker>
-					)
+					// bearing arrow + callout like before, with the route code as an upright label
+					return busMarkerFromBus(e as transit_realtime.FeedEntity, colors[code], {
+						label: label(code),
+						selected: is_selected,
+						onPress: () => select(e),
+						key: `${idOf(e)}-${is_selected}`,
+					})
 				})}
 			</MapView>
 
@@ -261,52 +241,18 @@ export default function GrouppedMap() {
 							{visible.map((e, i) => {
 								const code = routeOf(e)
 								const dir = directionOf(e)
-								const headsign = dir !== undefined ? names?.headsigns?.[`${code}|${dir}`] : undefined
-								const stop = e.vehicle?.stopId ? names?.stops?.[e.vehicle.stopId] : undefined
-								const is_selected = idOf(e) === selected
 								return (
-									<View key={`row-${idOf(e)}`} style={{ borderTopWidth: i === 0 ? 0 : 1, borderColor: "#f0f0f0", backgroundColor: is_selected ? "#FFF8D1" : theme.white }}>
-										<TouchableOpacity onPress={() => select(e)} className="flex-row items-center" style={{ gap: 10, paddingHorizontal: 14, paddingVertical: 10 }}>
-											<View style={{ minWidth: 40, height: 26, borderRadius: 7, backgroundColor: colors[code], alignItems: "center", justifyContent: "center", paddingHorizontal: 4 }}>
-												<Text style={{ color: theme.white, fontWeight: "800", fontSize: 13 }}>{label(code)}</Text>
-											</View>
-											<View style={{ flex: 1 }}>
-												<Text numberOfLines={1} style={{ color: theme.secondary, fontWeight: "800", fontSize: 14 }}>
-													{plateOf(e)}
-													<Text style={{ opacity: 0.6 }}>{headsign ? `  → ${headsign}` : e.vehicle?.vehicle?.label ? `  ${e.vehicle.vehicle.label}` : ""}</Text>
-												</Text>
-												<Text numberOfLines={1} style={{ color: theme.secondary, opacity: 0.6, fontWeight: "700", fontSize: 12 }}>
-													{stop ? `at ${stop}` : "on the way"}
-												</Text>
-											</View>
-											<MaterialCommunityIcons name={is_selected ? "chevron-up" : "chevron-down"} size={20} color={theme.secondary} />
-										</TouchableOpacity>
-										{is_selected ? (
-											<View style={{ paddingHorizontal: 14, paddingBottom: 12, paddingLeft: 64, gap: 4 }}>
-												<Text style={{ color: theme.secondary, opacity: 0.5, fontWeight: "800", fontSize: 11, letterSpacing: 0.5 }}>TODAY ON THIS BUS</Text>
-												{tripsLoading ? (
-													<CustomLoadingIndicator size={14} style={{ margin: 0, alignSelf: "flex-start" }} />
-												) : trips?.missing_api ? (
-													<TouchableOpacity onPress={() => router.navigate({ pathname: "/AppData", params: { fill_key: "kk_vts_api" } })}>
-														<Text style={{ color: theme.secondary, fontWeight: "700", fontSize: 13, textDecorationLine: "underline" }}>Set kk_vts_api to see trip history</Text>
-													</TouchableOpacity>
-												) : trips?.trips.length ? (
-													trips.trips.slice(0, 8).map((t, j) => (
-														<View key={`trip-${j}`} className="flex-row" style={{ gap: 10 }}>
-															<Text style={{ color: theme.secondary, opacity: t.end ? 0.6 : 1, fontWeight: "700", fontSize: 13, width: 96 }}>
-																{hhmm(t.start)}–{hhmm(t.end)}
-															</Text>
-															<Text style={{ color: t.end ? theme.secondary : colors[code], opacity: t.end ? 0.6 : 1, fontWeight: "800", fontSize: 13 }}>
-																Route {t.route} {t.direction ? "←" : "→"}
-															</Text>
-														</View>
-													))
-												) : (
-													<Text style={{ color: theme.secondary, opacity: 0.6, fontWeight: "700", fontSize: 13 }}>No trips logged today</Text>
-												)}
-											</View>
-										) : null}
-									</View>
+									<BusRow
+										key={`row-${idOf(e)}`}
+										entity={e}
+										first={i === 0}
+										color={colors[code]}
+										code_label={label(code)}
+										headsign={dir !== undefined ? names?.headsigns?.[`${code}|${dir}`] : undefined}
+										stop={e.vehicle?.stopId ? names?.stops?.[e.vehicle.stopId] : undefined}
+										selected={idOf(e) === selected}
+										onPress={() => select(e)}
+									/>
 								)
 							})}
 						</View>
@@ -314,5 +260,87 @@ export default function GrouppedMap() {
 				</BottomSheetScrollView>
 			</BottomSheet>
 		</React.Fragment>
+	)
+}
+
+/** one bus in the sheet: photo, plate, headsign, stop, latest trip; tap for all trips today and a bigger photo */
+function BusRow(props: {
+	entity: Entity
+	first: boolean
+	color: string
+	code_label: string
+	headsign?: string
+	stop?: string
+	selected: boolean
+	onPress: () => void
+}) {
+	const { entity: e, color, selected } = props
+	const { theme } = useContext(ThemeContext)
+	const plate = plateOf(e)
+	const { data: images } = useGetBusImages({ plateNumber: plate } as any)
+	const photo = images?.data?.data?.[0]
+	const { data: trips, isLoading: tripsLoading } = useBusTrips(idOf(e))
+	const latest = trips?.trips?.[0]
+	return (
+		<View style={{ borderTopWidth: props.first ? 0 : 1, borderColor: "#f0f0f0", backgroundColor: selected ? "#FFF8D1" : theme.white }}>
+			<TouchableOpacity onPress={props.onPress} className="flex-row items-center" style={{ gap: 10, paddingHorizontal: 12, paddingVertical: 8 }}>
+				{photo?.url ? (
+					<Image source={{ uri: photo.url }} style={{ width: 56, height: 42, borderRadius: 8 }} />
+				) : (
+					<View style={{ width: 56, height: 42, borderRadius: 8, backgroundColor: "#EFEFEF", alignItems: "center", justifyContent: "center" }}>
+						<MaterialCommunityIcons name="bus" size={22} color={theme.secondary} style={{ opacity: 0.35 }} />
+					</View>
+				)}
+				<View style={{ flex: 1 }}>
+					<View className="flex-row items-center" style={{ gap: 6 }}>
+						<View style={{ minWidth: 34, height: 22, borderRadius: 6, backgroundColor: color, alignItems: "center", justifyContent: "center", paddingHorizontal: 4 }}>
+							<Text style={{ color: theme.white, fontWeight: "800", fontSize: 12 }}>{props.code_label}</Text>
+						</View>
+						<Text numberOfLines={1} style={{ flex: 1, color: theme.secondary, fontWeight: "800", fontSize: 14 }}>
+							{plate}
+							<Text style={{ opacity: 0.6 }}>{props.headsign ? `  → ${props.headsign}` : e.vehicle?.vehicle?.label ? `  ${e.vehicle.vehicle.label}` : ""}</Text>
+						</Text>
+					</View>
+					<Text numberOfLines={1} style={{ color: theme.secondary, opacity: 0.6, fontWeight: "700", fontSize: 12, marginTop: 2 }}>
+						{props.stop ? `at ${props.stop}` : "on the way"}
+						{latest ? ` · since ${hhmm(latest.start)} on ${latest.route} ${latest.direction ? "←" : "→"}` : ""}
+					</Text>
+				</View>
+				<MaterialCommunityIcons name={selected ? "chevron-up" : "chevron-down"} size={20} color={theme.secondary} />
+			</TouchableOpacity>
+			{selected ? (
+				<View style={{ paddingHorizontal: 12, paddingBottom: 12, gap: 6 }}>
+					{photo?.url ? (
+						<View>
+							<Image source={{ uri: photo.url }} style={{ width: "100%", height: 150, borderRadius: 12 }} />
+							<Text style={{ position: "absolute", bottom: 4, alignSelf: "center", color: theme.white, fontWeight: "800" }}>
+								By {photo.uploader || "phasenull"} at {photo.uploadedAt?.slice(0, 10) || "????-??-??"}
+							</Text>
+						</View>
+					) : null}
+					<Text style={{ color: theme.secondary, opacity: 0.5, fontWeight: "800", fontSize: 11, letterSpacing: 0.5 }}>TODAY ON THIS BUS</Text>
+					{tripsLoading ? (
+						<CustomLoadingIndicator size={14} style={{ margin: 0, alignSelf: "flex-start" }} />
+					) : trips?.missing_api ? (
+						<TouchableOpacity onPress={() => router.navigate({ pathname: "/AppData", params: { fill_key: "kk_vts_api" } })}>
+							<Text style={{ color: theme.secondary, fontWeight: "700", fontSize: 13, textDecorationLine: "underline" }}>Set kk_vts_api to see trip history</Text>
+						</TouchableOpacity>
+					) : trips?.trips.length ? (
+						trips.trips.map((t, j) => (
+							<View key={`trip-${j}`} className="flex-row" style={{ gap: 10 }}>
+								<Text style={{ color: theme.secondary, opacity: t.end ? 0.6 : 1, fontWeight: "700", fontSize: 13, width: 96 }}>
+									{hhmm(t.start)}–{hhmm(t.end)}
+								</Text>
+								<Text style={{ color: t.end ? theme.secondary : color, opacity: t.end ? 0.6 : 1, fontWeight: "800", fontSize: 13 }}>
+									Route {t.route} {t.direction ? "←" : "→"}
+								</Text>
+							</View>
+						))
+					) : (
+						<Text style={{ color: theme.secondary, opacity: 0.6, fontWeight: "700", fontSize: 13 }}>No trips logged today</Text>
+					)}
+				</View>
+			) : null}
+		</View>
 	)
 }

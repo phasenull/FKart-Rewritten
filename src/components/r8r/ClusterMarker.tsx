@@ -16,7 +16,11 @@ function getAvgPositionFromArray(data: transit_realtime.FeedEntity[]): LatLng {
 	const lat = data.map((e) => e.vehicle?.position?.latitude as number)
 	return { latitude: avgFromArray(lat), longitude: avgFromArray(long) }
 }
-export function busMarkerFromBus(entity: transit_realtime.FeedEntity,force_color?:string) {
+export function busMarkerFromBus(
+	entity: transit_realtime.FeedEntity,
+	force_color?: string,
+	options?: { label?: string; selected?: boolean; onPress?: () => void; key?: string }
+) {
 	const id = entity.id
 	const vehicle = entity.vehicle as any
 	const [bus_id, disabled_person, _3, _4, vehicle_type, _5, _6, pick_me_up] = vehicle.vehicle.id.split("|")
@@ -25,6 +29,9 @@ export function busMarkerFromBus(entity: transit_realtime.FeedEntity,force_color
 			rt_raw={entity}
 			is_rt={true}
 			force_color={force_color}
+			label={options?.label}
+			selected={options?.selected}
+			onPress={options?.onPress}
 			route_data={{
 				displayRouteCode: vehicle.trip.routeId,
 				direction_name: vehicle.vehicle.label,
@@ -43,7 +50,7 @@ export function busMarkerFromBus(entity: transit_realtime.FeedEntity,force_color
 				busLabel: vehicle.vehicle.label,
 				plateNumber: vehicle.vehicle.licensePlate,
 				busId: bus_id,
-				bearing: vehicle.position.bearing.toString(),
+				bearing: `${vehicle.position.bearing ?? 0}`,
 				lat: vehicle.position.latitude.toString(),
 				lng: vehicle.position.longitude.toString(),
 				vehicleType: vehicle_type,
@@ -52,12 +59,12 @@ export function busMarkerFromBus(entity: transit_realtime.FeedEntity,force_color
 				couple: "",
 				disabledPerson: disabled_person.toString() as any,
 				pickMeUp: pick_me_up.toString() as any,
-				seq: vehicle.currentStopSequence.toString(),
+				seq: `${vehicle.currentStopSequence ?? ""}`,
 				stopId: vehicle.stopId,
 				timeDiff: parseInt(vehicle.timestamp),
 				tripId: vehicle.trip.tripId,
 			}}
-			key={vehicle.vehicle.licensePlate || id}
+			key={options?.key || vehicle.vehicle.licensePlate || id}
 			coordinate={{ latitude: vehicle.position.latitude, longitude: vehicle.position.longitude }}
 		/>
 	)

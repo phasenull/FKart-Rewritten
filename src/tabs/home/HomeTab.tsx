@@ -8,6 +8,8 @@ import CardTransaction from "common/interfaces/KentKart/CardTransaction"
 import { deltaTime } from "common/util"
 import { useWays } from "common/ways"
 import WayCard from "components/home/WayCard"
+import CardJSONData from "components/card_details/CardJSONData"
+import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
 import KentKartAuthValidator from "components/validators/KentKartAuthValidator"
 import AuthWall from "components/walls/AuthWall"
@@ -98,6 +100,7 @@ export default function HomeTab(props: { route: any }) {
 	const { data: favorites, refetch: refetchFavorites } = useGetFavorites()
 	const { data: ways, refetch: refetchWays } = useWays()
 	const { data: announcements, refetch: refetchAnnouncements } = useGetAnnouncements()
+	const credentials = useKentKartAuthStore((state) => state.credentials)
 	const first_card = favorites?.data?.cardlist?.at(0)?.aliasNo
 	const news = announcements?.data?.announceList || []
 	if (isLoading) {
@@ -207,6 +210,18 @@ export default function HomeTab(props: { route: any }) {
 							<ToolRow icon="map-marker-radius" title="R8R live map" description="Every bus in the city right now" onPress={() => router.navigate("/R8R")} />
 							<ToolRow icon="crosshairs-gps" title="Snipe" description="Find and track a bus by its plate" onPress={() => router.navigate("/snipe")} last />
 						</View>
+					</View>
+				) : null}
+				{filter === "all" ? (
+					<View>
+						<SectionLabel text="ACCOUNT" />
+						<CardJSONData
+							favorite_data={{
+								...profile?.data?.accountInfo,
+								phone: `${profile?.data?.accountInfo?.phone?.slice(0, 3)}${"*".repeat((profile?.data?.accountInfo?.phone?.length || 10) - 3)}`,
+							}}
+							card={{ access_token: credentials.access_token?.slice(0, 10) + "...", refresh_token: credentials.refresh_token?.slice(0, 4) + "..." }}
+						/>
 					</View>
 				) : null}
 			</ScrollView>
