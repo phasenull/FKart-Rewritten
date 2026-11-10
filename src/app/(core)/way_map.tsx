@@ -6,7 +6,7 @@ import { ThemeContext } from "common/contexts/ThemeContext"
 import { useGetCityList } from "common/hooks/kentkart/nonAuthHooks"
 import RouteData from "common/interfaces/KentKart/RouteData"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
-import { colorsFor, describeStatus, NEXT_BUS_COLOR, optionKey, optionQuery, optionStatus, useWayOptions, useWays, WayOption } from "common/ways"
+import { colorsFor, describeStatus, NEXT_BUS_COLOR, saveWay, optionKey, optionQuery, optionStatus, useWayOptions, useWays, WayOption } from "common/ways"
 import { BusMarker } from "components/map_details/markers/BusMarker"
 import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
 import { router, Stack, useLocalSearchParams } from "expo-router"
@@ -14,7 +14,7 @@ import React, { LegacyRef, Ref, useContext, useEffect, useMemo, useRef, useState
 import { Text, TouchableOpacity, View } from "react-native"
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from "react-native-maps"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { useQueries } from "react-query"
+import { useQueries, useQueryClient } from "react-query"
 import ErrorPage from "./../ErrorPage"
 
 /** every route/direction of a saved way on one map, each in its own color, with live buses */
@@ -26,10 +26,21 @@ export default function WayMap() {
 	const ref_map = useRef<MapView>(null)
 	const ref_sheet = useRef<BottomSheet>(null)
 	const fitted = useRef(false)
-	const [hidden, setHidden] = useState<Record<string, boolean>>({})
+	const queryClient = useQueryClient()
+	// hidden routes are saved on the way, so they stay hidden next time
+	const [hiddenOverride, setHiddenOverride] = useState<string[] | undefined>()
 	const { data: ways, isLoading: waysLoading } = useWays()
 	const { data: cityData } = useGetCityList()
 	const way = ways?.find((e) => e.id === way_id)
+	const hiddenList = hiddenOverride ?? way?.hidden ?? []
+	const hidden: Record<string, boolean> = Object.fromEntries(hiddenList.map((key) => [key, true]))
+	async function toggleHidden(key: string) {
+		if (!way) return
+		const next = hidden[key] ? hiddenList.filter((e) => e !== key) : [...hiddenList, key]
+		setHiddenOverride(next)
+		await saveWay({ ...way, hidden: next })
+		queryClient.invalidateQueries(["ways"])
+	}
 	// every route that goes from A to B (boarding / alighting allowed), not only the ones the way was made with
 	const { data: segmentOptions, isLoading: resolving } = useWayOptions(way)
 	const colors = useMemo(() => colorsFor(segmentOptions || []), [segmentOptions])
@@ -53,6 +64,7 @@ export default function WayMap() {
 		})
 	}, [way, allLoaded])
 
+	/** fit the map to the visible routes only (hidden ones never count) */
 	function fit() {
 		const coords = Object.entries(paths)
 			.filter(([key]) => !hidden[key])
@@ -187,7 +199,7 @@ export default function WayMap() {
 										</TouchableOpacity>
 										<TouchableOpacity
 											accessibilityLabel={`${off ? "Show" : "Hide"} route ${option.route_code} on the map`}
-											onPress={() => setHidden({ ...hidden, [key]: !off })}
+											onPress={() => toggleHidden(key)}
 											style={{ width: 48, height: 48, alignItems: "center", justifyContent: "center" }}
 										>
 											<MaterialCommunityIcons name={off ? "eye-off" : "eye"} size={20} color={theme.secondary} />

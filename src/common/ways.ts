@@ -29,6 +29,8 @@ export interface Way {
 	id: string
 	name: string
 	segments: WaySegment[]
+	/** option keys ("route|direction") hidden on the way map and ignored for the best bus */
+	hidden?: string[]
 }
 export interface WayOption {
 	route_code: string // displayRouteCode
