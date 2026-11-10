@@ -6,10 +6,19 @@ import { PROVIDER_GOOGLE } from "react-native-maps"
 import { busMarkerFromBus } from "../../components/r8r/ClusterMarker"
 import OverlayRoot from "../../components/r8r/overlay/OverlayRoot"
 import ErrorPage from "../ErrorPage"
+import ApplicationConfig from "common/ApplicationConfig"
+import { useQuery } from "react-query"
 
 export default function R8R() {
 	const map = useRef<MapView>()
-	const { data, isLoading, isError, error, refetch, isRefetching } = useGetRealtime()
+	// when the city-wide GTFS-RT feed is down, show the buses of favorite routes instead
+	const { data: fav_data } = useQuery(["get_favs"], {
+		queryFn: async () => {
+			return (await ApplicationConfig.database.get("favs.routes")) || []
+		},
+	})
+	const fallback_route_codes: string[] = fav_data?.map((e: any) => e.object_id).filter(Boolean) || []
+	const { data, isLoading, isError, error, refetch, isRefetching } = useGetRealtime(fallback_route_codes)
 	const renderedMarkers = (
 
 		data?.feed?.map((e) => {
@@ -23,7 +32,7 @@ export default function R8R() {
 		<React.Fragment>
 			<Stack.Screen options={{
 				headerShown: true,
-				title: `${data?.feed?.length || 0} buses ${new Date().toISOString().slice(0, 19)}`
+				title: `${data?.feed?.length || 0} buses${data?.source === "route_info" ? " (favorites only)" : ""} ${new Date().toISOString().slice(0, 19)}`
 			}} />
 			<OverlayRoot isRefetchLoading={isLoading || isRefetching} refetchFn={refetch} />
 			<MapView

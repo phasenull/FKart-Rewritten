@@ -65,7 +65,7 @@ export default function RouteDetails() {
 			<ErrorPage
 				error={{
 					title: "KentKart rejected the request",
-					description: `${api_result.message || "Unknown error"} (code ${api_result.code})${user ? "" : "\nTry logging in to your KentKart account"}`,
+					description: `${api_result.message || "Unknown error"} (code ${api_result.code})`,
 				}}
 				retry={() => refetch()}
 			/>

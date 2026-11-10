@@ -32,13 +32,14 @@ export default function GrouppedMap() {
 	const ref_map_view = useRef<MapView>()
 	const ref_bottom_sheet = useRef<BottomSheet>()
 	const { theme } = useContext(ThemeContext)
-	const flatted = fav_data?.map((e: any) => e.object_id)
+	const flatted: string[] = fav_data?.map((e: any) => e.object_id) || []
 	// console.log("flatted", flatted)
-	const { data, isLoading, isError, error, refetch, isRefetching } = useGetRealtime()
+	// favorites double as the fallback when the GTFS-RT feed is unavailable
+	const { data, isLoading, isError, error, refetch, isRefetching } = useGetRealtime(flatted)
 	function getFavDataFromRouteId(routeId: string) {
 		return fav_data?.find((e: any) => e.object_id === routeId)
 	}
-	const filtered: transit_realtime.IFeedEntity[] = data?.feed?.filter((e) => flatted.includes(e.vehicle?.trip?.routeId?.split("|")[0])) as any
+	const filtered: transit_realtime.IFeedEntity[] = data?.feed?.filter((e) => flatted.includes(e.vehicle?.trip?.routeId?.split("|")[0] as string)) as any
 	const renderedMarkers = filtered?.map((e: any) => {
 		const fav_data = getFavDataFromRouteId((e.vehicle?.trip?.routeId)?.split("|")[0])
 		const color = fav_data?.extras?.color
@@ -80,7 +81,7 @@ export default function GrouppedMap() {
 			<Stack.Screen
 				options={{
 					headerShown: true,
-					headerTitle: `Group View`,
+					headerTitle: data?.source === "route_info" ? `Group View (fallback)` : `Group View`,
 					headerTitleStyle: {
 						color: theme.secondary,
 						fontWeight: "900",
