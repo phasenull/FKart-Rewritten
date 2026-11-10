@@ -12,7 +12,7 @@ import { BusMarker } from "components/map_details/markers/BusMarker"
 import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
 import { router, Stack, useLocalSearchParams } from "expo-router"
 import React, { LegacyRef, Ref, useContext, useEffect, useMemo, useRef, useState } from "react"
-import { Dimensions, PixelRatio, Platform, Text, TouchableOpacity, View } from "react-native"
+import { Dimensions, Text, TouchableOpacity, View } from "react-native"
 import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from "react-native-maps"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { useQueries, useQueryClient } from "react-query"
@@ -104,11 +104,11 @@ export default function WayMap() {
 		})
 		for (const stop of waypoints) if (stop.lat !== undefined && stop.lng !== undefined) coords.push({ latitude: stop.lat, longitude: stop.lng })
 		if (!coords.length) return
-		// keep the ridden area between the top bar and the sheet (snapped at 42%); Android wants pixels, iOS points
-		const scale = Platform.OS === "android" ? PixelRatio.get() : 1
+		// keep the ridden area between the top bar and the sheet (snapped at 42%); values are dp,
+		// react-native-maps multiplies them by the screen density itself on Android
 		const sheet = Dimensions.get("window").height * 0.42
 		ref_map.current?.fitToCoordinates(coords, {
-			edgePadding: { top: (insets.top + 80) * scale, right: 28 * scale, bottom: (sheet + 24) * scale, left: 28 * scale },
+			edgePadding: { top: insets.top + 72, right: 24, bottom: sheet + 16, left: 24 },
 			animated: true,
 		})
 	}
