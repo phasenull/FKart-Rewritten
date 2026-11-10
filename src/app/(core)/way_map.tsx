@@ -6,7 +6,8 @@ import { ThemeContext } from "common/contexts/ThemeContext"
 import { useGetCityList } from "common/hooks/kentkart/nonAuthHooks"
 import RouteData from "common/interfaces/KentKart/RouteData"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
-import { colorsFor, describeStatus, NEXT_BUS_COLOR, saveWay, optionKey, optionQuery, optionStatus, useWayOptions, useWays, WayOption } from "common/ways"
+import StatusText from "components/home/StatusText"
+import { colorsFor, describeStatus, saveWay, optionKey, optionQuery, optionStatus, useWayOptions, useWays, WayOption } from "common/ways"
 import { BusMarker } from "components/map_details/markers/BusMarker"
 import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
 import { router, Stack, useLocalSearchParams } from "expo-router"
@@ -222,9 +223,13 @@ export default function WayMap() {
 												<Text numberOfLines={1} style={{ color: theme.secondary, fontWeight: "800", fontSize: 13 }}>
 													→ {option.headsign}
 												</Text>
-												<Text numberOfLines={2} style={{ color: status.tone === "ok" ? theme.secondary : status.tone === "warn" ? NEXT_BUS_COLOR : theme.error, opacity: status.tone === "ok" ? 0.7 : 1, fontWeight: "800", fontSize: 12 }}>
-													{result?.isLoading ? "Loading…" : result?.isError && !result.data ? "Couldn't load this route" : status.text}
-												</Text>
+												{result?.isLoading ? (
+													<StatusText tone="ok" parts={[{ text: "Loading…", kind: "plain" }]} />
+												) : result?.isError && !result.data ? (
+													<StatusText tone="bad" parts={[{ text: "Couldn't load this route", kind: "plain" }]} />
+												) : (
+													<StatusText tone={status.tone} parts={status.parts} />
+												)}
 											</View>
 										</TouchableOpacity>
 										<TouchableOpacity

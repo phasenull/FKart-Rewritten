@@ -1,7 +1,8 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
-import { bestOfSegment, colorsFor, describeStatus, NEXT_BUS_COLOR, StatusTone, optionKey, optionQuery, optionStatus, useWayOptions, Way, WayOption } from "common/ways"
+import StatusText from "components/home/StatusText"
+import { bestOfSegment, colorsFor, describeStatus, StatusPart, StatusTone, optionKey, optionQuery, optionStatus, useWayOptions, Way, WayOption } from "common/ways"
 import { router } from "expo-router"
 import { useContext } from "react"
 import { Text, TouchableOpacity, View } from "react-native"
@@ -49,16 +50,12 @@ export default function WayCard(props: { way: Way }) {
 				// routes hidden on the way map don't count for the best bus
 				const statuses = options.filter((o) => !way.hidden?.includes(optionKey(o))).map((o) => optionStatus(o, segment.from.id, pathOf(optionKey(o))))
 				const best = bestOfSegment(statuses)
-				const status =
+				const status: { tone: StatusTone; parts: StatusPart[] } =
 					loading && !best
-						? { text: "Loading…", tone: "ok" as StatusTone }
+						? { tone: "ok", parts: [{ text: "Loading…", kind: "plain" }] }
 						: !resolving && options.length === 0
-						? { text: "No direct bus between these stops", tone: "bad" as StatusTone }
-						: (() => {
-								// several routes can serve a part, so name the one the status is about
-								const described = describeStatus(best, segment.from.name)
-								return best ? { ...described, text: `${best.option.route_code} · ${described.text}` } : described
-						  })()
+						? { tone: "bad", parts: [{ text: "No direct bus between these stops", kind: "plain" }] }
+						: describeStatus(best, segment.from.name)
 				return (
 					<View key={`seg-${i}`} style={{ gap: 4 }}>
 						<Text numberOfLines={1} style={{ color: theme.secondary, fontWeight: "800", fontSize: 13 }}>
@@ -74,9 +71,8 @@ export default function WayCard(props: { way: Way }) {
 								</View>
 							))}
 						</View>
-						<Text numberOfLines={2} style={{ color: status.tone === "ok" ? theme.secondary : status.tone === "warn" ? NEXT_BUS_COLOR : theme.error, opacity: status.tone === "ok" ? 0.7 : 1, fontWeight: "800", fontSize: 12 }}>
-							{status.text}
-						</Text>
+						{/* several routes can serve a part, so name the one the status is about */}
+						<StatusText tone={status.tone} parts={status.parts} prefix={best && !(loading && !best) ? best.option.route_code : undefined} />
 					</View>
 				)
 			})}
