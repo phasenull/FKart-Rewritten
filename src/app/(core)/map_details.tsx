@@ -39,8 +39,8 @@ export default function MapData() {
 	}>()
 	const route_code = (params.force_route_code || params.route_code) as string
 	const insets = useSafeAreaInsets()
-	const ref_map_view = useRef<MapView>()
-	const ref_bottom_sheet = useRef<BottomSheet>()
+	const ref_map_view = useRef<MapView>(null)
+	const ref_bottom_sheet = useRef<BottomSheet>(null)
 	const user = useKentKartAuthStore((state) => state.user)
 	const { data: cityData } = useGetCityList()
 	const [direction, setDirection] = useState(parseInt(params.force_direction || "0") || 0)

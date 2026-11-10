@@ -100,8 +100,8 @@ function hhmm(date?: Date) {
 export default function GrouppedMap() {
 	const { theme } = useContext(ThemeContext)
 	const insets = useSafeAreaInsets()
-	const ref_map_view = useRef<MapView>()
-	const ref_bottom_sheet = useRef<BottomSheet>()
+	const ref_map_view = useRef<MapView>(null)
+	const ref_bottom_sheet = useRef<BottomSheet>(null)
 	const [hidden, setHidden] = useState<Record<string, boolean>>({})
 	const [selected, setSelected] = useState<string | undefined>()
 	const { data: cityData } = useGetCityList()
