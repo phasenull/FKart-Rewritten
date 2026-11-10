@@ -19,6 +19,8 @@ export function BusMarker(props: {
 	easterEggEnabled?: boolean
 	route_data?: RouteData,
 	force_color?: string
+	selected?: boolean
+	onPress?: () => void
 }) {
 	const { route_data, bus, coordinate, easterEggEnabled,force_color } = props
 	const schedule_list = route_data?.timeTableList
@@ -80,6 +82,7 @@ export function BusMarker(props: {
 			className="items-center justify-center overflow-visible"
 			// calloutOffset={{x:1,y:1}}
 			calloutAnchor={{ x: 0.5, y: 0.5 }}
+			onPress={props.onPress}
 			onCalloutPress={() => {
 				router.navigate({ pathname: "/bus_details", params: { bus64: btoa(escape(JSON.stringify(bus))) } })
 
@@ -94,10 +97,10 @@ export function BusMarker(props: {
 			/>
 			<MaterialCommunityIcons
 				style={{
-					backgroundColor: force_color||getColorFromBus(props.rt_raw || props.bus, props.route_data) || theme.primary,
+					backgroundColor: props.selected ? theme.secondary : (force_color||getColorFromBus(props.rt_raw || props.bus, props.route_data) || theme.primary),
 					elevation: 10,
 					borderRadius: 50,
-					padding: 2,
+					padding: props.selected ? 5 : 2,
 					color: theme.white,
 					transform: [{ rotateZ: "180deg" }],
 				}}

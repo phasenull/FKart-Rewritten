@@ -13,6 +13,8 @@ export default function Map(props: {
 	routeDataToShow: RouteData
 	busListToShow: BusData[]
 	easterEggEnabled?: boolean
+	selectedBusId?: string
+	onBusPress?: (bus: BusData) => void
 }) {
 	const {theme} = useContext(ThemeContext)
 	const { forwardRef, routeDataToShow, userCity, easterEggEnabled, busListToShow } = props
@@ -49,9 +51,18 @@ export default function Map(props: {
 				))}
 
 				{busListToShow.map((bus, index) => (
-					<BusMarker route_data={routeDataToShow} bus={bus} key={index.toString()} easterEggEnabled={easterEggEnabled} coordinate={{ latitude: parseFloat(bus.lat), longitude: parseFloat(bus.lng) }}  />
+					<BusMarker
+						route_data={routeDataToShow}
+						bus={bus}
+						// tracksViewChanges is off, so remount a marker when its selection changes
+						key={`${index}-${bus.busId === props.selectedBusId}`}
+						selected={bus.busId === props.selectedBusId}
+						onPress={props.onBusPress ? () => props.onBusPress?.(bus) : undefined}
+						easterEggEnabled={easterEggEnabled}
+						coordinate={{ latitude: parseFloat(bus.lat), longitude: parseFloat(bus.lng) }}
+					/>
 				))}
 			</MapView>
 		)
-	}, [busListToShow, routeDataToShow, userCity, easterEggEnabled])
+	}, [busListToShow, routeDataToShow, userCity, easterEggEnabled, props.selectedBusId])
 }
