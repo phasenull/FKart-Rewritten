@@ -7,7 +7,8 @@ import { useGetCityList } from "common/hooks/kentkart/nonAuthHooks"
 import RouteData from "common/interfaces/KentKart/RouteData"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 import StatusText from "components/home/StatusText"
-import { colorsFor, describeStatus, saveWay, optionKey, optionQuery, optionStatus, useWayOptions, useWays, WayOption } from "common/ways"
+import CandidateLines from "components/home/CandidateLines"
+import { colorsFor, describeStatus, saveWay, segmentCandidates, optionKey, optionQuery, optionStatus, useWayOptions, useWays, WayOption } from "common/ways"
 import { BusMarker } from "components/map_details/markers/BusMarker"
 import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
 import { router, Stack, useLocalSearchParams } from "expo-router"
@@ -207,6 +208,15 @@ export default function WayMap() {
 									{segment.from.name} → {segment.to.name}
 								</Text>
 							</View>
+							{!resolving && (segmentOptions?.[i] || []).length ? (
+								<View style={{ paddingHorizontal: 14, paddingBottom: 10 }}>
+									<CandidateLines
+										candidates={segmentCandidates(segment, (segmentOptions?.[i] || []).filter((o) => !hidden[optionKey(o)]), paths)}
+										colors={colors}
+										loading={!allLoaded}
+									/>
+								</View>
+							) : null}
 							{resolving ? (
 								<View style={{ padding: 14 }}>
 									<CustomLoadingIndicator size={16} style={{ margin: 0, alignSelf: "flex-start" }} />

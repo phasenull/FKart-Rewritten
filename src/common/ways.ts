@@ -322,3 +322,86 @@ export function describeStatus(status: OptionStatus | undefined, stop_name: stri
 	if (next) return done("warn", [{ text: next.charAt(0).toUpperCase() + next.slice(1), kind: "plain" }])
 	return done("bad", [{ text: "No buses scheduled", kind: "plain" }])
 }
+
+// MARK: timeline
+/** one bus you could take on a part of a way */
+export interface Candidate {
+	option: WayOption
+	kind: "live" | "scheduled"
+	/** estimated arrival at the boarding stop, epoch ms */
+	eta: number
+	/** departure from the first stop, "HH:MM" */
+	departure?: string
+	/** live only: stops between the bus and the boarding stop */
+	stops_away?: number
+	bus?: BusData
+	/** scheduled for tomorrow (nothing left today) */
+	tomorrow?: boolean
+}
+
+function scheduleTimes(path: RouteData, day_index: number) {
+	const entry = ((path.scheduleList || []) as { description: string; timeList: { departureTime: string }[] }[]).find((e) => {
+		const c = (e.description || "")[day_index]
+		return !!c && c !== c.toLowerCase()
+	})
+	return (entry?.timeList || []).map((e) => e.departureTime?.slice(0, 5)).filter(Boolean).sort() as string[]
+}
+function atTime(hhmm: string, day_offset = 0) {
+	const [h, m] = hhmm.split(":").map((e) => parseInt(e))
+	const date = new Date()
+	date.setDate(date.getDate() + day_offset)
+	date.setHours(h, m, 0, 0)
+	return date.getTime()
+}
+
+/**
+ * buses you can still catch at the segment's boarding stop, soonest first, across all its routes:
+ * live buses that have not passed the stop (eta = now + travel time from their current stop, from
+ * busStopList arrival_offset) and scheduled departures not on the road yet (eta = departure + travel
+ * time to the stop). Missed buses and trips already running as a live bus are left out.
+ */
+export function segmentCandidates(segment: WaySegment, options: WayOption[], paths: Record<string, RouteData | undefined>, limit = 3): Candidate[] {
+	const now = Date.now()
+	const today: Candidate[] = []
+	const tomorrow: Candidate[] = []
+	const today_index = (new Date().getDay() + 6) % 7
+	for (const option of options) {
+		const path = paths[optionKey(option)]
+		if (!path) continue
+		const stops = path.busStopList || []
+		const board_index = stops.findIndex((e) => e.stopId === segment.from.id && `${e.pickupType ?? "0"}` !== "1")
+		if (board_index === -1) continue
+		const offset = (i: number) => parseInt(`${stops[i]?.arrival_offset ?? "0"}`) || 0
+		const to_stop = offset(board_index) * 1000
+		const index_of = new Map(stops.map((e, i) => [e.stopId, i]))
+		const live_departures = new Set<string>()
+		for (const bus of path.busList || []) {
+			const index = index_of.get(bus.stopId)
+			const departure = (path.timeTableList || []).find((e) => e.tripId === bus.tripId)?.departureTime?.slice(0, 5)
+			if (departure) live_departures.add(departure)
+			if (index === undefined || index > board_index) continue
+			today.push({
+				option,
+				kind: "live",
+				eta: now + Math.max(0, offset(board_index) - offset(index)) * 1000,
+				departure,
+				stops_away: board_index - index,
+				bus,
+			})
+		}
+		let added = 0
+		for (const time of scheduleTimes(path, today_index)) {
+			if (added >= limit) break
+			if (live_departures.has(time)) continue
+			const departure_ms = atTime(time)
+			// already left without showing up live, or would have passed the stop already
+			if (departure_ms < now || departure_ms + to_stop < now) continue
+			today.push({ option, kind: "scheduled", eta: departure_ms + to_stop, departure: time })
+			added++
+		}
+		const first_tomorrow = scheduleTimes(path, (today_index + 1) % 7).at(0)
+		if (first_tomorrow) tomorrow.push({ option, kind: "scheduled", eta: atTime(first_tomorrow, 1) + to_stop, departure: first_tomorrow, tomorrow: true })
+	}
+	const sorted = today.sort((a, b) => a.eta - b.eta)
+	return (sorted.length ? sorted : tomorrow.sort((a, b) => a.eta - b.eta)).slice(0, limit)
+}

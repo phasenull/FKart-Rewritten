@@ -1,8 +1,8 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
-import StatusText from "components/home/StatusText"
-import { bestOfSegment, colorsFor, describeStatus, StatusPart, StatusTone, optionKey, optionQuery, optionStatus, useWayOptions, Way, WayOption } from "common/ways"
+import CandidateLines from "components/home/CandidateLines"
+import { colorsFor, segmentCandidates, optionKey, optionQuery, useWayOptions, Way, WayOption } from "common/ways"
 import { router } from "expo-router"
 import { useContext } from "react"
 import { Text, TouchableOpacity, View } from "react-native"
@@ -18,7 +18,7 @@ export default function WayCard(props: { way: Way }) {
 	const keys = Object.keys(colors)
 	const unique: WayOption[] = keys.map((key) => (segmentOptions || []).flat().find((o) => optionKey(o) === key) as WayOption)
 	const results = useQueries(unique.map((option) => optionQuery(region, option)))
-	const pathOf = (key: string) => results[keys.indexOf(key)]?.data
+	const paths = Object.fromEntries(keys.map((key, i) => [key, results[i]?.data]))
 	const loading = resolving || results.some((r) => r.isLoading)
 	const transfers = Math.max(0, way.segments.length - 1)
 
@@ -47,15 +47,9 @@ export default function WayCard(props: { way: Way }) {
 			</View>
 			{way.segments.map((segment, i) => {
 				const options = segmentOptions?.[i] || []
-				// routes hidden on the way map don't count for the best bus
-				const statuses = options.filter((o) => !way.hidden?.includes(optionKey(o))).map((o) => optionStatus(o, segment.from.id, pathOf(optionKey(o))))
-				const best = bestOfSegment(statuses)
-				const status: { tone: StatusTone; parts: StatusPart[] } =
-					loading && !best
-						? { tone: "ok", parts: [{ text: "Loading…", kind: "plain" }] }
-						: !resolving && options.length === 0
-						? { tone: "bad", parts: [{ text: "No direct bus between these stops", kind: "plain" }] }
-						: describeStatus(best, segment.from.name)
+				// next buses you can catch here, soonest first; routes hidden on the way map don't count
+				const visible = options.filter((o) => !way.hidden?.includes(optionKey(o)))
+				const candidates = segmentCandidates(segment, visible, paths)
 				return (
 					<View key={`seg-${i}`} style={{ gap: 4 }}>
 						<Text numberOfLines={1} style={{ color: theme.secondary, fontWeight: "800", fontSize: 13 }}>
@@ -71,8 +65,12 @@ export default function WayCard(props: { way: Way }) {
 								</View>
 							))}
 						</View>
-						{/* several routes can serve a part, so name the one the status is about */}
-						<StatusText tone={status.tone} parts={status.parts} prefix={best && !(loading && !best) ? best.option.route_code : undefined} />
+						<CandidateLines
+							candidates={candidates}
+							colors={colors}
+							loading={loading}
+							emptyText={!resolving && options.length === 0 ? "No direct bus between these stops" : undefined}
+						/>
 					</View>
 				)
 			})}
