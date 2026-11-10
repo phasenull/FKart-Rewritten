@@ -64,14 +64,44 @@ export default function WayMap() {
 		})
 	}, [way, allLoaded])
 
-	/** fit the map to the visible routes only (hidden ones never count) */
+	/**
+	 * fit the map to where you actually ride: for every visible option, only its path between the
+	 * part's boarding and alighting stops (the rest of a long route is ignored), plus the A / transfer / B stops
+	 */
 	function fit() {
-		const coords = Object.entries(paths)
-			.filter(([key]) => !hidden[key])
-			.flatMap(([, path]) => (path?.pointList || []).map((p) => ({ latitude: parseFloat(p.lat), longitude: parseFloat(p.lng) })))
+		if (!way) return
+		const coords: { latitude: number; longitude: number }[] = []
+		way.segments.forEach((segment, i) => {
+			for (const option of segmentOptions?.[i] || []) {
+				const key = optionKey(option)
+				const path = paths[key]
+				if (hidden[key] || !path) continue
+				const points = (path.pointList || []).map((p) => ({ latitude: parseFloat(p.lat), longitude: parseFloat(p.lng) }))
+				const stop_a = path.busStopList?.find((e) => e.stopId === segment.from.id)
+				const stop_b = path.busStopList?.find((e) => e.stopId === segment.to.id)
+				if (!stop_a || !stop_b || !points.length) continue
+				const nearest = (lat: number, lng: number, from_index: number) => {
+					let best = from_index
+					let best_d = Infinity
+					for (let j = from_index; j < points.length; j++) {
+						const d = (points[j].latitude - lat) ** 2 + (points[j].longitude - lng) ** 2
+						if (d < best_d) {
+							best_d = d
+							best = j
+						}
+					}
+					return best
+				}
+				const index_a = nearest(parseFloat(stop_a.lat), parseFloat(stop_a.lng), 0)
+				const index_b = nearest(parseFloat(stop_b.lat), parseFloat(stop_b.lng), index_a)
+				coords.push(...points.slice(index_a, index_b + 1))
+			}
+		})
+		for (const stop of waypoints) if (stop.lat !== undefined && stop.lng !== undefined) coords.push({ latitude: stop.lat, longitude: stop.lng })
 		if (!coords.length) return
-		ref_map.current?.fitToCoordinates(coords, { edgePadding: { top: insets.top + 90, right: 40, bottom: 360, left: 40 }, animated: true })
+		ref_map.current?.fitToCoordinates(coords, { edgePadding: { top: insets.top + 110, right: 60, bottom: 380, left: 60 }, animated: true })
 	}
+
 	useEffect(() => {
 		if (allLoaded && !fitted.current) {
 			fitted.current = true
