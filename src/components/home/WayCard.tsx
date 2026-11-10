@@ -54,7 +54,11 @@ export default function WayCard(props: { way: Way }) {
 						? { text: "Loading…", tone: "ok" as StatusTone }
 						: !resolving && options.length === 0
 						? { text: "No direct bus between these stops", tone: "bad" as StatusTone }
-						: describeStatus(best, segment.from.name)
+						: (() => {
+								// several routes can serve a part, so name the one the status is about
+								const described = describeStatus(best, segment.from.name)
+								return best ? { ...described, text: `${best.option.route_code} · ${described.text}` } : described
+						  })()
 				return (
 					<View key={`seg-${i}`} style={{ gap: 4 }}>
 						<Text numberOfLines={1} style={{ color: theme.secondary, fontWeight: "800", fontSize: 13 }}>
