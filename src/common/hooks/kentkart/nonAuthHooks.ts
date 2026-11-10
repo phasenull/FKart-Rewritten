@@ -71,7 +71,7 @@ const LEGACY_PATH_INFO_URL = `${ApplicationConfig.endpoints.service}/rl1/web/pat
  * /rl1/api/v2.0/route/info returns the same pathList shape and needs no login.
  * The legacy endpoint is only tried when route/info has nothing.
  */
-async function fetchRouteInfo(params: Record<string, string>): Promise<AxiosResponse<BaseKentKartResponse & { pathList: Array<RouteData> }>> {
+export async function fetchRouteInfo(params: Record<string, string>): Promise<AxiosResponse<BaseKentKartResponse & { pathList: Array<RouteData> }>> {
 	const primary = await ApplicationConfig.makeKentKartRequest(ROUTE_INFO_URL, { method: "GET", params: params, timeout: 15_000 })
 	if (primary?.data?.pathList?.length) return primary
 	try {
@@ -85,7 +85,7 @@ async function fetchRouteInfo(params: Record<string, string>): Promise<AxiosResp
 
 // internal routeCode (what favorites store) -> displayRouteCode (what the API takes)
 let route_code_cache: { region: string; map: Record<string, string> } | undefined
-async function getDisplayRouteCodes(region: string): Promise<Record<string, string>> {
+export async function getDisplayRouteCodes(region: string): Promise<Record<string, string>> {
 	if (route_code_cache?.region === region) return route_code_cache.map
 	const response = await axios(`${ApplicationConfig.endpoints.service}/rl1/api/v2.0/route/list?region=${region}`, { timeout: 15_000 })
 	const map: Record<string, string> = {}
