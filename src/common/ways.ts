@@ -303,13 +303,22 @@ export function bestOfSegment(statuses: OptionStatus[]) {
 export type StatusTone = "ok" | "warn" | "bad"
 /** amber used for "next scheduled bus" texts */
 export const NEXT_BUS_COLOR = "#D97706"
-export function describeStatus(status: OptionStatus | undefined, stop_name: string): { text: string; tone: StatusTone } {
+/** one piece of a status line; kind decides its color ("left" red, "away" green, "next" muted) */
+export interface StatusPart {
+	text: string
+	kind: "left" | "away" | "next" | "plain"
+}
+export function describeStatus(status: OptionStatus | undefined, stop_name: string): { text: string; tone: StatusTone; parts: StatusPart[] } {
 	const next = status?.next_departure ? `${status.next_is_tomorrow ? "next tomorrow " : "next "}${status.next_departure}` : undefined
+	const done = (tone: StatusTone, parts: StatusPart[]) => ({ tone, parts, text: parts.map((e) => e.text).join(" · ") })
 	if (status?.bus && status.stops_away !== undefined) {
-		const left = status.current_departure ? `Left ${status.current_departure}` : "On the way"
-		const where = status.stops_away === 0 ? `at ${stop_name}` : `${status.stops_away} stop${status.stops_away === 1 ? "" : "s"} away`
-		return { text: [left, where, next].filter(Boolean).join(" · "), tone: "ok" }
+		const parts: StatusPart[] = [
+			{ text: status.current_departure ? `Left ${status.current_departure}` : "On the way", kind: "left" },
+			{ text: status.stops_away === 0 ? `at ${stop_name}` : `${status.stops_away} stop${status.stops_away === 1 ? "" : "s"} away`, kind: "away" },
+		]
+		if (next) parts.push({ text: next, kind: "next" })
+		return done("ok", parts)
 	}
-	if (next) return { text: next.charAt(0).toUpperCase() + next.slice(1), tone: "warn" }
-	return { text: "No buses scheduled", tone: "bad" }
+	if (next) return done("warn", [{ text: next.charAt(0).toUpperCase() + next.slice(1), kind: "plain" }])
+	return done("bad", [{ text: "No buses scheduled", kind: "plain" }])
 }
