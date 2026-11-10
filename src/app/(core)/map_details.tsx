@@ -19,11 +19,14 @@ import { IKentKartUser } from "common/interfaces/KentKart/KentKartUser"
 import Logger from "common/Logger"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 import { router, Stack, useLocalSearchParams } from "expo-router"
-import { useQuery } from "react-query"
+import { useQueries, useQuery } from "react-query"
+import { groupBy } from "common/util"
+import SecondaryText from "components/reusables/SecondaryText"
+import CardJSONData from "components/card_details/CardJSONData"
 import ErrorPage from "../ErrorPage"
 import FollowingBus from "../../components/map_details/FollowingBus"
 
-type SheetMode = "buses" | "stops" | "times"
+type SheetMode = "buses" | "stops" | "times" | "raw"
 
 /**
  * Route page: the route line, stops and live buses on a map, with bus cards in a bottom sheet.
@@ -69,6 +72,25 @@ export default function MapData() {
 	const buses = useMemo(() => (route?.busList || []).slice().sort((a, b) => parseInt(a.seq || "0") - parseInt(b.seq || "0")), [route])
 	const userCity = cityData?.data?.city?.find((city) => city.id === ApplicationConfig.region)
 
+	// today's vehicle events per bus from kk_vts (shown under each bus card, as before)
+	const vts_results = useQueries(
+		buses.map((e) => ({
+			queryKey: ["search-bus", e.busId.split("|")[0]],
+			queryFn: async () => {
+				const vehicle_id = e.busId.split("|")[0].replaceAll(".", "").replaceAll("/", "")
+				const API = await ApplicationConfig.database.get("kk_vts_api")
+				if (!API) return { vehicle_id, events: [] }
+				const response = await fetch(`${API}/api/events/search?key=bus&value=${vehicle_id}`)
+				const json = await response.json()
+				return {
+					vehicle_id,
+					events: (json?.data || []) as { created_at: string; route_code: number; direction: 0 | 1; event_label: string }[],
+				}
+			},
+			cacheTime: 10 * 60 * 1000,
+			staleTime: 1 * 60 * 1000,
+		}))
+	)
 	// favorites (same storage as before: favs.routes keyed by the first 5 chars of path_code)
 	const route_id = route?.path_code?.slice(0, 5)
 	const { data: favorite, refetch: refetchFavorite } = useQuery(["get_favorites", route_id], {
@@ -238,7 +260,39 @@ export default function MapData() {
 											ToastAndroid.show("Link kopyalandı!", ToastAndroid.SHORT)
 											Vibration.vibrate(100)
 										}}
-									/>
+									>
+										{Object.entries(
+											groupBy(
+												(vts_results.find((r) => r.data?.vehicle_id === bus.busId.split("|")[0].replaceAll(".", "").replaceAll("/", ""))?.data?.events || []).slice(0, 45),
+												(e) => e?.created_at?.slice(0, 10) as string
+											)
+										).map(([day, value]) => {
+											let is_active: (typeof value)[0] | undefined = undefined
+											if (value.at(0)?.event_label === "vehicle_created") {
+												is_active = value.at(0)
+												value.shift()
+											}
+											const paired = groupBy(value, (e, i) => (i - (i % 2)).toString())
+											return (
+												<View key={`day-${day}`} className="flex-col pl-2">
+													<SecondaryText style={{ color: theme.primaryDark }}>{day}</SecondaryText>
+													<SecondaryText numberOfLines={Object.keys(paired).length + (is_active ? 1 : 0)} className="ml-2 text-sm">
+														{is_active &&
+															`${is_active.route_code} ${is_active.direction ? "<-" : "->"} | ` + new Date(is_active?.created_at)?.toLocaleTimeString().slice(0, 5) + " -> NOW \n"}
+														{Object.entries(paired)
+															.map(
+																([k, [destroyed, created]]) =>
+																	`${created?.route_code} ${created?.direction ? "<-" : "->"} | ` +
+																	new Date(created?.created_at).toLocaleTimeString().slice(0, 5) +
+																	" -> " +
+																	new Date(destroyed?.created_at).toLocaleTimeString().slice(0, 5)
+															)
+															.join("\n")}
+													</SecondaryText>
+												</View>
+											)
+										})}
+									</BusContainer>
 								</View>
 							))}
 						</ScrollView>
@@ -250,6 +304,9 @@ export default function MapData() {
 							<TouchableOpacity onPress={() => setMode("times")} style={{ ...pill, ...card }}>
 								<MaterialCommunityIcons name="clock-outline" size={18} color={theme.secondary} />
 								<Text style={{ color: theme.secondary, fontWeight: "800" }}>Times</Text>
+							</TouchableOpacity>
+							<TouchableOpacity accessibilityLabel="Raw route data" onPress={() => setMode("raw")} style={{ ...card, height: 46, width: 46, borderRadius: 16, alignItems: "center", justifyContent: "center" }}>
+								<MaterialCommunityIcons name="code-json" size={20} color={theme.secondary} />
 							</TouchableOpacity>
 							<TouchableOpacity
 								disabled={!selectedBus}
@@ -265,10 +322,12 @@ export default function MapData() {
 					<View style={{ flex: 1 }}>
 						<TouchableOpacity onPress={() => setMode("buses")} className="flex-row items-center" style={{ gap: 4, paddingHorizontal: 16, paddingBottom: 8 }}>
 							<MaterialCommunityIcons name="arrow-left" size={18} color={theme.secondary} />
-							<Text style={{ color: theme.secondary, fontWeight: "800", fontSize: 15 }}>{mode === "stops" ? `Stops · ${route.busStopList.length}` : "Departures from the first stop"}</Text>
+							<Text style={{ color: theme.secondary, fontWeight: "800", fontSize: 15 }}>{mode === "stops" ? `Stops · ${route.busStopList.length}` : mode === "raw" ? "Raw route data" : "Departures from the first stop"}</Text>
 						</TouchableOpacity>
 						<BottomSheetScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 24 }}>
-							{mode === "stops" ? (
+							{mode === "raw" ? (
+								<CardJSONData card={{ ...route, busStopList: [], pointList: [] }} />
+							) : mode === "stops" ? (
 								<View style={{ ...card, paddingHorizontal: 14 }}>
 									{route.busStopList.map((stop, i) => {
 										const here = buses.filter((b) => b.stopId === stop.stopId)

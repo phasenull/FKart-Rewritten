@@ -6,7 +6,7 @@ import RouteData from "common/interfaces/KentKart/RouteData"
 import { router } from "expo-router"
 import { transit_realtime } from "gtfs-realtime-bindings"
 import { useContext } from "react"
-import { Image } from "react-native"
+import { Image, Text, View } from "react-native"
 import { Callout, LatLng, Marker } from "react-native-maps"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { BusCallout } from "../callouts/BusCallout"
@@ -21,6 +21,8 @@ export function BusMarker(props: {
 	force_color?: string
 	selected?: boolean
 	onPress?: () => void
+	/** route code shown upright under the bearing icon (group view) */
+	label?: string
 }) {
 	const { route_data, bus, coordinate, easterEggEnabled,force_color } = props
 	const schedule_list = route_data?.timeTableList
@@ -65,6 +67,57 @@ export function BusMarker(props: {
 					tooltip={true}
 				>
 					<BusCallout bus={bus} route_data={route_data} scheduled_data={scheduled_data} />
+				</Callout>
+			</Marker>
+		)
+	}
+	if (props.label) {
+		const color = force_color || getColorFromBus(props.rt_raw || props.bus, props.route_data) || theme.primary
+		return (
+			<Marker
+				tracksViewChanges={false}
+				anchor={{ x: 0.5, y: 0.4 }}
+				zIndex={props.selected ? 20 : 12}
+				coordinate={{ latitude: parseFloat(bus.lat), longitude: parseFloat(bus.lng) }}
+				title={bus.plateNumber}
+				calloutAnchor={{ x: 0.5, y: 0.2 }}
+				onPress={props.onPress}
+				onCalloutPress={() => {
+					router.navigate({ pathname: "/bus_details", params: { bus64: btoa(escape(JSON.stringify(bus))) } })
+				}}
+			>
+				<View style={{ alignItems: "center" }}>
+					{/* same bearing arrow + bus icon as the route map, rotated here so the label stays upright */}
+					<View style={{ alignItems: "center", transform: [{ rotate: `${parseFloat(bus.bearing) || 0}deg` }] }}>
+						<Image style={{ objectFit: "fill" }} className="top-4 w-12 h-8 relative self-center -scale-y-100" source={require("assets/media/images/bus_bearing_colored.png")} />
+						<MaterialCommunityIcons
+							style={{
+								backgroundColor: props.selected ? theme.secondary : color,
+								elevation: 10,
+								borderRadius: 50,
+								padding: props.selected ? 5 : 2,
+								color: theme.white,
+								transform: [{ rotateZ: "180deg" }],
+							}}
+							name="bus"
+							size={16}
+						/>
+					</View>
+					<View
+						style={{
+							marginTop: 2,
+							backgroundColor: color,
+							borderColor: props.selected ? theme.secondary : theme.white,
+							borderWidth: props.selected ? 2 : 1.5,
+							borderRadius: 8,
+							paddingHorizontal: 5,
+						}}
+					>
+						<Text style={{ color: theme.white, fontWeight: "800", fontSize: 11 }}>{props.label}</Text>
+					</View>
+				</View>
+				<Callout removeClippedSubviews={false} style={{ overflow: "visible" }} tooltip={true}>
+					<BusCallout raw={props.rt_raw} is_rt={props.is_rt} bus={bus} route_data={route_data} scheduled_data={scheduled_data} />
 				</Callout>
 			</Marker>
 		)
