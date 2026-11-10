@@ -20,6 +20,7 @@ import Logger from "common/Logger"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 import { router, Stack, useLocalSearchParams } from "expo-router"
 import { useQueries, useQuery } from "react-query"
+import { nextDeparture, NEXT_BUS_COLOR } from "common/ways"
 import { groupBy } from "common/util"
 import SecondaryText from "components/reusables/SecondaryText"
 import CardJSONData from "components/card_details/CardJSONData"
@@ -191,6 +192,8 @@ export default function MapData() {
 	const shown = schedules[shown_schedule]
 	const shown_is_today = shown_schedule === today_schedule
 	const next_time = schedules[today_schedule]?.times.find((t) => t >= now_hhmm)
+	// shown when no bus is on the way: next scheduled departure, today or tomorrow's first
+	const next_bus = nextDeparture(route)
 	const badge_color = favorite?.extras?.color || theme.secondary
 	const card = { backgroundColor: theme.white, borderRadius: 16, elevation: 4 }
 	// within thumb reach: lives in the sheet's header row, not the top bar
@@ -257,12 +260,13 @@ export default function MapData() {
 				{mode === "buses" ? (
 					<View style={{ flex: 1 }}>
 						<View className="flex-row justify-between items-center" style={{ paddingHorizontal: 16, paddingBottom: 8 }}>
-							<Text style={{ color: theme.secondary, fontWeight: "800", fontSize: 15 }}>
-								{buses.length ? `${buses.length} bus${buses.length === 1 ? "" : "es"}` : "No buses right now"}
-							</Text>
-							<Text style={{ color: theme.secondary, opacity: 0.6, fontWeight: "700", fontSize: 12, flex: 1, marginLeft: 8 }} numberOfLines={1}>
-								{buses.length ? "" : next_time ? `next ${next_time}` : ""}
-							</Text>
+							{buses.length ? (
+								<Text style={{ color: theme.secondary, fontWeight: "800", fontSize: 15, flex: 1 }}>{`${buses.length} bus${buses.length === 1 ? "" : "es"}`}</Text>
+							) : (
+								<Text style={{ color: next_bus.time ? NEXT_BUS_COLOR : theme.error, fontWeight: "800", fontSize: 14, flex: 1 }} numberOfLines={2}>
+									{next_bus.time ? `Next bus ${next_bus.tomorrow ? "tomorrow at" : "at"} ${next_bus.time}` : "No buses scheduled"}
+								</Text>
+							)}
 							{directionButton}
 						</View>
 						<ScrollView horizontal={true} contentContainerStyle={{ paddingHorizontal: 16, columnGap: 12, paddingBottom: 4 }} style={{ flexGrow: 0 }}>

@@ -197,8 +197,10 @@ export interface OptionStatus {
 	bus?: BusData
 	/** stops between that bus and the boarding stop (0 = at the stop) */
 	stops_away?: number
-	/** next scheduled departure from the first stop today, when no bus is coming */
+	/** next scheduled departure from the first stop (schedule data), used when no bus is coming */
 	next_departure?: string
+	/** true when next_departure is tomorrow's first bus (none left today) */
+	next_is_tomorrow?: boolean
 }
 
 /** live route/info for one option: path, buses, stops, schedule */
@@ -223,20 +225,23 @@ export function optionQuery(region: string, option: WayOption) {
 	}
 }
 
-function todayNextDeparture(path: RouteData) {
+/** next scheduled departure from the first stop: later today, else tomorrow's first (scheduleList) */
+export function nextDeparture(path: RouteData): { time?: string; tomorrow: boolean } {
 	const now = new Date()
 	const now_hhmm = `${`${now.getHours()}`.padStart(2, "0")}:${`${now.getMinutes()}`.padStart(2, "0")}`
 	// scheduleList: one entry per day type, description is Monday-first, uppercase = runs that day
+	const schedules = (path.scheduleList || []) as { description: string; timeList: { departureTime: string }[] }[]
+	const timesOn = (day_index: number) => {
+		const entry = schedules.find((e) => {
+			const c = (e.description || "")[day_index]
+			return !!c && c !== c.toLowerCase()
+		})
+		return (entry?.timeList || []).map((e) => e.departureTime?.slice(0, 5)).filter(Boolean).sort() as string[]
+	}
 	const today_index = (now.getDay() + 6) % 7
-	const today = ((path.scheduleList || []) as { description: string; timeList: { departureTime: string }[] }[]).find((e) => {
-		const c = (e.description || "")[today_index]
-		return !!c && c !== c.toLowerCase()
-	})
-	return (today?.timeList || [])
-		.map((e) => e.departureTime?.slice(0, 5))
-		.filter((e) => e && e >= now_hhmm)
-		.sort()
-		.at(0)
+	const later = timesOn(today_index).find((t) => t >= now_hhmm)
+	if (later) return { time: later, tomorrow: false }
+	return { time: timesOn((today_index + 1) % 7).at(0), tomorrow: true }
 }
 
 /** which bus of this option is closest to the boarding stop without having passed it */
@@ -256,7 +261,8 @@ export function optionStatus(option: WayOption, from_stop_id: string, path?: Rou
 		option,
 		bus: best?.bus,
 		stops_away: best && board_index !== undefined ? board_index - best.index : undefined,
-		next_departure: todayNextDeparture(path),
+		next_departure: nextDeparture(path).time,
+		next_is_tomorrow: nextDeparture(path).tomorrow,
 	}
 }
 
@@ -264,20 +270,27 @@ export function optionStatus(option: WayOption, from_stop_id: string, path?: Rou
 export function bestOfSegment(statuses: OptionStatus[]) {
 	const with_bus = statuses.filter((e) => e.stops_away !== undefined).sort((a, b) => (a.stops_away as number) - (b.stops_away as number))
 	if (with_bus.length) return with_bus[0]
-	return statuses.filter((e) => e.next_departure).sort((a, b) => (a.next_departure as string).localeCompare(b.next_departure as string))[0]
+	// today's departures before tomorrow's
+	const rank = (e: OptionStatus) => `${e.next_is_tomorrow ? 1 : 0}${e.next_departure}`
+	return statuses.filter((e) => e.next_departure).sort((a, b) => rank(a).localeCompare(rank(b)))[0]
 }
 
-export function describeStatus(status: OptionStatus | undefined, stop_name: string) {
-	if (!status) return { text: "No bus coming", ok: false }
-	if (status.bus && status.stops_away !== undefined) {
+/** "ok": a bus is on the way · "warn": none on the way, next scheduled one shown · "bad": nothing scheduled */
+export type StatusTone = "ok" | "warn" | "bad"
+/** amber used for "next scheduled bus" texts */
+export const NEXT_BUS_COLOR = "#D97706"
+export function describeStatus(status: OptionStatus | undefined, stop_name: string): { text: string; tone: StatusTone } {
+	if (status?.bus && status.stops_away !== undefined) {
 		return {
 			text:
 				status.stops_away === 0
 					? `${status.option.route_code} · ${status.bus.plateNumber} is at ${stop_name}`
 					: `${status.option.route_code} · ${status.bus.plateNumber} · ${status.stops_away} stop${status.stops_away === 1 ? "" : "s"} before ${stop_name}`,
-			ok: true,
+			tone: "ok",
 		}
 	}
-	if (status.next_departure) return { text: `No bus coming · ${status.option.route_code} departs ${status.next_departure}`, ok: false }
-	return { text: "No bus coming", ok: false }
+	if (status?.next_departure) {
+		return { text: `Next ${status.option.route_code} ${status.next_is_tomorrow ? "tomorrow at" : "at"} ${status.next_departure} (from the first stop)`, tone: "warn" }
+	}
+	return { text: "No buses scheduled", tone: "bad" }
 }

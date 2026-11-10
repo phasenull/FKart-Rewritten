@@ -1,7 +1,7 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
-import { bestOfSegment, colorsFor, describeStatus, optionKey, optionQuery, optionStatus, useWayOptions, Way, WayOption } from "common/ways"
+import { bestOfSegment, colorsFor, describeStatus, NEXT_BUS_COLOR, StatusTone, optionKey, optionQuery, optionStatus, useWayOptions, Way, WayOption } from "common/ways"
 import { router } from "expo-router"
 import { useContext } from "react"
 import { Text, TouchableOpacity, View } from "react-native"
@@ -50,9 +50,9 @@ export default function WayCard(props: { way: Way }) {
 				const best = bestOfSegment(statuses)
 				const status =
 					loading && !best
-						? { text: "Loading…", ok: true }
+						? { text: "Loading…", tone: "ok" as StatusTone }
 						: !resolving && options.length === 0
-						? { text: "No direct bus between these stops", ok: false }
+						? { text: "No direct bus between these stops", tone: "bad" as StatusTone }
 						: describeStatus(best, segment.from.name)
 				return (
 					<View key={`seg-${i}`} style={{ gap: 4 }}>
@@ -66,7 +66,7 @@ export default function WayCard(props: { way: Way }) {
 								</View>
 							))}
 						</View>
-						<Text numberOfLines={2} style={{ color: status.ok ? theme.secondary : theme.error, opacity: status.ok ? 0.7 : 1, fontWeight: "700", fontSize: 12 }}>
+						<Text numberOfLines={2} style={{ color: status.tone === "ok" ? theme.secondary : status.tone === "warn" ? NEXT_BUS_COLOR : theme.error, opacity: status.tone === "ok" ? 0.7 : 1, fontWeight: "800", fontSize: 12 }}>
 							{status.text}
 						</Text>
 					</View>
