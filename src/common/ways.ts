@@ -130,8 +130,23 @@ export async function boardableDirections(region: string, route_code: string, fr
 	return found
 }
 
+/**
+ * fill in a stop's route list and position when it was saved without them (ways made before v2),
+ * by finding it in routes known to stop there
+ */
+export async function hydrateStop(region: string, stop: WayStop, hint_routes: string[]): Promise<WayStop> {
+	if (routeCodesAt(stop).length) return stop
+	for (const code of hint_routes)
+		for (const direction of [0, 1]) {
+			const found = (await getRouteShape(region, code, direction))?.busStopList?.find((e) => e.stopId === stop.id)
+			if (found?.routes) return { ...stop, routes: found.routes, lat: parseFloat(found.lat), lng: parseFloat(found.lng) }
+		}
+	return stop
+}
+
 /** stops you can get off at after boarding at `from` on any route stopping there */
-export async function reachableStops(region: string, from: WayStop) {
+export async function reachableStops(region: string, from_stop: WayStop, hint_routes: string[] = []) {
+	const from = await hydrateStop(region, from_stop, hint_routes)
 	const result: { stop: BasicStopInformation; routes: string[] }[] = []
 	const by_id = new Map<string, { stop: BasicStopInformation; routes: string[] }>()
 	const lines: { route_code: string; direction: 0 | 1; path: RouteData }[] = []
@@ -152,7 +167,7 @@ export async function reachableStops(region: string, from: WayStop) {
 			}
 		})
 	)
-	return { stops: result, lines }
+	return { stops: result, lines, from }
 }
 
 /** every route/direction that goes from `from` to `to` with boarding and alighting allowed */
