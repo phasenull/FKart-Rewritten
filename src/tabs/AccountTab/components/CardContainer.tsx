@@ -30,7 +30,7 @@ export default function CardContainer(props: Props) {
 	const { data: freshData, isLoading, isRefetching, isError, error } = useGetCardData({ card_alias: favorite_data.aliasNo })
 	const { mutateAsync: mutateRemove } = useRemoveFavoriteCard()
 	const { refetch: refetchAccountFavorites } = useGetFavorites()
-	const { data: dataCardType, isLoading: cardImageisLoading } = useGetCardType(favorite_data?.aliasNo)
+	const { data: dataCardType, isLoading: cardImageisLoading } = useGetCardType(favorite_data?.aliasNo, freshData?.data?.cardlist?.at(0)?.paxDescription)
 	const { theme } = useContext(ThemeContext)
 	if (isError) {
 		console.warn("CardContainer error", (error as any)?.message)

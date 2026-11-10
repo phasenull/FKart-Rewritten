@@ -102,7 +102,7 @@ export function BottomTabNavigator() {
 	return (
 		<Tab.Navigator
 			backBehavior="initialRoute"
-			initialRouteName={translations.tabs.settings.name}
+			initialRouteName={translations.tabs.home.name}
 			tabBar={BottomTab}
 			screenOptions={{
 				tabBarStyle: theme as any,

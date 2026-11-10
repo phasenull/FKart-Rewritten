@@ -32,7 +32,7 @@ export default function CardDetails() {
 	} = useGetABTSecret({
 		card_alias: alias,
 	})
-	const { data: card_type, refetch: refetchCardType } = useGetCardType(alias)
+	const { data: card_type, refetch: refetchCardType } = useGetCardType(alias, balanceData?.data?.cardlist?.at(0)?.paxDescription)
 	const { mutateAsync: mutateSetCardType } = useSetCardType()
 	const [showEditCardTypeModal, setShowEditCardTypeModal] = useState(false)
 	function refetchAll() {
