@@ -51,6 +51,8 @@ export default function MapData() {
 	const [following, setFollowing] = useState(!!params.force_bus_id)
 	const [mode, setMode] = useState<SheetMode>("buses")
 	const [easterEggEnabled, setEasterEggEnabled] = useState(false)
+	// picked schedule (weekdays / saturday / sunday …); undefined = the one running today
+	const [scheduleIndex, setScheduleIndex] = useState<number | undefined>()
 	const { theme } = useContext(ThemeContext)
 	const { data, isLoading, isRefetching, refetch, isError, error } = useGetRouteDetails({
 		direction: direction,
@@ -60,7 +62,7 @@ export default function MapData() {
 		result_includes: {
 			busStopList: true,
 			busList: true,
-			scheduleList: false,
+			scheduleList: true,
 			timeTableList: true,
 			pointList: true,
 		},
@@ -171,10 +173,41 @@ export default function MapData() {
 	const selectedBus = buses.find((e) => e.busId === selectedBusId)
 	const now = new Date()
 	const now_hhmm = `${`${now.getHours()}`.padStart(2, "0")}:${`${now.getMinutes()}`.padStart(2, "0")}`
-	const times = (route.timeTableList || []).map((e) => e.departureTime?.slice(0, 5)).filter(Boolean).sort()
-	const next_time = times.find((t) => t >= now_hhmm)
+	// scheduleList: one entry per day type; description marks running days Monday-first, uppercase = runs ("MTWTFss" = weekdays)
+	const day_names = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+	const today_index = (now.getDay() + 6) % 7
+	const schedules = ((route.scheduleList || []) as { description: string; timeList: { departureTime: string }[] }[]).map((e) => {
+		const days = [...(e.description || "")].map((c, i) => (c !== c.toLowerCase() ? i : -1)).filter((i) => i >= 0)
+		let label = days.map((i) => day_names[i]).join(", ")
+		if (days.join() === "0,1,2,3,4") label = "Weekdays"
+		else if (days.join() === "5") label = "Saturday"
+		else if (days.join() === "6") label = "Sunday"
+		else if (days.join() === "5,6") label = "Weekend"
+		else if (days.length === 7) label = "Every day"
+		return { label, runs_today: days.includes(today_index), times: (e.timeList || []).map((t) => t.departureTime?.slice(0, 5)).filter(Boolean).sort() }
+	})
+	const today_schedule = schedules.findIndex((e) => e.runs_today)
+	const shown_schedule = scheduleIndex ?? (today_schedule === -1 ? 0 : today_schedule)
+	const shown = schedules[shown_schedule]
+	const shown_is_today = shown_schedule === today_schedule
+	const next_time = schedules[today_schedule]?.times.find((t) => t >= now_hhmm)
 	const badge_color = favorite?.extras?.color || theme.secondary
 	const card = { backgroundColor: theme.white, borderRadius: 16, elevation: 4 }
+	// within thumb reach: lives in the sheet's header row, not the top bar
+	const directionButton = (
+		<TouchableOpacity
+			accessibilityLabel="Switch direction"
+			onPress={() => {
+				setDirection(1 - direction)
+				setSelectedBusId(undefined)
+				setFollowing(false)
+			}}
+			style={{ height: 40, paddingHorizontal: 14, borderRadius: 12, backgroundColor: theme.primary, flexDirection: "row", alignItems: "center", gap: 6 }}
+		>
+			<MaterialCommunityIcons name="swap-horizontal" size={20} color={theme.secondary} />
+			<Text style={{ color: theme.secondary, fontWeight: "800", fontSize: 13 }}>Direction</Text>
+		</TouchableOpacity>
+	)
 	const pill = { flex: 1, height: 46, borderRadius: 16, alignItems: "center" as const, justifyContent: "center" as const, flexDirection: "row" as const, gap: 6 }
 
 	return (
@@ -205,17 +238,6 @@ export default function MapData() {
 					<TouchableOpacity accessibilityLabel="Favorite" hitSlop={6} onPress={toggleFavorite} style={{ width: 36, height: 36, alignItems: "center", justifyContent: "center" }}>
 						<MaterialCommunityIcons name={favorite ? "star" : "star-outline"} size={24} color={favorite ? theme.primaryDark : theme.secondary} />
 					</TouchableOpacity>
-					<TouchableOpacity
-						accessibilityLabel="Switch direction"
-						onPress={() => {
-							setDirection(1 - direction)
-							setSelectedBusId(undefined)
-							setFollowing(false)
-						}}
-						style={{ height: 36, paddingHorizontal: 10, borderRadius: 8, backgroundColor: theme.primary, alignItems: "center", justifyContent: "center" }}
-					>
-						<MaterialCommunityIcons name="swap-horizontal" size={22} color={theme.secondary} />
-					</TouchableOpacity>
 				</View>
 				{following && selectedBus ? (
 					<FollowingBus
@@ -238,9 +260,10 @@ export default function MapData() {
 							<Text style={{ color: theme.secondary, fontWeight: "800", fontSize: 15 }}>
 								{buses.length ? `${buses.length} bus${buses.length === 1 ? "" : "es"}` : "No buses right now"}
 							</Text>
-							<Text style={{ color: theme.secondary, opacity: 0.6, fontWeight: "700", fontSize: 12 }}>
-								{buses.length ? "swipe or tap a pin" : next_time ? `next departure ${next_time}` : ""}
+							<Text style={{ color: theme.secondary, opacity: 0.6, fontWeight: "700", fontSize: 12, flex: 1, marginLeft: 8 }} numberOfLines={1}>
+								{buses.length ? "" : next_time ? `next ${next_time}` : ""}
 							</Text>
+							{directionButton}
 						</View>
 						<ScrollView horizontal={true} contentContainerStyle={{ paddingHorizontal: 16, columnGap: 12, paddingBottom: 4 }} style={{ flexGrow: 0 }}>
 							{buses.map((bus) => (
@@ -320,10 +343,15 @@ export default function MapData() {
 					</View>
 				) : (
 					<View style={{ flex: 1 }}>
-						<TouchableOpacity onPress={() => setMode("buses")} className="flex-row items-center" style={{ gap: 4, paddingHorizontal: 16, paddingBottom: 8 }}>
-							<MaterialCommunityIcons name="arrow-left" size={18} color={theme.secondary} />
-							<Text style={{ color: theme.secondary, fontWeight: "800", fontSize: 15 }}>{mode === "stops" ? `Stops · ${route.busStopList.length}` : mode === "raw" ? "Raw route data" : "Departures from the first stop"}</Text>
-						</TouchableOpacity>
+						<View className="flex-row items-center justify-between" style={{ paddingHorizontal: 16, paddingBottom: 8 }}>
+							<TouchableOpacity onPress={() => setMode("buses")} className="flex-row items-center" style={{ gap: 4, flex: 1, minHeight: 40 }}>
+								<MaterialCommunityIcons name="arrow-left" size={18} color={theme.secondary} />
+								<Text numberOfLines={1} style={{ color: theme.secondary, fontWeight: "800", fontSize: 15 }}>
+									{mode === "stops" ? `Stops · ${route.busStopList.length}` : mode === "raw" ? "Raw route data" : "Timetable"}
+								</Text>
+							</TouchableOpacity>
+							{directionButton}
+						</View>
 						<BottomSheetScrollView contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 24 }}>
 							{mode === "raw" ? (
 								<CardJSONData card={{ ...route, busStopList: [], pointList: [] }} />
@@ -354,27 +382,46 @@ export default function MapData() {
 										)
 									})}
 								</View>
-							) : times.length ? (
-								<View className="flex-row flex-wrap" style={{ gap: 8 }}>
-									{times.map((t, i) => (
-										<View
-											key={`t-${i}`}
-											style={{
-												width: "22%",
-												height: 40,
-												borderRadius: 10,
-												alignItems: "center",
-												justifyContent: "center",
-												backgroundColor: t === next_time ? theme.primary : theme.white,
-												opacity: t < now_hhmm ? 0.4 : 1,
-											}}
-										>
-											<Text style={{ color: theme.secondary, fontWeight: "800" }}>{t}</Text>
-										</View>
-									))}
+							) : schedules.length ? (
+								<View style={{ gap: 10 }}>
+									<View className="flex-row" style={{ gap: 6 }}>
+										{schedules.map((e, i) => (
+											<TouchableOpacity
+												key={`sched-${i}`}
+												onPress={() => setScheduleIndex(i)}
+												style={{ flex: 1, height: 38, borderRadius: 10, alignItems: "center", justifyContent: "center", backgroundColor: i === shown_schedule ? theme.secondary : theme.white }}
+											>
+												<Text numberOfLines={1} style={{ fontWeight: "800", fontSize: 13, color: i === shown_schedule ? theme.white : theme.secondary }}>
+													{e.label}
+												</Text>
+											</TouchableOpacity>
+										))}
+									</View>
+									<Text style={{ color: theme.secondary, opacity: 0.6, fontWeight: "700", fontSize: 12 }}>
+										{shown?.times.length || 0} departures from {route.busStopList?.at(0)?.stopName || "the first stop"}
+										{shown_is_today ? " · today, next one highlighted" : ""}
+									</Text>
+									<View className="flex-row flex-wrap" style={{ gap: 8 }}>
+										{(shown?.times || []).map((t, i) => (
+											<View
+												key={`t-${i}`}
+												style={{
+													width: "22%",
+													height: 40,
+													borderRadius: 10,
+													alignItems: "center",
+													justifyContent: "center",
+													backgroundColor: shown_is_today && t === next_time ? theme.primary : theme.white,
+													opacity: shown_is_today && t < now_hhmm ? 0.4 : 1,
+												}}
+											>
+												<Text style={{ color: theme.secondary, fontWeight: "800" }}>{t}</Text>
+											</View>
+										))}
+									</View>
 								</View>
 							) : (
-								<Text style={{ color: theme.secondary, opacity: 0.6, fontWeight: "700" }}>No timetable for today</Text>
+								<Text style={{ color: theme.secondary, opacity: 0.6, fontWeight: "700" }}>No schedule published for this direction</Text>
 							)}
 						</BottomSheetScrollView>
 					</View>
