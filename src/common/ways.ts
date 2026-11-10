@@ -71,8 +71,8 @@ export function useLegStatus(leg: WayLeg) {
 				lang: "tr",
 				direction: `${leg.direction}`,
 				displayRouteCode: leg.route_code,
-				// busList, busStopList, timeTableList
-				resultType: "011100",
+				// busList, busStopList, scheduleList
+				resultType: "011001",
 			})
 			const path = response?.data?.pathList?.at(0)
 			if (!path) throw new Error(response?.data?.result?.message || "Route not found")
@@ -89,7 +89,13 @@ export function useLegStatus(leg: WayLeg) {
 			}
 			const now = new Date()
 			const now_hhmm = `${`${now.getHours()}`.padStart(2, "0")}:${`${now.getMinutes()}`.padStart(2, "0")}`
-			const next_departure = (path.timeTableList || [])
+			// scheduleList has one entry per day type, description is Monday-first, uppercase = runs that day
+			const today_index = (now.getDay() + 6) % 7
+			const today_schedule = ((path.scheduleList || []) as { description: string; timeList: { departureTime: string }[] }[]).find((e) => {
+				const c = (e.description || "")[today_index]
+				return !!c && c !== c.toLowerCase()
+			})
+			const next_departure = (today_schedule?.timeList || [])
 				.map((e) => e.departureTime?.slice(0, 5))
 				.filter((e) => e && e >= now_hhmm)
 				.sort()
