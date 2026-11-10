@@ -6,7 +6,7 @@ import { useGetCityList } from "common/hooks/kentkart/nonAuthHooks"
 import BasicRouteInformation from "common/interfaces/KentKart/BasicRouteInformation"
 import BasicStopInformation from "common/interfaces/KentKart/BasicStopInformation"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
-import { deleteWay, getRouteShape, getWays, reachableStops, saveWay, Way, WAY_COLORS, WayStop } from "common/ways"
+import { deleteWay, getRouteShape, getWays, reachableStops, routeCodesAt, saveWay, Way, WAY_COLORS, WayStop } from "common/ways"
 import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
 import { router, Stack, useLocalSearchParams } from "expo-router"
 import { LegacyRef, useContext, useEffect, useMemo, useRef, useState } from "react"
@@ -120,7 +120,9 @@ export default function WayEditor() {
 	}, [browseShapes])
 
 	// every stop you can get off at after boarding at `from`, on any route
-	const { data: reachable, isLoading: reachableLoading } = useQuery(["way_reachable", region, from?.id], () => reachableStops(region, from as WayStop), {
+	// routes the way already uses, to look up stops saved without their route list
+	const hintRoutes = useMemo(() => [...new Set(way.segments.flatMap((s) => [...(s.hint_routes || []), ...routeCodesAt(s.from), ...routeCodesAt(s.to)]))], [way])
+	const { data: reachable, isLoading: reachableLoading } = useQuery(["way_reachable", region, from?.id, from?.routes], () => reachableStops(region, from as WayStop, hintRoutes), {
 		enabled: step === "pick_to" && !!from,
 		staleTime: 60 * 60 * 1000,
 	})
@@ -275,7 +277,7 @@ export default function WayEditor() {
 					) : (
 						<StopPickerMap
 							initial={initial}
-							fixed={step === "pick_to" ? from : undefined}
+							fixed={step === "pick_to" ? reachable?.from || from : undefined}
 							lines={
 								step === "pick_from"
 									? (browseShapes || []).map((path, i) => ({
@@ -318,6 +320,8 @@ export default function WayEditor() {
 							<Text style={{ ...text, opacity: 0.7, fontSize: 12, fontWeight: "700" }}>
 								{picked
 									? `Buses: ${pickedRoutes.join(", ")}`
+									: reachable && !routeCodesAt(reachable.from).length
+									? "Couldn't find which buses stop here. Tap \"Change\" and pick this stop again."
 									: reachable
 									? `${reachable.stops.length} stops reachable without a transfer`
 									: ""}
@@ -342,7 +346,7 @@ export default function WayEditor() {
 										setPicked(undefined)
 										setStep("pick_to")
 									} else {
-										setWay({ ...way, segments: [...way.segments, { from: from as WayStop, to: toWayStop(picked) }] })
+										setWay({ ...way, segments: [...way.segments, { from: (reachable?.from || from) as WayStop, to: toWayStop(picked) }] })
 										setPicked(undefined)
 										setStep("overview")
 									}
