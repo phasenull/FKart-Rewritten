@@ -46,7 +46,8 @@ export default function WayCard(props: { way: Way }) {
 			</View>
 			{way.segments.map((segment, i) => {
 				const options = segmentOptions?.[i] || []
-				const statuses = options.map((o) => optionStatus(o, segment.from.id, pathOf(optionKey(o))))
+				// routes hidden on the way map don't count for the best bus
+				const statuses = options.filter((o) => !way.hidden?.includes(optionKey(o))).map((o) => optionStatus(o, segment.from.id, pathOf(optionKey(o))))
 				const best = bestOfSegment(statuses)
 				const status =
 					loading && !best
@@ -61,8 +62,11 @@ export default function WayCard(props: { way: Way }) {
 						</Text>
 						<View className="flex-row flex-wrap items-center" style={{ gap: 4 }}>
 							{options.map((o) => (
-								<View key={optionKey(o)} style={{ minWidth: 34, height: 22, borderRadius: 6, paddingHorizontal: 5, backgroundColor: colors[optionKey(o)], alignItems: "center", justifyContent: "center" }}>
-									<Text style={{ color: theme.white, fontWeight: "800", fontSize: 12 }}>{o.route_code}</Text>
+								<View
+									key={optionKey(o)}
+									style={{ minWidth: 34, height: 22, borderRadius: 6, paddingHorizontal: 5, backgroundColor: colors[optionKey(o)], alignItems: "center", justifyContent: "center", opacity: way.hidden?.includes(optionKey(o)) ? 0.3 : 1 }}
+								>
+									<Text style={{ color: theme.white, fontWeight: "800", fontSize: 12, textDecorationLine: way.hidden?.includes(optionKey(o)) ? "line-through" : "none" }}>{o.route_code}</Text>
 								</View>
 							))}
 						</View>
