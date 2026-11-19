@@ -7,6 +7,8 @@ import { IKentKartUser } from "./interfaces/KentKart/KentKartUser"
 const CLIENT_ID = "rH7S2"
 const CLIENT_SECRET = "Om121T12fSv1j66kp9Un5vE9IMkJ3639"
 const REDIRECT_URI = "m.kentkart.com"
+// m.kentkart sends this on every call; without it oauth/* answers 401 "Parametreler eksik ya da yanlış"
+const CLIENT_VERSION = "Web_1.12.0_1.0_CHROME_kentkart.web.mkentkart"
 
 type KKResult = { code?: number | string; message?: string; extraErrorMessage?: string }
 
@@ -19,7 +21,7 @@ export function normalizePhone(input: string) {
 }
 
 function authQuery(region: string) {
-	return new URLSearchParams({ region: region, authType: "4", lang: "tr" }).toString()
+	return new URLSearchParams({ region: region, authType: "4", lang: "tr", version: CLIENT_VERSION }).toString()
 }
 
 function resultError(result: KKResult | undefined, fallback: string) {
@@ -152,7 +154,7 @@ export default abstract class API {
 		password?: string
 	}): Promise<[true] | [false, string]> {
 		const { access_token, region, name, surname, password } = args
-		const query = new URLSearchParams({ region: region, authType: "4", lang: "tr", name: name.trim(), surname: surname.trim() })
+		const query = new URLSearchParams({ region: region, authType: "4", lang: "tr", version: CLIENT_VERSION, name: name.trim(), surname: surname.trim() })
 		if (password) query.set("pin", password)
 		try {
 			const request = await ApplicationConfig.makeKentKartRequest(
@@ -173,7 +175,7 @@ export default abstract class API {
 	}
 
 	public static async fetchProfile({ access_token, region, auth_type }: { access_token: string; region: string; auth_type: string }): Promise<[IKentKartUser] | [false, string]> {
-		const url = `${ApplicationConfig.endpoints.service}/rl1/api/account?region=${region || ApplicationConfig.region}&authType=4&token=${access_token}`
+		const url = `${ApplicationConfig.endpoints.service}/rl1/api/account?region=${region || ApplicationConfig.region}&authType=4&version=${CLIENT_VERSION}&token=${access_token}`
 		const request: {
 			data: {
 				result: { code: number; message?: string }
