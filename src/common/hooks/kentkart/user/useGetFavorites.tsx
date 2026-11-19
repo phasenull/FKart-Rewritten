@@ -19,6 +19,6 @@ export default function useGetFavorites() {
 			Logger.info("REQUEST useGetFavorites")
 			return ApplicationConfig.makeKentKartRequest(url)
 		},
-		{ staleTime:1*60*1000 }
+		{ staleTime:1*60*1000, enabled: !!credentials?.access_token }
 	)
 }

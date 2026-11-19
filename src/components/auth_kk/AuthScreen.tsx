@@ -238,8 +238,10 @@ export default function AuthScreen() {
 		if (isPhone && !/^5\d{9}$/.test(username)) return t.err_phone
 		if (!isPhone && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(username)) return t.err_email
 	}
+	/** back to the screen that asked for a sign in (incognito mode), or Home if there is none */
 	function goHome() {
-		router.replace({ pathname: "/RootScreen" })
+		if (router.canGoBack()) router.back()
+		else router.replace({ pathname: "/RootScreen" })
 	}
 	async function run(task: () => Promise<void>) {
 		if (busy) return

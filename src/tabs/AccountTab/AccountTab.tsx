@@ -10,8 +10,9 @@ import useGetFavorites from "common/hooks/kentkart/user/useGetFavorites"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
 import SimplyButton from "components/ui/SimplyButton"
-import KentKartAuthValidator from "components/validators/KentKartAuthValidator"
-import AuthWall from "components/walls/AuthWall"
+import { useIsSignedIn } from "common/hooks/auth/useRequireAuth"
+import { checkForUpdates } from "common/updates"
+import SignInPrompt from "components/walls/SignInPrompt"
 import { router } from "expo-router"
 export default function AccountTab(props?: { route: any}) {
 	const { theme } = useContext(ThemeContext)
@@ -23,10 +24,12 @@ export default function AccountTab(props?: { route: any}) {
 		)
 	}
 	const { user, logout } = useKentKartAuthStore((state) => state)
+	// incognito: the tab stays usable (city, updates, app data); account parts ask for a sign in
+	const signedIn = useIsSignedIn()
 	const [is_show_secret, setIsShowSecret] = useState(false)
 	const { data: favoritesData, refetch: refetchFavorites, isRefetching: isFavoritesRefetching, isLoading: isFavoritesLoading, error: favoritesError } = useGetFavorites()
 	return (
-			<KentKartAuthValidator else={<AuthWall />}>
+			<>
 				<ScrollView
 					refreshControl={<RefreshControl onRefresh={refetchFavorites} refreshing={isFavoritesRefetching} />}
 					horizontal={false}
@@ -39,8 +42,15 @@ export default function AccountTab(props?: { route: any}) {
 					}}
 					className="flex-1 h-full"
 				>
-					<AccountDetailsContainer show_credentials={is_show_secret} user={user} />
-					{isFavoritesLoading ? (
+					{signedIn ? <AccountDetailsContainer show_credentials={is_show_secret} user={user} /> : null}
+					{!signedIn ? (
+						<SignInPrompt
+							style={{ marginTop: 5 * 4, marginHorizontal: 16, alignSelf: "stretch" }}
+							icon="card-account-details-outline"
+							title="KentKart account"
+							description="Sign in to see and add your cards. Everything else works without an account."
+						/>
+					) : isFavoritesLoading ? (
 						<View className="items-center flex-1 justify-center">
 							<CustomLoadingIndicator />
 							<Text
@@ -85,10 +95,12 @@ export default function AccountTab(props?: { route: any}) {
 						return (
 						<CardContainer style={{ marginTop: 5 * 4 }} favorite_data={p_card} key={"virtual_card_" + (p_card.favorite + p_card.alias)} index={index} />
 					)})} */}
-					<AddCard />
-					<SimplyButton onPress={logout} className="mb-2" text="Log Out" color={theme.error} size="medium" />
+					{signedIn ? <AddCard /> : null}
+					{signedIn ? <SimplyButton onPress={logout} className="mb-2" text="Log Out" color={theme.error} size="medium" /> : null}
 					<SimplyButton className="mt-4" text="Select City" size="medium" onPress={() => router.navigate("/city_selector")} />
+					<SimplyButton className="mt-4" text="Check for updates" size="medium" type="secondary" onPress={checkForUpdates} />
+					<SimplyButton className="mt-4" text="App data" size="medium" type="secondary" onPress={() => router.navigate("/AppData")} />
 				</ScrollView>
-			</KentKartAuthValidator>
+			</>
 	)
 }
