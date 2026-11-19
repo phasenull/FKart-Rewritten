@@ -11,8 +11,8 @@ import WayCard from "components/home/WayCard"
 import CardJSONData from "components/card_details/CardJSONData"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
 import CustomLoadingIndicator from "components/reusables/CustomLoadingIndicator"
-import KentKartAuthValidator from "components/validators/KentKartAuthValidator"
-import AuthWall from "components/walls/AuthWall"
+import { openSignIn, useIsSignedIn } from "common/hooks/auth/useRequireAuth"
+import SignInPrompt from "components/walls/SignInPrompt"
 import { router } from "expo-router"
 import { useContext, useState } from "react"
 import { Modal, Pressable, RefreshControl, ScrollView, Text, TouchableOpacity, View } from "react-native"
@@ -135,6 +135,8 @@ export default function HomeTab(props: { route: any }) {
 	const { data: ways, refetch: refetchWays } = useWays()
 	const { data: announcements, refetch: refetchAnnouncements } = useGetAnnouncements()
 	const credentials = useKentKartAuthStore((state) => state.credentials)
+	// incognito: no account, the tab still works; only card / account sections ask for one
+	const signedIn = useIsSignedIn()
 	const queryClient = useQueryClient()
 	const [pickerOpen, setPickerOpen] = useState(false)
 	// which card shows at the top right (and in card activity); saved on the phone
@@ -147,7 +149,7 @@ export default function HomeTab(props: { route: any }) {
 		setPickerOpen(false)
 	}
 	const news = announcements?.data?.announceList || []
-	if (isLoading) {
+	if (isLoading && signedIn) {
 		return <CustomLoadingIndicator />
 	}
 	const show = (key: Filter) => filter === "all" || filter === key
@@ -159,7 +161,7 @@ export default function HomeTab(props: { route: any }) {
 		{ key: "news", label: news.length ? `News ${news.length}` : "News" },
 	]
 	return (
-		<KentKartAuthValidator else={<AuthWall />}>
+		<>
 			<ScrollView
 				refreshControl={
 					<RefreshControl
@@ -179,10 +181,19 @@ export default function HomeTab(props: { route: any }) {
 					<View style={{ flex: 1 }}>
 						<Text style={{ color: theme.secondary, opacity: 0.6, fontWeight: "700", fontSize: 13 }}>Hello,</Text>
 						<Text numberOfLines={1} style={{ color: theme.secondary, fontWeight: "800", fontSize: 24 }}>
-							{profile?.data?.accountInfo?.name || ""}
+							{signedIn ? profile?.data?.accountInfo?.name || "" : "Guest"}
 						</Text>
 					</View>
-					{first_card ? <BalanceChip alias={first_card} onPress={() => setPickerOpen(true)} /> : null}
+					{signedIn && first_card ? <BalanceChip alias={first_card} onPress={() => setPickerOpen(true)} /> : null}
+					{!signedIn ? (
+						<TouchableOpacity
+							onPress={openSignIn}
+							style={{ flexDirection: "row", alignItems: "center", gap: 6, backgroundColor: theme.primary, borderRadius: 16, paddingHorizontal: 12, paddingVertical: 8, elevation: 2 }}
+						>
+							<MaterialCommunityIcons name="login" size={20} color={theme.secondaryDark} />
+							<Text style={{ color: theme.secondaryDark, fontWeight: "800", fontSize: 14 }}>Sign in</Text>
+						</TouchableOpacity>
+					) : null}
 				</View>
 
 				<View className="flex-row" style={{ gap: 8 }}>
@@ -236,6 +247,9 @@ export default function HomeTab(props: { route: any }) {
 				{show("card") ? (
 					<View style={{ gap: 10 }}>
 						<SectionLabel text="CARD ACTIVITY" />
+						{!signedIn ? (
+							<SignInPrompt icon="card-bulleted-outline" title="Your cards and balance" description="Sign in to KentKart to see your card activity here" />
+						) : (
 						<View style={card}>
 							{first_card ? (
 								<CardActivity alias={first_card} />
@@ -243,6 +257,7 @@ export default function HomeTab(props: { route: any }) {
 								<Text style={{ color: theme.secondary, opacity: 0.6, fontWeight: "700", padding: 14 }}>Add a card in the Settings tab to see its activity</Text>
 							)}
 						</View>
+						)}
 					</View>
 				) : null}
 
@@ -256,7 +271,7 @@ export default function HomeTab(props: { route: any }) {
 						</View>
 					</View>
 				) : null}
-				{filter === "all" ? (
+				{filter === "all" && signedIn ? (
 					<View>
 						<SectionLabel text="ACCOUNT" />
 						<CardJSONData
@@ -291,6 +306,6 @@ export default function HomeTab(props: { route: any }) {
 					</Pressable>
 				</Pressable>
 			</Modal>
-		</KentKartAuthValidator>
+		</>
 	)
 }

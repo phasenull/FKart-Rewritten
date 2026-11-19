@@ -6,6 +6,7 @@ import Logger from "common/Logger"
 import { ThemeContext } from "common/contexts/ThemeContext"
 import { useAddFavoriteCard, useRemoveFavoriteCard } from "common/hooks/kentkart/cardHooks"
 import { useKentKartAuthStore } from "common/stores/KentKartAuthStore"
+import { useRequireAuth } from "common/hooks/auth/useRequireAuth"
 import InputModal from "components/reusables/InputModal"
 import { router, useLocalSearchParams } from "expo-router"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
@@ -21,6 +22,7 @@ export default function CardControlPanel(props: {
 	const [favorite, setFavorite] = useState(!!description)
 	const [show_rename_modal, setShowRenameModal] = useState(false)
 	const user = useKentKartAuthStore((state) => state.user)
+	const requireAuth = useRequireAuth()
 	const { data: dataAdd, isLoading: isLoadingAdd, mutateAsync: mutateAdd } = useAddFavoriteCard()
 	const { data: dataRemove, isLoading: isLoadingRemove, mutate: mutateRemove } = useRemoveFavoriteCard()
 
@@ -103,14 +105,15 @@ export default function CardControlPanel(props: {
 					<MaterialCommunityIcons name="cash-plus" size={24} color={theme.secondary} />
 				</TouchableOpacity>
 				<TouchableOpacity
-					disabled={!user}
-					onPress={() => {
-						if (favorite) {
-							mutateRemove({ alias_no: alias })
-						} else {
-							setShowRenameModal(true)
-						}
-					}}
+					onPress={() =>
+						requireAuth(() => {
+							if (favorite) {
+								mutateRemove({ alias_no: alias })
+							} else {
+								setShowRenameModal(true)
+							}
+						})
+					}
 					className="flex-1 rounded-xl flex-row justify-center items-center h-12"
 					style={{ backgroundColor: favorite ? theme.error : theme.primaryDark }}
 				>

@@ -1,5 +1,5 @@
 import { Text, TouchableOpacity, View } from "react-native"
-import * as Updates from "expo-updates"
+import { checkForUpdates } from "common/updates"
 import ApplicationConfig from "common/ApplicationConfig"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
 import { convertToDate, hideEmail,hidePhone } from "common/util"
@@ -55,24 +55,7 @@ export default function AccountDetailsContainer(props: { show_credentials?: bool
 			</TouchableOpacity>
 			<TouchableOpacity
 				className="justify-center items-center w-12 top-8 h-12 absolute self-end"
-				onPress={async () => {
-					let updates
-					try {
-						const result = await Updates.checkForUpdateAsync()
-						await ApplicationConfig.database.set("settings.last_update_check", Date.now())
-						if (result.isAvailable) {
-							updates = result
-						} else {
-							alert(`No Update Found!\nLast Check:${new Date((await ApplicationConfig.database.get("settings.last_update_check")) || 0).toUTCString()}`)
-						}
-					} catch (e) {
-						alert("Couldn't check for updates: " + e)
-					}
-					if (updates?.isAvailable) {
-						await Updates.fetchUpdateAsync()
-						await Updates.reloadAsync()
-					}
-				}}
+				onPress={checkForUpdates}
 			>
 				<MaterialCommunityIcons name="package-variant-closed" color={theme.success} size={24} />
 			</TouchableOpacity>
